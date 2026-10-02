@@ -46,6 +46,9 @@ const router = createBrowserRouter([
       },
     ],
   },
+  ...(import.meta.env.DEV
+    ? [{ path: '/dev/ui', lazy: () => import('@/pages/dev/ui-kit').then((m) => ({ Component: m.UiKitPage })) }]
+    : []),
   {
     path: '*',
     lazy: () => import('@/pages/not-found').then((m) => ({ Component: m.NotFoundPage })),
