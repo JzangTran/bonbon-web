@@ -9,6 +9,7 @@ const sellerNav: NavItem[] = [
 ]
 const adminNav: NavItem[] = [
   { to: '/admin', label: 'Tổng quan' },
+  { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
   { to: '/admin/categories', label: 'Ngành hàng' },
   { to: '/admin/admins', label: 'Quản trị viên' },
 ]
@@ -76,6 +77,14 @@ const router = createBrowserRouter([
           {
             index: true,
             lazy: () => import('@/pages/admin/dashboard').then((m) => ({ Component: m.AdminDashboardPage })),
+          },
+          {
+            path: 'shop-review',
+            lazy: () => import('@/pages/admin/shop-review').then((m) => ({ Component: m.ShopReviewQueuePage })),
+          },
+          {
+            path: 'shop-review/:vendorId',
+            lazy: () => import('@/pages/admin/shop-review-detail').then((m) => ({ Component: m.ShopReviewDetailPage })),
           },
           {
             path: 'categories',
