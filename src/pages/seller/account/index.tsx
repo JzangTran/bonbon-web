@@ -28,19 +28,21 @@ const passwordSchema = z
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: 'Mật khẩu nhập lại không khớp' })
 
 export function SellerAccountPage() {
+  const profile = useProfile()
+  // Google-only accounts have no password to change or to confirm with.
+  const hasPassword = profile.data?.hasPassword !== false
   return (
     <div className="flex max-w-xl flex-col gap-6">
       <h1 className="text-2xl font-bold">Tài khoản</h1>
       <ProfileCard />
-      <PasswordCard />
-      <SessionsCard />
+      {hasPassword ? <PasswordCard /> : null}
+      <SessionsCard hasPassword={hasPassword} />
     </div>
   )
 }
 
-function ProfileCard() {
-  const queryClient = useQueryClient()
-  const profile = useQuery({
+function useProfile() {
+  return useQuery({
     queryKey: ['account', 'me'],
     queryFn: async () => {
       const { data, error } = await api.GET('/api/account/me')
@@ -48,6 +50,11 @@ function ProfileCard() {
       return data
     },
   })
+}
+
+function ProfileCard() {
+  const queryClient = useQueryClient()
+  const profile = useProfile()
   const form = useForm<z.infer<typeof profileSchema>>({ resolver: zodResolver(profileSchema), defaultValues: { name: '', phone: '' } })
   useEffect(() => {
     if (profile.data) form.reset({ name: profile.data.name ?? '', phone: profile.data.phone ?? '' })
@@ -149,7 +156,7 @@ function PasswordCard() {
   )
 }
 
-function SessionsCard() {
+function SessionsCard({ hasPassword }: { hasPassword: boolean }) {
   const { signOut } = useSession()
   const navigate = useNavigate()
   const [password, setPassword] = useState('')
@@ -158,7 +165,7 @@ function SessionsCard() {
   const logoutAll = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
-    const { error: problem, response } = await api.POST('/api/auth/logout-all', { body: { password } })
+    const { error: problem, response } = await api.POST('/api/auth/logout-all', { body: { password: hasPassword ? password : undefined } })
     if (!response.ok) {
       setError(problemMessage(problem as unknown))
       return
@@ -175,10 +182,12 @@ function SessionsCard() {
       </CardHeader>
       <CardContent>
         <form onSubmit={logoutAll} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="logout-all-password">Nhập mật khẩu để xác nhận</Label>
-            <Input id="logout-all-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
+          {hasPassword ? (
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="logout-all-password">Nhập mật khẩu để xác nhận</Label>
+              <Input id="logout-all-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+          ) : null}
           <FormError message={error} />
           <Button type="submit" variant="destructive">
             Đăng xuất mọi thiết bị

@@ -1,14 +1,13 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavItem } from '@/app/layouts/area-layout'
+import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 
-const sellerNav: NavItem[] = [
-  { to: '/seller', label: 'Tổng quan' },
-  { to: '/seller/account', label: 'Tài khoản' },
-]
 const adminNav: NavItem[] = [
   { to: '/admin', label: 'Tổng quan' },
+  { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
+  { to: '/admin/categories', label: 'Ngành hàng' },
   { to: '/admin/admins', label: 'Quản trị viên' },
 ]
 
@@ -43,6 +42,10 @@ const router = createBrowserRouter([
     lazy: () => import('@/pages/auth/reset-password').then((m) => ({ Component: () => <m.SetPasswordPage mode="initial" /> })),
   },
   {
+    path: '/captcha-bridge',
+    lazy: () => import('@/pages/captcha-bridge').then((m) => ({ Component: m.CaptchaBridgePage })),
+  },
+  {
     path: '/legal/:type',
     lazy: () => import('@/pages/legal-document').then((m) => ({ Component: m.LegalDocumentPage })),
   },
@@ -51,7 +54,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/seller',
-        element: <AreaLayout title="Người bán" nav={sellerNav} loginPath="/seller/login" />,
+        element: <SellerLayout />,
         children: [
           {
             index: true,
@@ -60,6 +63,14 @@ const router = createBrowserRouter([
           {
             path: 'account',
             lazy: () => import('@/pages/seller/account').then((m) => ({ Component: m.SellerAccountPage })),
+          },
+          {
+            path: 'shop',
+            lazy: () => import('@/pages/seller/shop').then((m) => ({ Component: m.SellerShopPage })),
+          },
+          {
+            path: 'open-shop',
+            lazy: () => import('@/pages/seller/open-shop').then((m) => ({ Component: m.OpenShopPage })),
           },
         ],
       },
@@ -75,6 +86,18 @@ const router = createBrowserRouter([
           {
             index: true,
             lazy: () => import('@/pages/admin/dashboard').then((m) => ({ Component: m.AdminDashboardPage })),
+          },
+          {
+            path: 'shop-review',
+            lazy: () => import('@/pages/admin/shop-review').then((m) => ({ Component: m.ShopReviewQueuePage })),
+          },
+          {
+            path: 'shop-review/:vendorId',
+            lazy: () => import('@/pages/admin/shop-review-detail').then((m) => ({ Component: m.ShopReviewDetailPage })),
+          },
+          {
+            path: 'categories',
+            lazy: () => import('@/pages/admin/categories').then((m) => ({ Component: m.AdminCategoriesPage })),
           },
           {
             path: 'admins',
