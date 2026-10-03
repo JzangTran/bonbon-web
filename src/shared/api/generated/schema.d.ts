@@ -393,14 +393,6 @@ export interface components {
             /** @enum {string} */
             role?: "CUSTOMER" | "SELLER" | "ADMIN";
         };
-        CurrentPrincipal: {
-            /** Format: uuid */
-            id?: string;
-            /** @enum {string} */
-            actorType?: "CUSTOMER" | "SHOP_ACCOUNT" | "MAIN_ACCOUNT" | "MEMBER" | "ADMIN" | "SYSTEM";
-            activeRole?: string;
-            permissions?: string[];
-        };
         ChangePasswordRequest: {
             currentPassword: string;
             newPassword: string;
@@ -771,9 +763,7 @@ export interface operations {
     };
     changePassword: {
         parameters: {
-            query: {
-                principal: components["schemas"]["CurrentPrincipal"];
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -797,9 +787,7 @@ export interface operations {
     };
     me: {
         parameters: {
-            query: {
-                principal: components["schemas"]["CurrentPrincipal"];
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -819,9 +807,7 @@ export interface operations {
     };
     update: {
         parameters: {
-            query: {
-                principal: components["schemas"]["CurrentPrincipal"];
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;

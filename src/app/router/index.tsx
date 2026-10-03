@@ -3,7 +3,10 @@ import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavItem } from '@/app/layouts/area-layout'
 import { RequireRole } from './require-role'
 
-const sellerNav: NavItem[] = [{ to: '/seller', label: 'Tổng quan' }]
+const sellerNav: NavItem[] = [
+  { to: '/seller', label: 'Tổng quan' },
+  { to: '/seller/account', label: 'Tài khoản' },
+]
 const adminNav: NavItem[] = [
   { to: '/admin', label: 'Tổng quan' },
   { to: '/admin/admins', label: 'Quản trị viên' },
@@ -53,6 +56,10 @@ const router = createBrowserRouter([
           {
             index: true,
             lazy: () => import('@/pages/seller/dashboard').then((m) => ({ Component: m.SellerDashboardPage })),
+          },
+          {
+            path: 'account',
+            lazy: () => import('@/pages/seller/account').then((m) => ({ Component: m.SellerAccountPage })),
           },
         ],
       },
