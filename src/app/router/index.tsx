@@ -9,6 +9,7 @@ const sellerNav: NavItem[] = [
 ]
 const adminNav: NavItem[] = [
   { to: '/admin', label: 'Tổng quan' },
+  { to: '/admin/categories', label: 'Ngành hàng' },
   { to: '/admin/admins', label: 'Quản trị viên' },
 ]
 
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
           {
             index: true,
             lazy: () => import('@/pages/admin/dashboard').then((m) => ({ Component: m.AdminDashboardPage })),
+          },
+          {
+            path: 'categories',
+            lazy: () => import('@/pages/admin/categories').then((m) => ({ Component: m.AdminCategoriesPage })),
           },
           {
             path: 'admins',
