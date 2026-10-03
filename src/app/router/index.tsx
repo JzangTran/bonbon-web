@@ -42,6 +42,10 @@ const router = createBrowserRouter([
     lazy: () => import('@/pages/auth/reset-password').then((m) => ({ Component: () => <m.SetPasswordPage mode="initial" /> })),
   },
   {
+    path: '/captcha-bridge',
+    lazy: () => import('@/pages/captcha-bridge').then((m) => ({ Component: m.CaptchaBridgePage })),
+  },
+  {
     path: '/legal/:type',
     lazy: () => import('@/pages/legal-document').then((m) => ({ Component: m.LegalDocumentPage })),
   },
