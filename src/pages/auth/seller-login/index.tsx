@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { z } from 'zod'
 import { useSession, type Role } from '@/entities/session'
+import { GoogleSignIn } from '@/features/google-sign-in'
 import { api, problemCode, problemMessage, type components } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Captcha } from '@/shared/ui/captcha'
@@ -124,6 +125,7 @@ export function SellerLoginPage() {
           {form.formState.isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
         </Button>
       </form>
+      <GoogleSignIn />
     </AuthShell>
   )
 }
