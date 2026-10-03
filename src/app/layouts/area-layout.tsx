@@ -1,12 +1,23 @@
-import { NavLink, Outlet } from 'react-router'
+import { LogOutIcon } from 'lucide-react'
+import { NavLink, Outlet, useNavigate } from 'react-router'
+import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui/button'
 
 export type NavItem = { to: string; label: string }
 
-export function AreaLayout({ title, nav }: { title: string; nav: NavItem[] }) {
+export function AreaLayout({ title, nav, loginPath }: { title: string; nav: NavItem[]; loginPath: string }) {
+  const { session, signOut } = useSession()
+  const navigate = useNavigate()
+
+  const logout = async () => {
+    await signOut()
+    navigate(loginPath, { replace: true })
+  }
+
   return (
     <div className="grid min-h-svh grid-cols-[15rem_1fr]">
-      <aside className="border-r bg-sidebar p-4">
+      <aside className="flex flex-col border-r bg-sidebar p-4">
         <p className="mb-6 text-xl font-bold text-brand-600">bonbon</p>
         <p className="mb-2 text-xs font-medium text-muted-foreground uppercase">{title}</p>
         <nav className="flex flex-col gap-1">
@@ -26,6 +37,15 @@ export function AreaLayout({ title, nav }: { title: string; nav: NavItem[] }) {
             </NavLink>
           ))}
         </nav>
+        <div className="mt-auto flex flex-col gap-2 border-t pt-4">
+          <div className="text-sm">
+            <p className="font-medium">{session?.name || session?.email}</p>
+            <p className="truncate text-muted-foreground">{session?.email}</p>
+          </div>
+          <Button variant="ghost" onClick={logout} className="justify-start">
+            <LogOutIcon /> Đăng xuất
+          </Button>
+        </div>
       </aside>
       <main className="p-6">
         <Outlet />

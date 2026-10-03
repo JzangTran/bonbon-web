@@ -11,4 +11,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    // Same-origin API in development (as behind Caddy in production): no CORS involved.
+    proxy: {
+      '/api': 'http://localhost:8080',
+    },
+  },
 })
