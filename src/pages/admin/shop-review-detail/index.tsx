@@ -54,7 +54,7 @@ export function ShopReviewDetailPage() {
 
   return (
     <div className="flex max-w-6xl flex-col gap-6">
-      <Link to="/admin/shop-review" className="inline-flex items-center gap-1 text-sm text-brand-700 hover:underline">
+      <Link to="/admin/shop-review" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
         <ArrowLeftIcon className="size-4" /> Duyệt cửa hàng
       </Link>
       <div className="flex flex-wrap items-center gap-3">
@@ -77,7 +77,7 @@ export function ShopReviewDetailPage() {
             {shop.lat !== undefined && shop.lng !== undefined ? (
               <Row label="Toạ độ">
                 <a
-                  className="text-brand-700 hover:underline"
+                  className="text-primary hover:underline"
                   href={`https://www.google.com/maps?q=${shop.lat},${shop.lng}`}
                   target="_blank"
                   rel="noreferrer"
@@ -111,7 +111,7 @@ export function ShopReviewDetailPage() {
             <Row label="Email hoá đơn">{shop.invoiceEmails?.join(', ') || '—'}</Row>
             {shop.businessLicenseUrl ? (
               <Row label="Giấy phép kinh doanh">
-                <a className="text-brand-700 hover:underline" href={shop.businessLicenseUrl} target="_blank" rel="noreferrer">
+                <a className="text-primary hover:underline" href={shop.businessLicenseUrl} target="_blank" rel="noreferrer">
                   Mở tệp (liên kết hết hạn sau 5 phút)
                 </a>
               </Row>

@@ -11,7 +11,7 @@ declare global {
           initialize: (options: { client_id: string; callback: (response: CredentialResponse) => void; ux_mode?: 'popup' }) => void
           renderButton: (
             parent: HTMLElement,
-            options: { type?: 'standard'; theme?: 'outline'; size?: 'large'; text?: 'continue_with'; shape?: 'rectangular'; width?: number; locale?: string },
+            options: { type?: 'standard'; theme?: 'outline'; size?: 'large'; text?: 'continue_with'; shape?: 'pill'; width?: number; locale?: string },
           ) => void
         }
       }
@@ -63,7 +63,7 @@ export function GoogleButton({ onCredential }: { onCredential: (idToken: string)
           theme: 'outline',
           size: 'large',
           text: 'continue_with',
-          shape: 'rectangular',
+          shape: 'pill',
           width: Math.min(400, target.clientWidth || 320),
           locale: 'vi',
         })

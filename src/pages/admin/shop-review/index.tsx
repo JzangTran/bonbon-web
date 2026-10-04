@@ -64,7 +64,7 @@ export function ShopReviewQueuePage() {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-b">
-        <div role="tablist" className="flex gap-1">
+        <div role="tablist" className="flex max-w-full gap-1 overflow-x-auto">
           {TABS.map((tab) => (
             <button
               key={tab.status}
@@ -72,8 +72,8 @@ export function ShopReviewQueuePage() {
               aria-selected={status === tab.status}
               onClick={() => setStatus(tab.status)}
               className={cn(
-                '-mb-px min-h-10 border-b-2 px-3 text-sm',
-                status === tab.status ? 'border-brand-600 font-semibold text-brand-700' : 'border-transparent text-muted-foreground',
+                '-mb-px min-h-10 shrink-0 border-b-2 px-3 text-sm whitespace-nowrap',
+                status === tab.status ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
               )}
             >
               {tab.label}
