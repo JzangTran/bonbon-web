@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router'
+import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavItem } from '@/app/layouts/area-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
@@ -12,7 +12,10 @@ const adminNav: NavItem[] = [
 ]
 
 const router = createBrowserRouter([
-  { path: '/', element: <Navigate to="/seller" replace /> },
+  {
+    path: '/',
+    lazy: () => import('@/pages/landing').then((m) => ({ Component: m.LandingPage })),
+  },
   {
     path: '/seller/login',
     lazy: () => import('@/pages/auth/seller-login').then((m) => ({ Component: m.SellerLoginPage })),
