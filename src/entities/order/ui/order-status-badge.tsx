@@ -20,8 +20,8 @@ const STATUS_STYLE: Record<OrderStatus, StatusStyle> = {
   PENDING_PAYMENT: { label: 'Chờ thanh toán', icon: WalletIcon, className: 'bg-warning-subtle text-warning-fg' },
   PLACED: { label: 'Chờ quán xác nhận', icon: ClockIcon, className: 'bg-info-subtle text-info-fg' },
   CONFIRMED: { label: 'Quán đã nhận đơn', icon: CheckIcon, className: 'bg-info-subtle text-info-fg' },
-  PREPARING: { label: 'Đang chuẩn bị', icon: ChefHatIcon, className: 'bg-caramel-400 text-foreground' },
-  OUT_FOR_DELIVERY: { label: 'Đang giao', icon: BikeIcon, className: 'bg-brand-50 text-brand-700' },
+  PREPARING: { label: 'Đang chuẩn bị', icon: ChefHatIcon, className: 'bg-highlight-subtle text-highlight-fg' },
+  OUT_FOR_DELIVERY: { label: 'Đang giao', icon: BikeIcon, className: 'bg-accent text-accent-foreground' },
   DELIVERED: { label: 'Đã giao', icon: CircleCheckIcon, className: 'bg-success-subtle text-success-fg' },
   CANCELLED: { label: 'Đã huỷ', icon: CircleXIcon, className: 'bg-muted text-muted-foreground' },
   REJECTED: { label: 'Quán từ chối', icon: BanIcon, className: 'bg-danger-subtle text-danger-fg' },
@@ -33,7 +33,7 @@ export function OrderStatusBadge({ status, className }: { status: OrderStatus; c
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap',
+        'inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-semibold whitespace-nowrap',
         tone,
         className,
       )}

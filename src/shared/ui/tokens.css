@@ -1,99 +1,124 @@
 /*
- * bonbon design tokens — values from docs/reference/design-tokens.md (contrast checked there).
+ * bonbon design tokens v2 (deep green) — values from docs/reference/design-tokens.md (contrast checked there).
  * Light is the default; .dark applies the dark set. shadcn components read the semantic variables
  * (--primary, --border, ...); bonbon-specific scales are exposed as Tailwind colors via @theme below.
+ *
+ * Shape: only buttons are fully rounded (rounded-full in Button); every other rounded-* utility
+ * resolves to 4px, and panels/images stay square.
  */
 
 :root {
-  /* brand */
-  --primary-50: #fff1f3;
-  --primary-400: #ff7a93;
-  --primary-500: #f0476c;
-  --primary-600: #d9264f;
-  --primary-700: #b81e43;
-  --caramel-400: #f5b83d;
-  --caramel-700: #a15c07;
-  --pandan-700: #2e7d4f;
+  /* brand green; green-500 only for large shapes with ink text (white on it fails AA) */
+  --green-50: #e8f5ee;
+  --green-100: #cdebda;
+  --green-500: #00a44a;
+  --green-600: #007f3a;
+  --green-700: #006c35;
+  --green-800: #005c2e;
+  --green-900: #0b3b24;
+  --amber-50: #fff6e0;
+  --amber-400: #ffb020;
+  --amber-800: #8a5100;
+  --image-slot: #e9eeeb;
 
   /* semantic (solid takes white text; subtle bg pairs with its -fg) */
-  --success: #15803d;
-  --success-subtle: #f0fdf4;
-  --success-fg: #15803d;
-  --warning: #b45309;
-  --warning-subtle: #fffbeb;
-  --warning-fg: #92400e;
-  --info: #1d4ed8;
-  --info-subtle: #eff6ff;
-  --info-fg: #1d4ed8;
-  --danger-subtle: #fef2f2;
-  --danger-fg: #b91c1c;
+  --success: #006c35;
+  --success-subtle: #e8f5ee;
+  --success-fg: #006c35;
+  --warning: #a15c00;
+  --warning-subtle: #fff4e0;
+  --warning-fg: #8a4b00;
+  --info: #1d5bd8;
+  --info-subtle: #eaf1ff;
+  --info-fg: #1d4fb8;
+  --danger-subtle: #fdecea;
+  --danger-fg: #b3261e;
+  --highlight-subtle: var(--amber-50);
+  --highlight-fg: var(--amber-800);
 
   /* shadcn semantic variables */
-  --background: #fffaf5;
-  --foreground: #1c1917;
+  --background: #f6f8f7;
+  --foreground: #14201a;
   --card: #ffffff;
-  --card-foreground: #1c1917;
+  --card-foreground: #14201a;
   --popover: #ffffff;
-  --popover-foreground: #1c1917;
-  --primary: var(--primary-600);
+  --popover-foreground: #14201a;
+  --primary: var(--green-600);
+  --primary-hover: var(--green-700);
   --primary-foreground: #ffffff;
-  --secondary: #f5f5f4;
-  --secondary-foreground: #1c1917;
-  --muted: #f5f5f4;
-  --muted-foreground: #57534e;
-  --accent: var(--primary-50);
-  --accent-foreground: var(--primary-700);
-  --destructive: #b91c1c;
-  --border: #e7e5e4; /* decorative only */
-  --input: #8a837d; /* control boundary, 3.6:1 on bg */
-  --ring: var(--primary-600);
-  --chart-1: #d9264f;
-  --chart-2: #2e7d4f;
-  --chart-3: #f5b83d;
-  --chart-4: #1d4ed8;
-  --chart-5: #a15c07;
-  --radius: 0.75rem;
+  --secondary: #f3f6f4;
+  --secondary-foreground: #14201a;
+  --muted: #f3f6f4;
+  --muted-foreground: #4b5a52;
+  --accent: var(--green-50);
+  --accent-foreground: var(--green-700);
+  --destructive: #c42b1c;
+  --destructive-foreground: #ffffff;
+  --border: #e3e8e5; /* decorative only */
+  --input: #7c8a83; /* control boundary, 3.38:1 on bg */
+  --ring: var(--green-600);
+  --chart-1: #007f3a;
+  --chart-2: #ffb020;
+  --chart-3: #1d5bd8;
+  --chart-4: #0b3b24;
+  --chart-5: #a15c00;
+  --radius: 0.25rem;
   --sidebar: #ffffff;
-  --sidebar-foreground: #1c1917;
-  --sidebar-primary: var(--primary-600);
+  --sidebar-foreground: #14201a;
+  --sidebar-primary: var(--green-600);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--primary-50);
-  --sidebar-accent-foreground: var(--primary-700);
-  --sidebar-border: #e7e5e4;
-  --sidebar-ring: var(--primary-600);
+  --sidebar-accent: var(--green-50);
+  --sidebar-accent-foreground: var(--green-700);
+  --sidebar-border: #e3e8e5;
+  --sidebar-ring: var(--green-600);
 }
 
 .dark {
-  --background: #1c1917;
-  --foreground: #fafaf9;
-  --card: #292524;
-  --card-foreground: #fafaf9;
-  --popover: #292524;
-  --popover-foreground: #fafaf9;
-  --primary: var(--primary-400);
-  --primary-foreground: #1c1917;
-  --secondary: #292524;
-  --secondary-foreground: #fafaf9;
-  --muted: #292524;
-  --muted-foreground: #a8a29e;
-  --accent: #3a2a2e;
-  --accent-foreground: #ffd6de;
-  --destructive: #f87171;
+  --image-slot: #1e2a24;
+  --success: #3cc77a;
+  --success-subtle: #12301f;
+  --success-fg: #7fd9a6;
+  --warning-subtle: #33240a;
+  --warning-fg: #f5c26b;
+  --info-subtle: #14223f;
+  --info-fg: #9ebcff;
+  --danger-subtle: #3a1714;
+  --danger-fg: #f4a39a;
+  --highlight-subtle: #2e2410;
+  --highlight-fg: #f2cb7a;
+
+  --background: #0e1512;
+  --foreground: #e6ede9;
+  --card: #16201b;
+  --card-foreground: #e6ede9;
+  --popover: #16201b;
+  --popover-foreground: #e6ede9;
+  --primary: #3cc77a;
+  --primary-hover: #5fd493;
+  --primary-foreground: #0e1512;
+  --secondary: #1e2a24;
+  --secondary-foreground: #e6ede9;
+  --muted: #1e2a24;
+  --muted-foreground: #9db0a5;
+  --accent: #12301f;
+  --accent-foreground: #7fd9a6;
+  --destructive: #f07b6e;
+  --destructive-foreground: #0e1512;
   --border: rgb(255 255 255 / 10%);
-  --input: #78716c;
-  --ring: var(--primary-400);
-  --sidebar: #292524;
-  --sidebar-foreground: #fafaf9;
-  --sidebar-primary: var(--primary-400);
-  --sidebar-primary-foreground: #1c1917;
-  --sidebar-accent: #3a2a2e;
-  --sidebar-accent-foreground: #ffd6de;
+  --input: #5e7066;
+  --ring: #3cc77a;
+  --sidebar: #0e1512;
+  --sidebar-foreground: #e6ede9;
+  --sidebar-primary: #3cc77a;
+  --sidebar-primary-foreground: #0e1512;
+  --sidebar-accent: #12301f;
+  --sidebar-accent-foreground: #7fd9a6;
   --sidebar-border: rgb(255 255 255 / 10%);
-  --sidebar-ring: var(--primary-400);
+  --sidebar-ring: #3cc77a;
 }
 
 @theme inline {
-  --font-sans: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-sans);
 
   --color-background: var(--background);
@@ -103,6 +128,7 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -111,6 +137,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -128,14 +155,17 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --color-brand-50: var(--primary-50);
-  --color-brand-400: var(--primary-400);
-  --color-brand-500: var(--primary-500);
-  --color-brand-600: var(--primary-600);
-  --color-brand-700: var(--primary-700);
-  --color-caramel-400: var(--caramel-400);
-  --color-caramel-700: var(--caramel-700);
-  --color-pandan-700: var(--pandan-700);
+  --color-brand-50: var(--green-50);
+  --color-brand-100: var(--green-100);
+  --color-brand-500: var(--green-500);
+  --color-brand-600: var(--green-600);
+  --color-brand-700: var(--green-700);
+  --color-brand-800: var(--green-800);
+  --color-brand-900: var(--green-900);
+  --color-amber-50: var(--amber-50);
+  --color-amber-400: var(--amber-400);
+  --color-amber-800: var(--amber-800);
+  --color-image-slot: var(--image-slot);
   --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
   --color-success-fg: var(--success-fg);
@@ -147,10 +177,18 @@
   --color-info-fg: var(--info-fg);
   --color-danger-subtle: var(--danger-subtle);
   --color-danger-fg: var(--danger-fg);
+  --color-highlight-subtle: var(--highlight-subtle);
+  --color-highlight-fg: var(--highlight-fg);
 
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.67);
+  /* one small radius for everything that is not a button (buttons use rounded-full) */
+  --radius-xs: var(--radius);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
+
+  --shadow-float: 0 1px 2px rgb(20 32 26 / 0.06), 0 4px 12px rgb(20 32 26 / 0.08);
 }

@@ -10,7 +10,7 @@ export function AuthShell({ title, description, children, footer }: {
 }) {
   return (
     <main className="mx-auto flex min-h-svh max-w-md flex-col justify-center gap-6 p-6">
-      <p className="text-center text-3xl font-bold text-brand-600">bonbon</p>
+      <p className="text-center text-3xl font-extrabold tracking-tight text-primary">bonbon</p>
       <Card>
         <CardHeader>
           <CardTitle className="text-xl">{title}</CardTitle>

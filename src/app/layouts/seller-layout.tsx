@@ -14,6 +14,7 @@ export function SellerLayout() {
   const nav: NavItem[] = approved
     ? [
         { to: '/seller', label: 'Tổng quan' },
+        { to: '/seller/menu', label: 'Thực đơn' },
         { to: '/seller/shop', label: 'Cửa hàng' },
         { to: '/seller/account', label: 'Tài khoản' },
       ]
