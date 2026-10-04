@@ -34,7 +34,7 @@ export function UiKitPage() {
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-10 p-8">
       <header>
-        <h1 className="text-3xl font-bold text-brand-600">bonbon UI kit</h1>
+        <h1 className="text-3xl font-bold text-primary">bonbon UI kit</h1>
         <p className="text-muted-foreground">Component cơ bản với design tokens (chỉ có ở môi trường dev).</p>
       </header>
 

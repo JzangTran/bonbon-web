@@ -53,7 +53,7 @@ export function AddressPicker({
       <Label htmlFor={id}>{label}</Label>
       {shown ? (
         <p className="flex items-start gap-2 rounded-md bg-muted px-3 py-2 text-sm">
-          <MapPinIcon className="mt-0.5 size-4 shrink-0 text-brand-600" />
+          <MapPinIcon className="mt-0.5 size-4 shrink-0 text-primary" />
           <span>{shown}</span>
         </p>
       ) : null}

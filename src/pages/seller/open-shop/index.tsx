@@ -113,14 +113,14 @@ function Wizard({ shop }: { shop: ShopApplication }) {
                 aria-current={step === n ? 'step' : undefined}
                 className={cn(
                   'flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm',
-                  step === n ? 'bg-brand-50 font-semibold text-brand-700' : 'text-muted-foreground hover:bg-muted',
+                  step === n ? 'bg-accent font-semibold text-accent-foreground' : 'text-muted-foreground hover:bg-muted',
                 )}
               >
                 <span
                   className={cn(
                     'flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold',
                     done && 'border-success bg-success text-white',
-                    step === n && !done && 'border-brand-600 bg-brand-600 text-white',
+                    step === n && !done && 'border-primary bg-primary text-primary-foreground',
                   )}
                 >
                   {done ? <CheckIcon className="size-4" /> : n}
@@ -348,7 +348,7 @@ function UploadBox({
       <span className="text-sm font-medium">{label}</span>
       {previewUrl ? (
         kind === 'business-license' ? (
-          <a className="text-sm text-brand-700 hover:underline" href={previewUrl} target="_blank" rel="noreferrer">
+          <a className="text-sm text-primary hover:underline" href={previewUrl} target="_blank" rel="noreferrer">
             Xem tệp đã tải
           </a>
         ) : (
@@ -359,7 +359,7 @@ function UploadBox({
       )}
       <label
         htmlFor={id}
-        className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 text-sm font-medium hover:bg-muted"
+        className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full border border-input bg-card px-4 text-sm font-semibold hover:bg-muted"
       >
         <UploadIcon className="size-4" /> {upload.isPending ? 'Đang tải…' : previewUrl ? 'Chọn tệp khác' : 'Chọn tệp'}
       </label>
@@ -618,7 +618,7 @@ function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: () => v
             <input type="checkbox" className="mt-0.5 size-4" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
             <span>
               Tôi đồng ý với{' '}
-              <Link to="/legal/SELLER_TERMS" target="_blank" className="text-brand-700 underline">
+              <Link to="/legal/SELLER_TERMS" target="_blank" className="text-primary underline">
                 {terms.data?.title ?? 'Điều khoản dành cho người bán'}
               </Link>
               .
@@ -634,7 +634,7 @@ function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: () => v
             <input type="checkbox" className="mt-0.5 size-4" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
             <span>
               Tôi đồng ý để bonbon xử lý dữ liệu định danh nhằm xác minh cửa hàng — xem{' '}
-              <Link to="/legal/PRIVACY_POLICY" target="_blank" className="text-brand-700 underline">
+              <Link to="/legal/PRIVACY_POLICY" target="_blank" className="text-primary underline">
                 {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
               </Link>
               .

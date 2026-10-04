@@ -81,7 +81,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/admin',
-        element: <AreaLayout title="Quản trị" nav={adminNav} loginPath="/admin/login" />,
+        element: <AreaLayout title="Quản trị" nav={adminNav} loginPath="/admin/login" tone="dark" />,
         children: [
           {
             index: true,

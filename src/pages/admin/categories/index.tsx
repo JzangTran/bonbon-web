@@ -66,7 +66,7 @@ export function AdminCategoriesPage() {
         <div
           className={cn(
             'flex items-center gap-1 rounded-md pr-2',
-            node.id === selectedId ? 'bg-brand-50 ring-1 ring-brand-400/40' : 'hover:bg-muted',
+            node.id === selectedId ? 'bg-accent ring-1 ring-primary/40' : 'hover:bg-muted',
           )}
         >
           <Button
