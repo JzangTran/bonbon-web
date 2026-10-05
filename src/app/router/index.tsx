@@ -7,6 +7,7 @@ import { RequireRole } from './require-role'
 const adminNav: NavItem[] = [
   { to: '/admin', label: 'Tổng quan' },
   { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
+  { to: '/admin/reviews', label: 'Đánh giá' },
   { to: '/admin/categories', label: 'Ngành hàng' },
   { to: '/admin/admins', label: 'Quản trị viên' },
 ]
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/orders').then((m) => ({ Component: m.SellerOrdersPage })),
           },
           {
+            path: 'reviews',
+            lazy: () => import('@/pages/seller/reviews').then((m) => ({ Component: m.SellerReviewsPage })),
+          },
+          {
             path: 'menu',
             lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerMenuPage })),
           },
@@ -105,6 +110,10 @@ const router = createBrowserRouter([
           {
             path: 'shop-review/:vendorId',
             lazy: () => import('@/pages/admin/shop-review-detail').then((m) => ({ Component: m.ShopReviewDetailPage })),
+          },
+          {
+            path: 'reviews',
+            lazy: () => import('@/pages/admin/reviews').then((m) => ({ Component: m.AdminReviewsPage })),
           },
           {
             path: 'categories',
