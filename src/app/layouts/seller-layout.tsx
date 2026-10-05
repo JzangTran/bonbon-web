@@ -16,6 +16,7 @@ export function SellerLayout() {
         { to: '/seller', label: 'Tổng quan' },
         { to: '/seller/orders', label: 'Đơn hàng' },
         { to: '/seller/menu', label: 'Thực đơn' },
+        { to: '/seller/reviews', label: 'Đánh giá' },
         { to: '/seller/shop', label: 'Cửa hàng' },
         { to: '/seller/account', label: 'Tài khoản' },
       ]
