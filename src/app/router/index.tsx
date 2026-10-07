@@ -1,14 +1,16 @@
+import { SettingsIcon, ShieldCheckIcon, StoreIcon, WalletIcon } from 'lucide-react'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import { AreaLayout, type NavItem } from '@/app/layouts/area-layout'
+import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 
-const adminNav: NavItem[] = [
-  { to: '/admin', label: 'Tổng quan' },
-  { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
-  { to: '/admin/categories', label: 'Ngành hàng' },
-  { to: '/admin/admins', label: 'Quản trị viên' },
+const adminNav: NavGroup[] = [
+  { items: [{ to: '/admin', label: 'Tổng quan' }] },
+  { title: 'Cửa hàng', icon: <StoreIcon />, items: [{ to: '/admin/shop-review', label: 'Duyệt cửa hàng' }] },
+  { title: 'Tiền', icon: <WalletIcon />, items: [{ to: '/admin/refunds', label: 'Hoàn tiền' }] },
+  { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
+  { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
 ]
 
 const router = createBrowserRouter([
@@ -45,6 +47,10 @@ const router = createBrowserRouter([
     lazy: () => import('@/pages/auth/reset-password').then((m) => ({ Component: () => <m.SetPasswordPage mode="initial" /> })),
   },
   {
+    path: '/payment/return',
+    lazy: () => import('@/pages/payment-return').then((m) => ({ Component: m.PaymentReturnPage })),
+  },
+  {
     path: '/captcha-bridge',
     lazy: () => import('@/pages/captcha-bridge').then((m) => ({ Component: m.CaptchaBridgePage })),
   },
@@ -76,6 +82,10 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/orders').then((m) => ({ Component: m.SellerOrdersPage })),
           },
           {
+            path: 'reviews',
+            lazy: () => import('@/pages/seller/reviews').then((m) => ({ Component: m.SellerReviewsPage })),
+          },
+          {
             path: 'menu',
             lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerMenuPage })),
           },
@@ -105,6 +115,14 @@ const router = createBrowserRouter([
           {
             path: 'shop-review/:vendorId',
             lazy: () => import('@/pages/admin/shop-review-detail').then((m) => ({ Component: m.ShopReviewDetailPage })),
+          },
+          {
+            path: 'refunds',
+            lazy: () => import('@/pages/admin/refunds').then((m) => ({ Component: m.AdminRefundsPage })),
+          },
+          {
+            path: 'reviews',
+            lazy: () => import('@/pages/admin/reviews').then((m) => ({ Component: m.AdminReviewsPage })),
           },
           {
             path: 'categories',

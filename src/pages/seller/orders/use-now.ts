@@ -1,14 +1,4 @@
-import { useEffect, useState } from 'react'
-
-/** The current time, refreshed every second, for countdowns. */
-export function useNow(intervalMs = 1000): number {
-  const [now, setNow] = useState(() => Date.now())
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), intervalMs)
-    return () => clearInterval(timer)
-  }, [intervalMs])
-  return now
-}
+export { useNow } from '@/shared/lib/use-now'
 
 /** "mm:ss" until a deadline; "Quá hạn" once it has passed. */
 export function countdown(deadline: string | undefined, now: number): { text: string; urgent: boolean } | null {
