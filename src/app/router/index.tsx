@@ -8,7 +8,15 @@ import { RequireRole } from './require-role'
 const adminNav: NavGroup[] = [
   { items: [{ to: '/admin', label: 'Tổng quan' }] },
   { title: 'Cửa hàng', icon: <StoreIcon />, items: [{ to: '/admin/shop-review', label: 'Duyệt cửa hàng' }] },
-  { title: 'Tiền', icon: <WalletIcon />, items: [{ to: '/admin/refunds', label: 'Hoàn tiền' }] },
+  {
+    title: 'Tiền',
+    icon: <WalletIcon />,
+    items: [
+      { to: '/admin/settlement', label: 'Đối soát' },
+      { to: '/admin/commission', label: 'Hoa hồng' },
+      { to: '/admin/refunds', label: 'Hoàn tiền' },
+    ],
+  },
   { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
   { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
 ]
@@ -82,6 +90,10 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/orders').then((m) => ({ Component: m.SellerOrdersPage })),
           },
           {
+            path: 'earnings',
+            lazy: () => import('@/pages/seller/earnings').then((m) => ({ Component: m.SellerEarningsPage })),
+          },
+          {
             path: 'reviews',
             lazy: () => import('@/pages/seller/reviews').then((m) => ({ Component: m.SellerReviewsPage })),
           },
@@ -115,6 +127,18 @@ const router = createBrowserRouter([
           {
             path: 'shop-review/:vendorId',
             lazy: () => import('@/pages/admin/shop-review-detail').then((m) => ({ Component: m.ShopReviewDetailPage })),
+          },
+          {
+            path: 'settlement',
+            lazy: () => import('@/pages/admin/settlement').then((m) => ({ Component: m.AdminSettlementPage })),
+          },
+          {
+            path: 'settlement/:vendorId',
+            lazy: () => import('@/pages/admin/settlement-shop').then((m) => ({ Component: m.AdminSettlementShopPage })),
+          },
+          {
+            path: 'commission',
+            lazy: () => import('@/pages/admin/commission').then((m) => ({ Component: m.AdminCommissionPage })),
           },
           {
             path: 'refunds',
