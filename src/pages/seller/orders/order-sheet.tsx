@@ -93,8 +93,9 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                 <dd className="text-right font-semibold tabular-nums">{formatVnd(data.totals?.grandTotal)}</dd>
               </dl>
               <p className="text-sm text-muted-foreground">
-                {data.paymentMethod === 'COD' ? 'Thu tiền mặt khi giao' : 'Thanh toán online'} ·{' '}
-                {data.paymentStatus === 'PAID' ? 'đã thu tiền' : 'chưa thu'}
+                {data.paymentMethod === 'COD'
+                  ? `Thu tiền mặt khi giao · ${data.paymentStatus === 'PAID' ? 'đã thu tiền' : 'chưa thu'}`
+                  : 'Khách đã thanh toán qua MoMo · không thu tiền khi giao'}
               </p>
             </section>
 

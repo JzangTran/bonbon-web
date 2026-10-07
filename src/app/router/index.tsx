@@ -1,4 +1,4 @@
-import { SettingsIcon, ShieldCheckIcon, StoreIcon } from 'lucide-react'
+import { SettingsIcon, ShieldCheckIcon, StoreIcon, WalletIcon } from 'lucide-react'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
@@ -8,6 +8,7 @@ import { RequireRole } from './require-role'
 const adminNav: NavGroup[] = [
   { items: [{ to: '/admin', label: 'Tổng quan' }] },
   { title: 'Cửa hàng', icon: <StoreIcon />, items: [{ to: '/admin/shop-review', label: 'Duyệt cửa hàng' }] },
+  { title: 'Tiền', icon: <WalletIcon />, items: [{ to: '/admin/refunds', label: 'Hoàn tiền' }] },
   { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
   { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
 ]
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: '/set-password',
     lazy: () => import('@/pages/auth/reset-password').then((m) => ({ Component: () => <m.SetPasswordPage mode="initial" /> })),
+  },
+  {
+    path: '/payment/return',
+    lazy: () => import('@/pages/payment-return').then((m) => ({ Component: m.PaymentReturnPage })),
   },
   {
     path: '/captcha-bridge',
@@ -110,6 +115,10 @@ const router = createBrowserRouter([
           {
             path: 'shop-review/:vendorId',
             lazy: () => import('@/pages/admin/shop-review-detail').then((m) => ({ Component: m.ShopReviewDetailPage })),
+          },
+          {
+            path: 'refunds',
+            lazy: () => import('@/pages/admin/refunds').then((m) => ({ Component: m.AdminRefundsPage })),
           },
           {
             path: 'reviews',
