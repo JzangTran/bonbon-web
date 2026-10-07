@@ -17,12 +17,15 @@ export function AddressPicker({
   current,
   onPick,
   invalid,
+  hideLabel,
 }: {
   label: string
   /** The address saved so far, shown until another one is picked. */
   current?: string
   onPick: (picked: PickedAddress) => void
   invalid?: boolean
+  /** The caller shows the label itself (a form row). */
+  hideLabel?: boolean
 }) {
   const id = useId()
   const [text, setText] = useState('')
@@ -50,7 +53,9 @@ export function AddressPicker({
 
   return (
     <div className="relative flex flex-col gap-2">
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id} className={hideLabel ? 'sr-only' : undefined}>
+        {label}
+      </Label>
       {shown ? (
         <p className="flex items-start gap-2 rounded-md bg-muted px-3 py-2 text-sm">
           <MapPinIcon className="mt-0.5 size-4 shrink-0 text-primary" />
