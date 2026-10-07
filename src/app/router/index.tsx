@@ -1,15 +1,15 @@
+import { SettingsIcon, ShieldCheckIcon, StoreIcon } from 'lucide-react'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import { AreaLayout, type NavItem } from '@/app/layouts/area-layout'
+import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 
-const adminNav: NavItem[] = [
-  { to: '/admin', label: 'Tổng quan' },
-  { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
-  { to: '/admin/reviews', label: 'Đánh giá' },
-  { to: '/admin/categories', label: 'Ngành hàng' },
-  { to: '/admin/admins', label: 'Quản trị viên' },
+const adminNav: NavGroup[] = [
+  { items: [{ to: '/admin', label: 'Tổng quan' }] },
+  { title: 'Cửa hàng', icon: <StoreIcon />, items: [{ to: '/admin/shop-review', label: 'Duyệt cửa hàng' }] },
+  { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
+  { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
 ]
 
 const router = createBrowserRouter([

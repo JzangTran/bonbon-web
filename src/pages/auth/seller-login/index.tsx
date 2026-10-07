@@ -9,8 +9,11 @@ import { api, problemCode, problemMessage, type components } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Captcha } from '@/shared/ui/captcha'
 import { Input } from '@/shared/ui/input'
+import { PasswordInput } from '@/shared/ui/password-input'
 import { Label } from '@/shared/ui/label'
-import { AuthShell, FormError, FormSuccess } from '@/widgets/auth-shell'
+import { AuthHero, FormError, FormSuccess } from '@/widgets/auth-shell'
+import { LegalNote } from '@/widgets/auth-shell/legal-note'
+import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
 
 const schema = z.object({
   email: z.email('Email không hợp lệ'),
@@ -85,32 +88,49 @@ export function SellerLoginPage() {
   }
 
   return (
-    <AuthShell
-      title="Đăng nhập người bán"
-      description="Quản lý cửa hàng, thực đơn và đơn hàng của bạn."
+    <AuthHero
+      heading="Đăng nhập"
+      eyebrow="bonbon dành cho người bán"
+      headline="Bán hàng ngay trong khu của bạn"
+      points={SELLER_POINTS}
+      cardTitle="Đăng nhập"
       footer={
         <>
-          Chưa có tài khoản?{' '}
-          <Link to="/seller/register" className="font-medium text-primary underline-offset-4 hover:underline">
-            Đăng ký bán hàng
+          Bạn mới biết đến bonbon?{' '}
+          <Link to="/seller/register" className="font-medium text-primary hover:underline">
+            Đăng ký
           </Link>
         </>
       }
     >
       <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" autoComplete="email" aria-invalid={!!form.formState.errors.email} {...form.register('email')} />
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="email" className="sr-only">
+            Email
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            placeholder="Email"
+            className="h-11"
+            aria-invalid={!!form.formState.errors.email}
+            {...form.register('email')}
+          />
           {form.formState.errors.email ? <p className="text-sm text-destructive">{form.formState.errors.email.message}</p> : null}
         </div>
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="password">Mật khẩu</Label>
-            <Link to="/forgot-password" className="text-sm text-primary underline-offset-4 hover:underline">
-              Quên mật khẩu?
-            </Link>
-          </div>
-          <Input id="password" type="password" autoComplete="current-password" aria-invalid={!!form.formState.errors.password} {...form.register('password')} />
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="password" className="sr-only">
+            Mật khẩu
+          </Label>
+          <PasswordInput
+            id="password"
+            autoComplete="current-password"
+            placeholder="Mật khẩu"
+            className="h-11"
+            aria-invalid={!!form.formState.errors.password}
+            {...form.register('password')}
+          />
           {form.formState.errors.password ? <p className="text-sm text-destructive">{form.formState.errors.password.message}</p> : null}
         </div>
         {needsCaptcha ? <Captcha onToken={setCaptchaToken} /> : null}
@@ -121,11 +141,15 @@ export function SellerLoginPage() {
           </Button>
         ) : null}
         {resent ? <FormSuccess message="Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết. Hãy kiểm tra hộp thư." /> : null}
-        <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
+        <Button type="submit" size="lg" className="uppercase tracking-wide" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
         </Button>
+        <Link to="/forgot-password" className="-mt-2 self-start text-xs text-primary hover:underline">
+          Quên mật khẩu
+        </Link>
       </form>
       <GoogleSignIn />
-    </AuthShell>
+      <LegalNote action="đăng nhập" />
+    </AuthHero>
   )
 }

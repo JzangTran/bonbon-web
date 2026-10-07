@@ -5,7 +5,7 @@ import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-import { AuthShell, FormError, FormSuccess } from '@/widgets/auth-shell'
+import { AuthShell, FormError, FormSuccess, SuccessMark } from '@/widgets/auth-shell'
 
 /** Landing page of the emailed link; works for sellers and customers (customers then open the app). */
 export function VerifyEmailPage() {
@@ -23,7 +23,8 @@ export function VerifyEmailPage() {
   })
 
   return (
-    <AuthShell title="Xác thực email">
+    <AuthShell title={result.data ? 'Xác thực thành công' : 'Xác thực email'} heading="Đăng ký">
+      {result.data ? <SuccessMark /> : null}
       {!token ? <FormError message="Liên kết thiếu mã xác thực." /> : null}
       {result.isPending && token ? <p className="text-sm text-muted-foreground">Đang xác thực…</p> : null}
       {result.data === 'VERIFIED' ? <FormSuccess message="Email đã được xác thực. Bạn có thể đăng nhập." /> : null}
@@ -31,7 +32,7 @@ export function VerifyEmailPage() {
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
       {result.data ? (
         <>
-          <Button asChild>
+          <Button asChild size="lg" className="uppercase tracking-wide">
             <Link to="/seller/login">Đăng nhập người bán</Link>
           </Button>
           <p className="text-sm text-muted-foreground">Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.</p>

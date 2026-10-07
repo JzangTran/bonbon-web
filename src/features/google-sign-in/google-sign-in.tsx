@@ -8,6 +8,7 @@ import { Button } from '@/shared/ui/button'
 import { Captcha } from '@/shared/ui/captcha'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { OrDivider } from '@/shared/ui/or-divider'
 import { FormError } from '@/widgets/auth-shell'
 import { GoogleButton } from './google-button'
 
@@ -104,13 +105,10 @@ export function GoogleSignIn() {
     void submit(token)
   }
 
+  if (!env.googleClientId) return null
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <span className="h-px flex-1 bg-border" />
-        hoặc
-        <span className="h-px flex-1 bg-border" />
-      </div>
+      <OrDivider />
       <GoogleButton onCredential={onCredential} />
 
       {step.kind === 'consent' && idToken ? (

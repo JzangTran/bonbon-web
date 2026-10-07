@@ -10,9 +10,10 @@ import { api, problemCode, problemFieldErrors, problemMessage } from '@/shared/a
 import { formatDateTime } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Card, CardContent } from '@/shared/ui/card'
+import { FormRow } from '@/shared/ui/form-row'
 import { Input } from '@/shared/ui/input'
-import { Label } from '@/shared/ui/label'
+import { Stepper } from '@/shared/ui/stepper'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 
@@ -84,8 +85,27 @@ function UnderReview({ shop }: { shop: ShopApplication }) {
 
 function Wizard({ shop }: { shop: ShopApplication }) {
   const [step, setStep] = useState(shop.firstIncompleteStep ?? 5)
+  const [started, setStarted] = useState(shop.status !== 'NONE')
   const complete = (n: number) => shop.steps?.find((s) => s.step === n)?.complete ?? false
   const next = () => setStep((s) => Math.min(5, s + 1))
+
+  if (!started) {
+    return (
+      <div className="flex max-w-4xl flex-col gap-6">
+        <h1 className="text-2xl font-bold">Mở cửa hàng</h1>
+        <Card className="items-center gap-3 px-6 py-16 text-center">
+          <h2 className="text-lg font-semibold">Chào mừng đến với bonbon!</h2>
+          <p className="max-w-md text-sm text-muted-foreground">
+            Vui lòng cung cấp thông tin để thành lập tài khoản người bán: cửa hàng, giao hàng, thuế và giấy tờ định danh.
+            Mỗi bước được lưu nháp, bạn có thể quay lại sau.
+          </p>
+          <Button size="lg" className="mt-2 uppercase tracking-wide" onClick={() => setStarted(true)}>
+            Bắt đầu đăng ký
+          </Button>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
@@ -101,41 +121,22 @@ function Wizard({ shop }: { shop: ShopApplication }) {
           </span>
         </p>
       ) : null}
-      <ol className="flex flex-wrap gap-2">
-        {STEPS.map((label, i) => {
-          const n = i + 1
-          const done = n < 5 && complete(n)
-          return (
-            <li key={n} className="flex-[1_1_9rem]">
-              <button
-                type="button"
-                onClick={() => setStep(n)}
-                aria-current={step === n ? 'step' : undefined}
-                className={cn(
-                  'flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm',
-                  step === n ? 'bg-accent font-semibold text-accent-foreground' : 'text-muted-foreground hover:bg-muted',
-                )}
-              >
-                <span
-                  className={cn(
-                    'flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold',
-                    done && 'border-success bg-success text-white',
-                    step === n && !done && 'border-primary bg-primary text-primary-foreground',
-                  )}
-                >
-                  {done ? <CheckIcon className="size-4" /> : n}
-                </span>
-                {label}
-              </button>
-            </li>
-          )
-        })}
-      </ol>
+      <Card className="gap-0 p-0">
+        <div className="border-b px-4 py-6 md:px-10">
+          <Stepper
+            steps={STEPS.map((label, i) => ({ label, done: i + 1 < 5 && complete(i + 1) }))}
+            current={step}
+            onSelect={setStep}
+          />
+        </div>
+        <div className="px-4 py-6 md:px-10">
       {step === 1 ? <ShopInfoStep shop={shop} onNext={next} /> : null}
       {step === 2 ? <ShippingStep shop={shop} onNext={next} /> : null}
       {step === 3 ? <TaxStep shop={shop} onNext={next} /> : null}
       {step === 4 ? <IdentityStep shop={shop} onNext={next} /> : null}
       {step === 5 ? <ReviewStep shop={shop} goTo={setStep} /> : null}
+        </div>
+      </Card>
     </div>
   )
 }
@@ -162,26 +163,22 @@ function useSaveStep<T>(save: (body: T) => Promise<{ data?: ShopApplication; err
 
 function StepCard({ title, description, children, footer }: { title: string; description?: string; children: ReactNode; footer: ReactNode }) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        {description ? <CardDescription>{description}</CardDescription> : null}
-      </CardHeader>
-      <CardContent className="flex flex-col gap-5">
-        {children}
-        <div className="flex flex-wrap items-center justify-end gap-2 border-t pt-4">{footer}</div>
-      </CardContent>
-    </Card>
+    <section className="flex flex-col gap-5">
+      <div>
+        <h2 className="text-lg font-semibold">{title}</h2>
+        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
+      </div>
+      {children}
+      <div className="flex flex-wrap items-center justify-end gap-2 border-t pt-4">{footer}</div>
+    </section>
   )
 }
 
 function Field({ id, label, error, hint, children }: { id?: string; label: string; error?: string; hint?: string; children: ReactNode }) {
   return (
-    <div className="flex flex-1 flex-col gap-2">
-      <Label htmlFor={id}>{label}</Label>
+    <FormRow htmlFor={id} label={label} error={error} hint={hint}>
       {children}
-      {error ? <p className="text-sm text-destructive">{error}</p> : hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
-    </div>
+    </FormRow>
   )
 }
 
@@ -223,15 +220,18 @@ function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: () => v
       <Field id="shop-name" label="Tên cửa hàng" error={save.fieldErrors.name}>
         <Input id="shop-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
       </Field>
+      <FormRow label="Địa chỉ cửa hàng">
       <AddressPicker
+        hideLabel
         label="Địa chỉ cửa hàng"
         current={shop.shop?.address?.formattedAddress}
         onPick={(p) => setPlaceId(p.placeId)}
       />
+      </FormRow>
       <Field id="shop-detail" label="Địa chỉ chi tiết" hint="Số nhà, tầng, kiot… (tuỳ chọn)" error={save.fieldErrors.addressDetail}>
         <Input id="shop-detail" maxLength={200} value={detail} onChange={(e) => setDetail(e.target.value)} />
       </Field>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-col gap-5">
         <Field id="shop-phone" label="Số điện thoại cửa hàng" error={save.fieldErrors.phone}>
           <Input id="shop-phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
         </Field>
@@ -274,11 +274,10 @@ function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: () => v
       description="Giờ Việt Nam. Phí giao hàng là doanh thu của cửa hàng (không có tài xế riêng)."
       footer={<SaveButtons pending={save.isPending} onSave={submit} />}
     >
-      <div className="flex flex-col gap-2">
-        <Label>Giờ mở cửa</Label>
+      <FormRow label="Giờ mở cửa" className="md:[&>div]:max-w-none">
         <OpeningHoursEditor value={hours} onChange={setHours} />
-      </div>
-      <div className="flex flex-wrap gap-4">
+      </FormRow>
+      <div className="flex flex-col gap-5">
         <Field
           id="ship-radius"
           label="Bán kính giao (km)"
@@ -291,7 +290,7 @@ function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: () => v
           <Input id="ship-fee" inputMode="numeric" value={fee} onChange={(e) => setFee(e.target.value)} />
         </Field>
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-col gap-5">
         <Field id="ship-free" label="Miễn phí giao từ (₫, tuỳ chọn)" error={save.fieldErrors.freeDeliveryThreshold}>
           <Input id="ship-free" inputMode="numeric" value={free} onChange={(e) => setFree(e.target.value)} />
         </Field>
@@ -426,9 +425,8 @@ function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }
 
   return (
     <StepCard title="3 · Thuế & tài khoản nhận tiền" footer={<SaveButtons pending={save.isPending} onSave={submit} />}>
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-medium">Loại hình kinh doanh</legend>
-        <div className="flex flex-wrap gap-4">
+      <FormRow label="Loại hình kinh doanh">
+        <div role="radiogroup" aria-label="Loại hình kinh doanh" className="flex flex-wrap gap-4">
           {(
             [
               ['INDIVIDUAL', 'Cá nhân'],
@@ -440,7 +438,7 @@ function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }
             </label>
           ))}
         </div>
-      </fieldset>
+      </FormRow>
       {type === 'HOUSEHOLD' ? (
         <Field id="tax-bname" label="Tên hộ kinh doanh" error={save.fieldErrors.businessName}>
           <Input id="tax-bname" maxLength={200} value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
@@ -452,8 +450,7 @@ function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }
       <Field id="tax-code" label="Mã số thuế" hint="10 số, 10 số kèm mã chi nhánh (-001), hoặc 12 số CCCD." error={save.fieldErrors.taxCode}>
         <Input id="tax-code" value={taxCode} onChange={(e) => setTaxCode(e.target.value)} />
       </Field>
-      <div className="flex flex-col gap-2">
-        <Label>Email nhận hoá đơn điện tử (tối đa 5)</Label>
+      <FormRow label="Email nhận hoá đơn điện tử (tối đa 5)">
         {emails.map((value, i) => (
           <div key={i} className="flex gap-2">
             <Input
@@ -475,7 +472,7 @@ function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }
             Thêm email
           </Button>
         ) : null}
-      </div>
+      </FormRow>
       {type === 'HOUSEHOLD' ? (
         <UploadBox
           label="Giấy phép kinh doanh"
@@ -487,7 +484,7 @@ function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }
       ) : null}
       <div className="flex flex-col gap-4 border-t pt-4">
         <p className="text-sm font-medium">Tài khoản nhận tiền</p>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-col gap-5">
           <Field id="pay-bank" label="Ngân hàng" error={save.fieldErrors.bankName}>
             <Input id="pay-bank" maxLength={100} value={bankName} onChange={(e) => setBankName(e.target.value)} />
           </Field>
@@ -577,17 +574,16 @@ function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: () => v
       description="Giấy tờ được mã hoá; chỉ quản trị viên có quyền riêng mới xem được và mỗi lần xem đều được ghi lại."
       footer={<SaveButtons pending={save.isPending || terms.isPending || privacy.isPending} onSave={submit} />}
     >
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-medium">Loại giấy tờ</legend>
-        <div className="flex gap-4">
+      <FormRow label="Loại giấy tờ">
+        <div role="radiogroup" aria-label="Loại giấy tờ" className="flex gap-4">
           {(['CCCD', 'CMND'] as const).map((value) => (
             <label key={value} className="flex min-h-9 items-center gap-2 text-sm">
               <input type="radio" name="doc-type" checked={docType === value} onChange={() => setDocType(value)} /> {value}
             </label>
           ))}
         </div>
-      </fieldset>
-      <div className="flex flex-wrap gap-4">
+      </FormRow>
+      <div className="flex flex-col gap-5">
         <Field
           id="id-number"
           label="Số giấy tờ"
