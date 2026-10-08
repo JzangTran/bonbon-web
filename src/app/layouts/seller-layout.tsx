@@ -17,7 +17,14 @@ export function SellerLayout() {
         { items: [{ to: '/seller', label: 'Tổng quan' }] },
         { title: 'Quản lý đơn hàng', icon: <ClipboardListIcon />, items: [{ to: '/seller/orders', label: 'Tất cả đơn hàng' }] },
         { title: 'Quản lý thực đơn', icon: <UtensilsCrossedIcon />, items: [{ to: '/seller/menu', label: 'Thực đơn & nhóm lựa chọn' }] },
-        { title: 'Tài chính', icon: <WalletIcon />, items: [{ to: '/seller/earnings', label: 'Thu nhập' }] },
+        {
+          title: 'Tài chính',
+          icon: <WalletIcon />,
+          items: [
+            { to: '/seller/statistics', label: 'Thống kê' },
+            { to: '/seller/earnings', label: 'Thu nhập' },
+          ],
+        },
         { title: 'Chăm sóc khách hàng', icon: <MessageSquareIcon />, items: [{ to: '/seller/reviews', label: 'Quản lý đánh giá' }] },
         {
           title: 'Cửa hàng',
