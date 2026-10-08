@@ -1790,6 +1790,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/merchant/stats/revenue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Doanh thu theo thời gian
+         * @description Chỉ tính đơn đã giao (`DELIVERED`), theo lúc giao, giờ Việt Nam; gồm cả phí giao, chưa trừ hoa hồng. `from`/`to` là ngày, gồm cả hai đầu (mặc định 7 ngày gần nhất); `granularity` là `day` (mặc định), `week` (từ thứ Hai) hoặc `month`. Trả mọi kỳ trong khoảng, kỳ không có đơn là 0, kèm tổng số đơn, doanh thu và giá trị đơn trung bình.
+         *
+         *     **Cần đăng nhập**, quyền `stats:read`.
+         */
+        get: operations["getRevenueStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/merchant/stats/best-selling-dishes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Món bán chạy
+         * @description Món xếp theo số phần đã bán của các đơn đã giao trong khoảng `from`–`to` (mặc định 30 ngày gần nhất), kèm tiền món của các phần đó. Dùng tên món lúc khách đặt nên món đã đổi tên hay xoá vẫn hiện.
+         *
+         *     **Cần đăng nhập**, quyền `stats:read`.
+         */
+        get: operations["getBestSellingDishes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/merchant/reviews": {
         parameters: {
             query?: never;
@@ -3727,6 +3771,75 @@ export interface components {
             size?: number;
             /** Format: int64 */
             total?: number;
+        };
+        RevenueBucket: {
+            /**
+             * Format: date
+             * @description Ngày đầu kỳ.
+             */
+            start?: string;
+            /** Format: int64 */
+            orders?: number;
+            /** Format: int64 */
+            revenue?: number;
+            /** Format: int64 */
+            averageOrderValue?: number;
+        };
+        /** @description Doanh thu gộp của các đơn đã giao trong khoảng thời gian, theo từng ngày, tuần hoặc tháng. */
+        RevenueReport: {
+            /** Format: date */
+            from?: string;
+            /** Format: date */
+            to?: string;
+            /** @description day, week (bắt đầu từ thứ Hai) hoặc month, theo giờ Việt Nam. */
+            granularity?: string;
+            totals?: components["schemas"]["RevenueTotals"];
+            /** @description Mọi kỳ trong khoảng, kể cả kỳ không có đơn nào (0), cũ nhất trước: sẵn để vẽ biểu đồ. */
+            buckets?: components["schemas"]["RevenueBucket"][];
+        };
+        RevenueTotals: {
+            /**
+             * Format: int64
+             * @description Số đơn đã giao.
+             */
+            orders?: number;
+            /**
+             * Format: int64
+             * @description Tổng khách đã trả, gồm phí giao hàng, chưa trừ hoa hồng.
+             */
+            revenue?: number;
+            /**
+             * Format: int64
+             * @description Giá trị đơn trung bình; 0 khi chưa có đơn.
+             */
+            averageOrderValue?: number;
+        };
+        BestSellingDish: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            menuItemId?: string;
+            /** @description Tên món lúc khách đặt (món đã đổi tên hoặc xoá vẫn hiện tên cũ). */
+            name?: string;
+            /**
+             * Format: int64
+             * @description Số phần đã bán.
+             */
+            quantity?: number;
+            /**
+             * Format: int64
+             * @description Tiền món của các phần đó (gồm lựa chọn thêm, không gồm phí giao).
+             */
+            revenue?: number;
+        };
+        /** @description Món bán chạy: xếp theo số lượng bán của các đơn đã giao. */
+        TopDishes: {
+            /** Format: date */
+            from?: string;
+            /** Format: date */
+            to?: string;
+            items?: components["schemas"]["BestSellingDish"][];
         };
         ShopOrderPage: {
             items?: components["schemas"]["ShopOrderSummary"][];
@@ -10990,6 +11103,153 @@ export interface operations {
             };
             /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getRevenueStats: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+                granularity?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevenueReport"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_GRANULARITY`: `granularity` không phải day, week hoặc month.
+             *     - `INVALID_RANGE`: `from` sau `to`.
+             *     - `RANGE_TOO_LONG`: Quá nhiều kỳ (hơn 400); chia theo tuần hoặc tháng.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `stats:read`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `SHOP_NOT_APPROVED`: Người gọi chưa có cửa hàng được duyệt. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getBestSellingDishes: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TopDishes"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_RANGE`: `from` sau `to`.
+             *     - `INVALID_LIMIT`: `limit` ngoài 1–50.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `stats:read`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `SHOP_NOT_APPROVED`: Người gọi chưa có cửa hàng được duyệt. */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
