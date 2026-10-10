@@ -1,4 +1,4 @@
-import { AlertTriangleIcon, SettingsIcon, ShieldCheckIcon, StoreIcon, WalletIcon } from 'lucide-react'
+import { AlertTriangleIcon, LifeBuoyIcon, SettingsIcon, ShieldCheckIcon, StoreIcon, WalletIcon } from 'lucide-react'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
@@ -19,6 +19,7 @@ const adminNav: NavGroup[] = [
   },
   { title: 'Chất lượng', icon: <AlertTriangleIcon />, items: [{ to: '/admin/order-cases', label: 'Khiếu nại đơn hàng' }, { to: '/admin/penalties', label: 'Điểm phạt các quán' }] },
   { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
+  { title: 'Hỗ trợ', icon: <LifeBuoyIcon />, items: [{ to: '/admin/support-tickets', label: 'Phiếu hỗ trợ' }, { to: '/admin/lookup', label: 'Tra cứu đơn & tài khoản' }, { to: '/admin/help-articles', label: 'Bài trợ giúp' }] },
   { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
 ]
 
@@ -107,6 +108,26 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/order-case-detail').then((m) => ({ Component: m.SellerOrderCaseDetailPage })),
           },
           {
+            path: 'chat',
+            lazy: () => import('@/pages/seller/chat').then((m) => ({ Component: m.SellerChatPage })),
+          },
+          {
+            path: 'help',
+            lazy: () => import('@/pages/seller/help').then((m) => ({ Component: m.SellerHelpPage })),
+          },
+          {
+            path: 'support-tickets',
+            lazy: () => import('@/pages/seller/support-tickets').then((m) => ({ Component: m.SellerSupportTicketsPage })),
+          },
+          {
+            path: 'support-tickets/:id',
+            lazy: () => import('@/pages/seller/support-ticket-detail').then((m) => ({ Component: m.SellerSupportTicketDetailPage })),
+          },
+          {
+            path: 'notification-settings',
+            lazy: () => import('@/pages/seller/notification-settings').then((m) => ({ Component: m.SellerNotificationSettingsPage })),
+          },
+          {
             path: 'earnings',
             lazy: () => import('@/pages/seller/earnings').then((m) => ({ Component: m.SellerEarningsPage })),
           },
@@ -156,6 +177,34 @@ const router = createBrowserRouter([
           {
             path: 'commission',
             lazy: () => import('@/pages/admin/commission').then((m) => ({ Component: m.AdminCommissionPage })),
+          },
+          {
+            path: 'support-tickets',
+            lazy: () => import('@/pages/admin/support-tickets').then((m) => ({ Component: m.AdminSupportTicketsPage })),
+          },
+          {
+            path: 'support-tickets/:id',
+            lazy: () => import('@/pages/admin/support-ticket-detail').then((m) => ({ Component: m.AdminSupportTicketDetailPage })),
+          },
+          {
+            path: 'lookup',
+            lazy: () => import('@/pages/admin/lookup').then((m) => ({ Component: m.AdminLookupPage })),
+          },
+          {
+            path: 'lookup/orders/:id',
+            lazy: () => import('@/pages/admin/lookup-order').then((m) => ({ Component: m.AdminLookupOrderPage })),
+          },
+          {
+            path: 'lookup/customers/:id',
+            lazy: () => import('@/pages/admin/lookup-customer').then((m) => ({ Component: m.AdminLookupCustomerPage })),
+          },
+          {
+            path: 'conversations/:id',
+            lazy: () => import('@/pages/admin/conversation').then((m) => ({ Component: m.AdminConversationPage })),
+          },
+          {
+            path: 'help-articles',
+            lazy: () => import('@/pages/admin/help-articles').then((m) => ({ Component: m.AdminHelpArticlesPage })),
           },
           {
             path: 'penalties',

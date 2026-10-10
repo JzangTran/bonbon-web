@@ -10,6 +10,14 @@ export type OrderEvent = {
   to: string
 }
 
+/** A chat message arrived for this side; the caller re-fetches the conversation list and thread. */
+export type ChatEvent = {
+  type: 'message'
+  channel: 'customer' | 'shop'
+  conversationId: string
+  messageId: string
+}
+
 export type SocketState = 'connecting' | 'live' | 'offline'
 
 function socketUrl(): string {
@@ -22,11 +30,13 @@ function socketUrl(): string {
  * reconnects with a growing pause. The event is only a hint; the caller re-fetches. While the state is not
  * {@code live} the caller should poll, so a dropped connection never leaves a screen stale.
  */
-export function useOrderSocket(accessToken: string | null, onEvent: (event: OrderEvent) => void): SocketState {
+export function useOrderSocket(accessToken: string | null, onEvent: (event: OrderEvent) => void, onMessage?: (event: ChatEvent) => void): SocketState {
   const [state, setState] = useState<SocketState>('connecting')
   const handler = useRef(onEvent)
+  const messageHandler = useRef(onMessage)
   useEffect(() => {
     handler.current = onEvent
+    messageHandler.current = onMessage
   })
 
   useEffect(() => {
@@ -47,6 +57,8 @@ export function useOrderSocket(accessToken: string | null, onEvent: (event: Orde
             setState('live')
           } else if (body.type === 'order') {
             handler.current(body as OrderEvent)
+          } else if (body.type === 'message') {
+            messageHandler.current?.(body as ChatEvent)
           }
         } catch {
           // A malformed message is ignored: the next fetch tells the truth anyway.

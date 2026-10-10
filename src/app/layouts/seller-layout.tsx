@@ -1,4 +1,4 @@
-import { ClipboardListIcon, MessageSquareIcon, StoreIcon, UtensilsCrossedIcon, WalletIcon } from 'lucide-react'
+import { ClipboardListIcon, LifeBuoyIcon, MessageSquareIcon, StoreIcon, UtensilsCrossedIcon, WalletIcon } from 'lucide-react'
 import { Navigate, useLocation } from 'react-router'
 import { shopStatus, useShop } from '@/entities/shop'
 import { AreaLayout, type NavGroup } from './area-layout'
@@ -25,13 +25,15 @@ export function SellerLayout() {
             { to: '/seller/earnings', label: 'Thu nhập' },
           ],
         },
-        { title: 'Chăm sóc khách hàng', icon: <MessageSquareIcon />, items: [{ to: '/seller/order-cases', label: 'Khiếu nại của khách' }, { to: '/seller/performance', label: 'Hiệu suất cửa hàng' }, { to: '/seller/reviews', label: 'Quản lý đánh giá' }] },
+        { title: 'Chăm sóc khách hàng', icon: <MessageSquareIcon />, items: [{ to: '/seller/chat', label: 'Tin nhắn' }, { to: '/seller/order-cases', label: 'Khiếu nại của khách' }, { to: '/seller/performance', label: 'Hiệu suất cửa hàng' }, { to: '/seller/reviews', label: 'Quản lý đánh giá' }] },
+        { title: 'Trợ giúp', icon: <LifeBuoyIcon />, items: [{ to: '/seller/help', label: 'Trung tâm trợ giúp' }, { to: '/seller/support-tickets', label: 'Liên hệ hỗ trợ' }] },
         {
           title: 'Cửa hàng',
           icon: <StoreIcon />,
           items: [
             { to: '/seller/shop', label: 'Hồ sơ cửa hàng' },
             { to: '/seller/account', label: 'Tài khoản' },
+            { to: '/seller/notification-settings', label: 'Cài đặt thông báo' },
           ],
         },
       ]
