@@ -1,4 +1,4 @@
-import { SettingsIcon, ShieldCheckIcon, StoreIcon, WalletIcon } from 'lucide-react'
+import { AlertTriangleIcon, SettingsIcon, ShieldCheckIcon, StoreIcon, WalletIcon } from 'lucide-react'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
@@ -17,6 +17,7 @@ const adminNav: NavGroup[] = [
       { to: '/admin/refunds', label: 'Hoàn tiền' },
     ],
   },
+  { title: 'Chất lượng', icon: <AlertTriangleIcon />, items: [{ to: '/admin/order-cases', label: 'Khiếu nại đơn hàng' }, { to: '/admin/penalties', label: 'Điểm phạt các quán' }] },
   { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
   { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
 ]
@@ -94,6 +95,18 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/statistics').then((m) => ({ Component: m.SellerStatisticsPage })),
           },
           {
+            path: 'performance',
+            lazy: () => import('@/pages/seller/performance').then((m) => ({ Component: m.SellerPerformancePage })),
+          },
+          {
+            path: 'order-cases',
+            lazy: () => import('@/pages/seller/order-cases').then((m) => ({ Component: m.SellerOrderCasesPage })),
+          },
+          {
+            path: 'order-cases/:id',
+            lazy: () => import('@/pages/seller/order-case-detail').then((m) => ({ Component: m.SellerOrderCaseDetailPage })),
+          },
+          {
             path: 'earnings',
             lazy: () => import('@/pages/seller/earnings').then((m) => ({ Component: m.SellerEarningsPage })),
           },
@@ -143,6 +156,22 @@ const router = createBrowserRouter([
           {
             path: 'commission',
             lazy: () => import('@/pages/admin/commission').then((m) => ({ Component: m.AdminCommissionPage })),
+          },
+          {
+            path: 'penalties',
+            lazy: () => import('@/pages/admin/penalties').then((m) => ({ Component: m.AdminPenaltiesPage })),
+          },
+          {
+            path: 'penalties/:vendorId',
+            lazy: () => import('@/pages/admin/penalty-shop').then((m) => ({ Component: m.AdminPenaltyShopPage })),
+          },
+          {
+            path: 'order-cases',
+            lazy: () => import('@/pages/admin/order-cases').then((m) => ({ Component: m.AdminOrderCasesPage })),
+          },
+          {
+            path: 'order-cases/:id',
+            lazy: () => import('@/pages/admin/order-case-detail').then((m) => ({ Component: m.AdminOrderCaseDetailPage })),
           },
           {
             path: 'refunds',

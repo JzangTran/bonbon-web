@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { useShopCases } from '@/entities/order-case'
 import { useShopOrders, type OrderStatus } from '@/entities/order'
 import { useSellerReviews } from '@/entities/review'
 import { useShop } from '@/entities/shop'
@@ -18,6 +19,7 @@ const TODOS: Todo[] = [
 export function SellerDashboardPage() {
   const shop = useShop()
   const unreplied = useSellerReviews(true, 0)
+  const waitingCases = useShopCases('AWAITING_SHOP', 0)
   return (
     <div className="flex max-w-5xl flex-col gap-6">
       <div>
@@ -30,10 +32,16 @@ export function SellerDashboardPage() {
           <CardDescription>Những việc bạn cần xử lý ngay.</CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="grid grid-cols-2 gap-y-6 sm:grid-cols-3 lg:grid-cols-6">
+          <ul className="grid grid-cols-2 gap-y-6 sm:grid-cols-3 lg:grid-cols-7">
             {TODOS.map((todo) => (
               <TodoCount key={todo.label} todo={todo} />
             ))}
+            <li>
+              <Link to="/seller/order-cases" className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
+                <span className="text-2xl font-semibold text-primary tabular-nums">{waitingCases.data?.total ?? '–'}</span>
+                <span className="text-center text-sm text-muted-foreground">Khiếu nại chờ trả lời</span>
+              </Link>
+            </li>
             <li>
               <Link to="/seller/reviews" className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
                 <span className="text-2xl font-semibold text-primary tabular-nums">{unreplied.data?.total ?? '–'}</span>
