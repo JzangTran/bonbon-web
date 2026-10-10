@@ -25,7 +25,7 @@ export function SellerLayout() {
             { to: '/seller/earnings', label: 'Thu nhập' },
           ],
         },
-        { title: 'Chăm sóc khách hàng', icon: <MessageSquareIcon />, items: [{ to: '/seller/order-cases', label: 'Khiếu nại của khách' }, { to: '/seller/reviews', label: 'Quản lý đánh giá' }] },
+        { title: 'Chăm sóc khách hàng', icon: <MessageSquareIcon />, items: [{ to: '/seller/order-cases', label: 'Khiếu nại của khách' }, { to: '/seller/performance', label: 'Hiệu suất cửa hàng' }, { to: '/seller/reviews', label: 'Quản lý đánh giá' }] },
         {
           title: 'Cửa hàng',
           icon: <StoreIcon />,

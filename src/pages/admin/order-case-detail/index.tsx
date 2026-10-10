@@ -5,6 +5,7 @@ import {
   CaseEvidence,
   LOG_ACTION_LABEL,
   LOG_ACTOR_LABEL,
+  NO_SHOW_OUTCOME,
   useAdminCase,
   useDecideCase,
   useReopenCase,
@@ -52,7 +53,7 @@ export function AdminOrderCaseDetailPage() {
             <History title="Khách này" history={d.customerHistory} />
             <History title="Quán này" history={d.shopHistory} />
           </div>
-          {d.noResponse ? <p className="text-sm text-warning-fg">Quán không trả lời trong thời hạn.</p> : null}
+          {d.noResponse && d.orderCase.type !== 'CUSTOMER_NO_SHOW' ? <p className="text-sm text-warning-fg">Quán không trả lời trong thời hạn.</p> : null}
           <Log log={d.log ?? []} />
           {canDecide && d.orderCase.status === 'OPEN' ? <DecidePanel key={d.orderCase.id} detail={d} /> : null}
           {canDecide && (d.orderCase.status === 'UPHELD' || d.orderCase.status === 'DISMISSED') && !d.reopened ? <ReopenPanel id={id} /> : null}
@@ -97,24 +98,39 @@ function Log({ log }: { log: NonNullable<AdminCaseDetail['log']> }) {
   )
 }
 
-/** Uphold all, uphold part (a quantity per line) or dismiss. Everything needs a reason, which both sides see. */
+type NoShowOutcome = 'CUSTOMER_AT_FAULT' | 'CUSTOMER_RECEIVED' | 'SHOP_NEVER_CAME'
+
+/** Uphold all, uphold part (a quantity per line) or dismiss; a no-show picks one of three outcomes instead. Everything needs a reason, which both sides see. */
 function DecidePanel({ detail }: { detail: AdminCaseDetail }) {
   const orderCase = detail.orderCase
   const lines = orderCase?.lines ?? []
-  const canNarrow = orderCase?.type !== 'NOT_RECEIVED' && !detail.reopened && lines.length > 0
+  const noShow = orderCase?.type === 'CUSTOMER_NO_SHOW'
+  const canNarrow = !noShow && orderCase?.type !== 'NOT_RECEIVED' && !detail.reopened && lines.length > 0
   const [partial, setPartial] = useState(false)
   const [quantities, setQuantities] = useState<Record<string, number>>(() => Object.fromEntries(lines.map((l) => [l.orderItemId ?? '', l.quantity ?? 0])))
   const [reason, setReason] = useState('')
   const [pending, setPending] = useState<'UPHELD' | 'DISMISSED' | null>(null)
+  const [noShowOutcome, setNoShowOutcome] = useState<NoShowOutcome | null>(null)
   const decide = useDecideCase()
 
   const chosen = partial ? lines.filter((l) => (quantities[l.orderItemId ?? ''] ?? 0) > 0).map((l) => ({ orderItemId: l.orderItemId ?? '', quantity: quantities[l.orderItemId ?? ''] ?? 0 })) : []
   const partialInvalid = partial && (chosen.length === 0 || lines.some((l) => (quantities[l.orderItemId ?? ''] ?? 0) > (l.quantity ?? 0)))
-  const ready = reason.trim().length > 0 && !partialInvalid
+  const ready = reason.trim().length > 0 && !partialInvalid && (!noShow || noShowOutcome !== null)
 
   return (
     <Card className="gap-4 p-4">
       <h3 className="font-semibold">Quyết định</h3>
+      {noShow ? (
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-1 text-sm font-medium">Kết cục</legend>
+          {(['CUSTOMER_AT_FAULT', 'CUSTOMER_RECEIVED', 'SHOP_NEVER_CAME'] as const).map((o) => (
+            <label key={o} className="flex items-start gap-2 text-sm">
+              <input type="radio" name="no-show-outcome" className="mt-1" checked={noShowOutcome === o} onChange={() => setNoShowOutcome(o)} />
+              <span>{NO_SHOW_OUTCOME[o]}</span>
+            </label>
+          ))}
+        </fieldset>
+      ) : null}
       {canNarrow ? (
         <div className="flex flex-col gap-2">
           <label className="flex items-center gap-2 text-sm">
@@ -150,20 +166,30 @@ function DecidePanel({ detail }: { detail: AdminCaseDetail }) {
         <Textarea id="decision-reason" rows={3} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
       </div>
       <div className="flex flex-wrap gap-2">
-        <Button disabled={!ready || decide.isPending} onClick={() => setPending('UPHELD')}>
-          Chấp nhận, hoàn tiền cho khách
-        </Button>
-        <Button variant="outline" disabled={reason.trim().length === 0 || decide.isPending} onClick={() => setPending('DISMISSED')}>
-          Bác bỏ
-        </Button>
+        {noShow ? (
+          <Button disabled={!ready || decide.isPending} onClick={() => setPending(noShowOutcome === 'CUSTOMER_AT_FAULT' ? 'UPHELD' : 'DISMISSED')}>
+            Quyết định
+          </Button>
+        ) : (
+          <>
+            <Button disabled={!ready || decide.isPending} onClick={() => setPending('UPHELD')}>
+              Chấp nhận, hoàn tiền cho khách
+            </Button>
+            <Button variant="outline" disabled={reason.trim().length === 0 || decide.isPending} onClick={() => setPending('DISMISSED')}>
+              Bác bỏ
+            </Button>
+          </>
+        )}
       </div>
 
       <Dialog open={pending !== null} onOpenChange={(open) => (open ? undefined : setPending(null))}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{pending === 'UPHELD' ? 'Chấp nhận khiếu nại?' : 'Bác bỏ khiếu nại?'}</DialogTitle>
+            <DialogTitle>{noShow ? 'Quyết định báo cáo khách vắng mặt?' : pending === 'UPHELD' ? 'Chấp nhận khiếu nại?' : 'Bác bỏ khiếu nại?'}</DialogTitle>
             <DialogDescription>
-              {pending === 'UPHELD'
+              {noShow
+                ? `${noShowOutcome ? NO_SHOW_OUTCOME[noShowOutcome] : ''}. Đơn được kết thúc theo kết cục này và cả hai bên được báo.`
+                : pending === 'UPHELD'
                 ? 'Khách được hoàn tiền và quán chịu khoản đó trong sổ cái. Có thể xem lại một lần bằng cách mở lại khiếu nại.'
                 : 'Không có khoản tiền nào thay đổi. Khiếu nại bị bác bỏ được tính vào lịch sử của khách.'}
             </DialogDescription>
@@ -178,7 +204,7 @@ function DecidePanel({ detail }: { detail: AdminCaseDetail }) {
               onClick={() => {
                 if (!orderCase?.id || !pending) return
                 decide.mutate(
-                  { id: orderCase.id, outcome: pending, reason, ...(pending === 'UPHELD' && partial ? { lines: chosen } : {}) },
+                  { id: orderCase.id, outcome: pending, reason, ...(pending === 'UPHELD' && partial ? { lines: chosen } : {}), ...(noShow && noShowOutcome ? { noShowOutcome } : {}) },
                   { onSuccess: () => setPending(null) },
                 )
               }}

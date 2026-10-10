@@ -24,6 +24,22 @@ export const LOG_ACTION_LABEL: Record<string, string> = {
   UPHELD: 'Quản trị chấp nhận',
   DISMISSED: 'Quản trị bác bỏ',
   REOPENED: 'Mở lại để xem xét',
+  CUSTOMER_UNABLE: 'Khách không thể nhận',
+  CUSTOMER_RECEIVED: 'Khách nói đã nhận',
+  CUSTOMER_SHOP_NEVER_CAME: 'Khách nói quán không đến',
+  NO_REPLY: 'Khách không trả lời kịp',
+}
+
+export const NO_SHOW_OUTCOME: Record<string, string> = {
+  CUSTOMER_AT_FAULT: 'Lỗi của khách: đơn kết thúc, không giao được',
+  CUSTOMER_RECEIVED: 'Khách đã nhận: đơn thành đã giao',
+  SHOP_NEVER_CAME: 'Quán không đến: huỷ đơn, hoàn tiền đủ nếu đã trả online, quán bị ghi lỗi',
+}
+
+export const CUSTOMER_ANSWER: Record<string, string> = {
+  UNABLE: 'Tôi không nhận được hoặc không muốn nhận',
+  RECEIVED: 'Tôi đã nhận được',
+  SHOP_NEVER_CAME: 'Quán không đến hoặc không gọi',
 }
 
 export const LOG_ACTOR_LABEL: Record<string, string> = { CUSTOMER: 'Khách', SHOP: 'Quán', ADMIN: 'Quản trị viên', SYSTEM: 'Hệ thống' }

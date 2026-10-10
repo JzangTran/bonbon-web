@@ -44,10 +44,15 @@ export function useAdminCase(id: string, enabled: boolean) {
 export function useDecideCase() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (input: { id: string; outcome: 'UPHELD' | 'DISMISSED'; reason: string; lines?: { orderItemId: string; quantity: number }[] }) => {
+    mutationFn: async (input: { id: string; outcome: 'UPHELD' | 'DISMISSED'; reason: string; lines?: { orderItemId: string; quantity: number }[]; noShowOutcome?: 'CUSTOMER_AT_FAULT' | 'CUSTOMER_RECEIVED' | 'SHOP_NEVER_CAME' }) => {
       const { data, error } = await api.POST('/api/admin/order-cases/{id}/decide', {
         params: { path: { id: input.id } },
-        body: { outcome: input.outcome, reason: input.reason.trim(), ...(input.lines && input.lines.length > 0 ? { lines: input.lines } : {}) },
+        body: {
+          outcome: input.outcome,
+          reason: input.reason.trim(),
+          ...(input.lines && input.lines.length > 0 ? { lines: input.lines } : {}),
+          ...(input.noShowOutcome ? { noShowOutcome: input.noShowOutcome } : {}),
+        },
       })
       if (error || !data) throw error
       return data
