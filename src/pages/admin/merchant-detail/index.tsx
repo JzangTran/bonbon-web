@@ -86,6 +86,11 @@ export function AdminMerchantDetailPage() {
               Sổ số dư và hoa hồng
             </Link>
           ) : null}
+          {session?.permissions.has('dish:moderate') ? (
+            <Link className="text-primary hover:underline" to={`/admin/category-moderation?vendorId=${shop.vendorId}`}>
+              Món sai ngành
+            </Link>
+          ) : null}
         </div>
       </Section>
 

@@ -4072,6 +4072,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/merchants/{vendorId}/dishes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Món của một cửa hàng và ngành của chúng
+         * @description Các món đang bán, theo tên: ngành lá và đường đi của ngành, tỷ lệ hoa hồng của ngành (rỗng nếu áp dụng mức mặc định chung), món có đang bị ẩn không và vụ sai ngành chưa đóng nếu có. Chỗ quản trị viên tìm món xếp vào ngành rẻ hơn để đánh dấu.
+         *
+         *     **Cần đăng nhập**, quyền `dish:moderate`.
+         */
+        get: operations["listShopDishesForModeration"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/merchants/{id}/suspensions": {
         parameters: {
             query?: never;
@@ -8346,6 +8368,50 @@ export interface components {
              * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
              */
             closesAt?: string;
+        };
+        ShopDishCategory: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            name?: string;
+            /**
+             * Format: int32
+             * @description Số tiền, số nguyên VND (không có phần thập phân).
+             */
+            price?: number;
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            categoryId?: string;
+            /** @description Đường đi từ ngành cấp 2 đến ngành lá, ví dụ `Đồ uống › Cà phê`. */
+            categoryPath?: string;
+            /** @description Tỷ lệ hoa hồng riêng của ngành hoặc kế thừa từ ngành cha; rỗng khi áp dụng tỷ lệ mặc định chung. */
+            commissionRate?: number;
+            /** @description Đang bị ẩn khỏi tìm kiếm vì sai ngành. */
+            restricted?: boolean;
+            /** @description Vụ sai ngành chưa đóng của món, nếu có. */
+            openCase?: components["schemas"]["ShopDishOpenCase"];
+        };
+        /** @description Các món đang bán của một cửa hàng với ngành và hoa hồng, để tìm món xếp sai ngành. */
+        ShopDishCategoryList: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            vendorId?: string;
+            shopName?: string;
+            items?: components["schemas"]["ShopDishCategory"][];
+        };
+        ShopDishOpenCase: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            status?: string;
         };
         ShopSuspensionHistory: {
             items?: components["schemas"]["ShopSuspension"][];
@@ -23182,6 +23248,73 @@ export interface operations {
                 };
             };
             /** @description - `SHOP_APPLICATION_NOT_FOUND`: Không có cửa hàng đã gửi hồ sơ với id này. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    listShopDishesForModeration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopDishCategoryList"];
+                };
+            };
+            /** @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `dish:moderate`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `SHOP_NOT_FOUND`: Không có cửa hàng này. */
             404: {
                 headers: {
                     [name: string]: unknown;
