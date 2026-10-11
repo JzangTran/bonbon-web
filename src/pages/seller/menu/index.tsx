@@ -1,4 +1,7 @@
+import { TriangleAlertIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router'
+import { useMyOpenCaseCount } from '@/entities/dish-category-case'
 import { useMenu, useOptionGroups } from '@/entities/menu'
 import { problemMessage } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
@@ -19,6 +22,7 @@ export function SellerMenuPage() {
   const menu = useMenu()
   const groups = useOptionGroups()
   const [tab, setTab] = useState<Tab>('dishes')
+  const openCases = useMyOpenCaseCount()
 
   return (
     <div className="flex max-w-5xl flex-col gap-6">
@@ -28,6 +32,15 @@ export function SellerMenuPage() {
           Mục thực đơn là cách bạn nhóm món cho khách xem. Nhóm lựa chọn (cỡ ly, topping…) dùng lại được cho nhiều món.
         </p>
       </div>
+      {openCases > 0 ? (
+        <p className="flex flex-wrap items-center gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
+          <TriangleAlertIcon className="size-4 shrink-0" />
+          Có {openCases} món bị đánh dấu sai ngành hàng.
+          <Link to="/seller/category-cases" className="font-medium underline">
+            Xem và sửa
+          </Link>
+        </p>
+      ) : null}
       <div role="tablist" aria-label="Thực đơn" className="flex gap-1 border-b">
         {TABS.map((t) => (
           <button

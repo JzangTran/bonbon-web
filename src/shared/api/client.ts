@@ -1,5 +1,6 @@
 import createClient, { type Middleware } from 'openapi-fetch'
 import { env } from '@/shared/config/env'
+import { reportLegalRequired, reportMaintenance } from './gate'
 import type { paths } from './generated/schema'
 
 /** RFC 9457 body the backend returns for every error (see GlobalExceptionHandler). */
@@ -77,8 +78,24 @@ const authMiddleware: Middleware = {
   },
 }
 
+/** Tells the app gate when the server refuses everything for a reason that is not about one call (legal re-acceptance, maintenance). */
+const gateMiddleware: Middleware = {
+  async onResponse({ response }) {
+    if (response.status !== 403 && response.status !== 503) return response
+    try {
+      const body = (await response.clone().json()) as { code?: unknown }
+      if (body.code === 'LEGAL_ACCEPTANCE_REQUIRED') reportLegalRequired()
+      else if (body.code === 'MAINTENANCE') reportMaintenance()
+    } catch {
+      // not a problem body: nothing to report
+    }
+    return response
+  },
+}
+
 export const api = createClient<paths>({ baseUrl: env.apiUrl })
 api.use(authMiddleware)
+api.use(gateMiddleware)
 
 export function isApiProblem(value: unknown): value is ApiProblem {
   return typeof value === 'object' && value !== null && 'code' in value && 'status' in value

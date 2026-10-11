@@ -92,6 +92,14 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/dashboard').then((m) => ({ Component: m.SellerDashboardPage })),
           },
           {
+            path: 'closing',
+            lazy: () => import('@/pages/seller/closing').then((m) => ({ Component: m.SellerClosingPage })),
+          },
+          {
+            path: 'category-cases',
+            lazy: () => import('@/pages/seller/category-cases').then((m) => ({ Component: m.SellerCategoryCasesPage })),
+          },
+          {
             path: 'account',
             lazy: () => import('@/pages/seller/account').then((m) => ({ Component: m.SellerAccountPage })),
           },

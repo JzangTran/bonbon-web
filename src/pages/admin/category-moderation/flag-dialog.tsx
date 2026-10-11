@@ -12,7 +12,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
-import { CategorySelect } from './category-select'
+import { CategorySelect } from '@/shared/ui/category-select'
 
 /**
  * Three steps: find the shop, pick the misfiled dish from its menu (with category path and rate to compare), then say which category it
