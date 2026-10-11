@@ -30,9 +30,9 @@ const adminNav: NavGroup[] = [
     ],
   },
   { title: 'Chất lượng', icon: <AlertTriangleIcon />, items: [{ to: '/admin/order-cases', label: 'Khiếu nại đơn hàng' }, { to: '/admin/penalties', label: 'Điểm phạt các quán' }] },
-  { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
+  { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }, { to: '/admin/category-moderation', label: 'Món sai ngành' }] },
   { title: 'Hỗ trợ', icon: <LifeBuoyIcon />, items: [{ to: '/admin/support-tickets', label: 'Phiếu hỗ trợ' }, { to: '/admin/lookup', label: 'Tra cứu đơn & tài khoản' }, { to: '/admin/help-articles', label: 'Bài trợ giúp' }] },
-  { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
+  { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }, { to: '/admin/legal-documents', label: 'Văn bản pháp lý' }, { to: '/admin/app-config', label: 'Cấu hình app' }] },
 ]
 
 const router = createBrowserRouter([
@@ -169,6 +169,22 @@ const router = createBrowserRouter([
           {
             index: true,
             lazy: () => import('@/pages/admin/dashboard').then((m) => ({ Component: m.AdminDashboardPage })),
+          },
+          {
+            path: 'legal-documents',
+            lazy: () => import('@/pages/admin/legal-documents').then((m) => ({ Component: m.AdminLegalDocumentsPage })),
+          },
+          {
+            path: 'legal-documents/:id',
+            lazy: () => import('@/pages/admin/legal-document-edit').then((m) => ({ Component: m.AdminLegalDocumentEditPage })),
+          },
+          {
+            path: 'app-config',
+            lazy: () => import('@/pages/admin/app-config').then((m) => ({ Component: m.AdminAppConfigPage })),
+          },
+          {
+            path: 'category-moderation',
+            lazy: () => import('@/pages/admin/category-moderation').then((m) => ({ Component: m.AdminCategoryModerationPage })),
           },
           {
             path: 'merchants',
