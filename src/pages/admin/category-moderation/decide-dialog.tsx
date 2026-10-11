@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/shared/ui/label'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
-import { CategorySelect } from './category-select'
+import { CategorySelect } from '@/shared/ui/category-select'
 
 /** Accept moves the dish to the category the shop asked for (or another one, explained in the reason); reject keeps the system's. The shop reads the reason. */
 export function DecideDialog({ kase, decision, onClose }: { kase: CategoryCase | null; decision: 'ACCEPT' | 'REJECT'; onClose: () => void }) {

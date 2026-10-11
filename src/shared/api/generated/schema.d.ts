@@ -3368,6 +3368,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/merchant/closure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Tình trạng đóng cửa hàng
+         * @description Khi cửa hàng đang `CLOSING`: lý do đã chọn và những gì còn chặn việc đóng hẳn (đơn đang làm, khiếu nại, kháng nghị, tiền đang giữ, số dư sổ cái). Cửa hàng thành `CLOSED` khi tất cả đều xong.
+         *
+         *     **Cần đăng nhập**, quyền `vendor:read`.
+         */
+        get: operations["getMyShopClosure"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/merchant/category-cases": {
         parameters: {
             query?: never;
@@ -7429,6 +7451,18 @@ export interface components {
             size?: number;
             /** Format: int64 */
             total?: number;
+        };
+        /** @description Cửa hàng của người gọi đang đóng: lý do đã chọn và những gì còn chặn. */
+        MyClosureStatus: {
+            name?: string;
+            reason?: string;
+            reasonText?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            requestedAt?: string;
+            blockers?: components["schemas"]["ClosureBlockers"];
         };
         DishCategoryCasePage: {
             items?: components["schemas"]["DishCategoryCase"][];
@@ -21299,6 +21333,62 @@ export interface operations {
                 };
             };
             /** @description - `SHOP_NOT_APPROVED`: Người gọi chưa có cửa hàng được duyệt. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getMyShopClosure: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyClosureStatus"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `vendor:read`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `SHOP_NOT_CLOSING`: Cửa hàng của người gọi không đang trong quá trình đóng. */
             409: {
                 headers: {
                     [name: string]: unknown;
