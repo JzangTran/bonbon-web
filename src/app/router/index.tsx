@@ -6,8 +6,20 @@ import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 
 const adminNav: NavGroup[] = [
-  { items: [{ to: '/admin', label: 'Tổng quan' }] },
-  { title: 'Cửa hàng', icon: <StoreIcon />, items: [{ to: '/admin/shop-review', label: 'Duyệt cửa hàng' }] },
+  {
+    items: [
+      { to: '/admin', label: 'Tổng quan' },
+      { to: '/admin/statistics', label: 'Thống kê hệ thống' },
+    ],
+  },
+  {
+    title: 'Cửa hàng',
+    icon: <StoreIcon />,
+    items: [
+      { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
+      { to: '/admin/merchants', label: 'Danh sách và vùng phủ' },
+    ],
+  },
   {
     title: 'Tiền',
     icon: <WalletIcon />,
@@ -157,6 +169,18 @@ const router = createBrowserRouter([
           {
             index: true,
             lazy: () => import('@/pages/admin/dashboard').then((m) => ({ Component: m.AdminDashboardPage })),
+          },
+          {
+            path: 'merchants',
+            lazy: () => import('@/pages/admin/merchants').then((m) => ({ Component: m.AdminMerchantsPage })),
+          },
+          {
+            path: 'merchants/:vendorId',
+            lazy: () => import('@/pages/admin/merchant-detail').then((m) => ({ Component: m.AdminMerchantDetailPage })),
+          },
+          {
+            path: 'statistics',
+            lazy: () => import('@/pages/admin/platform-stats').then((m) => ({ Component: m.AdminPlatformStatsPage })),
           },
           {
             path: 'shop-review',
