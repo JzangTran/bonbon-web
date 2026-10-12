@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { WrenchIcon } from 'lucide-react'
+import { Illustration } from '@/shared/ui/illustrations'
 import { useSession } from '@/entities/session'
 import { api, useGateState } from '@/shared/api'
 import { formatDateTime } from '@/shared/lib/format'
@@ -35,7 +35,7 @@ export function MaintenanceGate() {
   if ((full || refused) && !isAdmin) {
     return (
       <div role="alert" className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-background px-6 text-center">
-        <WrenchIcon className="size-12 text-primary" aria-hidden />
+        <Illustration name="maintenance" className="w-44" />
         <h1 className="text-2xl font-bold">Bonbon đang bảo trì</h1>
         <p className="max-w-md text-muted-foreground">{m?.message || 'Hệ thống đang được bảo trì. Bạn vui lòng quay lại sau ít phút.'}</p>
         {m?.endsAt ? <p className="text-sm">Dự kiến xong lúc {formatDateTime(m.endsAt)}.</p> : null}
