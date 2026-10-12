@@ -1,31 +1,23 @@
-import { useState } from 'react'
 import { useBestSellingDishes, useRevenueStats, type RevenueBucket, type StatsGranularity } from '@/entities/statistics'
 import { problemMessage } from '@/shared/api'
 import { formatVnd } from '@/shared/lib/format'
 import { periodLabel } from '@/shared/lib/ledger'
-import { useNow } from '@/shared/lib/use-now'
 import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
-import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
-import { PRESET_LABEL, addDays, daysInRange, presetRange, shortLabel, vietnamToday, type RangePreset } from './range'
+import { RangePicker, granularityLabel, useStatsRange } from '@/widgets/range-picker'
+import { shortLabel } from '@/shared/lib/date-range'
 
-const GRANULARITY_LABEL: Record<StatsGranularity, string> = { day: 'Ngày', week: 'Tuần', month: 'Tháng' }
 
 /** How the shop is selling (view-revenue-statistics.md, view-best-selling-dishes.md): revenue over time and the dishes that carry it. */
 export function SellerStatisticsPage() {
-  const today = vietnamToday(useNow(60_000))
-  const [preset, setPreset] = useState<RangePreset>('7d')
-  const [custom, setCustom] = useState<{ from: string; to: string } | null>(null)
-  const [granularity, setGranularity] = useState<StatsGranularity>('day')
-  const range = preset === 'custom' && custom ? custom : presetRange(preset === 'custom' ? '7d' : preset, today)
+  const state = useStatsRange('7d')
+  const { range, granularity } = state
   const revenue = useRevenueStats(range, granularity)
   const dishes = useBestSellingDishes(range)
   const totals = revenue.data?.totals
   const buckets = revenue.data?.buckets ?? []
-  const customInvalid = preset === 'custom' && custom !== null && custom.from > custom.to
 
   return (
     <div className="flex max-w-5xl flex-col gap-6">
@@ -36,49 +28,7 @@ export function SellerStatisticsPage() {
         </p>
       </div>
 
-      <Card className="flex flex-col gap-3 p-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex flex-wrap gap-1">
-            {(Object.keys(PRESET_LABEL) as RangePreset[]).map((p) => (
-              <Button
-                key={p}
-                size="sm"
-                variant={preset === p ? 'default' : 'outline'}
-                onClick={() => {
-                  setPreset(p)
-                  if (p === 'custom' && !custom) setCustom({ from: addDays(today, -13), to: today })
-                }}
-              >
-                {PRESET_LABEL[p]}
-              </Button>
-            ))}
-          </div>
-          <span className="mx-1 hidden h-6 w-px bg-border sm:block" />
-          <div className="flex gap-1">
-            {(Object.keys(GRANULARITY_LABEL) as StatsGranularity[]).map((g) => (
-              <Button key={g} size="sm" variant={granularity === g ? 'default' : 'outline'} onClick={() => setGranularity(g)}>
-                {GRANULARITY_LABEL[g]}
-              </Button>
-            ))}
-          </div>
-        </div>
-        {preset === 'custom' && custom ? (
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <label className="flex items-center gap-2">
-              Từ
-              <Input type="date" className="w-40" max={today} value={custom.from} onChange={(e) => setCustom({ ...custom, from: e.target.value })} />
-            </label>
-            <label className="flex items-center gap-2">
-              đến
-              <Input type="date" className="w-40" max={today} value={custom.to} onChange={(e) => setCustom({ ...custom, to: e.target.value })} />
-            </label>
-            {customInvalid ? <span className="text-danger-fg">Ngày bắt đầu phải trước ngày kết thúc.</span> : null}
-          </div>
-        ) : null}
-        <p className="text-xs text-muted-foreground">
-          {range.from === range.to ? range.from.split('-').reverse().join('/') : `${range.from.split('-').reverse().join('/')} – ${range.to.split('-').reverse().join('/')}`} ({daysInRange(range.from, range.to)} ngày)
-        </p>
-      </Card>
+      <RangePicker state={state} />
 
       {revenue.isError ? <FormError message={problemMessage(revenue.error)} /> : null}
       {revenue.isPending ? <Skeleton className="h-28" /> : null}
@@ -93,7 +43,7 @@ export function SellerStatisticsPage() {
 
       {revenue.data ? (
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">Doanh thu theo {GRANULARITY_LABEL[granularity].toLowerCase()}</h2>
+          <h2 className="text-lg font-semibold">Doanh thu theo {granularityLabel(granularity).toLowerCase()}</h2>
           {(totals?.orders ?? 0) === 0 ? <Card className="p-6 text-muted-foreground">Chưa có đơn nào được giao trong khoảng này.</Card> : <RevenueChart buckets={buckets} granularity={granularity} />}
           {buckets.length > 0 ? (
             <div className="max-h-96 overflow-auto rounded-sm border bg-card">

@@ -9,6 +9,7 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 
 const TABS: { id: CaseStatus; label: string }[] = [
@@ -61,7 +62,7 @@ export function SellerOrderCasesPage() {
 
       {cases.isError ? <FormError message={problemMessage(cases.error)} /> : null}
       {cases.isPending ? <Skeleton className="h-32" /> : null}
-      {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">Không có khiếu nại nào ở mục này.</Card> : null}
+      {data && items.length === 0 ? <EmptyState title="Không có khiếu nại nào ở mục này." /> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((item) => {

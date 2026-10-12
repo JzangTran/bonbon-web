@@ -6,17 +6,28 @@ import { AreaLayout, type NavGroup } from './area-layout'
 /** Pages a seller without an approved shop may open (open-shop.md: selling features stay blocked until then). */
 const OPEN_BEFORE_APPROVAL = ['/seller/open-shop', '/seller/account']
 
+/** A closing shop keeps what it needs to finish: orders, cases, earnings, support (close-shop.md). */
+const WHILE_CLOSING = ['/seller/closing', '/seller/orders', '/seller/order-cases', '/seller/performance', '/seller/earnings', '/seller/support-tickets', '/seller/help', '/seller/account', '/seller/chat']
+
 /** The seller area: until the shop is approved, everything leads to the open-shop page. */
 export function SellerLayout() {
   const shop = useShop()
   const { pathname } = useLocation()
   const status = shopStatus(shop.data)
   const approved = status === 'APPROVED'
+  const closing = status === 'CLOSING' || status === 'CLOSED'
   const nav: NavGroup[] = approved
     ? [
         { items: [{ to: '/seller', label: 'Tổng quan' }] },
         { title: 'Quản lý đơn hàng', icon: <ClipboardListIcon />, items: [{ to: '/seller/orders', label: 'Tất cả đơn hàng' }] },
-        { title: 'Quản lý thực đơn', icon: <UtensilsCrossedIcon />, items: [{ to: '/seller/menu', label: 'Thực đơn & nhóm lựa chọn' }] },
+        {
+          title: 'Quản lý thực đơn',
+          icon: <UtensilsCrossedIcon />,
+          items: [
+            { to: '/seller/menu', label: 'Thực đơn & nhóm lựa chọn' },
+            { to: '/seller/category-cases', label: 'Món sai ngành' },
+          ],
+        },
         {
           title: 'Tài chính',
           icon: <WalletIcon />,
@@ -37,7 +48,20 @@ export function SellerLayout() {
           ],
         },
       ]
-    : [
+    : closing
+      ? [
+          {
+            items: [
+              { to: '/seller/closing', label: status === 'CLOSED' ? 'Cửa hàng đã đóng' : 'Đóng cửa hàng' },
+              { to: '/seller/orders', label: 'Đơn hàng' },
+              { to: '/seller/order-cases', label: 'Khiếu nại của khách' },
+              { to: '/seller/earnings', label: 'Thu nhập' },
+              { to: '/seller/support-tickets', label: 'Liên hệ hỗ trợ' },
+              { to: '/seller/account', label: 'Tài khoản' },
+            ],
+          },
+        ]
+      : [
         {
           items: [
             { to: '/seller/open-shop', label: status === 'PENDING' ? 'Hồ sơ cửa hàng' : 'Mở cửa hàng' },
@@ -46,7 +70,10 @@ export function SellerLayout() {
         },
       ]
 
-  if (shop.data && !approved && !OPEN_BEFORE_APPROVAL.includes(pathname)) {
+  if (shop.data && closing && !WHILE_CLOSING.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
+    return <Navigate to="/seller/closing" replace />
+  }
+  if (shop.data && !approved && !closing && !OPEN_BEFORE_APPROVAL.includes(pathname)) {
     return <Navigate to="/seller/open-shop" replace />
   }
   return <AreaLayout title="Kênh người bán" nav={nav} loginPath="/seller/login" />

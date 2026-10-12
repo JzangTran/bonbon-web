@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { useSession, type Role } from '@/entities/session'
 import { GoogleSignIn } from '@/features/google-sign-in'
@@ -34,6 +35,9 @@ export function SellerLoginPage() {
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '', password: '' } })
 
   const finish = (data: LoginResponse) => {
+    if (data.deletionCancelled) {
+      toast.success('Việc xoá tài khoản đã được huỷ vì bạn đăng nhập lại.', { description: 'Tài khoản của bạn vẫn như cũ.', duration: 12_000 })
+    }
     const { tokens, user } = data
     if (!tokens?.accessToken || !tokens.refreshToken || !user?.id) return
     signIn({

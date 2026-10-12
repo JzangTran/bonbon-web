@@ -4,10 +4,23 @@ import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
+import { RouteError } from './route-error'
 
 const adminNav: NavGroup[] = [
-  { items: [{ to: '/admin', label: 'Tổng quan' }] },
-  { title: 'Cửa hàng', icon: <StoreIcon />, items: [{ to: '/admin/shop-review', label: 'Duyệt cửa hàng' }] },
+  {
+    items: [
+      { to: '/admin', label: 'Tổng quan' },
+      { to: '/admin/statistics', label: 'Thống kê hệ thống' },
+    ],
+  },
+  {
+    title: 'Cửa hàng',
+    icon: <StoreIcon />,
+    items: [
+      { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
+      { to: '/admin/merchants', label: 'Danh sách và vùng phủ' },
+    ],
+  },
   {
     title: 'Tiền',
     icon: <WalletIcon />,
@@ -18,9 +31,9 @@ const adminNav: NavGroup[] = [
     ],
   },
   { title: 'Chất lượng', icon: <AlertTriangleIcon />, items: [{ to: '/admin/order-cases', label: 'Khiếu nại đơn hàng' }, { to: '/admin/penalties', label: 'Điểm phạt các quán' }] },
-  { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }] },
+  { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }, { to: '/admin/category-moderation', label: 'Món sai ngành' }] },
   { title: 'Hỗ trợ', icon: <LifeBuoyIcon />, items: [{ to: '/admin/support-tickets', label: 'Phiếu hỗ trợ' }, { to: '/admin/lookup', label: 'Tra cứu đơn & tài khoản' }, { to: '/admin/help-articles', label: 'Bài trợ giúp' }] },
-  { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }] },
+  { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }, { to: '/admin/legal-documents', label: 'Văn bản pháp lý' }, { to: '/admin/app-config', label: 'Cấu hình app' }] },
 ]
 
 const router = createBrowserRouter([
@@ -74,10 +87,19 @@ const router = createBrowserRouter([
       {
         path: '/seller',
         element: <SellerLayout />,
+        errorElement: <RouteError />,
         children: [
           {
             index: true,
             lazy: () => import('@/pages/seller/dashboard').then((m) => ({ Component: m.SellerDashboardPage })),
+          },
+          {
+            path: 'closing',
+            lazy: () => import('@/pages/seller/closing').then((m) => ({ Component: m.SellerClosingPage })),
+          },
+          {
+            path: 'category-cases',
+            lazy: () => import('@/pages/seller/category-cases').then((m) => ({ Component: m.SellerCategoryCasesPage })),
           },
           {
             path: 'account',
@@ -153,10 +175,39 @@ const router = createBrowserRouter([
       {
         path: '/admin',
         element: <AreaLayout title="Quản trị" nav={adminNav} loginPath="/admin/login" tone="dark" />,
+        errorElement: <RouteError />,
         children: [
           {
             index: true,
             lazy: () => import('@/pages/admin/dashboard').then((m) => ({ Component: m.AdminDashboardPage })),
+          },
+          {
+            path: 'legal-documents',
+            lazy: () => import('@/pages/admin/legal-documents').then((m) => ({ Component: m.AdminLegalDocumentsPage })),
+          },
+          {
+            path: 'legal-documents/:id',
+            lazy: () => import('@/pages/admin/legal-document-edit').then((m) => ({ Component: m.AdminLegalDocumentEditPage })),
+          },
+          {
+            path: 'app-config',
+            lazy: () => import('@/pages/admin/app-config').then((m) => ({ Component: m.AdminAppConfigPage })),
+          },
+          {
+            path: 'category-moderation',
+            lazy: () => import('@/pages/admin/category-moderation').then((m) => ({ Component: m.AdminCategoryModerationPage })),
+          },
+          {
+            path: 'merchants',
+            lazy: () => import('@/pages/admin/merchants').then((m) => ({ Component: m.AdminMerchantsPage })),
+          },
+          {
+            path: 'merchants/:vendorId',
+            lazy: () => import('@/pages/admin/merchant-detail').then((m) => ({ Component: m.AdminMerchantDetailPage })),
+          },
+          {
+            path: 'statistics',
+            lazy: () => import('@/pages/admin/platform-stats').then((m) => ({ Component: m.AdminPlatformStatsPage })),
           },
           {
             path: 'shop-review',

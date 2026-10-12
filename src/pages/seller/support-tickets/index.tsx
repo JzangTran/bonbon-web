@@ -12,6 +12,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
+import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 
 /** The shop's tickets to the Bonbon team (support-tickets.md). Problems with a delivered order go through the order's own report. */
@@ -37,7 +38,7 @@ export function SellerSupportTicketsPage() {
 
       {tickets.isError ? <FormError message={problemMessage(tickets.error)} /> : null}
       {tickets.isPending ? <Skeleton className="h-24" /> : null}
-      {tickets.data && items.length === 0 ? <Card className="p-6 text-muted-foreground">Bạn chưa gửi phiếu nào.</Card> : null}
+      {tickets.data && items.length === 0 ? <EmptyState title="Bạn chưa gửi phiếu nào." /> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((t) => {

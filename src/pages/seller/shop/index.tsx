@@ -14,6 +14,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { CloseShopCard } from './close-shop-card'
 
 type Update = components['schemas']['ShopProfileUpdateRequest']
 
@@ -56,6 +57,7 @@ export function SellerShopPage() {
       <InfoCard key={`info-${shop.data.shop?.name}-${shop.data.shop?.address?.placeId}`} shop={shop.data} />
       <ShippingCard key={`ship-${JSON.stringify(shop.data.shipping)}`} shop={shop.data} />
       <HoursCard key={`hours-${JSON.stringify(shop.data.shipping?.openingHours)}`} shop={shop.data} />
+      <CloseShopCard />
     </div>
   )
 }
