@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router/dom'
 import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
+import { RouteError } from './route-error'
 
 const adminNav: NavGroup[] = [
   {
@@ -86,6 +87,7 @@ const router = createBrowserRouter([
       {
         path: '/seller',
         element: <SellerLayout />,
+        errorElement: <RouteError />,
         children: [
           {
             index: true,
@@ -173,6 +175,7 @@ const router = createBrowserRouter([
       {
         path: '/admin',
         element: <AreaLayout title="Quản trị" nav={adminNav} loginPath="/admin/login" tone="dark" />,
+        errorElement: <RouteError />,
         children: [
           {
             index: true,

@@ -12,6 +12,7 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
+import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 
 /** Customers writing to the shop (send-message.md, view-conversation-list.md): the list on one side, the open conversation on the other. */
@@ -46,7 +47,7 @@ export function SellerChatPage() {
       <div className="grid gap-4 md:grid-cols-[320px_1fr]">
         <div className={cn('flex flex-col gap-2', selected ? 'hidden md:flex' : '')}>
           {conversations.isPending ? <Skeleton className="h-24" /> : null}
-          {conversations.data && items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">Chưa có khách nào nhắn tin.</Card> : null}
+          {conversations.data && items.length === 0 ? <EmptyState title="Chưa có khách nào nhắn tin." className="px-3 py-6" /> : null}
           <ul className="flex flex-col gap-2">
             {items.map((c) => (
               <li key={c.id}>

@@ -19,6 +19,7 @@ import { Card } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 import { OrderActions } from './order-actions'
 import { OrderSheet } from './order-sheet'
@@ -179,9 +180,7 @@ function OrderList({ query, empty, onOpen }: { query: ListQuery; empty: string; 
   const items = query.data?.items ?? []
   if (items.length === 0) {
     return (
-      <Card className="p-6">
-        <p className="text-muted-foreground">{empty}</p>
-      </Card>
+      <EmptyState title={empty} />
     )
   }
   return (
