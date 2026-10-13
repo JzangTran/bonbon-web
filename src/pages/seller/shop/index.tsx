@@ -128,7 +128,7 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
           <div className="flex flex-col gap-2">
             <Label htmlFor="info-name">Tên cửa hàng</Label>
             <Input id="info-name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
-            {save.fieldErrors.name ? <p className="text-sm text-destructive">{save.fieldErrors.name}</p> : null}
+            {save.fieldErrors.name ? <p role="alert" className="text-sm text-destructive">{save.fieldErrors.name}</p> : null}
           </div>
           <AddressPicker label="Địa chỉ" current={shop.shop?.address?.formattedAddress} onPick={(p) => setPlaceId(p.placeId)} />
           {placeId ? (
@@ -144,7 +144,7 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="info-phone">Số điện thoại</Label>
               <Input id="info-phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
-              {save.fieldErrors.phone ? <p className="text-sm text-destructive">{save.fieldErrors.phone}</p> : null}
+              {save.fieldErrors.phone ? <p role="alert" className="text-sm text-destructive">{save.fieldErrors.phone}</p> : null}
             </div>
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="info-email">Email</Label>

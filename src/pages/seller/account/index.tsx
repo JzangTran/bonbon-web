@@ -82,12 +82,12 @@ function ProfileCard() {
           <div className="flex flex-col gap-2">
             <Label htmlFor="profile-name">Họ tên</Label>
             <Input id="profile-name" aria-invalid={!!errors.name} {...form.register('name')} />
-            {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}
+            {errors.name ? <p role="alert" className="text-sm text-destructive">{errors.name.message}</p> : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="profile-phone">Số điện thoại</Label>
             <Input id="profile-phone" inputMode="tel" placeholder="0912345678" aria-invalid={!!errors.phone} {...form.register('phone')} />
-            {errors.phone ? <p className="text-sm text-destructive">{errors.phone.message}</p> : null}
+            {errors.phone ? <p role="alert" className="text-sm text-destructive">{errors.phone.message}</p> : null}
           </div>
           {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
           {save.isSuccess ? <FormSuccess message="Đã lưu thông tin." /> : null}
@@ -144,7 +144,7 @@ function PasswordCard() {
                 aria-invalid={!!errors[field]}
                 {...form.register(field)}
               />
-              {errors[field] ? <p className="text-sm text-destructive">{errors[field]?.message}</p> : null}
+              {errors[field] ? <p role="alert" className="text-sm text-destructive">{errors[field]?.message}</p> : null}
             </div>
           ))}
           <FormError message={error} />
