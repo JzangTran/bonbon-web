@@ -159,7 +159,7 @@ export function DishSheet({
           <div className="flex flex-col gap-2">
             <Label htmlFor="dish-name">Tên món</Label>
             <Input id="dish-name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} aria-invalid={Boolean(fieldErrors.name)} />
-            {fieldErrors.name ? <p className="text-sm text-destructive">{fieldErrors.name}</p> : null}
+            {fieldErrors.name ? <p role="alert" className="text-sm text-destructive">{fieldErrors.name}</p> : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="dish-desc">Mô tả (không bắt buộc)</Label>

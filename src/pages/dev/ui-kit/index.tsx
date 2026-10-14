@@ -81,7 +81,7 @@ export function UiKitPage() {
             <div className="flex flex-col gap-2">
               <Label htmlFor="invalid">Số điện thoại</Label>
               <Input id="invalid" aria-invalid defaultValue="09xx" />
-              <p className="text-sm text-destructive">Số điện thoại chưa đúng định dạng.</p>
+              <p role="alert" className="text-sm text-destructive">Số điện thoại chưa đúng định dạng.</p>
             </div>
             <div className="flex flex-col gap-2">
               <Label>Phương thức thanh toán</Label>

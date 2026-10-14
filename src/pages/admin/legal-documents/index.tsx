@@ -71,7 +71,7 @@ function VersionItem({ v }: { v: LegalVersion }) {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="font-semibold">
             Phiên bản {v.version} · {v.title} <Badge className={`ml-2 ${status.className}`}>{status.label}</Badge>
-            {v.requiresReacceptance ? <Badge className="ml-1 bg-primary/10 text-primary">Phải đồng ý lại</Badge> : null}
+            {v.requiresReacceptance ? <Badge className="ml-1 bg-accent text-accent-foreground">Phải đồng ý lại</Badge> : null}
           </p>
           {v.status !== 'DRAFT' ? (
             <p className="text-sm text-muted-foreground tabular-nums">

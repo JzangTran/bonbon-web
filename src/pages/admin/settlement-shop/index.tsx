@@ -235,7 +235,7 @@ function RecordDialog({ vendorId, kind, payable, owed, onClose }: { vendorId: st
             <Label htmlFor="amount">Số tiền (₫)</Label>
             <Input id="amount" inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value)} />
             {limit !== null ? <p className="text-xs text-muted-foreground">Tối đa {formatVnd(limit)}</p> : null}
-            {limit !== null && digits > limit ? <p className="text-sm text-destructive">Vượt quá số cho phép.</p> : null}
+            {limit !== null && digits > limit ? <p role="alert" className="text-sm text-destructive">Vượt quá số cho phép.</p> : null}
           </div>
           {needsReference ? (
             <div className="flex flex-col gap-1.5">

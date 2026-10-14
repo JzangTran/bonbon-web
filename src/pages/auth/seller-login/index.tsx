@@ -121,7 +121,7 @@ export function SellerLoginPage() {
             aria-invalid={!!form.formState.errors.email}
             {...form.register('email')}
           />
-          {form.formState.errors.email ? <p className="text-sm text-destructive">{form.formState.errors.email.message}</p> : null}
+          {form.formState.errors.email ? <p role="alert" className="text-sm text-destructive">{form.formState.errors.email.message}</p> : null}
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="password" className="sr-only">
@@ -135,7 +135,7 @@ export function SellerLoginPage() {
             aria-invalid={!!form.formState.errors.password}
             {...form.register('password')}
           />
-          {form.formState.errors.password ? <p className="text-sm text-destructive">{form.formState.errors.password.message}</p> : null}
+          {form.formState.errors.password ? <p role="alert" className="text-sm text-destructive">{form.formState.errors.password.message}</p> : null}
         </div>
         {needsCaptcha ? <Captcha onToken={setCaptchaToken} /> : null}
         <FormError message={error} />
