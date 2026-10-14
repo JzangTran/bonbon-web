@@ -38,6 +38,12 @@ export function AreaLayout({ title, nav, loginPath, tone = 'light' }: {
 
   return (
     <div className="flex min-h-svh flex-col bg-background">
+      <a
+        href="#main"
+        className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
+      >
+        Bỏ qua đến nội dung chính
+      </a>
       <header className="sticky top-0 z-20 border-b bg-card">
         <div className="flex h-14 items-center justify-between gap-3 px-4">
           <Link to="/" className="flex items-baseline gap-3">
@@ -103,7 +109,7 @@ export function AreaLayout({ title, nav, loginPath, tone = 'light' }: {
             )}
           </nav>
         </aside>
-        <main className="min-w-0 p-4 md:p-6">
+        <main id="main" tabIndex={-1} className="min-w-0 p-4 outline-none md:p-6">
           <Outlet />
         </main>
       </div>

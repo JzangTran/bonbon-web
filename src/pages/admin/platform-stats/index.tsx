@@ -45,7 +45,7 @@ export function AdminPlatformStatsPage() {
   const format = (v: number) => (metric === 'orders' ? `${number(v)} đơn` : formatVnd(v))
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex min-w-0 max-w-5xl flex-col gap-6">
       <div>
         <h1 className="text-2xl font-bold">Thống kê hệ thống</h1>
         <p className="text-sm text-muted-foreground">
@@ -69,7 +69,7 @@ export function AdminPlatformStatsPage() {
       ) : null}
 
       {overview.data ? (
-        <section className="flex flex-col gap-3">
+        <section className="flex min-w-0 flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-lg font-semibold">Theo {granularityLabel(granularity).toLowerCase()}</h2>
             <div role="tablist" className="flex gap-1">
@@ -95,7 +95,7 @@ export function AdminPlatformStatsPage() {
             />
           )}
           {buckets.length > 0 ? (
-            <div className="max-h-96 overflow-auto rounded-sm border bg-card">
+            <div tabIndex={0} role="region" aria-label="Bảng số liệu theo kỳ" className="max-h-96 overflow-auto rounded-sm border bg-card">
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-muted text-xs text-muted-foreground">
                   <tr>
@@ -124,7 +124,7 @@ export function AdminPlatformStatsPage() {
 
       <ByMerchant range={range} enabled={ready} />
 
-      <section className="flex flex-col gap-3">
+      <section className="flex min-w-0 flex-col gap-3">
         <h2 className="text-lg font-semibold">Người dùng mới</h2>
         <p className="text-sm text-muted-foreground">
           Số vai trò khách và người bán được thêm, tính theo ngày vai trò được thêm. Một người đăng ký làm khách rồi mở quán được tính một lần ở mỗi chuỗi.
@@ -147,7 +147,7 @@ export function AdminPlatformStatsPage() {
                     ['sellers', 'Người bán mới'],
                   ] as const
                 ).map(([key, label]) => (
-                  <div key={key} className="flex flex-col gap-1">
+                  <div key={key} className="flex min-w-0 flex-col gap-1">
                     <h3 className="text-sm font-medium">{label}</h3>
                     <BarChart
                       ariaLabel={`Biểu đồ ${label.toLowerCase()}`}

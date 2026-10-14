@@ -32,7 +32,7 @@ const TABS: { id: CaseStatus | ''; label: string }[] = [
 const STATUS: Record<string, { label: string; className: string }> = {
   RESTRICTED: { label: 'Cần sửa', className: 'bg-danger-subtle text-danger-fg' },
   AUTO_CORRECTED: { label: 'Hệ thống đã sửa', className: 'bg-warning-subtle text-warning-fg' },
-  APPEALED: { label: 'Đang kháng nghị', className: 'bg-primary/10 text-primary' },
+  APPEALED: { label: 'Đang kháng nghị', className: 'bg-accent text-accent-foreground' },
   RESOLVED: { label: 'Đã sửa', className: 'bg-success-subtle text-success-fg' },
   CONFIRMED: { label: 'Đã đồng ý', className: 'bg-success-subtle text-success-fg' },
   EXPIRED: { label: 'Hết hạn', className: 'bg-muted text-muted-foreground' },

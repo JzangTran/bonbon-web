@@ -115,7 +115,7 @@ export function SellerRegisterPage() {
               Email
             </Label>
             <Input id="email" type="email" autoComplete="email" placeholder="Email" className="h-11" aria-invalid={!!errors.email} {...form.register('email')} />
-            {errors.email ? <p className="text-sm text-destructive">{errors.email.message}</p> : null}
+            {errors.email ? <p role="alert" className="text-sm text-destructive">{errors.email.message}</p> : null}
           </div>
           <Button type="submit" size="lg" className="uppercase tracking-wide" disabled={email.trim().length === 0}>
             Tiếp theo
@@ -143,7 +143,7 @@ export function SellerRegisterPage() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="name">Họ tên</Label>
           <Input id="name" autoComplete="name" className="h-11" aria-invalid={!!errors.name} {...form.register('name')} />
-          {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}
+          {errors.name ? <p role="alert" className="text-sm text-destructive">{errors.name.message}</p> : null}
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="password">Mật khẩu</Label>
@@ -174,7 +174,7 @@ export function SellerRegisterPage() {
             .
           </span>
         </label>
-        {errors.acceptTerms ? <p className="text-sm text-destructive">{errors.acceptTerms.message}</p> : null}
+        {errors.acceptTerms ? <p role="alert" className="text-sm text-destructive">{errors.acceptTerms.message}</p> : null}
         <label className="flex items-start gap-2 text-sm text-muted-foreground">
           <input type="checkbox" className="mt-1" {...form.register('marketing')} />
           Nhận tin khuyến mãi và hướng dẫn bán hàng qua email (không bắt buộc).
