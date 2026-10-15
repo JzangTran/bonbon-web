@@ -19,9 +19,11 @@ import { Card } from '@/shared/ui/card'
 import { CategorySelect } from '@/shared/ui/category-select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
 import { Label } from '@/shared/ui/label'
+import { FilterChips } from '@/shared/ui/filter-chips'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { MenuTabs } from '@/widgets/seller-tabs'
 
 const TABS: { id: CaseStatus | ''; label: string }[] = [
   { id: 'RESTRICTED', label: 'Cần sửa ngay' },
@@ -53,6 +55,7 @@ export function SellerCategoryCasesPage() {
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
+      <MenuTabs />
       <div>
         <h1 className="text-2xl font-bold">Món sai ngành</h1>
         <p className="text-sm text-muted-foreground">
@@ -60,22 +63,15 @@ export function SellerCategoryCasesPage() {
         </p>
       </div>
 
-      <div role="tablist" className="flex flex-wrap gap-1 border-b">
-        {TABS.map((t) => (
-          <button
-            key={t.id || 'all'}
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => {
-              setTab(t.id)
-              setPage(0)
-            }}
-            className={cn('-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap', tab === t.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+      <FilterChips
+        label="Trạng thái"
+        chips={TABS}
+        value={tab}
+        onChange={(id) => {
+          setTab(id)
+          setPage(0)
+        }}
+      />
 
       {cases.isError ? <FormError message={problemMessage(cases.error)} /> : null}
       {cases.isPending ? <Skeleton className="h-32" /> : null}

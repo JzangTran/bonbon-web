@@ -12,6 +12,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const TABS = [
   { hidden: undefined, label: 'Tất cả' },
@@ -47,26 +48,16 @@ export function AdminReviewsPage() {
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b">
-        <div role="tablist" className="flex gap-1">
-          {TABS.map((tab) => (
-            <button
-              key={String(tab.hidden)}
-              role="tab"
-              aria-selected={hidden === tab.hidden}
-              onClick={() => {
-                setHidden(tab.hidden)
-                setPage(0)
-              }}
-              className={cn(
-                '-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap',
-                hidden === tab.hidden ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        <PageTabs
+          label="Đánh giá"
+          tabs={TABS.map((t) => ({ id: String(t.hidden), label: t.label }))}
+          value={String(hidden)}
+          onValueChange={(id) => {
+            setHidden(TABS.find((t) => String(t.hidden) === id)?.hidden)
+            setPage(0)
+          }}
+        />
         <label className="mb-2 flex min-h-10 items-center gap-2 text-sm">
           <input
             type="checkbox"

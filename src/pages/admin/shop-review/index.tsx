@@ -6,7 +6,6 @@ import { toast } from 'sonner'
 import { useSession } from '@/entities/session'
 import { api, problemMessage } from '@/shared/api'
 import { formatRelative } from '@/shared/lib/format'
-import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
@@ -15,6 +14,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const TABS = [
   { status: 'PENDING', label: 'Chờ duyệt' },
@@ -63,24 +63,13 @@ export function ShopReviewQueuePage() {
         {session.permissions.has('merchant-approval:write-settings') ? <RadiusCapCard /> : null}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b">
-        <div role="tablist" className="flex max-w-full gap-1 overflow-x-auto">
-          {TABS.map((tab) => (
-            <button
-              key={tab.status}
-              role="tab"
-              aria-selected={status === tab.status}
-              onClick={() => setStatus(tab.status)}
-              className={cn(
-                '-mb-px min-h-10 shrink-0 border-b-2 px-3 text-sm whitespace-nowrap',
-                status === tab.status ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
-              )}
-            >
-              {tab.label}
-              {tab.status === 'PENDING' && status === 'PENDING' && queue.data ? ` (${queue.data.length})` : ''}
-            </button>
-          ))}
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <PageTabs
+          label="Hồ sơ cửa hàng"
+          tabs={TABS.map((t) => ({ id: t.status, label: t.label, count: t.status === 'PENDING' && queue.data ? queue.data.length : undefined, alert: true }))}
+          value={status}
+          onValueChange={(id) => setStatus(id as Status)}
+        />
         <div className="relative mb-2 w-full max-w-xs">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input

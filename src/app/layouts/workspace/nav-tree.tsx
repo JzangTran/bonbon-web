@@ -49,6 +49,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
                 to={parent.to!}
                 end
                 onClick={onNavigate}
+                aria-current={location.page?.to === parent.to ? 'page' : 'false'}
                 className={cn(rowBase, 'justify-start hover:bg-ws-fill', here && 'bg-ws-fill font-semibold text-brand-700')}
               >
                 <span className="flex min-w-0 items-center gap-3">
@@ -88,7 +89,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
                       <NavLink
                         to={child.to}
                         onClick={onNavigate}
-                        aria-current={current ? 'page' : undefined}
+                        aria-current={current ? 'page' : 'false'}
                         className={() =>
                           cn(
                             'flex min-h-9 items-center pr-5 pl-[50px] text-[13px] text-muted-foreground outline-none hover:bg-ws-fill focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',

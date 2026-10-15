@@ -1,9 +1,8 @@
-import { BarChart3Icon, LayersIcon, LifeBuoyIcon, ShieldCheckIcon, SlidersHorizontalIcon, StoreIcon, WalletIcon } from 'lucide-react'
+import { LayersIcon, LifeBuoyIcon, ShieldCheckIcon, SlidersHorizontalIcon, StoreIcon, WalletIcon } from 'lucide-react'
 import { WorkspaceShell, type ExtraPage, type FooterLink, type NavParent } from './workspace'
 
 /** The administrator's menu: Trang chủ is the breadcrumb root; groups start closed except the one with the current page. */
 const NAV: NavParent[] = [
-  { key: 'stats', label: 'Thống kê hệ thống', icon: BarChart3Icon, to: '/admin/statistics' },
   {
     key: 'shops',
     label: 'Cửa hàng',
@@ -71,6 +70,7 @@ const NAV: NavParent[] = [
 ]
 
 const EXTRAS: ExtraPage[] = [
+  { to: '/admin/statistics', label: 'Thống kê hệ thống' },
   { to: '/admin/conversations', label: 'Hội thoại', parentKey: 'support' },
 ]
 

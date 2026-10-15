@@ -143,6 +143,10 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerMenuPage })),
           },
           {
+            path: 'menu/options',
+            lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerOptionGroupsPage })),
+          },
+          {
             path: 'menu/new',
             lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerAddDishPage })),
           },

@@ -19,6 +19,14 @@ export function locate(path: string, nav: NavParent[], extras: ExtraPage[]): Loc
     for (const child of parent.children ?? []) consider(child.to, { parent, page: child as NavChild })
   }
   for (const extra of extras) {
+    if (extra.under) {
+      const parent = nav.find((p) => p.to === extra.under || p.children?.some((c) => c.to === extra.under))
+      const page = parent?.to === extra.under ? { to: parent.to, label: parent.label } : parent?.children?.find((c) => c.to === extra.under)
+      if (parent && page) {
+        consider(extra.to, { parent, page })
+        continue
+      }
+    }
     const parent = nav.find((p) => p.key === extra.parentKey)
     consider(extra.to, { parent, page: extra })
   }

@@ -10,6 +10,7 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const TABS: { id: ShopFilter; label: string }[] = [
   { id: 'ALL', label: 'Tất cả quán' },
@@ -52,25 +53,15 @@ export function AdminSettlementPage() {
         </div>
       ) : null}
 
-      <div role="tablist" className="flex flex-wrap gap-1 border-b">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            role="tab"
-            aria-selected={filter === tab.id}
-            onClick={() => {
-              setFilter(tab.id)
-              setPage(0)
-            }}
-            className={cn(
-              '-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap',
-              filter === tab.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <PageTabs
+        label="Đối soát"
+        tabs={TABS}
+        value={filter}
+        onValueChange={(id) => {
+          setFilter(id as ShopFilter)
+          setPage(0)
+        }}
+      />
 
       {shops && (shops.items ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">Chưa có quán nào ở mục này.</Card> : null}
       <ul className="flex flex-col gap-2">

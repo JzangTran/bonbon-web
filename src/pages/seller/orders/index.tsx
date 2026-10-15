@@ -20,6 +20,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
+import { PageTabs, type PageTab } from '@/shared/ui/workspace-slots'
 import { FormError } from '@/widgets/auth-shell'
 import { OrderActions } from './order-actions'
 import { OrderSheet } from './order-sheet'
@@ -101,8 +102,8 @@ export function SellerOrdersPage() {
     if (next) beep()
   }
 
-  const tabs: { id: Tab; label: string; count?: number }[] = [
-    { id: 'new', label: 'Mới', count: waiting },
+  const tabs: PageTab[] = [
+    { id: 'new', label: 'Mới', count: waiting, alert: true },
     { id: 'progress', label: 'Đang làm', count: progress.data?.total ?? 0 },
     { id: 'history', label: 'Lịch sử' },
   ]
@@ -134,26 +135,7 @@ export function SellerOrdersPage() {
         </div>
       ) : null}
 
-      <div role="tablist" aria-label="Đơn hàng" className="flex gap-1 border-b">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            type="button"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
-            className={cn(
-              '-mb-px flex h-11 items-center gap-2 border-b-2 px-4 text-sm font-semibold transition-colors',
-              tab === t.id ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground',
-            )}
-          >
-            {t.label}
-            {t.count ? (
-              <span className={cn('rounded-full px-2 text-xs tabular-nums', t.id === 'new' ? 'bg-primary text-primary-foreground' : 'bg-muted')}>{t.count}</span>
-            ) : null}
-          </button>
-        ))}
-      </div>
+      <PageTabs label="Đơn hàng" tabs={tabs} value={tab} onValueChange={(id) => setTab(id as Tab)} />
 
       {tab === 'new' ? <OrderList query={fresh} empty="Chưa có đơn mới. Đơn mới sẽ hiện ở đây ngay khi khách đặt." onOpen={setOpenId} /> : null}
       {tab === 'progress' ? <OrderList query={progress} empty="Không có đơn nào đang làm." onOpen={setOpenId} /> : null}

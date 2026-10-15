@@ -54,9 +54,10 @@ const APPROVED_NAV: NavParent[] = [
 
 /** Pages without a row in the menu: they sit under a parent in the breadcrumb, or are reached from the account menu or the footer. */
 const EXTRAS: ExtraPage[] = [
-  { to: '/seller/performance', label: 'Hiệu suất và điểm phạt', parentKey: 'orders' },
-  { to: '/seller/category-cases', label: 'Món sai ngành', parentKey: 'menu' },
-  { to: '/seller/earnings', label: 'Thu nhập và sao kê', parentKey: 'finance' },
+  // Tabs of a menu row: the row stays selected and is the breadcrumb.
+  { to: '/seller/performance', label: 'Hiệu suất và điểm phạt', under: '/seller/order-cases' },
+  { to: '/seller/category-cases', label: 'Món sai ngành', under: '/seller/menu' },
+  { to: '/seller/earnings', label: 'Thu nhập và sao kê', under: '/seller/statistics' },
   { to: '/seller/shop', label: 'Hồ sơ cửa hàng' },
   { to: '/seller/account', label: 'Tài khoản và bảo mật' },
   { to: '/seller/notification-settings', label: 'Cài đặt thông báo' },

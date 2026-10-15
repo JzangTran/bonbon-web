@@ -8,6 +8,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { RangePicker, granularityLabel, useStatsRange } from '@/widgets/range-picker'
 import { shortLabel } from '@/shared/lib/date-range'
+import { FinanceTabs } from '@/widgets/seller-tabs'
 
 
 /** How the shop is selling (view-revenue-statistics.md, view-best-selling-dishes.md): revenue over time and the dishes that carry it. */
@@ -21,10 +22,11 @@ export function SellerStatisticsPage() {
 
   return (
     <div className="flex max-w-5xl flex-col gap-6">
+      <FinanceTabs />
       <div>
         <h1 className="text-2xl font-bold">Thống kê</h1>
         <p className="text-sm text-muted-foreground">
-          Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam). Đây là tiền khách đã trả, gồm phí giao và chưa trừ hoa hồng; phần quán nhận được nằm ở mục Thu nhập.
+          Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam). Đây là tiền khách đã trả, gồm phí giao và chưa trừ hoa hồng; phần quán nhận được nằm ở tab Thu nhập và sao kê.
         </p>
       </div>
 

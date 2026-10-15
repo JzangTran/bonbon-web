@@ -14,10 +14,10 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
+import { WorkspaceSlotsProvider } from '@/shared/ui/workspace-slots'
+import { useSlotHosts } from '@/shared/ui/workspace-slots/context'
 import { locate } from './locate'
 import { NavTree } from './nav-tree'
-import { usePanelHost } from './panel-context'
-import { RightPanelProvider } from './right-panel'
 import type { AccountLink, ExtraPage, FooterLink, NavParent } from './types'
 
 export type WorkspaceProps = {
@@ -43,9 +43,9 @@ export type WorkspaceProps = {
  */
 export function WorkspaceShell(props: WorkspaceProps) {
   return (
-    <RightPanelProvider>
+    <WorkspaceSlotsProvider>
       <Shell {...props} />
-    </RightPanelProvider>
+    </WorkspaceSlotsProvider>
   )
 }
 
@@ -54,7 +54,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const location = locate(pathname, nav, extras)
-  const { setHost, custom } = usePanelHost()
+  const { setPanelHost, setTabsHost, custom } = useSlotHosts()
   const notifications = useNotifications()
   const unread = notifications.data?.unread ?? 0
 
@@ -220,6 +220,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
         </aside>
 
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground p-3 outline-none sm:p-5">
+          <div ref={setTabsHost} className="mb-3 empty:hidden sm:mb-4" />
           <div className="ws-content bg-card p-4 sm:p-6">
             <Outlet />
           </div>
@@ -233,7 +234,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
             panelOpen ? 'translate-x-0' : 'translate-x-full',
           )}
         >
-          <div ref={setHost} className="flex flex-col gap-8 empty:hidden" />
+          <div ref={setPanelHost} className="flex flex-col gap-8 empty:hidden" />
           {!custom ? <NotificationFeed orderPath={orderPath} /> : null}
         </aside>
       </div>

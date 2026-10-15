@@ -16,7 +16,13 @@ export type NavParent = {
 }
 
 /** A page that has no row in the nav (reached from the account menu, the footer or a link): only its breadcrumb is known. */
-export type ExtraPage = { to: string; label: string; parentKey?: string }
+export type ExtraPage = {
+  to: string
+  label: string
+  parentKey?: string
+  /** the `to` of the nav row this page is a tab of: that row stays selected and is the breadcrumb */
+  under?: string
+}
 
 export type AccountLink = { to: string; label: string }
 export type FooterLink = { to: string; label: string }
