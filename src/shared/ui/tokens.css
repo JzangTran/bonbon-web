@@ -68,6 +68,11 @@
   --ws-ground: #e0e4e2;
   --ws-fill: #f1f3f2;
   --ws-hairline: #eef1f0;
+
+  /* v3 customer-facing look (landing, sign-in): ink bar, two-tone headlines, pale pills */
+  --ink: #14201a;
+  --headline-soft: #7c8a83; /* only for text of 24px and up (3.61:1 on white) */
+  --pill-pale: #edf1ef;
   --sidebar: #ffffff;
   --sidebar-foreground: #14201a;
   --sidebar-primary: var(--green-600);
@@ -169,6 +174,9 @@
   --color-ws-ground: var(--ws-ground);
   --color-ws-fill: var(--ws-fill);
   --color-ws-hairline: var(--ws-hairline);
+  --color-ink: var(--ink);
+  --color-headline-soft: var(--headline-soft);
+  --color-pill-pale: var(--pill-pale);
 
   --color-brand-50: var(--green-50);
   --color-brand-100: var(--green-100);
@@ -204,6 +212,10 @@
   --radius-2xl: var(--radius);
   --radius-3xl: var(--radius);
   --radius-4xl: var(--radius);
+  /* customer-facing surfaces (radius option A): cards 24, photos 18, phone frame 44 */
+  --radius-card: 24px;
+  --radius-media: 18px;
+  --radius-device: 44px;
 
   --shadow-float: 0 1px 2px rgb(20 32 26 / 0.06), 0 4px 12px rgb(20 32 26 / 0.08);
 }
