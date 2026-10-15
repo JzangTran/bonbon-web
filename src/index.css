@@ -56,3 +56,25 @@
   box-shadow: none;
   background-color: var(--ws-fill);
 }
+
+/* Workspace buttons (seller and admin, focus pages): flat, 6 px corners, 13 px text, no outline. Customer-facing pages keep pills. */
+:root:has(.ws-root) [data-slot="button"] {
+  border-radius: 6px;
+  font-size: 13px;
+}
+:root:has(.ws-root) [data-slot="button"][data-size="default"] {
+  height: 2rem;
+}
+:root:has(.ws-root) [data-slot="button"][data-size="sm"] {
+  height: 1.75rem;
+}
+:root:has(.ws-root) [data-slot="button"][data-size="lg"] {
+  height: 2.25rem;
+}
+:root:has(.ws-root) [data-slot="button"][data-variant="outline"] {
+  border-color: transparent;
+  background-color: var(--ws-fill);
+}
+:root:has(.ws-root) [data-slot="button"][data-variant="outline"]:hover {
+  background-color: var(--muted);
+}

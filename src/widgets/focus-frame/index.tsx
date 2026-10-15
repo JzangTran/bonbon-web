@@ -24,7 +24,7 @@ export function FocusFrame({ title, exitTo, loginPath = '/seller/login', width =
   const navigate = useNavigate()
   const barButton = 'rounded-md px-3 py-1.5 text-[13px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white'
   return (
-    <div className="flex min-h-svh flex-col bg-ws-ground text-[13px]">
+    <div className="ws-root flex min-h-svh flex-col bg-ws-ground text-[13px]">
       <a
         href="#main"
         className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"

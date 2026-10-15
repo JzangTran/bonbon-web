@@ -84,7 +84,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
   const atHome = pathname === homePath
 
   return (
-    <div className="flex h-svh flex-col bg-card text-[13px]">
+    <div className="ws-root flex h-svh flex-col bg-card text-[13px]">
       <a
         href="#main"
         className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
