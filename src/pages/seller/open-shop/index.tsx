@@ -16,6 +16,7 @@ import { Input } from '@/shared/ui/input'
 import { Stepper } from '@/shared/ui/stepper'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { FocusFrame } from '@/widgets/focus-frame'
 
 const STEPS = ['Thông tin quán', 'Giao hàng & giờ', 'Thuế & nhận tiền', 'Định danh', 'Xác nhận'] as const
 
@@ -50,7 +51,16 @@ const FIELD_LABEL: Record<string, string> = {
  * Where a seller lands until the shop is approved (open-shop.md): the five-step wizard for a new, draft or
  * rejected application, a read-only page while it is under review.
  */
-export function OpenShopPage() {
+/** The open-shop flow on a page of its own (open-shop.md): the person is leaving the workspace behind until the shop is approved. */
+export function OpenShopFocusPage() {
+  return (
+    <FocusFrame title="Mở cửa hàng" width="lg">
+      <OpenShopPage />
+    </FocusFrame>
+  )
+}
+
+function OpenShopPage() {
   const shop = useShop()
   if (shop.isPending) return <Skeleton className="h-96 max-w-4xl" />
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />

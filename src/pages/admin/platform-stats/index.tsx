@@ -10,6 +10,7 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { AdminHomeTabs } from '@/widgets/admin-tabs'
 import { FormError } from '@/widgets/auth-shell'
 import { RangePicker, granularityLabel, useStatsRange } from '@/widgets/range-picker'
 
@@ -46,6 +47,7 @@ export function AdminPlatformStatsPage() {
 
   return (
     <div className="flex min-w-0 max-w-5xl flex-col gap-6">
+      <AdminHomeTabs />
       <div>
         <h1 className="text-2xl font-bold">Thống kê hệ thống</h1>
         <p className="text-sm text-muted-foreground">

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -31,7 +32,10 @@ function seoFiles(siteUrl: string | undefined): Plugin {
 }
 
 // https://vite.dev/config/
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string }
+
 export default defineConfig(({ mode }) => ({
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [react(), tailwindcss(), seoFiles(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL)],
   resolve: {
     alias: {

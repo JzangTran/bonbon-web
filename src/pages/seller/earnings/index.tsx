@@ -8,6 +8,7 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { FinanceTabs } from '@/widgets/seller-tabs'
 
 const GRANULARITY_LABEL: Record<Granularity, string> = { day: 'Ngày', week: 'Tuần', month: 'Tháng' }
 
@@ -28,6 +29,7 @@ export function SellerEarningsPage() {
 
   return (
     <div className="flex max-w-5xl flex-col gap-6">
+      <FinanceTabs />
       <div>
         <h1 className="text-2xl font-bold">Thu nhập</h1>
         <p className="text-sm text-muted-foreground">Tiền giữa quán và bonbon. Mọi con số lấy từ sổ cái, cùng một sổ mà quản trị viên đối soát.</p>

@@ -1,40 +1,9 @@
-import { AlertTriangleIcon, LifeBuoyIcon, SettingsIcon, ShieldCheckIcon, StoreIcon, WalletIcon } from 'lucide-react'
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import { AreaLayout, type NavGroup } from '@/app/layouts/area-layout'
+import { AdminLayout } from '@/app/layouts/admin-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 import { RouteError } from './route-error'
-
-const adminNav: NavGroup[] = [
-  {
-    items: [
-      { to: '/admin', label: 'Tổng quan' },
-      { to: '/admin/statistics', label: 'Thống kê hệ thống' },
-    ],
-  },
-  {
-    title: 'Cửa hàng',
-    icon: <StoreIcon />,
-    items: [
-      { to: '/admin/shop-review', label: 'Duyệt cửa hàng' },
-      { to: '/admin/merchants', label: 'Danh sách và vùng phủ' },
-    ],
-  },
-  {
-    title: 'Tiền',
-    icon: <WalletIcon />,
-    items: [
-      { to: '/admin/settlement', label: 'Đối soát' },
-      { to: '/admin/commission', label: 'Hoa hồng' },
-      { to: '/admin/refunds', label: 'Hoàn tiền' },
-    ],
-  },
-  { title: 'Chất lượng', icon: <AlertTriangleIcon />, items: [{ to: '/admin/order-cases', label: 'Khiếu nại đơn hàng' }, { to: '/admin/penalties', label: 'Điểm phạt các quán' }] },
-  { title: 'Nội dung', icon: <ShieldCheckIcon />, items: [{ to: '/admin/reviews', label: 'Kiểm duyệt đánh giá' }, { to: '/admin/categories', label: 'Ngành hàng' }, { to: '/admin/category-moderation', label: 'Món sai ngành' }] },
-  { title: 'Hỗ trợ', icon: <LifeBuoyIcon />, items: [{ to: '/admin/support-tickets', label: 'Phiếu hỗ trợ' }, { to: '/admin/lookup', label: 'Tra cứu đơn & tài khoản' }, { to: '/admin/help-articles', label: 'Bài trợ giúp' }] },
-  { title: 'Hệ thống', icon: <SettingsIcon />, items: [{ to: '/admin/admins', label: 'Quản trị viên' }, { to: '/admin/legal-documents', label: 'Văn bản pháp lý' }, { to: '/admin/app-config', label: 'Cấu hình app' }] },
-]
 
 const router = createBrowserRouter([
   {
@@ -82,6 +51,25 @@ const router = createBrowserRouter([
     lazy: () => import('@/pages/legal-document').then((m) => ({ Component: m.LegalDocumentPage })),
   },
   {
+    // Tasks that need the person's whole attention: a page of their own, no workspace around them.
+    element: <RequireRole role="SELLER" loginPath="/seller/login" />,
+    errorElement: <RouteError />,
+    children: [
+      {
+        path: '/focus/open-shop',
+        lazy: () => import('@/pages/seller/open-shop').then((m) => ({ Component: m.OpenShopFocusPage })),
+      },
+      {
+        path: '/focus/close-shop',
+        lazy: () => import('@/pages/seller/close-shop').then((m) => ({ Component: m.CloseShopPage })),
+      },
+      {
+        path: '/focus/delete-account',
+        lazy: () => import('@/pages/seller/delete-account').then((m) => ({ Component: m.SellerDeleteAccountPage })),
+      },
+    ],
+  },
+  {
     element: <RequireRole role="SELLER" loginPath="/seller/login" />,
     children: [
       {
@@ -112,6 +100,18 @@ const router = createBrowserRouter([
           {
             path: 'orders',
             lazy: () => import('@/pages/seller/orders').then((m) => ({ Component: m.SellerOrdersPage })),
+          },
+          {
+            path: 'orders/cancelled',
+            lazy: () => import('@/pages/seller/orders').then((m) => ({ Component: m.SellerCancelledOrdersPage })),
+          },
+          {
+            path: 'shipping',
+            lazy: () => import('@/pages/seller/shipping').then((m) => ({ Component: m.SellerShippingPage })),
+          },
+          {
+            path: 'bank-account',
+            lazy: () => import('@/pages/seller/bank-account').then((m) => ({ Component: m.SellerBankAccountPage })),
           },
           {
             path: 'statistics',
@@ -162,8 +162,16 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerMenuPage })),
           },
           {
+            path: 'menu/options',
+            lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerOptionGroupsPage })),
+          },
+          {
+            path: 'menu/new',
+            lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerAddDishPage })),
+          },
+          {
             path: 'open-shop',
-            lazy: () => import('@/pages/seller/open-shop').then((m) => ({ Component: m.OpenShopPage })),
+            element: <Navigate to="/focus/open-shop" replace />,
           },
         ],
       },
@@ -174,7 +182,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/admin',
-        element: <AreaLayout title="Quản trị" nav={adminNav} loginPath="/admin/login" tone="dark" />,
+        element: <AdminLayout />,
         errorElement: <RouteError />,
         children: [
           {

@@ -97,7 +97,8 @@ export function SellerRegisterPage() {
       <AuthHero
         heading="Đăng ký"
         eyebrow="bonbon dành cho người bán"
-        headline="Trở thành người bán ngay hôm nay"
+        headline="Trở thành người bán"
+        headlineSoft="ngay hôm nay"
         points={SELLER_POINTS}
         cardTitle="Đăng ký"
         footer={
