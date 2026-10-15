@@ -229,12 +229,12 @@ function OrderRow({ order, now, onOpen }: { order: ShopOrderSummary; now: number
   )
 }
 
-function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void }) {
+function History({ live, onOpen, statuses }: { live: boolean; onOpen: (id: string) => void; statuses?: OrderStatus[] }) {
   const [status, setStatus] = useState<'ALL' | OrderStatus>('ALL')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
   const [page, setPage] = useState(0)
-  const query = useShopOrders({ statuses: status === 'ALL' ? FINISHED : [status], from, to, page, size: 20 }, live)
+  const query = useShopOrders({ statuses: statuses ?? (status === 'ALL' ? FINISHED : [status]), from, to, page, size: 20 }, live)
   const total = query.data?.total ?? 0
   const pages = Math.max(1, Math.ceil(total / 20))
   const reset = <T,>(set: (value: T) => void) => (value: T) => {
@@ -245,6 +245,7 @@ function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end gap-4">
+        {statuses ? null : (
         <div className="flex flex-col gap-2">
           <Label htmlFor="history-status">Trạng thái</Label>
           <select
@@ -260,6 +261,7 @@ function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void
             <option value="NOT_DELIVERED">Giao không thành công</option>
           </select>
         </div>
+        )}
         <div className="flex flex-col gap-2">
           <Label htmlFor="history-from">Từ ngày</Label>
           <Input id="history-from" type="date" value={from} max={to || undefined} onChange={(e) => reset(setFrom)(e.target.value)} />
@@ -283,6 +285,20 @@ function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void
           </Button>
         </div>
       ) : null}
+    </div>
+  )
+}
+
+const CANCELLED: OrderStatus[] = ['REJECTED', 'CANCELLED', 'NOT_DELIVERED']
+
+/** Orders that did not end in a delivery: refused by the shop, cancelled by the customer, or not delivered. */
+export function SellerCancelledOrdersPage() {
+  const [openId, setOpenId] = useState<string | null>(null)
+  return (
+    <div className="flex max-w-5xl flex-col gap-4">
+      <h1 className="text-2xl font-bold">Đơn hủy</h1>
+      <History live={false} statuses={CANCELLED} onOpen={setOpenId} />
+      <OrderSheet id={openId} onClose={() => setOpenId(null)} />
     </div>
   )
 }

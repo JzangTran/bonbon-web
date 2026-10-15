@@ -18,7 +18,7 @@ const TABS: { id: Tab; label: string }[] = [
 ]
 
 /** The seller's menu (manage-menu.md, manage-menu-options.md): sections and dishes, and the option groups dishes offer. */
-export function SellerMenuPage() {
+export function SellerMenuPage({ startNewDish = false }: { startNewDish?: boolean }) {
   const menu = useMenu()
   const groups = useOptionGroups()
   const [tab, setTab] = useState<Tab>('dishes')
@@ -66,10 +66,15 @@ export function SellerMenuPage() {
       ) : menu.isError || groups.isError ? (
         <FormError message={problemMessage(menu.error ?? groups.error)} />
       ) : tab === 'dishes' ? (
-        <MenuTab menu={menu.data} groups={groups.data} />
+        <MenuTab menu={menu.data} groups={groups.data} startNewDish={startNewDish} />
       ) : (
         <OptionsTab menu={menu.data} groups={groups.data} />
       )}
     </div>
   )
+}
+
+/** "Thêm món ăn": the menu with the new-dish form already open on the first section. */
+export function SellerAddDishPage() {
+  return <SellerMenuPage startNewDish />
 }

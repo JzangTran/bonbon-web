@@ -22,6 +22,13 @@
   th {
     font-variant-numeric: tabular-nums;
   }
+  /* Pages keep an h1 for assistive tech, but the workspace shows the page name in the header breadcrumb only. */
+  .ws-content h1 {
+    @apply sr-only;
+  }
+  .ws-content > div {
+    max-width: none;
+  }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
   }

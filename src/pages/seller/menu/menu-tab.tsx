@@ -22,9 +22,10 @@ function moved(ids: string[], id: string, by: -1 | 1): string[] | null {
   return next
 }
 
-export function MenuTab({ menu, groups }: { menu: Menu; groups: OptionGroups }) {
+export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; groups: OptionGroups; startNewDish?: boolean }) {
   const sections = menu.sections ?? []
-  const [editing, setEditing] = useState<Editing | null>(null)
+  const firstSection = sections[0]?.id
+  const [editing, setEditing] = useState<Editing | null>(() => (startNewDish && firstSection ? { item: null, sectionId: firstSection } : null))
   const [adding, setAdding] = useState(false)
   const [name, setName] = useState('')
 
