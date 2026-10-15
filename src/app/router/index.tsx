@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AdminLayout } from '@/app/layouts/admin-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
@@ -49,6 +49,25 @@ const router = createBrowserRouter([
   {
     path: '/legal/:type',
     lazy: () => import('@/pages/legal-document').then((m) => ({ Component: m.LegalDocumentPage })),
+  },
+  {
+    // Tasks that need the person's whole attention: a page of their own, no workspace around them.
+    element: <RequireRole role="SELLER" loginPath="/seller/login" />,
+    errorElement: <RouteError />,
+    children: [
+      {
+        path: '/focus/open-shop',
+        lazy: () => import('@/pages/seller/open-shop').then((m) => ({ Component: m.OpenShopFocusPage })),
+      },
+      {
+        path: '/focus/close-shop',
+        lazy: () => import('@/pages/seller/close-shop').then((m) => ({ Component: m.CloseShopPage })),
+      },
+      {
+        path: '/focus/delete-account',
+        lazy: () => import('@/pages/seller/delete-account').then((m) => ({ Component: m.SellerDeleteAccountPage })),
+      },
+    ],
   },
   {
     element: <RequireRole role="SELLER" loginPath="/seller/login" />,
@@ -152,7 +171,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'open-shop',
-            lazy: () => import('@/pages/seller/open-shop').then((m) => ({ Component: m.OpenShopPage })),
+            element: <Navigate to="/focus/open-shop" replace />,
           },
         ],
       },

@@ -50,3 +50,9 @@
     }
   }
 }
+
+/* Flat workspace: cards in the work area have no outline, only a light fill (outside @layer so it wins over the ring utility). */
+.ws-content [data-slot="card"] {
+  box-shadow: none;
+  background-color: var(--ws-fill);
+}

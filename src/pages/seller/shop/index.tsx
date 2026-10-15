@@ -7,9 +7,9 @@ import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { DangerLinkCard } from '@/shared/ui/danger-link-card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
-import { CloseShopCard } from './close-shop-card'
 
 type Update = components['schemas']['ShopProfileUpdateRequest']
 
@@ -25,7 +25,12 @@ export function SellerShopPage() {
     <div className="flex max-w-4xl flex-col gap-6">
       <h1 className="text-2xl font-bold">Hồ sơ cửa hàng</h1>
       <InfoCard key={`info-${shop.data.shop?.name}-${shop.data.shop?.address?.placeId}`} shop={shop.data} />
-      <CloseShopCard />
+      <DangerLinkCard
+        title="Đóng cửa hàng"
+        description="Đóng hẳn cửa hàng, không mở lại được. Muốn bán lại phải mở một cửa hàng mới."
+        to="/focus/close-shop"
+        action="Đóng cửa hàng"
+      />
     </div>
   )
 }

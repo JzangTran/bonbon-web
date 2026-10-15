@@ -5,7 +5,7 @@ import { AcceptingOrdersSwitch } from '@/features/accepting-orders'
 import { WorkspaceShell, type AccountLink, type ExtraPage, type FooterLink, type NavParent } from './workspace'
 
 /** Pages a seller without an approved shop may open (open-shop.md: selling features stay blocked until then). */
-const OPEN_BEFORE_APPROVAL = ['/seller/open-shop', '/seller/account']
+const OPEN_BEFORE_APPROVAL = ['/seller/account']
 
 /** A closing shop keeps what it needs to finish: orders, cases, earnings, support (close-shop.md). */
 const WHILE_CLOSING = ['/seller/closing', '/seller/orders', '/seller/order-cases', '/seller/performance', '/seller/earnings', '/seller/support-tickets', '/seller/help', '/seller/account', '/seller/chat']
@@ -64,7 +64,6 @@ const EXTRAS: ExtraPage[] = [
   { to: '/seller/help', label: 'Trung tâm trợ giúp' },
   { to: '/seller/support-tickets', label: 'Liên hệ hỗ trợ' },
   { to: '/seller/closing', label: 'Đóng cửa hàng' },
-  { to: '/seller/open-shop', label: 'Mở cửa hàng' },
 ]
 
 const ACCOUNT: AccountLink[] = [
@@ -91,7 +90,7 @@ const CLOSING_NAV: NavParent[] = [
   { key: 'account', label: 'Tài khoản', icon: UserRoundIcon, to: '/seller/account' },
 ]
 const SETUP_NAV: NavParent[] = [
-  { key: 'open-shop', label: 'Mở cửa hàng', icon: StoreIcon, to: '/seller/open-shop' },
+  { key: 'open-shop', label: 'Mở cửa hàng', icon: StoreIcon, to: '/focus/open-shop' },
   { key: 'account', label: 'Tài khoản', icon: UserRoundIcon, to: '/seller/account' },
 ]
 
@@ -107,7 +106,7 @@ export function SellerLayout() {
     return <Navigate to="/seller/closing" replace />
   }
   if (shop.data && !approved && !closing && !OPEN_BEFORE_APPROVAL.includes(pathname)) {
-    return <Navigate to="/seller/open-shop" replace />
+    return <Navigate to="/focus/open-shop" replace />
   }
   return (
     <WorkspaceShell

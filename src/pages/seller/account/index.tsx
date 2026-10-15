@@ -8,10 +8,10 @@ import { useSession } from '@/entities/session'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { DangerLinkCard } from '@/shared/ui/danger-link-card'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { FormError, FormSuccess } from '@/widgets/auth-shell'
-import { DeleteAccountCard } from './delete-account-card'
 
 const VN_MOBILE = /^(0|\+84)(3|5|7|8|9)\d{8}$/
 
@@ -38,7 +38,12 @@ export function SellerAccountPage() {
       <ProfileCard />
       {hasPassword ? <PasswordCard /> : null}
       <SessionsCard hasPassword={hasPassword} />
-      <DeleteAccountCard />
+      <DangerLinkCard
+        title="Xoá tài khoản"
+        description="Xoá toàn bộ tài khoản, gồm cả vai trò khách và người bán nếu bạn có cả hai. Có thời gian chờ trước khi xoá thật."
+        to="/focus/delete-account"
+        action="Xoá tài khoản"
+      />
     </div>
   )
 }
