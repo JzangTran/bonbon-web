@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { api, problemMessage } from '@/shared/api'
+import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 
 type DocumentType = 'CUSTOMER_TERMS' | 'SELLER_TERMS' | 'PRIVACY_POLICY'
 const TYPES: DocumentType[] = ['CUSTOMER_TERMS', 'SELLER_TERMS', 'PRIVACY_POLICY']
@@ -19,7 +20,9 @@ export function LegalDocumentPage() {
     },
   })
   return (
-    <main className="mx-auto flex max-w-2xl flex-col gap-4 p-6">
+    <div className="flex min-h-svh flex-col bg-background">
+      <SiteHeader />
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-4 py-10 sm:px-6">
       {!valid ? <p>Không tìm thấy văn bản.</p> : null}
       {doc.isError ? <p className="text-destructive">{problemMessage(doc.error)}</p> : null}
       {doc.data ? (
@@ -32,6 +35,8 @@ export function LegalDocumentPage() {
           <article className="whitespace-pre-line leading-7">{doc.data.content}</article>
         </>
       ) : null}
-    </main>
+      </main>
+      <SiteFooter />
+    </div>
   )
 }

@@ -1,5 +1,7 @@
 import { ImageIcon, XIcon } from 'lucide-react'
 import { useRef } from 'react'
+import { toast } from 'sonner'
+import { acceptUploads } from '@/shared/lib/upload'
 import { Button } from '@/shared/ui/button'
 
 const MAX = 3
@@ -15,9 +17,11 @@ export function ImagePicker({ files, onChange }: { files: File[]; onChange: (fil
         accept="image/jpeg,image/png,image/webp"
         multiple
         className="hidden"
-        onChange={(e) => {
-          onChange([...files, ...Array.from(e.target.files ?? [])].slice(0, MAX))
+        onChange={async (e) => {
+          const picked = Array.from(e.target.files ?? [])
           e.target.value = ''
+          const ok = await acceptUploads(picked, { maxMb: 5 }, (m) => toast.error(m))
+          onChange([...files, ...ok].slice(0, MAX))
         }}
       />
       <div className="flex flex-wrap items-center gap-2">

@@ -22,20 +22,20 @@ export function OpeningHoursEditor({ value, onChange }: { value: OpeningWindow[]
   }
 
   return (
-    <div className="flex flex-col divide-y rounded-lg border">
+    <div className="flex flex-col divide-y rounded-sm border">
       {WEEKDAYS.map((name, idx) => {
         const day = idx + 1
         const windows = byDay(day)
         return (
           <div key={day} className="flex flex-wrap items-center gap-2 px-3 py-2">
-            <span className="w-20 shrink-0 text-sm font-medium">{name}</span>
+            <span className="w-full shrink-0 text-sm font-medium sm:w-20">{name}</span>
             {windows.length === 0 ? <span className="text-sm text-muted-foreground">Nghỉ</span> : null}
             {windows.map(({ w, i }) => (
-              <span key={i} className="flex items-center gap-1 rounded-md bg-muted px-2 py-1">
+              <span key={i} className="flex max-w-full flex-wrap items-center gap-1 rounded-md bg-muted px-2 py-1">
                 <Input
                   type="time"
                   aria-label={`${name} mở cửa`}
-                  className="h-8 w-28"
+                  className="h-8 w-36"
                   value={w.opensAt}
                   onChange={(e) => update(i, { opensAt: e.target.value })}
                 />
@@ -43,7 +43,7 @@ export function OpeningHoursEditor({ value, onChange }: { value: OpeningWindow[]
                 <Input
                   type="time"
                   aria-label={`${name} đóng cửa`}
-                  className="h-8 w-28"
+                  className="h-8 w-36"
                   value={w.closesAt}
                   onChange={(e) => update(i, { closesAt: e.target.value })}
                 />

@@ -17,14 +17,14 @@ const VN_MOBILE = /^(0|\+84)(3|5|7|8|9)\d{8}$/
 
 const profileSchema = z.object({
   name: z.string().trim().min(1, 'Vui lòng nhập họ tên').max(100),
-  phone: z.string().trim().refine((v) => v === '' || VN_MOBILE.test(v), 'Số điện thoại di động Việt Nam không hợp lệ'),
+  phone: z.string().trim().max(30).refine((v) => v === '' || VN_MOBILE.test(v), 'Số điện thoại di động Việt Nam không hợp lệ'),
 })
 
 const passwordSchema = z
   .object({
-    currentPassword: z.string().min(1, 'Vui lòng nhập mật khẩu hiện tại'),
+    currentPassword: z.string().min(1, 'Vui lòng nhập mật khẩu hiện tại').max(100),
     newPassword: z.string().min(8, 'Mật khẩu tối thiểu 8 ký tự').max(100),
-    confirmPassword: z.string(),
+    confirmPassword: z.string().max(100),
   })
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: 'Mật khẩu nhập lại không khớp' })
 

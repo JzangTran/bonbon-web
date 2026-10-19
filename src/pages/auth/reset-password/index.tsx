@@ -12,7 +12,7 @@ import { AuthShell, FormError, FormSuccess } from '@/widgets/auth-shell'
 const schema = z
   .object({
     newPassword: z.string().min(8, 'Mật khẩu tối thiểu 8 ký tự').max(100, 'Tối đa 100 ký tự'),
-    confirmPassword: z.string(),
+    confirmPassword: z.string().max(100),
   })
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: 'Mật khẩu nhập lại không khớp' })
 type Values = z.infer<typeof schema>

@@ -3,6 +3,7 @@ import { CheckIcon, ClockIcon, TriangleAlertIcon, UploadIcon } from 'lucide-reac
 import { useState, type ReactNode } from 'react'
 import { Link, Navigate } from 'react-router'
 import { toast } from 'sonner'
+import { acceptUploads } from '@/shared/lib/upload'
 import { SHOP_QUERY_KEY, shopStatus, useShop, type ShopApplication } from '@/entities/shop'
 import { AddressPicker } from '@/features/address-picker'
 import { OpeningHoursEditor, toEditorWindows, type OpeningWindow } from '@/features/opening-hours-editor'
@@ -342,12 +343,15 @@ function UploadBox({
   hint,
   kind,
   accept,
+  maxMb = 8,
   previewUrl,
 }: {
   label: string
   hint: string
   kind: 'business-license' | 'identity-front' | 'identity-selfie'
   accept: string
+  /** the server's limit for this document, in MB */
+  maxMb?: number
   previewUrl?: string
 }) {
   const upload = useUpload(kind)
@@ -377,10 +381,11 @@ function UploadBox({
         type="file"
         accept={accept}
         className="sr-only"
-        onChange={(e) => {
-          const file = e.target.files?.[0]
-          if (file) upload.mutate(file)
+        onChange={async (e) => {
+          const picked = Array.from(e.target.files ?? []).slice(0, 1)
           e.target.value = ''
+          const [ok] = await acceptUploads(picked, { maxMb, pdf: accept.includes('application/pdf') }, (m) => toast.error(m))
+          if (ok) upload.mutate(ok)
         }}
       />
     </div>
@@ -489,6 +494,7 @@ function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }
           hint="Ảnh hoặc PDF, tối đa 10 MB."
           kind="business-license"
           accept="image/jpeg,image/png,image/webp,application/pdf"
+          maxMb={10}
           previewUrl={t?.businessLicenseUrl}
         />
       ) : null}

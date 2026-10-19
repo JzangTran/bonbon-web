@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
 import {
   BikeIcon,
   CheckIcon,
@@ -15,15 +14,21 @@ import {
   WalletIcon,
 } from 'lucide-react'
 import { Link } from 'react-router'
-import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
-import { Lockup } from '@/shared/ui/brand'
+import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
+import { siteButton, siteButtonGreen } from '@/widgets/site-chrome/buttons'
 
-const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
-const btn = 'inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full px-6 text-base font-semibold outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-[52px] sm:px-[26px]'
-const btnGreen = cn(btn, 'bg-primary text-primary-foreground hover:bg-primary-hover')
+const btn = siteButton
+const btnGreen = siteButtonGreen
 const btnPale = cn(btn, 'bg-pill-pale text-ink hover:bg-[#e3e8e5]')
+
+const SECTIONS = [
+  { id: 'dat-mon', label: 'Đặt món' },
+  { id: 'quan', label: 'Quán trong khu' },
+  { id: 'mo-quan', label: 'Mở quán' },
+  { id: 'hoi-dap', label: 'Hỏi đáp' },
+]
 
 /** Public landing page at "/": brings customers to the app and local shops to seller sign-up (look: Landing v3 on the design canvas). */
 export function LandingPage() {
@@ -34,7 +39,7 @@ export function LandingPage() {
         name="description"
         content="Đặt cơm, bún, đồ uống từ các quán ngay trong chung cư và khu công nghiệp của bạn. Quán tự giao trong khu, phí giao thấp. Chủ quán trả hoa hồng thấp hơn các ứng dụng lớn."
       />
-      <Header />
+      <SiteHeader sections={SECTIONS} />
       <main>
         <Hero />
         <NearbyShops />
@@ -43,7 +48,7 @@ export function LandingPage() {
         <SellerBand />
         <Faq />
       </main>
-      <Footer />
+      <SiteFooter />
     </div>
   )
 }
@@ -68,85 +73,6 @@ function Badge({ children }: { children: ReactNode }) {
     <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-white [&_svg]:size-[22px]" aria-hidden="true">
       {children}
     </span>
-  )
-}
-
-const SECTIONS = ['dat-mon', 'quan', 'mo-quan', 'hoi-dap'] as const
-
-/** The section nearest the top of the screen, to mark its link in the bar. */
-function useActiveSection() {
-  const [active, setActive] = useState<string>(SECTIONS[0])
-  useEffect(() => {
-    const visible = new Set<string>()
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) visible.add(e.target.id)
-          else visible.delete(e.target.id)
-        }
-        const first = SECTIONS.find((id) => visible.has(id))
-        if (first) setActive(first)
-      },
-      { rootMargin: '-20% 0px -60% 0px' },
-    )
-    for (const id of SECTIONS) {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    }
-    return () => observer.disconnect()
-  }, [])
-  return active
-}
-
-function Header() {
-  const { session } = useSession()
-  const active = useActiveSection()
-  const area =
-    session?.role === 'SELLER' ? { to: '/seller', label: 'Vào trang người bán' }
-    : session?.role === 'ADMIN' ? { to: '/admin', label: 'Vào trang quản trị' }
-    : null
-  const links = [
-    ['dat-mon', 'Đặt món'],
-    ['quan', 'Quán trong khu'],
-    ['mo-quan', 'Mở quán'],
-    ['hoi-dap', 'Hỏi đáp'],
-  ] as const
-
-  return (
-    <header className="pt-4 sm:pt-6">
-      <Wrap>
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[28px] bg-ink py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:rounded-full sm:pl-[30px]">
-          <Link to="/" className="flex items-center">
-            <Lockup tone="white" className="h-9" />
-          </Link>
-          <nav aria-label="Trang chủ" className="order-3 flex w-full flex-wrap gap-1 sm:order-none sm:w-auto">
-            {links.map(([id, label]) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                aria-current={active === id ? 'location' : undefined}
-                className={cn(
-                  'rounded-full px-4 py-2.5 text-[15px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white sm:px-[18px]',
-                  active === id && 'bg-white font-semibold text-ink hover:bg-white',
-                )}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-          {area ? (
-            <Link to={area.to} className={cn(btnGreen, 'min-h-12 px-[22px]')}>
-              {area.label}
-            </Link>
-          ) : (
-            <a href="#tai-app" className={cn(btnGreen, 'min-h-12 px-[22px]')}>
-              <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
-              Tải app
-            </a>
-          )}
-        </div>
-      </Wrap>
-    </header>
   )
 }
 
@@ -417,7 +343,7 @@ function SellerBand() {
           </Link>
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
-          <ImageSlot label="Ảnh chủ quán bán hàng trên bonbon (bổ sung sau)" className="aspect-[4/5] w-full max-w-[420px] rounded-[32px] bg-[#164a30]" />
+          <ImageSlot label="Ảnh chủ quán bán hàng trên bonbon (bổ sung sau)" className="aspect-[4/5] w-full max-w-[420px] rounded-card bg-[#164a30]" />
         </div>
       </Wrap>
     </section>
@@ -455,7 +381,7 @@ function Faq() {
             <div key={group.group} className="flex flex-col gap-3">
               <h3 className="text-sm font-bold text-primary">{group.group}</h3>
               {group.items.map((item) => (
-                <details key={item.q} className="group rounded-card bg-card px-6 py-4">
+                <details key={item.q} className="group rounded-panel bg-card px-6 py-4">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                     {item.q}
                     <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-pill-pale" aria-hidden="true">
@@ -470,31 +396,5 @@ function Faq() {
         </div>
       </Wrap>
     </section>
-  )
-}
-
-function Footer() {
-  return (
-    <footer className="bg-ink text-brand-100">
-      <Wrap className="flex flex-wrap justify-between gap-6 py-10 text-sm">
-        <div className="flex flex-col gap-2">
-          <Lockup tone="white" className="h-9" />
-          <span>Đặt món từ quán trong khu.</span>
-          {SUPPORT_EMAIL ? (
-            <span>
-              Liên hệ:{' '}
-              <a href={`mailto:${SUPPORT_EMAIL}`} className="underline-offset-4 hover:underline">
-                {SUPPORT_EMAIL}
-              </a>
-            </span>
-          ) : null}
-        </div>
-        <nav aria-label="Pháp lý" className="flex flex-wrap items-start gap-x-6 gap-y-2">
-          <Link to="/legal/CUSTOMER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản sử dụng</Link>
-          <Link to="/legal/SELLER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản người bán</Link>
-          <Link to="/legal/PRIVACY_POLICY" className="underline-offset-4 hover:text-white hover:underline">Chính sách quyền riêng tư</Link>
-        </nav>
-      </Wrap>
-    </footer>
   )
 }

@@ -30,19 +30,21 @@ export function AuthTopBar({ title }: { title: string }) {
 }
 
 /** A centered card under the top bar: sign-in help pages (forgot password, verify email, admin sign-in). */
-export function AuthShell({ title, description, children, footer, heading = 'Đăng nhập' }: {
+export function AuthShell({ title, description, children, footer, heading = 'Đăng nhập', bare = false }: {
   title: string
   description?: string
   children: ReactNode
   footer?: ReactNode
   /** The name shown beside the logo in the top bar. */
   heading?: string
+  /** No bar at all: pages reached from outside (a payment provider) that only say goodbye. */
+  bare?: boolean
 }) {
   return (
     <div className="flex min-h-svh flex-col bg-background">
-      <AuthTopBar title={heading} />
+      {bare ? null : <AuthTopBar title={heading} />}
       <main className="flex flex-1 flex-col items-center justify-center gap-5 px-4 py-10">
-        <div className="flex w-full max-w-sm flex-col gap-5 rounded-card bg-card p-8 shadow-float">
+        <div className="flex w-full max-w-sm flex-col gap-5 rounded-panel bg-card p-8 shadow-float">
           <div className="flex flex-col gap-1.5 text-center">
             <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
             {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
@@ -100,7 +102,7 @@ export function AuthHero({ heading, eyebrow, headline, headlineSoft, points, car
               ))}
             </ul>
           </section>
-          <div className="order-1 flex w-full max-w-sm flex-col gap-5 justify-self-center rounded-card bg-card p-8 shadow-float md:order-2 md:max-w-none">
+          <div className="order-1 flex w-full max-w-sm flex-col gap-5 justify-self-center rounded-panel bg-card p-8 shadow-float md:order-2 md:max-w-none">
             <h1 className="text-2xl font-extrabold tracking-tight">{cardTitle}</h1>
             {children}
             <p className="text-center text-sm text-muted-foreground">{footer}</p>
@@ -126,7 +128,7 @@ export function AuthStepPage({ heading, steps, current, title, description, onBa
       <AuthTopBar title={heading} />
       <main className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center gap-8 px-4 py-10">
         <Stepper steps={steps} current={current} className="max-w-md" />
-        <div className="relative flex w-full flex-col gap-5 rounded-card bg-card p-8 shadow-float">
+        <div className="relative flex w-full flex-col gap-5 rounded-panel bg-card p-8 shadow-float">
           {onBack ? (
             <button
               type="button"

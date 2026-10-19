@@ -7,7 +7,7 @@ import { AuthShell, SuccessMark } from '@/widgets/auth-shell'
  */
 export function PaymentReturnPage() {
   return (
-    <AuthShell title="Đã nhận kết quả từ MoMo" heading="Thanh toán" description="Quay lại ứng dụng bonbon để xem đơn của bạn. Trạng thái đơn sẽ tự cập nhật trong ít giây.">
+    <AuthShell bare title="Đã nhận kết quả từ MoMo" description="Quay lại ứng dụng bonbon để xem đơn của bạn. Trạng thái đơn sẽ tự cập nhật trong ít giây.">
       <SuccessMark />
       <Link to="/" className="text-center text-sm text-primary hover:underline">
         Về trang chủ bonbon
