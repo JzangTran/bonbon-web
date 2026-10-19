@@ -18,7 +18,7 @@ import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
 
 const schema = z.object({
   email: z.email('Email không hợp lệ'),
-  password: z.string().min(1, 'Vui lòng nhập mật khẩu'),
+  password: z.string().min(1, 'Vui lòng nhập mật khẩu').max(100, 'Mật khẩu tối đa 100 ký tự'),
 })
 type Values = z.infer<typeof schema>
 type LoginResponse = components['schemas']['LoginResponse']

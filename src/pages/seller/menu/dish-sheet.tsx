@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { acceptUploads } from '@/shared/lib/upload'
 import {
   MENU_QUERY_KEY,
   OPTIONS_QUERY_KEY,
@@ -252,9 +253,13 @@ export function DishSheet({
               id="dish-photo"
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              onChange={(e) => {
-                setPhoto(e.target.files?.[0] ?? null)
-                setRemovePhoto(false)
+              onChange={async (e) => {
+                const input = e.target
+                const picked = Array.from(input.files ?? []).slice(0, 1)
+                const [ok] = await acceptUploads(picked, { maxMb: 5 }, (m) => toast.error(m))
+                if (!ok) input.value = ''
+                setPhoto(ok ?? null)
+                if (ok) setRemovePhoto(false)
               }}
             />
             <p className="text-xs text-muted-foreground">JPG, PNG hoặc WebP, tối đa 5 MB.</p>

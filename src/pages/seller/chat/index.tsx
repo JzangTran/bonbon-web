@@ -2,9 +2,12 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ArrowLeftIcon, ImageIcon, SendIcon, XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
+import { toast } from 'sonner'
+
 import { CHAT_KEY, MessageList, useConversations, useMarkRead, useSendMessage, useThread, type ChatMessage, type Conversation } from '@/entities/chat'
 import { useOrderSocket } from '@/entities/order'
 import { useSession } from '@/entities/session'
+import { acceptUploads } from '@/shared/lib/upload'
 import { problemMessage } from '@/shared/api'
 import { formatRelative } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
@@ -180,9 +183,11 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
             type="file"
             accept="image/jpeg,image/png,image/webp"
             className="hidden"
-            onChange={(e) => {
-              setImage(e.target.files?.[0] ?? null)
+            onChange={async (e) => {
+              const picked = Array.from(e.target.files ?? []).slice(0, 1)
               e.target.value = ''
+              const [ok] = await acceptUploads(picked, { maxMb: 5 }, (m) => toast.error(m))
+              if (ok) setImage(ok)
             }}
           />
           <Button type="button" variant="outline" size="icon" onClick={() => file.current?.click()} aria-label="Đính kèm ảnh">
