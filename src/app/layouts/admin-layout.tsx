@@ -10,6 +10,7 @@ const NAV: NavParent[] = [
     defaultOpen: false,
     children: [
       { to: '/admin/shop-review', label: 'Duyệt hồ sơ' },
+      { to: '/admin/service-areas', label: 'Khu vực phục vụ' },
       { to: '/admin/merchants', label: 'Danh sách và vùng phủ' },
     ],
   },

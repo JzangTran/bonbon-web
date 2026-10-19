@@ -21,7 +21,7 @@ export function FormRow({ label, htmlFor, hint, error, children, className }: {
     : children
   return (
     <div className={cn('grid gap-1.5 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-x-5', className)}>
-      <Label htmlFor={htmlFor} className="md:justify-end md:pt-2.5 md:text-right">
+      <Label htmlFor={htmlFor} className="leading-snug md:justify-end md:pt-2.5 md:text-right">
         {label}
       </Label>
       <div className="flex max-w-xl flex-col gap-1.5">
