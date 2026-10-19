@@ -90,7 +90,7 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
             submit()
           }}
         >
-          <FormRow label="Tên cửa hàng" htmlFor="info-name" error={errors.name}>
+          <FormRow label="Tên cửa hàng" required htmlFor="info-name" error={errors.name}>
             <Input id="info-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
           </FormRow>
           <ShopAddressFields value={address} onChange={setAddress} errors={errors} />
@@ -99,10 +99,10 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
               <TriangleAlertIcon className="size-4 shrink-0" /> Lưu địa chỉ mới sẽ gửi cửa hàng đi duyệt lại.
             </p>
           ) : null}
-          <FormRow label="Số điện thoại" htmlFor="info-phone" hint="Số điện thoại Việt Nam, ví dụ 0912345678." error={errors.phone}>
+          <FormRow label="Số điện thoại" required htmlFor="info-phone" hint="Số điện thoại Việt Nam, ví dụ 0912345678." error={errors.phone}>
             <Input id="info-phone" type="tel" inputMode="tel" maxLength={15} placeholder="0912345678" value={phone} onChange={(e) => setPhone(e.target.value)} />
           </FormRow>
-          <FormRow label="Email" htmlFor="info-email" error={errors.email}>
+          <FormRow label="Email" required htmlFor="info-email" error={errors.email}>
             <Input id="info-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormRow>
           <Button type="submit" className="self-end" disabled={disabled}>

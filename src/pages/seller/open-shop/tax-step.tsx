@@ -84,7 +84,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
 
   return (
     <StepCard title="3 · Thuế & tài khoản nhận tiền" footer={<SaveButtons pending={save.isPending} onSave={submit} />}>
-      <FormRow label="Loại hình kinh doanh" error={save.errors.businessType}>
+      <FormRow label="Loại hình kinh doanh" required error={save.errors.businessType}>
         <div role="radiogroup" aria-label="Loại hình kinh doanh" className="flex flex-wrap gap-4">
           {(
             [
@@ -99,22 +99,23 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         </div>
       </FormRow>
       {type === 'HOUSEHOLD' ? (
-        <Field id="tax-bname" label="Tên hộ kinh doanh" error={save.errors.businessName}>
+        <Field id="tax-bname" label="Tên hộ kinh doanh" required error={save.errors.businessName}>
           <Input id="tax-bname" maxLength={200} value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
         </Field>
       ) : null}
-      <Field id="tax-address" label="Địa chỉ đăng ký kinh doanh" error={save.errors.businessAddress}>
+      <Field id="tax-address" label="Địa chỉ đăng ký kinh doanh" required error={save.errors.businessAddress}>
         <Input id="tax-address" maxLength={300} value={businessAddress} onChange={(e) => setBusinessAddress(e.target.value)} />
       </Field>
-      <Field id="tax-code" label="Mã số thuế" hint="10 số, 10 số kèm mã chi nhánh (-001), hoặc 12 số CCCD." error={save.errors.taxCode}>
+      <Field id="tax-code" label="Mã số thuế" required hint="10 số, 10 số kèm mã chi nhánh (-001), hoặc 12 số CCCD." error={save.errors.taxCode}>
         <Input id="tax-code" inputMode="numeric" maxLength={14} value={taxCode} onChange={(e) => setTaxCode(e.target.value)} />
       </Field>
-      <FormRow label="Email nhận hoá đơn điện tử (tối đa 5)" error={save.errors.invoiceEmails}>
+      <FormRow label="Email nhận hoá đơn điện tử (tối đa 5)" required error={save.errors.invoiceEmails}>
         {emails.map((value, i) => (
           <div key={i} className="flex flex-col gap-1">
             <div className="flex gap-2">
               <Input
                 type="email"
+                showCount
                 aria-label={`Email hoá đơn ${i + 1}`}
                 aria-invalid={!!save.errors[`invoiceEmails[${i}]`]}
                 value={value}
@@ -142,6 +143,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
       {type === 'HOUSEHOLD' ? (
         <UploadField
           label="Giấy phép kinh doanh"
+          required
           hint="Ảnh hoặc PDF, tối đa 10 MB."
           kind="business-license"
           accept="image/jpeg,image/png,image/webp,application/pdf"
@@ -151,18 +153,19 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         />
       ) : null}
       <p className="border-t pt-4 text-sm font-medium">Tài khoản nhận tiền</p>
-      <Field id="pay-bank" label="Ngân hàng" error={save.errors.bankName}>
+      <Field id="pay-bank" label="Ngân hàng" required error={save.errors.bankName}>
         <Input id="pay-bank" maxLength={100} value={bankName} onChange={(e) => setBankName(e.target.value)} />
       </Field>
       <Field
         id="pay-number"
         label="Số tài khoản"
+        required
         hint={t?.payout?.accountLast4 ? `Đã lưu ••••${t.payout.accountLast4}; để trống để giữ nguyên.` : undefined}
         error={save.errors.accountNumber}
       >
         <Input id="pay-number" inputMode="numeric" autoComplete="off" maxLength={24} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
       </Field>
-      <Field id="pay-holder" label="Chủ tài khoản" hint="Phải là chủ cửa hàng, trùng tên trên giấy tờ ở bước 4." error={save.errors.accountHolderName}>
+      <Field id="pay-holder" label="Chủ tài khoản" required hint="Phải là chủ cửa hàng, trùng tên trên giấy tờ ở bước 4." error={save.errors.accountHolderName}>
         <Input id="pay-holder" maxLength={100} value={holder} onChange={(e) => setHolder(e.target.value)} />
       </Field>
       {mismatch ? (

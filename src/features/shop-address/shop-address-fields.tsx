@@ -43,7 +43,7 @@ export function ShopAddressFields({
 
   return (
     <>
-      <FormRow label="Tỉnh/Thành phố, Phường/Xã" htmlFor="shop-units" error={unitsError}>
+      <FormRow label="Tỉnh/Thành phố, Phường/Xã" required htmlFor="shop-units" error={unitsError}>
         <UnitPicker
           id="shop-units"
           provinceCode={value.provinceCode}
@@ -53,7 +53,7 @@ export function ShopAddressFields({
           onChange={(provinceCode, wardCode) => onChange({ ...value, provinceCode, wardCode, lat: undefined, lng: undefined })}
         />
       </FormRow>
-      <FormRow label="Địa chỉ chi tiết" htmlFor="shop-detail" error={errors.addressDetail}>
+      <FormRow label="Địa chỉ chi tiết" required htmlFor="shop-detail" error={errors.addressDetail}>
         <Textarea
           id="shop-detail"
           rows={2}
@@ -63,7 +63,7 @@ export function ShopAddressFields({
           onChange={(e) => onChange({ ...value, detail: e.target.value })}
         />
       </FormRow>
-      <FormRow label="Vị trí trên bản đồ" error={errors.location}>
+      <FormRow label="Vị trí trên bản đồ" required error={errors.location}>
         <div className="flex flex-wrap items-center gap-3">
           <Button type="button" variant="outline" onClick={() => setMapOpen(true)}>
             <MapPinIcon /> Định vị

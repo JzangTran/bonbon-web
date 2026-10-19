@@ -74,10 +74,10 @@ export function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: 
           <p className="flex min-h-9 items-center text-sm text-destructive">Chưa xác định. Hãy quay lại bước 1 và định vị quán.</p>
         )}
       </FormRow>
-      <Field id="ship-radius" label="Bán kính giao (km)" hint={`Tối đa ${cap} km${area ? ` ở ${area.name}` : ''}, tính đường chim bay từ cửa hàng.`} error={save.errors.deliveryRadiusKm}>
+      <Field id="ship-radius" label="Bán kính giao (km)" required hint={`Tối đa ${cap} km${area ? ` ở ${area.name}` : ''}, tính đường chim bay từ cửa hàng.`} error={save.errors.deliveryRadiusKm}>
         <Input id="ship-radius" inputMode="decimal" maxLength={5} value={radius} onChange={(e) => setRadius(e.target.value)} />
       </Field>
-      <Field id="ship-fee" label="Phí giao hàng (₫)" hint="0 = miễn phí." error={save.errors.deliveryFee}>
+      <Field id="ship-fee" label="Phí giao hàng (₫)" required hint="0 = miễn phí." error={save.errors.deliveryFee}>
         <Input id="ship-fee" inputMode="numeric" maxLength={9} value={fee} onChange={(e) => setFee(e.target.value)} />
       </Field>
       <Field id="ship-free" label="Miễn phí giao từ (₫, tuỳ chọn)" error={save.errors.freeDeliveryThreshold}>
@@ -86,7 +86,7 @@ export function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: 
       <Field id="ship-min" label="Đơn tối thiểu (₫, tuỳ chọn)" error={save.errors.minOrderValue}>
         <Input id="ship-min" inputMode="numeric" maxLength={11} value={min} onChange={(e) => setMin(e.target.value)} />
       </Field>
-      <FormRow label="Giờ mở cửa" error={save.errors.openingHours} className="md:[&>div]:max-w-none">
+      <FormRow label="Giờ mở cửa" required error={save.errors.openingHours} className="md:[&>div]:max-w-none">
         <OpeningHoursEditor value={hours} onChange={setHours} />
       </FormRow>
       {save.isError ? <FormError message={problemMessage(save.error)} /> : null}

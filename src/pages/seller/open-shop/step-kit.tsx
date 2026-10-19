@@ -23,9 +23,9 @@ export function StepCard({ title, description, children, footer }: { title: stri
 }
 
 /** One line of the form: the label on the left, the control on the right. */
-export function Field({ id, label, error, hint, children }: { id?: string; label: string; error?: string; hint?: string; children: ReactNode }) {
+export function Field({ id, label, required, error, hint, children }: { id?: string; label: string; required?: boolean; error?: string; hint?: string; children: ReactNode }) {
   return (
-    <FormRow htmlFor={id} label={label} error={error} hint={hint}>
+    <FormRow htmlFor={id} label={label} required={required} error={error} hint={hint}>
       {children}
     </FormRow>
   )
@@ -69,6 +69,7 @@ function useUpload(kind: UploadKind) {
 /** A document of the application: its label, a square with a plus to pick the file (checked first), and the limit as a hint. */
 export function UploadField({
   label,
+  required,
   hint,
   kind,
   accept,
@@ -77,6 +78,7 @@ export function UploadField({
   error,
 }: {
   label: string
+  required?: boolean
   hint: string
   kind: UploadKind
   accept: string
@@ -89,7 +91,7 @@ export function UploadField({
   const pdf = accept.includes('application/pdf')
   const errorId = `upload-${kind}-error`
   return (
-    <Field label={label} hint={hint} error={error}>
+    <Field label={label} required={required} hint={hint} error={error}>
       <ImageUpload
         label={label}
         accept={accept}

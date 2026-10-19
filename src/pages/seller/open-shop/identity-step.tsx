@@ -88,7 +88,7 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
       description="Giấy tờ được mã hoá; chỉ quản trị viên có quyền riêng mới xem được và mỗi lần xem đều được ghi lại."
       footer={<SaveButtons pending={save.isPending || terms.isPending || privacy.isPending} onSave={submit} />}
     >
-      <FormRow label="Loại giấy tờ">
+      <FormRow label="Loại giấy tờ" required>
         <div role="radiogroup" aria-label="Loại giấy tờ" className="flex gap-4">
           {(['CCCD', 'CMND'] as const).map((value) => (
             <label key={value} className="flex min-h-9 items-center gap-2 text-sm">
@@ -100,16 +100,18 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
       <Field
         id="id-number"
         label="Số giấy tờ"
+        required
         hint={id?.docNumberLast4 ? `Đã lưu ••••${id.docNumberLast4}; để trống để giữ nguyên.` : 'CCCD 12 số, CMND 9 hoặc 12 số.'}
         error={save.errors.docNumber}
       >
         <Input id="id-number" inputMode="numeric" autoComplete="off" maxLength={14} value={docNumber} onChange={(e) => setDocNumber(e.target.value)} />
       </Field>
-      <Field id="id-name" label="Họ tên như trên giấy tờ" error={save.errors.fullName}>
+      <Field id="id-name" label="Họ tên như trên giấy tờ" required error={save.errors.fullName}>
         <Input id="id-name" maxLength={100} value={fullName} onChange={(e) => setFullName(e.target.value)} />
       </Field>
       <UploadField
         label="Ảnh mặt trước giấy tờ"
+        required
         hint="JPG, PNG hoặc WebP, tối đa 8 MB."
         kind="identity-front"
         accept="image/jpeg,image/png,image/webp"
@@ -118,6 +120,7 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
       />
       <UploadField
         label="Ảnh bạn cầm giấy tờ"
+        required
         hint="Thấy rõ mặt và giấy tờ. JPG, PNG hoặc WebP, tối đa 8 MB."
         kind="identity-selfie"
         accept="image/jpeg,image/png,image/webp"

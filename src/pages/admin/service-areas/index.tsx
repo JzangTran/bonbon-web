@@ -173,10 +173,10 @@ function AreaDialog({ area, onClose }: { area: ServiceArea | null; onClose: () =
               submit()
             }}
           >
-            <FormRow label="Tên khu vực" htmlFor="area-name" error={errors.name}>
+            <FormRow label="Tên khu vực" required htmlFor="area-name" error={errors.name}>
               <Input id="area-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
             </FormRow>
-            <FormRow label="Tâm khu vực" error={errors.centerLat ?? errors.centerLng}>
+            <FormRow label="Tâm khu vực" required error={errors.centerLat ?? errors.centerLng}>
               <div className="flex flex-wrap items-center gap-3">
                 <Button type="button" variant="outline" onClick={() => setMapOpen(true)}>
                   <MapPinIcon /> {centre ? 'Chọn lại' : 'Chọn trên bản đồ'}
@@ -191,10 +191,10 @@ function AreaDialog({ area, onClose }: { area: ServiceArea | null; onClose: () =
                 )}
               </div>
             </FormRow>
-            <FormRow label="Bán kính khu vực (km)" htmlFor="area-radius" hint="Quán cách tâm không quá chừng này thì thuộc khu vực." error={errors.radiusKm}>
+            <FormRow label="Bán kính khu vực (km)" required htmlFor="area-radius" hint="Quán cách tâm không quá chừng này thì thuộc khu vực." error={errors.radiusKm}>
               <Input id="area-radius" inputMode="decimal" maxLength={4} value={radius} onChange={(e) => setRadius(e.target.value)} />
             </FormRow>
-            <FormRow label="Giao tối đa (km)" htmlFor="area-max" hint="Bán kính giao lớn nhất quán trong khu vực được đặt." error={errors.maxDeliveryRadiusKm}>
+            <FormRow label="Giao tối đa (km)" required htmlFor="area-max" hint="Bán kính giao lớn nhất quán trong khu vực được đặt." error={errors.maxDeliveryRadiusKm}>
               <Input id="area-max" inputMode="decimal" maxLength={4} value={maxDelivery} onChange={(e) => setMaxDelivery(e.target.value)} />
             </FormRow>
             {area ? (
