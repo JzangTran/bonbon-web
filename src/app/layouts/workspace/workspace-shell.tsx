@@ -220,11 +220,12 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
           </nav>
         </aside>
 
-        <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground p-3 outline-none sm:p-5">
+        <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground p-2 outline-none sm:p-5">
           <div ref={setTabsHost} className="mb-3 empty:hidden sm:mb-4" />
-          <div className="ws-content bg-card p-4 sm:p-6">
+          <div className="ws-content bg-card p-3 sm:p-6">
             <Outlet />
           </div>
+          <ShellFooter links={footerLinks} className="mt-2 md:hidden" />
         </main>
 
         <aside
@@ -240,18 +241,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
         </aside>
       </div>
 
-      <footer className="flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-ws-hairline bg-card px-4 py-1.5 text-[11px] text-muted-foreground sm:px-5">
-        <span>
-          © {new Date().getFullYear()} bonbon · phiên bản {__APP_VERSION__}
-        </span>
-        <nav aria-label="Liên kết chân trang" className="flex flex-wrap gap-x-5">
-          {footerLinks.map((link) => (
-            <Link key={link.to} to={link.to} className="hover:text-foreground">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </footer>
+      <ShellFooter links={footerLinks} className="max-md:hidden" />
 
       <Sheet open={bellOpen} onOpenChange={setBellOpen}>
         <SheetContent side="right" className="gap-0 p-0">
@@ -265,5 +255,23 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
         </SheetContent>
       </Sheet>
     </div>
+  )
+}
+
+/** Copyright, version and links. Below md it ends the scrolling work area instead of taking a fixed strip of the screen. */
+function ShellFooter({ links, className }: { links: FooterLink[]; className?: string }) {
+  return (
+    <footer className={cn('flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-ws-hairline bg-card px-4 py-1.5 text-[11px] text-muted-foreground sm:px-5', className)}>
+      <span>
+        © {new Date().getFullYear()} bonbon · phiên bản {__APP_VERSION__}
+      </span>
+      <nav aria-label="Liên kết chân trang" className="flex flex-wrap gap-x-5">
+        {links.map((link) => (
+          <Link key={link.to} to={link.to} className="hover:text-foreground">
+            {link.label}
+          </Link>
+        ))}
+      </nav>
+    </footer>
   )
 }

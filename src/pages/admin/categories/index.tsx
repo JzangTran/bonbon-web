@@ -81,7 +81,7 @@ export function AdminCategoriesPage() {
           <button
             type="button"
             onClick={() => setSelectedId(node.id!)}
-            className={cn('flex min-h-10 flex-1 items-center gap-2 text-left text-sm', hidden && 'text-muted-foreground')}
+            className={cn('flex min-h-10 min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5 py-1 text-left text-sm', hidden && 'text-muted-foreground')}
           >
             <span className={cn(node.level === 1 && 'font-semibold')}>{node.name}</span>
             <Badge variant="outline">Cấp {node.level}</Badge>
@@ -100,7 +100,7 @@ export function AdminCategoriesPage() {
           </button>
         </div>
         {open && children.length > 0 ? (
-          <ul className="ml-5 border-l pl-2">{children.map((c) => renderNode(c, hidden))}</ul>
+          <ul className="ml-3 border-l pl-1 sm:ml-5 sm:pl-2">{children.map((c) => renderNode(c, hidden))}</ul>
         ) : null}
       </li>
     )

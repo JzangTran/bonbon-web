@@ -213,6 +213,7 @@
   --radius-3xl: var(--radius);
   --radius-4xl: var(--radius);
   /* customer-facing surfaces (radius option A): cards 24, photos 18, phone frame 44 */
+  --radius-panel: 12px;
   --radius-card: 24px;
   --radius-media: 18px;
   --radius-device: 44px;

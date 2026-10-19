@@ -78,3 +78,7 @@
 :root:has(.ws-root) [data-slot="button"][data-variant="outline"]:hover {
   background-color: var(--muted);
 }
+/* An outline button on a card (which is already the light fill) is white, so it still reads as a button. */
+:root:has(.ws-root) [data-slot="card"] [data-slot="button"][data-variant="outline"] {
+  background-color: var(--card);
+}
