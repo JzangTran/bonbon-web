@@ -95,7 +95,8 @@ export function SellerLoginPage() {
     <AuthHero
       heading="Đăng nhập"
       eyebrow="bonbon dành cho người bán"
-      headline="Bán hàng ngay trong khu của bạn"
+      headline="Bán hàng"
+      headlineSoft="ngay trong khu của bạn"
       points={SELLER_POINTS}
       cardTitle="Đăng nhập"
       footer={

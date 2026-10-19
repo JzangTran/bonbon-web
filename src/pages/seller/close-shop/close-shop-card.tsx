@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { CLOSE_REASON_LABEL, useCloseShop, type CloseReason } from '@/entities/shop'
 import { useReauthGate } from '@/features/reauthenticate'
@@ -16,6 +17,7 @@ const REASONS = Object.keys(CLOSE_REASON_LABEL) as CloseReason[]
 /** Closing for good (close-shop.md): irreversible, so it says what will happen first and asks for a recent sign-in. */
 export function CloseShopCard() {
   const close = useCloseShop()
+  const navigate = useNavigate()
   const gate = useReauthGate()
   const [reason, setReason] = useState<CloseReason>('STOP_SELLING')
   const [text, setText] = useState('')
@@ -32,7 +34,10 @@ export function CloseShopCard() {
       close.mutate(
         { reason, reasonText: text.trim() || undefined },
         {
-          onSuccess: () => toast.success('Cửa hàng đang đóng. Bạn vẫn hoàn tất các đơn đang làm.'),
+          onSuccess: () => {
+            toast.success('Cửa hàng đang đóng. Bạn vẫn hoàn tất các đơn đang làm.')
+            navigate('/seller/closing', { replace: true })
+          },
           onError: (e) => {
             if (!gate.handle(e, attempt)) setError(problemMessage(e))
           },

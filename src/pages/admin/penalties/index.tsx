@@ -5,12 +5,12 @@ import { usePenaltyAppeals, usePenaltyShops } from '@/entities/penalty'
 import { useSession } from '@/entities/session'
 import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatRelative } from '@/shared/lib/format'
-import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 type Tab = 'shops' | 'appeals'
 
@@ -37,29 +37,18 @@ export function AdminPenaltiesPage() {
         </p>
       </div>
 
-      <div role="tablist" className="flex flex-wrap gap-1 border-b">
-        {[
-          { id: 'shops' as const, label: 'Quán có điểm' },
-          { id: 'appeals' as const, label: 'Kháng nghị chờ quyết' },
-        ].map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => {
-              setTab(t.id)
-              setPage(0)
-            }}
-            className={cn(
-              '-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap',
-              tab === t.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
-            )}
-          >
-            {t.label}
-            {tab === t.id && total > 0 ? ` (${total})` : ''}
-          </button>
-        ))}
-      </div>
+      <PageTabs
+        label="Điểm phạt"
+        tabs={[
+          { id: 'shops', label: 'Quán có điểm', count: tab === 'shops' ? total : undefined },
+          { id: 'appeals', label: 'Kháng nghị chờ quyết', count: tab === 'appeals' ? total : undefined },
+        ]}
+        value={tab}
+        onValueChange={(id) => {
+          setTab(id as 'shops' | 'appeals')
+          setPage(0)
+        }}
+      />
 
       {current.isError ? <FormError message={problemMessage(current.error)} /> : null}
       {current.isPending ? <Skeleton className="h-32" /> : null}

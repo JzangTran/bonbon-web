@@ -14,6 +14,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 type Kind = RecordInput['type']
 type Tab = 'ledger' | 'statement'
@@ -79,19 +80,15 @@ export function AdminSettlementShopPage() {
         </Card>
       ) : null}
 
-      <div role="tablist" className="flex gap-1 border-b">
-        {(['ledger', 'statement'] as const).map((id) => (
-          <button
-            key={id}
-            role="tab"
-            aria-selected={tab === id}
-            onClick={() => setTab(id)}
-            className={cn('-mb-px min-h-10 border-b-2 px-3 text-sm', tab === id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
-          >
-            {id === 'ledger' ? 'Sổ cái' : 'Sao kê theo kỳ'}
-          </button>
-        ))}
-      </div>
+      <PageTabs
+        label="Sổ cái của quán"
+        tabs={[
+          { id: 'ledger', label: 'Sổ cái' },
+          { id: 'statement', label: 'Sao kê theo kỳ' },
+        ]}
+        value={tab}
+        onValueChange={(id) => setTab(id as 'ledger' | 'statement')}
+      />
 
       {tab === 'ledger' ? (
         <section className="flex flex-col gap-3">

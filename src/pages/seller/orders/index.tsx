@@ -20,6 +20,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
+import { PageTabs, type PageTab } from '@/shared/ui/workspace-slots'
 import { FormError } from '@/widgets/auth-shell'
 import { OrderActions } from './order-actions'
 import { OrderSheet } from './order-sheet'
@@ -101,8 +102,8 @@ export function SellerOrdersPage() {
     if (next) beep()
   }
 
-  const tabs: { id: Tab; label: string; count?: number }[] = [
-    { id: 'new', label: 'Mới', count: waiting },
+  const tabs: PageTab[] = [
+    { id: 'new', label: 'Mới', count: waiting, alert: true },
     { id: 'progress', label: 'Đang làm', count: progress.data?.total ?? 0 },
     { id: 'history', label: 'Lịch sử' },
   ]
@@ -134,26 +135,7 @@ export function SellerOrdersPage() {
         </div>
       ) : null}
 
-      <div role="tablist" aria-label="Đơn hàng" className="flex gap-1 border-b">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            type="button"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
-            className={cn(
-              '-mb-px flex h-11 items-center gap-2 border-b-2 px-4 text-sm font-semibold transition-colors',
-              tab === t.id ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground',
-            )}
-          >
-            {t.label}
-            {t.count ? (
-              <span className={cn('rounded-full px-2 text-xs tabular-nums', t.id === 'new' ? 'bg-primary text-primary-foreground' : 'bg-muted')}>{t.count}</span>
-            ) : null}
-          </button>
-        ))}
-      </div>
+      <PageTabs label="Đơn hàng" tabs={tabs} value={tab} onValueChange={(id) => setTab(id as Tab)} />
 
       {tab === 'new' ? <OrderList query={fresh} empty="Chưa có đơn mới. Đơn mới sẽ hiện ở đây ngay khi khách đặt." onOpen={setOpenId} /> : null}
       {tab === 'progress' ? <OrderList query={progress} empty="Không có đơn nào đang làm." onOpen={setOpenId} /> : null}
@@ -229,12 +211,12 @@ function OrderRow({ order, now, onOpen }: { order: ShopOrderSummary; now: number
   )
 }
 
-function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void }) {
+function History({ live, onOpen, statuses }: { live: boolean; onOpen: (id: string) => void; statuses?: OrderStatus[] }) {
   const [status, setStatus] = useState<'ALL' | OrderStatus>('ALL')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
   const [page, setPage] = useState(0)
-  const query = useShopOrders({ statuses: status === 'ALL' ? FINISHED : [status], from, to, page, size: 20 }, live)
+  const query = useShopOrders({ statuses: statuses ?? (status === 'ALL' ? FINISHED : [status]), from, to, page, size: 20 }, live)
   const total = query.data?.total ?? 0
   const pages = Math.max(1, Math.ceil(total / 20))
   const reset = <T,>(set: (value: T) => void) => (value: T) => {
@@ -245,6 +227,7 @@ function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end gap-4">
+        {statuses ? null : (
         <div className="flex flex-col gap-2">
           <Label htmlFor="history-status">Trạng thái</Label>
           <select
@@ -260,6 +243,7 @@ function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void
             <option value="NOT_DELIVERED">Giao không thành công</option>
           </select>
         </div>
+        )}
         <div className="flex flex-col gap-2">
           <Label htmlFor="history-from">Từ ngày</Label>
           <Input id="history-from" type="date" value={from} max={to || undefined} onChange={(e) => reset(setFrom)(e.target.value)} />
@@ -283,6 +267,20 @@ function History({ live, onOpen }: { live: boolean; onOpen: (id: string) => void
           </Button>
         </div>
       ) : null}
+    </div>
+  )
+}
+
+const CANCELLED: OrderStatus[] = ['REJECTED', 'CANCELLED', 'NOT_DELIVERED']
+
+/** Orders that did not end in a delivery: refused by the shop, cancelled by the customer, or not delivered. */
+export function SellerCancelledOrdersPage() {
+  const [openId, setOpenId] = useState<string | null>(null)
+  return (
+    <div className="flex max-w-5xl flex-col gap-4">
+      <h1 className="text-2xl font-bold">Đơn hủy</h1>
+      <History live={false} statuses={CANCELLED} onOpen={setOpenId} />
+      <OrderSheet id={openId} onClose={() => setOpenId(null)} />
     </div>
   )
 }

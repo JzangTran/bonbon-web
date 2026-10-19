@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -11,6 +12,16 @@ function seoFiles(siteUrl: string | undefined): Plugin {
   return {
     name: 'bonbon-seo-files',
     apply: 'build',
+    // The share image needs an absolute URL, so it is only linked when the public origin is known.
+    transformIndexHtml(html) {
+      const origin = siteUrl?.replace(/\/+$/, '')
+      if (!origin) return html
+      const tags = `    <meta property="og:image" content="${origin}/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+`
+      return html.replace('    <meta name="twitter:card" content="summary" />', `${tags}    <meta name="twitter:card" content="summary_large_image" />`)
+    },
     generateBundle() {
       const origin = siteUrl?.replace(/\/+$/, '')
       const robots = ['User-agent: *', 'Disallow: /seller', 'Disallow: /admin', 'Allow: /']
@@ -31,7 +42,10 @@ function seoFiles(siteUrl: string | undefined): Plugin {
 }
 
 // https://vite.dev/config/
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string }
+
 export default defineConfig(({ mode }) => ({
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [react(), tailwindcss(), seoFiles(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL)],
   resolve: {
     alias: {

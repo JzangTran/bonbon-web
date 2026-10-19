@@ -13,6 +13,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { DecideDialog } from './decide-dialog'
 import { FlagDialog } from './flag-dialog'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const TABS: { id: CaseStatus | ''; label: string }[] = [
   { id: 'APPEALED', label: 'Kháng nghị chờ quyết định' },
@@ -78,22 +79,15 @@ export function AdminCategoryModerationPage() {
         </p>
       ) : null}
 
-      <div role="tablist" className="flex flex-wrap gap-1 border-b">
-        {TABS.map((t) => (
-          <button
-            key={t.id || 'all'}
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => {
-              setTab(t.id)
-              setPage(0)
-            }}
-            className={cn('-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap', tab === t.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+      <PageTabs
+        label="Món sai ngành"
+        tabs={TABS.map((t) => ({ id: t.id || 'all', label: t.label }))}
+        value={tab || 'all'}
+        onValueChange={(id) => {
+          setTab(id === 'all' ? '' : (id as CaseStatus))
+          setPage(0)
+        }}
+      />
 
       {cases.isError ? <FormError message={problemMessage(cases.error)} /> : null}
       {cases.isPending ? <Skeleton className="h-32" /> : null}

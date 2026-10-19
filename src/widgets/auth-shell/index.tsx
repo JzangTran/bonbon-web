@@ -1,6 +1,7 @@
 import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
+import { Lockup } from '@/shared/ui/brand'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
@@ -11,14 +12,15 @@ const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
  */
 export function AuthTopBar({ title }: { title: string }) {
   return (
-    <header className="border-b bg-card">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
-        <Link to="/" className="flex items-baseline gap-3">
-          <span className="text-2xl font-extrabold tracking-tight text-primary">bonbon</span>
-          <span className="text-xl text-foreground">{title}</span>
+    <header className="px-4 pt-4 sm:pt-6">
+      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 rounded-full bg-ink py-2.5 pr-3 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:pl-[30px]">
+        <Link to="/" className="flex min-w-0 items-center gap-3 text-white">
+          <Lockup tone="white" className="h-9 shrink-0" />
+          <span aria-hidden="true" className="hidden h-5 w-px bg-white/20 sm:block" />
+          <span className="hidden truncate text-[15px] font-medium text-white/80 sm:block">{title}</span>
         </Link>
         {SUPPORT_EMAIL ? (
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-sm text-primary hover:underline">
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-full px-4 py-2.5 text-sm font-medium text-white hover:bg-white/10">
             Bạn cần giúp đỡ?
           </a>
         ) : null}
@@ -40,9 +42,9 @@ export function AuthShell({ title, description, children, footer, heading = 'Đ�
     <div className="flex min-h-svh flex-col bg-background">
       <AuthTopBar title={heading} />
       <main className="flex flex-1 flex-col items-center justify-center gap-5 px-4 py-10">
-        <div className="flex w-full max-w-sm flex-col gap-5 rounded-sm bg-card p-6 shadow-md">
+        <div className="flex w-full max-w-sm flex-col gap-5 rounded-card bg-card p-8 shadow-float">
           <div className="flex flex-col gap-1.5 text-center">
-            <h1 className="text-xl font-semibold">{title}</h1>
+            <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
             {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
           </div>
           {children}
@@ -57,10 +59,12 @@ export function AuthShell({ title, description, children, footer, heading = 'Đ�
  * Sign-in and sign-up entry: marketing copy on the left, a floating card on the right, a city skyline fading
  * out at the bottom. Below md the copy drops under the card.
  */
-export function AuthHero({ heading, eyebrow, headline, points, cardTitle, children, footer }: {
+export function AuthHero({ heading, eyebrow, headline, headlineSoft, points, cardTitle, children, footer }: {
   heading: string
   eyebrow: string
   headline: string
+  /** the rest of the headline, in the soft gray */
+  headlineSoft?: string
   points: { icon: ReactNode; text: string }[]
   cardTitle: string
   children: ReactNode
@@ -74,20 +78,30 @@ export function AuthHero({ heading, eyebrow, headline, points, cardTitle, childr
         <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 md:grid-cols-[minmax(0,1fr)_22rem] md:items-center md:gap-16 lg:grid-cols-[minmax(0,1fr)_24rem]">
           <section className="order-2 flex flex-col gap-6 md:order-1">
             <div>
-              <p className="text-lg text-primary">{eyebrow}</p>
-              <h2 className="mt-1 max-w-md text-4xl leading-tight font-semibold text-primary">{headline}</h2>
+              <p className="text-base font-semibold text-primary">{eyebrow}</p>
+              <h2 className="mt-2 max-w-md text-[40px] leading-[46px] font-extrabold tracking-[-0.03em] lg:text-[52px] lg:leading-[58px]">
+                {headline}
+                {headlineSoft ? (
+                  <>
+                    <br />
+                    <span className="text-headline-soft">{headlineSoft}</span>
+                  </>
+                ) : null}
+              </h2>
             </div>
             <ul className="flex max-w-md flex-col gap-4">
               {points.map((point) => (
                 <li key={point.text} className="flex items-start gap-3 text-foreground">
-                  <span className="mt-0.5 shrink-0 text-primary [&_svg]:size-6">{point.icon}</span>
-                  <span>{point.text}</span>
+                  <span aria-hidden="true" className="flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-white [&_svg]:size-[22px]">
+                    {point.icon}
+                  </span>
+                  <span className="pt-2.5">{point.text}</span>
                 </li>
               ))}
             </ul>
           </section>
-          <div className="order-1 flex w-full max-w-sm flex-col gap-5 justify-self-center rounded-sm bg-card p-6 shadow-lg md:order-2 md:max-w-none">
-            <h1 className="text-xl font-medium">{cardTitle}</h1>
+          <div className="order-1 flex w-full max-w-sm flex-col gap-5 justify-self-center rounded-card bg-card p-8 shadow-float md:order-2 md:max-w-none">
+            <h1 className="text-2xl font-extrabold tracking-tight">{cardTitle}</h1>
             {children}
             <p className="text-center text-sm text-muted-foreground">{footer}</p>
           </div>
@@ -112,7 +126,7 @@ export function AuthStepPage({ heading, steps, current, title, description, onBa
       <AuthTopBar title={heading} />
       <main className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center gap-8 px-4 py-10">
         <Stepper steps={steps} current={current} className="max-w-md" />
-        <div className="relative flex w-full flex-col gap-5 rounded-sm bg-card p-6 shadow-md">
+        <div className="relative flex w-full flex-col gap-5 rounded-card bg-card p-8 shadow-float">
           {onBack ? (
             <button
               type="button"
@@ -124,7 +138,7 @@ export function AuthStepPage({ heading, steps, current, title, description, onBa
             </button>
           ) : null}
           <div className="flex flex-col gap-1.5 px-8 text-center">
-            <h1 className="text-xl font-medium">{title}</h1>
+            <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
             {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
           </div>
           {children}

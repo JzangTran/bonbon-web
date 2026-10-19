@@ -63,6 +63,16 @@
   --chart-4: #0b3b24;
   --chart-5: #a15c00;
   --radius: 0.25rem;
+  /* workspace (seller/admin web): flat, white first */
+  --ws-header: #14201a;
+  --ws-ground: #e0e4e2;
+  --ws-fill: #f1f3f2;
+  --ws-hairline: #eef1f0;
+
+  /* v3 customer-facing look (landing, sign-in): ink bar, two-tone headlines, pale pills */
+  --ink: #14201a;
+  --headline-soft: #7c8a83; /* only for text of 24px and up (3.61:1 on white) */
+  --pill-pale: #edf1ef;
   --sidebar: #ffffff;
   --sidebar-foreground: #14201a;
   --sidebar-primary: var(--green-600);
@@ -86,6 +96,11 @@
   --danger-fg: #f4a39a;
   --highlight-subtle: #2e2410;
   --highlight-fg: #f2cb7a;
+
+  --ws-header: #0e1512;
+  --ws-ground: #0e1512;
+  --ws-fill: #1e2a24;
+  --ws-hairline: rgb(255 255 255 / 8%);
 
   --background: #0e1512;
   --foreground: #e6ede9;
@@ -118,7 +133,7 @@
 }
 
 @theme inline {
-  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-sans);
 
   --color-background: var(--background);
@@ -155,6 +170,14 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  --color-ws-header: var(--ws-header);
+  --color-ws-ground: var(--ws-ground);
+  --color-ws-fill: var(--ws-fill);
+  --color-ws-hairline: var(--ws-hairline);
+  --color-ink: var(--ink);
+  --color-headline-soft: var(--headline-soft);
+  --color-pill-pale: var(--pill-pale);
+
   --color-brand-50: var(--green-50);
   --color-brand-100: var(--green-100);
   --color-brand-500: var(--green-500);
@@ -189,6 +212,10 @@
   --radius-2xl: var(--radius);
   --radius-3xl: var(--radius);
   --radius-4xl: var(--radius);
+  /* customer-facing surfaces (radius option A): cards 24, photos 18, phone frame 44 */
+  --radius-card: 24px;
+  --radius-media: 18px;
+  --radius-device: 44px;
 
   --shadow-float: 0 1px 2px rgb(20 32 26 / 0.06), 0 4px 12px rgb(20 32 26 / 0.08);
 }

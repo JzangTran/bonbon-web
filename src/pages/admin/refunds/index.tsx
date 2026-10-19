@@ -5,7 +5,6 @@ import { useCompleteRefund, useFailRefund, useRefunds, type RefundRow } from '@/
 import { useSession } from '@/entities/session'
 import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatRelative, formatVnd } from '@/shared/lib/format'
-import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
@@ -15,6 +14,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const TABS = [
   { id: 'OPEN', label: 'Cần xử lý' },
@@ -74,26 +74,15 @@ export function AdminRefundsPage() {
         </p>
       </div>
 
-      <div role="tablist" className="flex flex-wrap gap-1 border-b">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => {
-              setTab(t.id)
-              setPage(0)
-            }}
-            className={cn(
-              '-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap',
-              tab === t.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
-            )}
-          >
-            {t.label}
-            {tab === t.id && total > 0 ? ` (${total})` : ''}
-          </button>
-        ))}
-      </div>
+      <PageTabs
+        label="Hoàn tiền"
+        tabs={TABS.map((t) => ({ id: t.id, label: t.label, count: t.id === tab ? total : undefined }))}
+        value={tab}
+        onValueChange={(id) => {
+          setTab(id as Tab)
+          setPage(0)
+        }}
+      />
 
       {refunds.isError ? <FormError message={problemMessage(refunds.error)} /> : null}
       {refunds.isPending ? <Skeleton className="h-32" /> : null}

@@ -20,6 +20,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { OrderCaseTabs } from '@/widgets/seller-tabs'
 
 /** How the shop is doing on the orders it fails, the points that follow, and what they lead to (view-shop-performance.md). */
 export function SellerPerformancePage() {
@@ -36,6 +37,7 @@ export function SellerPerformancePage() {
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
+      <OrderCaseTabs />
       <div>
         <h1 className="text-2xl font-bold">Hiệu suất cửa hàng</h1>
         <p className="text-sm text-muted-foreground">

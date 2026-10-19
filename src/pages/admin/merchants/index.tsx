@@ -11,6 +11,7 @@ import { Card } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const STATUS_TABS: { id: MerchantStatus; label: string }[] = [
   { id: 'APPROVED', label: 'Đang hoạt động' },
@@ -53,24 +54,15 @@ export function AdminMerchantsPage() {
           Danh sách mọi cửa hàng đã gửi hồ sơ và vùng phủ thực tế. Muốn xử lý hồ sơ chờ duyệt, vào mục Duyệt cửa hàng.
         </p>
       </div>
-      <div role="tablist" className="flex gap-1 border-b">
-        {(
-          [
-            ['list', 'Danh sách'],
-            ['coverage', 'Vùng phủ'],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            role="tab"
-            aria-selected={tab === id}
-            onClick={() => setTab(id)}
-            className={cn('-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap', tab === id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <PageTabs
+        label="Cửa hàng"
+        tabs={[
+          { id: 'list', label: 'Danh sách' },
+          { id: 'coverage', label: 'Vùng phủ' },
+        ]}
+        value={tab}
+        onValueChange={(id) => setTab(id as Tab)}
+      />
       {tab === 'list' ? <Directory /> : <Coverage />}
     </div>
   )

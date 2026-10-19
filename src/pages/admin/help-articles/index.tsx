@@ -4,7 +4,6 @@ import { AUDIENCE_LABEL, useAdminHelpArticles, useDeleteHelpArticle, useSaveHelp
 import { useSession } from '@/entities/session'
 import { problemMessage } from '@/shared/api'
 import { formatRelative } from '@/shared/lib/format'
-import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
@@ -14,6 +13,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const FILTERS: { id: HelpStatus | 'ALL_STATUSES'; label: string }[] = [
   { id: 'ALL_STATUSES', label: 'Tất cả' },
@@ -52,22 +52,15 @@ export function AdminHelpArticlesPage() {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div role="tablist" className="flex gap-1 border-b">
-          {FILTERS.map((f) => (
-            <button
-              key={f.id}
-              role="tab"
-              aria-selected={filter === f.id}
-              onClick={() => {
-                setFilter(f.id)
-                setPage(0)
-              }}
-              className={cn('-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap', filter === f.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
+        <PageTabs
+          label="Bài trợ giúp"
+          tabs={FILTERS}
+          value={filter}
+          onValueChange={(id) => {
+            setFilter(id as HelpStatus | 'ALL_STATUSES')
+            setPage(0)
+          }}
+        />
         <Input
           type="search"
           className="max-w-xs"

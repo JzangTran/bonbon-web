@@ -4,13 +4,14 @@ import { CASE_STATUS, CASE_TYPE_LABEL, useShopCases, type CaseStatus } from '@/e
 import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatVnd } from '@/shared/lib/format'
 import { useNow } from '@/shared/lib/use-now'
-import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
+import { FilterChips } from '@/shared/ui/filter-chips'
 import { FormError } from '@/widgets/auth-shell'
+import { OrderCaseTabs } from '@/widgets/seller-tabs'
 
 const TABS: { id: CaseStatus; label: string }[] = [
   { id: 'AWAITING_SHOP', label: 'Chờ quán trả lời' },
@@ -32,6 +33,7 @@ export function SellerOrderCasesPage() {
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
+      <OrderCaseTabs />
       <div>
         <h1 className="text-2xl font-bold">Khiếu nại của khách</h1>
         <p className="text-sm text-muted-foreground">
@@ -39,26 +41,15 @@ export function SellerOrderCasesPage() {
         </p>
       </div>
 
-      <div role="tablist" className="flex flex-wrap gap-1 border-b">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => {
-              setTab(t.id)
-              setPage(0)
-            }}
-            className={cn(
-              '-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap',
-              tab === t.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
-            )}
-          >
-            {t.label}
-            {tab === t.id && total > 0 ? ` (${total})` : ''}
-          </button>
-        ))}
-      </div>
+      <FilterChips
+        label="Trạng thái khiếu nại"
+        chips={TABS.map((t) => ({ id: t.id, label: t.id === tab && total > 0 ? `${t.label} (${total})` : t.label }))}
+        value={tab}
+        onChange={(id) => {
+          setTab(id)
+          setPage(0)
+        }}
+      />
 
       {cases.isError ? <FormError message={problemMessage(cases.error)} /> : null}
       {cases.isPending ? <Skeleton className="h-32" /> : null}
