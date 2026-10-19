@@ -17,6 +17,7 @@ import {
 import { Link } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
+import { Lockup } from '@/shared/ui/brand'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
@@ -115,12 +116,8 @@ function Header() {
     <header className="pt-4 sm:pt-6">
       <Wrap>
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[28px] bg-ink py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:rounded-full sm:pl-[30px]">
-          <Link to="/" className="flex items-center gap-2.5 text-2xl font-extrabold tracking-tight text-white">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-              <circle cx="13" cy="13" r="12" fill="#00a44a" />
-              <path d="M8 14c0-4 2-6 5-6M18 12c0 4-2 6-5 6" stroke="#14201a" strokeWidth="2.2" strokeLinecap="round" />
-            </svg>
-            bonbon
+          <Link to="/" className="flex items-center">
+            <Lockup tone="white" className="h-9" />
           </Link>
           <nav aria-label="Trang chủ" className="order-3 flex w-full flex-wrap gap-1 sm:order-none sm:w-auto">
             {links.map(([id, label]) => (
@@ -481,7 +478,7 @@ function Footer() {
     <footer className="bg-ink text-brand-100">
       <Wrap className="flex flex-wrap justify-between gap-6 py-10 text-sm">
         <div className="flex flex-col gap-2">
-          <span className="text-[22px] font-extrabold tracking-tight text-white">bonbon</span>
+          <Lockup tone="white" className="h-9" />
           <span>Đặt món từ quán trong khu.</span>
           {SUPPORT_EMAIL ? (
             <span>

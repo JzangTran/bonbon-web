@@ -4,6 +4,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { NotificationFeed, useNotifications } from '@/entities/notification'
 import { useSession } from '@/entities/session'
 import { useMediaQuery } from '@/shared/lib/use-media-query'
+import { Lockup } from '@/shared/ui/brand'
 import { cn } from '@/shared/lib/utils'
 import {
   DropdownMenu,
@@ -105,8 +106,8 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
               <MenuIcon className="size-[18px]" aria-hidden="true" />
             </button>
           ) : null}
-          <Link to={homePath} className="text-lg font-bold tracking-tight text-white">
-            bonbon
+          <Link to={homePath} className="flex items-center">
+            <Lockup tone="white" className="h-7" />
           </Link>
           <span className="hidden text-[#9DB0A5] lg:inline">{area}</span>
           <span aria-hidden="true" className="hidden h-4 w-px bg-white/15 sm:block" />

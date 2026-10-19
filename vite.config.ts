@@ -12,6 +12,16 @@ function seoFiles(siteUrl: string | undefined): Plugin {
   return {
     name: 'bonbon-seo-files',
     apply: 'build',
+    // The share image needs an absolute URL, so it is only linked when the public origin is known.
+    transformIndexHtml(html) {
+      const origin = siteUrl?.replace(/\/+$/, '')
+      if (!origin) return html
+      const tags = `    <meta property="og:image" content="${origin}/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+`
+      return html.replace('    <meta name="twitter:card" content="summary" />', `${tags}    <meta name="twitter:card" content="summary_large_image" />`)
+    },
     generateBundle() {
       const origin = siteUrl?.replace(/\/+$/, '')
       const robots = ['User-agent: *', 'Disallow: /seller', 'Disallow: /admin', 'Allow: /']

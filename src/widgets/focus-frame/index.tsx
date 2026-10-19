@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
+import { Lockup } from '@/shared/ui/brand'
 
 type Props = {
   /** what the person is doing, shown in the bar next to the logo */
@@ -33,7 +34,7 @@ export function FocusFrame({ title, exitTo, loginPath = '/seller/login', width =
       </a>
       <header className="flex h-12 shrink-0 items-center justify-between gap-4 bg-ws-header px-4 text-white sm:px-5">
         <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-          <span className="text-lg font-bold tracking-tight">bonbon</span>
+          <Lockup tone="white" className="h-7" />
           <span aria-hidden="true" className="h-4 w-px bg-white/15" />
           <span className="truncate font-semibold">{title}</span>
         </div>

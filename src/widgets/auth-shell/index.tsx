@@ -1,6 +1,7 @@
 import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
+import { Lockup } from '@/shared/ui/brand'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
@@ -14,11 +15,7 @@ export function AuthTopBar({ title }: { title: string }) {
     <header className="px-4 pt-4 sm:pt-6">
       <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 rounded-full bg-ink py-2.5 pr-3 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:pl-[30px]">
         <Link to="/" className="flex min-w-0 items-center gap-3 text-white">
-          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true" className="shrink-0">
-            <circle cx="13" cy="13" r="12" fill="#00a44a" />
-            <path d="M8 14c0-4 2-6 5-6M18 12c0 4-2 6-5 6" stroke="#14201a" strokeWidth="2.2" strokeLinecap="round" />
-          </svg>
-          <span className="text-2xl font-extrabold tracking-tight">bonbon</span>
+          <Lockup tone="white" className="h-9 shrink-0" />
           <span aria-hidden="true" className="hidden h-5 w-px bg-white/20 sm:block" />
           <span className="hidden truncate text-[15px] font-medium text-white/80 sm:block">{title}</span>
         </Link>
