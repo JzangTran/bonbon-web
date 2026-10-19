@@ -206,6 +206,10 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/admin/category-moderation').then((m) => ({ Component: m.AdminCategoryModerationPage })),
           },
           {
+            path: 'service-areas',
+            lazy: () => import('@/pages/admin/service-areas').then((m) => ({ Component: m.AdminServiceAreasPage })),
+          },
+          {
             path: 'merchants',
             lazy: () => import('@/pages/admin/merchants').then((m) => ({ Component: m.AdminMerchantsPage })),
           },
