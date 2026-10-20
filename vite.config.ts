@@ -81,7 +81,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   server: {
-    // IPv4, so that seller.localhost and admin.localhost (which resolve to 127.0.0.1) reach the dev server like localhost does.
+    // IPv4, so that merchant.localhost, help.localhost, console.localhost and ops.localhost (which resolve to 127.0.0.1) reach the dev server like localhost does.
     host: '127.0.0.1',
     // Same-origin API in development (as behind Caddy in production): no CORS involved.
     proxy: {
