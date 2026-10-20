@@ -13,14 +13,14 @@ const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 export function AuthTopBar({ title }: { title: string }) {
   return (
     <header className="px-4 pt-4 sm:pt-6">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 rounded-full bg-ink py-2.5 pr-3 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:pl-[30px]">
+      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 rounded-xl bg-ink py-2.5 pr-3 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:pl-[30px]">
         <a href={siteUrl('public')} className="flex min-w-0 items-center gap-3 text-white">
           <Lockup tone="white" className="h-9 shrink-0" />
           <span aria-hidden="true" className="hidden h-5 w-px bg-white/20 sm:block" />
           <span className="hidden truncate text-[15px] font-medium text-white/80 sm:block">{title}</span>
         </a>
         {SUPPORT_EMAIL ? (
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-full px-4 py-2.5 text-sm font-medium text-white hover:bg-white/10">
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-sm px-4 py-2.5 text-sm font-medium text-white hover:bg-white/10">
             Bạn cần giúp đỡ?
           </a>
         ) : null}

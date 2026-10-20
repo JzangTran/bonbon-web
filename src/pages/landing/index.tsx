@@ -70,7 +70,7 @@ function ImageSlot({ label, className }: { label: string; className?: string }) 
 /** The black round badge that carries an icon next to a short point. */
 function Badge({ children }: { children: ReactNode }) {
   return (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-white [&_svg]:size-[22px]" aria-hidden="true">
+    <span className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-ink text-white [&_svg]:size-[22px]" aria-hidden="true">
       {children}
     </span>
   )
@@ -130,7 +130,7 @@ function Hero() {
         </div>
 
         <div className="relative hidden h-[620px] min-w-0 flex-[1_1_28rem] md:block">
-          <ImageSlot label="Ảnh món ăn (bổ sung sau)" className="absolute top-5 -right-[220px] size-[620px] rounded-full" />
+          <ImageSlot label="Ảnh món ăn (bổ sung sau)" className="absolute top-5 -right-[220px] size-[620px] rounded-sm" />
           <PhoneMock />
         </div>
       </Wrap>
@@ -153,26 +153,26 @@ function PhoneMock() {
             <b className="text-xs">Toà S2 · căn 1508 ▾</b>
           </span>
           <span className="flex gap-1.5">
-            <span className="size-7 rounded-full bg-white" />
-            <span className="size-7 rounded-full bg-white" />
+            <span className="size-7 rounded-sm bg-white" />
+            <span className="size-7 rounded-sm bg-white" />
           </span>
         </div>
         <div className="text-xl leading-6 font-extrabold tracking-[-0.02em]">
           Hôm nay bạn <Soft>muốn ăn gì?</Soft>
         </div>
         <div className="flex gap-1.5">
-          <span className="h-8 flex-1 rounded-full bg-white" />
-          <span className="size-8 rounded-full bg-ink" />
+          <span className="h-8 flex-1 rounded-sm bg-white" />
+          <span className="size-8 rounded-sm bg-ink" />
         </div>
         <div className="flex gap-1.5 text-[11px] font-semibold">
-          <span className="rounded-full bg-primary px-2.5 py-1.5 text-primary-foreground">Tất cả</span>
-          <span className="rounded-full bg-white px-2.5 py-1.5">Cơm</span>
-          <span className="rounded-full bg-white px-2.5 py-1.5">Bún &amp; phở</span>
+          <span className="rounded-sm bg-primary px-2.5 py-1.5 text-primary-foreground">Tất cả</span>
+          <span className="rounded-sm bg-white px-2.5 py-1.5">Cơm</span>
+          <span className="rounded-sm bg-white px-2.5 py-1.5">Bún &amp; phở</span>
         </div>
         <div className="flex flex-col gap-2 rounded-media bg-white p-2">
           <div className="relative h-[110px] rounded-xl bg-image-slot">
-            <span className="absolute top-2 left-2 rounded-full bg-ink px-2 py-1 text-[10px] font-semibold text-white">12 phút</span>
-            <span className="absolute top-2 right-2 rounded-full bg-white px-2 py-1 text-[10px] font-semibold text-brand-700">Miễn phí giao</span>
+            <span className="absolute top-2 left-2 rounded-sm bg-ink px-2 py-1 text-[10px] font-semibold text-white">12 phút</span>
+            <span className="absolute top-2 right-2 rounded-sm bg-white px-2 py-1 text-[10px] font-semibold text-brand-700">Miễn phí giao</span>
           </div>
           <div className="px-1 pb-0.5">
             <b className="text-[13px]">Cơm tấm Cô Ba</b>
@@ -180,11 +180,11 @@ function PhoneMock() {
           </div>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute right-4 bottom-3.5 left-4 flex h-12 items-center justify-around rounded-full bg-ink">
-        <span className="size-[34px] rounded-full bg-primary" />
-        <span className="size-[34px] rounded-full bg-white/15" />
-        <span className="size-[34px] rounded-full bg-white/15" />
-        <span className="size-[34px] rounded-full bg-white/15" />
+      <div aria-hidden="true" className="absolute right-4 bottom-3.5 left-4 flex h-12 items-center justify-around rounded-lg bg-ink">
+        <span className="size-[34px] rounded-sm bg-primary" />
+        <span className="size-[34px] rounded-sm bg-white/15" />
+        <span className="size-[34px] rounded-sm bg-white/15" />
+        <span className="size-[34px] rounded-sm bg-white/15" />
       </div>
     </div>
   )
@@ -212,8 +212,8 @@ function NearbyShops() {
             <li key={shop.name} className="flex flex-col gap-2.5 rounded-card bg-background p-2.5">
               <div className="relative h-[170px]">
                 <ImageSlot label={`Ảnh món của ${shop.name} (bổ sung sau)`} className="size-full rounded-media bg-[#e3e8e5]" />
-                <span className="absolute top-2.5 left-2.5 rounded-full bg-ink px-2.5 py-1.5 text-xs font-semibold text-white">{shop.minutes} phút</span>
-                {shop.free ? <span className="absolute top-2.5 right-2.5 rounded-full bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-700">Miễn phí giao</span> : null}
+                <span className="absolute top-2.5 left-2.5 rounded-sm bg-ink px-2.5 py-1.5 text-xs font-semibold text-white">{shop.minutes} phút</span>
+                {shop.free ? <span className="absolute top-2.5 right-2.5 rounded-sm bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-700">Miễn phí giao</span> : null}
               </div>
               <div className="px-1.5 pb-1.5">
                 <b className="text-[17px]">{shop.name}</b>
@@ -269,7 +269,7 @@ function OrderSteps() {
           <Badge>
             <Icon strokeWidth={1.75} />
           </Badge>
-          <span className={cn('self-start rounded-full px-2.5 py-1.5 text-[13px] font-semibold', chipClass)}>{chip}</span>
+          <span className={cn('self-start rounded-sm px-2.5 py-1.5 text-[13px] font-semibold', chipClass)}>{chip}</span>
           <h3 className="text-lg font-bold">{title}</h3>
           <p className="leading-6 text-muted-foreground">{body}</p>
         </div>
@@ -384,7 +384,7 @@ function Faq() {
                 <details key={item.q} className="group rounded-panel bg-card px-6 py-4">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                     {item.q}
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-pill-pale" aria-hidden="true">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-pill-pale" aria-hidden="true">
                       <ChevronDownIcon className="size-4 transition-transform group-open:rotate-180" />
                     </span>
                   </summary>
