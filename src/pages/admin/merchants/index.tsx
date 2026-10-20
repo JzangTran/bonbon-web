@@ -12,6 +12,7 @@ import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { adminPath } from '@/shared/config/sites'
 
 const STATUS_TABS: { id: MerchantStatus; label: string }[] = [
   { id: 'APPROVED', label: 'Đang hoạt động' },
@@ -144,7 +145,7 @@ function MerchantItem({ m }: { m: MerchantRow }) {
   ].filter(Boolean)
   return (
     <li>
-      <Link to={`/admin/merchants/${m.vendorId}`} className="block rounded-sm border bg-card p-4 hover:bg-muted/50">
+      <Link to={adminPath(`/merchants/${m.vendorId}`)} className="block rounded-sm border bg-card p-4 hover:bg-muted/50">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="font-semibold">
             {m.name ?? '(chưa đặt tên)'} <Badge className={cn('ml-2', badge.className)}>{badge.label}</Badge>
@@ -223,7 +224,7 @@ function Coverage() {
               {items.map((s) => (
                 <tr key={s.vendorId} className={cn('border-t', s.outlier && 'bg-warning-subtle/40')}>
                   <td className="px-3 py-2">
-                    <Link to={`/admin/merchants/${s.vendorId}`} className="font-medium text-primary hover:underline">
+                    <Link to={adminPath(`/merchants/${s.vendorId}`)} className="font-medium text-primary hover:underline">
                       {s.name}
                     </Link>
                     <p className="text-xs text-muted-foreground">{s.address}</p>

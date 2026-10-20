@@ -11,6 +11,7 @@ import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { adminPath } from '@/shared/config/sites'
 
 const TABS: { id: ShopFilter; label: string }[] = [
   { id: 'ALL', label: 'Tất cả quán' },
@@ -67,7 +68,7 @@ export function AdminSettlementPage() {
       <ul className="flex flex-col gap-2">
         {(shops?.items ?? []).map((shop) => (
           <li key={shop.vendorId}>
-            <Link to={`/admin/settlement/${shop.vendorId}`} className="block rounded-sm border bg-card p-4 hover:bg-muted/50">
+            <Link to={adminPath(`/settlement/${shop.vendorId}`)} className="block rounded-sm border bg-card p-4 hover:bg-muted/50">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-semibold">
                   {shop.name}

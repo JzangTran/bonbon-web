@@ -4,6 +4,7 @@ import { useShopOrders, type OrderStatus } from '@/entities/order'
 import { useSellerReviews } from '@/entities/review'
 import { useShop } from '@/entities/shop'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { sellerPath } from '@/shared/config/sites'
 
 type Todo = { label: string; statuses: OrderStatus[] }
 
@@ -37,13 +38,13 @@ export function SellerDashboardPage() {
               <TodoCount key={todo.label} todo={todo} />
             ))}
             <li>
-              <Link to="/seller/order-cases" className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
+              <Link to={sellerPath('/order-cases')} className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
                 <span className="text-2xl font-semibold text-primary tabular-nums">{waitingCases.data?.total ?? '–'}</span>
                 <span className="text-center text-sm text-muted-foreground">Khiếu nại chờ trả lời</span>
               </Link>
             </li>
             <li>
-              <Link to="/seller/reviews" className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
+              <Link to={sellerPath('/reviews')} className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
                 <span className="text-2xl font-semibold text-primary tabular-nums">{unreplied.data?.total ?? '–'}</span>
                 <span className="text-center text-sm text-muted-foreground">Đánh giá chưa phản hồi</span>
               </Link>
@@ -59,7 +60,7 @@ function TodoCount({ todo }: { todo: Todo }) {
   const orders = useShopOrders({ statuses: todo.statuses, size: 1 }, false)
   return (
     <li>
-      <Link to="/seller/orders" className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
+      <Link to={sellerPath('/orders')} className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
         <span className="text-2xl font-semibold text-primary tabular-nums">{orders.data?.total ?? '–'}</span>
         <span className="text-center text-sm text-muted-foreground">{todo.label}</span>
       </Link>

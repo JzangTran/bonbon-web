@@ -7,6 +7,7 @@ import { formatDateTime, formatVnd } from '@/shared/lib/format'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { sellerPath } from '@/shared/config/sites'
 
 /** A shop that asked to close: no new orders, what is under way finishes, and it becomes CLOSED once nothing is left (close-shop.md). */
 export function SellerClosingPage() {
@@ -53,10 +54,10 @@ export function SellerClosingPage() {
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
               {b.ready ? <p className="text-sm text-success-fg">Không còn gì chặn. Cửa hàng sẽ được đóng hẳn trong ít phút.</p> : null}
-              <Item done={(b.ordersInProgress ?? 0) === 0} title="Đơn đang làm" detail={`${b.ordersInProgress} đơn chưa giao xong`} to="/seller/orders" action="Xem đơn hàng" />
-              <Item done={(b.openCases ?? 0) === 0} title="Khiếu nại" detail={`${b.openCases} khiếu nại chưa xong`} to="/seller/order-cases" action="Xem khiếu nại" />
-              <Item done={(b.pendingAppeals ?? 0) === 0} title="Kháng nghị điểm phạt" detail={`${b.pendingAppeals} kháng nghị chờ quản trị viên`} to="/seller/performance" action="Xem hiệu suất" />
-              <Item done={(b.heldForCases ?? 0) === 0} title="Tiền đang giữ cho khiếu nại" detail={`${formatVnd(b.heldForCases)} được giải phóng khi khiếu nại xong`} to="/seller/earnings" action="Xem thu nhập" />
+              <Item done={(b.ordersInProgress ?? 0) === 0} title="Đơn đang làm" detail={`${b.ordersInProgress} đơn chưa giao xong`} to={sellerPath('/orders')} action="Xem đơn hàng" />
+              <Item done={(b.openCases ?? 0) === 0} title="Khiếu nại" detail={`${b.openCases} khiếu nại chưa xong`} to={sellerPath('/order-cases')} action="Xem khiếu nại" />
+              <Item done={(b.pendingAppeals ?? 0) === 0} title="Kháng nghị điểm phạt" detail={`${b.pendingAppeals} kháng nghị chờ quản trị viên`} to={sellerPath('/performance')} action="Xem hiệu suất" />
+              <Item done={(b.heldForCases ?? 0) === 0} title="Tiền đang giữ cho khiếu nại" detail={`${formatVnd(b.heldForCases)} được giải phóng khi khiếu nại xong`} to={sellerPath('/earnings')} action="Xem thu nhập" />
               <Item
                 done={(b.balance ?? 0) === 0}
                 title="Số dư sổ cái"
@@ -65,7 +66,7 @@ export function SellerClosingPage() {
                     ? `Nền tảng nợ bạn ${formatVnd(b.balance)}: sẽ được chi trả vào tài khoản nhận tiền`
                     : `Bạn nợ nền tảng ${formatVnd(Math.abs(b.balance ?? 0))} (hoa hồng đơn tiền mặt): hãy liên hệ hỗ trợ để thanh toán hoặc được xử lý`
                 }
-                to={(b.balance ?? 0) > 0 ? '/seller/earnings' : '/seller/support-tickets'}
+                to={(b.balance ?? 0) > 0 ? sellerPath('/earnings') : sellerPath('/support-tickets')}
                 action={(b.balance ?? 0) > 0 ? 'Xem thu nhập' : 'Liên hệ hỗ trợ'}
               />
             </CardContent>

@@ -13,10 +13,10 @@ import {
   TruckIcon,
   WalletIcon,
 } from 'lucide-react'
-import { Link } from 'react-router'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { siteButton, siteButtonGreen } from '@/widgets/site-chrome/buttons'
+import { siteUrl } from '@/shared/config/sites'
 
 
 const btn = siteButton
@@ -331,16 +331,16 @@ function SellerBand() {
             ))}
           </ol>
           <div className="flex flex-wrap items-center gap-3">
-            <Link to="/seller/register" className={cn(btn, 'bg-white text-brand-900 hover:bg-brand-50')}>
+            <a href={siteUrl('seller', '/register')} className={cn(btn, 'bg-white text-brand-900 hover:bg-brand-50')}>
               Mở quán trên bonbon
-            </Link>
+            </a>
             <a href="#hoi-dap" className={cn(btn, 'bg-white/12 text-white hover:bg-white/20')}>
               Hồ sơ cần những gì?
             </a>
           </div>
-          <Link to="/seller/login" className="self-start font-semibold text-white underline-offset-4 hover:underline">
+          <a href={siteUrl('seller', '/login')} className="self-start font-semibold text-white underline-offset-4 hover:underline">
             Đã có tài khoản? Đăng nhập
-          </Link>
+          </a>
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
           <ImageSlot label="Ảnh chủ quán bán hàng trên bonbon (bổ sung sau)" className="aspect-[4/5] w-full max-w-[420px] rounded-card bg-[#164a30]" />

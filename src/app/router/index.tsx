@@ -4,24 +4,39 @@ import { AdminLayout } from '@/app/layouts/admin-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 import { RouteError } from './route-error'
+import { SITE, SUBDOMAINS, adminPath, sellerPath } from '@/shared/config/sites'
+
+// One build, three hosts (see shared/config/sites.ts): each host gets its own pages, and the shared ones (email links, legal texts,
+// payment return) work on all of them. Without subdomains (development, previews) every page lives on the one host.
+const showLanding = SITE === 'public'
+const showSeller = SITE === 'seller' || (SITE === 'public' && !SUBDOMAINS)
+const showAdmin = SITE === 'admin' || (SITE === 'public' && !SUBDOMAINS)
 
 const router = createBrowserRouter([
+  ...(showLanding ? [
   {
     path: '/',
     lazy: () => import('@/pages/landing').then((m) => ({ Component: m.LandingPage })),
   },
+  ] : []),
+  ...(showSeller ? [
   {
-    path: '/seller/login',
+    path: sellerPath('/login'),
     lazy: () => import('@/pages/auth/seller-login').then((m) => ({ Component: m.SellerLoginPage })),
   },
+  ] : []),
+  ...(showAdmin ? [
   {
-    path: '/admin/login',
+    path: adminPath('/login'),
     lazy: () => import('@/pages/auth/admin-login').then((m) => ({ Component: m.AdminLoginPage })),
   },
+  ] : []),
+  ...(showSeller ? [
   {
-    path: '/seller/register',
+    path: sellerPath('/register'),
     lazy: () => import('@/pages/auth/seller-register').then((m) => ({ Component: m.SellerRegisterPage })),
   },
+  ] : []),
   {
     path: '/verify-email',
     lazy: () => import('@/pages/auth/verify-email').then((m) => ({ Component: m.VerifyEmailPage })),
@@ -50,9 +65,10 @@ const router = createBrowserRouter([
     path: '/legal/:type',
     lazy: () => import('@/pages/legal-document').then((m) => ({ Component: m.LegalDocumentPage })),
   },
+  ...(showSeller ? [
   {
     // Tasks that need the person's whole attention: a page of their own, no workspace around them.
-    element: <RequireRole role="SELLER" loginPath="/seller/login" />,
+    element: <RequireRole role="SELLER" loginPath={sellerPath('/login')} />,
     errorElement: <RouteError />,
     children: [
       {
@@ -70,10 +86,10 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <RequireRole role="SELLER" loginPath="/seller/login" />,
+    element: <RequireRole role="SELLER" loginPath={sellerPath('/login')} />,
     children: [
       {
-        path: '/seller',
+        path: sellerPath(),
         element: <SellerLayout />,
         errorElement: <RouteError />,
         children: [
@@ -177,11 +193,13 @@ const router = createBrowserRouter([
       },
     ],
   },
+  ] : []),
+  ...(showAdmin ? [
   {
-    element: <RequireRole role="ADMIN" loginPath="/admin/login" />,
+    element: <RequireRole role="ADMIN" loginPath={adminPath('/login')} />,
     children: [
       {
-        path: '/admin',
+        path: adminPath(),
         element: <AdminLayout />,
         errorElement: <RouteError />,
         children: [
@@ -305,6 +323,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  ] : []),
   ...(import.meta.env.DEV
     ? [{ path: '/dev/ui', lazy: () => import('@/pages/dev/ui-kit').then((m) => ({ Component: m.UiKitPage })) }]
     : []),

@@ -15,6 +15,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { adminPath } from '@/shared/config/sites'
 
 type Kind = RecordInput['type']
 type Tab = 'ledger' | 'statement'
@@ -46,7 +47,7 @@ export function AdminSettlementShopPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-6">
       <div>
-        <Link to="/admin/settlement" className="text-sm text-primary hover:underline">
+        <Link to={adminPath('/settlement')} className="text-sm text-primary hover:underline">
           ← Đối soát
         </Link>
         <h1 className="text-2xl font-bold">{v?.name ?? 'Quán'}</h1>

@@ -7,6 +7,7 @@ import { Captcha } from '@/shared/ui/captcha'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { AuthShell, FormError } from '@/widgets/auth-shell'
+import { adminPath } from '@/shared/config/sites'
 
 export function AdminLoginPage() {
   const { signIn } = useSession()
@@ -41,7 +42,7 @@ export function AdminLoginPage() {
       role: 'ADMIN',
     })
     const from = (location.state as { from?: string } | null)?.from
-    navigate(from && from.startsWith('/admin') ? from : '/admin', { replace: true })
+    navigate(from && from.startsWith(adminPath()) ? from : adminPath(), { replace: true })
   }
 
   return (
