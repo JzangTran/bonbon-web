@@ -20,7 +20,7 @@ export function BarChart({ bars, ariaLabel, format }: { bars: Bar[]; ariaLabel: 
           </div>
         ))}
       </div>
-      <div className="mt-2 flex gap-px text-[11px] text-muted-foreground sm:gap-1">
+      <div className="mt-2 flex gap-px text-[0.6875rem] text-muted-foreground sm:gap-1">
         {bars.map((b, i) => (
           <span key={b.key} className="min-w-0 flex-1 overflow-visible text-center whitespace-nowrap">
             {i % every === 0 ? b.label : ''}

@@ -5,7 +5,7 @@ import { cn } from '@/shared/lib/utils'
 import type { Location } from './locate'
 import type { NavParent } from './types'
 
-const rowBase = 'flex min-h-9 w-full items-center justify-between gap-3 px-5 text-left text-[13px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
+const rowBase = 'flex min-h-9 w-full items-center justify-between gap-3 px-5 text-left text-[0.8125rem] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
 
 function readOpen(storageKey: string): Record<string, boolean> {
   try {
@@ -92,7 +92,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
                         aria-current={current ? 'page' : 'false'}
                         className={() =>
                           cn(
-                            'flex min-h-9 items-center pr-5 pl-[50px] text-[13px] text-muted-foreground outline-none hover:bg-ws-fill focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
+                            'flex min-h-9 items-center pr-5 pl-[50px] text-[0.8125rem] text-muted-foreground outline-none hover:bg-ws-fill focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
                             current && 'font-semibold text-brand-700',
                           )
                         }

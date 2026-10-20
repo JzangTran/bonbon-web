@@ -15,6 +15,48 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Breakpoints of the workspace shell that grow with the chosen text size. Media queries measure rem against the browser's own
+ * size, not the page's, so larger text would leave the side columns at their wide-screen layout; these two variants move the
+ * thresholds with the size instead: wsnav (left menu beside the work area: 768 px at 100 %) and wspanel (right panel: 1280 px).
+ */
+@custom-variant wsnav {
+  @media (min-width: 48rem) {
+    :root:not([data-text-scale]) &,
+    :root[data-text-scale="normal"] & {
+      @slot;
+    }
+  }
+  @media (min-width: 60rem) {
+    :root[data-text-scale="large"] & {
+      @slot;
+    }
+  }
+  @media (min-width: 72rem) {
+    :root[data-text-scale="xlarge"] & {
+      @slot;
+    }
+  }
+}
+@custom-variant wspanel {
+  @media (min-width: 80rem) {
+    :root:not([data-text-scale]) &,
+    :root[data-text-scale="normal"] & {
+      @slot;
+    }
+  }
+  @media (min-width: 100rem) {
+    :root[data-text-scale="large"] & {
+      @slot;
+    }
+  }
+  @media (min-width: 120rem) {
+    :root[data-text-scale="xlarge"] & {
+      @slot;
+    }
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -51,6 +93,42 @@
   }
 }
 
+/* Motion is kept small and short: a block fading up as it scrolls into view (landing only), and a page fading in when the route changes. */
+@keyframes bb-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes bb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.bb-reveal[data-reveal="out"] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+.bb-reveal[data-reveal="in"] {
+  animation: bb-fade-up 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.bb-page-in {
+  animation: bb-fade 180ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bb-reveal[data-reveal="out"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Flat workspace: cards in the work area have no outline, only a light fill (outside @layer so it wins over the ring utility). */
 .ws-content [data-slot="card"] {
   box-shadow: none;
@@ -59,7 +137,7 @@
 
 /* Workspace buttons (seller and admin, focus pages): 13 px text and tighter heights, flat outline. The corners are the product-wide 8 px. */
 :root:has(.ws-root) [data-slot="button"] {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 :root:has(.ws-root) [data-slot="button"][data-size="default"] {
   height: 2rem;

@@ -28,8 +28,9 @@ export function FormRow({ label, htmlFor, required, hint, error, children, class
     ? cloneElement(children as ReactElement<Record<string, unknown>>, extra)
     : children
   return (
-    <div className={cn('grid gap-1.5 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-x-5', className)}>
-      <Label htmlFor={htmlFor} className="leading-snug md:justify-end md:pt-2.5 md:text-right">
+    <div className="@container">
+    <div className={cn('grid gap-1.5 @xl:grid-cols-[13rem_minmax(0,1fr)] @xl:gap-x-5', className)}>
+      <Label htmlFor={htmlFor} className="leading-snug @xl:justify-end @xl:pt-2.5 @xl:text-right">
         <span>
           {required ? (
             <>
@@ -44,6 +45,7 @@ export function FormRow({ label, htmlFor, required, hint, error, children, class
         {control}
         {error ? <p id={errorId} role="alert" className="text-sm text-destructive">{error}</p> : hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
       </div>
+    </div>
     </div>
   )
 }

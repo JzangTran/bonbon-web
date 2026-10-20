@@ -4,6 +4,7 @@ import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { sellerPath } from '@/shared/config/sites'
+import { TextSizeControl } from '@/shared/ui/text-size-control'
 
 type Props = {
   /** what the person is doing, shown in the bar next to the logo */
@@ -24,9 +25,9 @@ type Props = {
 export function FocusFrame({ title, exitTo, loginPath = sellerPath('/login'), width = 'md', flat = false, children }: Props) {
   const { signOut } = useSession()
   const navigate = useNavigate()
-  const barButton = 'rounded-md px-3 py-1.5 text-[13px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white'
+  const barButton = 'rounded-md px-3 py-1.5 text-[0.8125rem] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white'
   return (
-    <div className="ws-root flex min-h-svh flex-col bg-ws-ground text-[13px]">
+    <div className="ws-root flex min-h-svh flex-col bg-ws-ground text-[0.8125rem]">
       <a
         href="#main"
         className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
@@ -39,6 +40,8 @@ export function FocusFrame({ title, exitTo, loginPath = sellerPath('/login'), wi
           <span aria-hidden="true" className="h-4 w-px bg-white/15" />
           <span className="truncate font-semibold">{title}</span>
         </div>
+        <div className="flex items-center gap-1">
+        <TextSizeControl tone="light" className="[&>span]:hidden sm:[&>span]:inline [&_button]:size-7" />
         {exitTo ? (
           <Link to={exitTo} className={barButton}>
             Thoát
@@ -55,6 +58,7 @@ export function FocusFrame({ title, exitTo, loginPath = sellerPath('/login'), wi
             Đăng xuất
           </button>
         )}
+        </div>
       </header>
       <main id="main" tabIndex={-1} className="flex-1 p-3 outline-none sm:p-6">
         <div

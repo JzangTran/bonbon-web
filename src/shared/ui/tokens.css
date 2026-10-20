@@ -218,5 +218,6 @@
   --radius-media: 12px;
   --radius-device: 44px;
 
-  --shadow-float: 0 1px 2px rgb(20 32 26 / 0.06), 0 4px 12px rgb(20 32 26 / 0.08);
+  /* flat, not raised: a floating layer (menu, popover, drawer) is set apart by a hairline, never a cast shadow */
+  --shadow-float: 0 0 0 1px rgb(20 32 26 / 0.1);
 }

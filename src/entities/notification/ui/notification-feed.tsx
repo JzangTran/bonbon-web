@@ -39,8 +39,8 @@ export function NotificationFeed({ orderPath }: { orderPath?: (orderId: string) 
               <>
                 <span aria-hidden="true" className={cn('mt-1.5 size-1.5 shrink-0 rounded-full', isUnread ? 'bg-foreground' : 'bg-border')} />
                 <span className="min-w-0">
-                  <span className={cn('block text-xs leading-[18px]', isUnread ? 'font-semibold' : 'font-medium')}>{n.title}</span>
-                  {n.body ? <span className="block text-xs leading-[18px] text-muted-foreground">{n.body}</span> : null}
+                  <span className={cn('block text-xs leading-[1.125rem]', isUnread ? 'font-semibold' : 'font-medium')}>{n.title}</span>
+                  {n.body ? <span className="block text-xs leading-[1.125rem] text-muted-foreground">{n.body}</span> : null}
                   <span className="block text-xs text-muted-foreground tabular-nums">{n.createdAt ? time.format(new Date(n.createdAt)) : ''}</span>
                 </span>
               </>
