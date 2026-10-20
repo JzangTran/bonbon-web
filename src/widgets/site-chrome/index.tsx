@@ -54,7 +54,7 @@ export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
   return (
     <header className="pt-4 sm:pt-6">
       <Wrap>
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[28px] bg-ink py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:rounded-full sm:pl-[30px]">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl bg-ink py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:pl-[30px]">
           <a href={siteUrl('public')} className="flex items-center">
             <Lockup tone="white" className="h-9" />
           </a>
@@ -66,7 +66,7 @@ export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
                   href={`#${id}`}
                   aria-current={active === id ? 'location' : undefined}
                   className={cn(
-                    'rounded-full px-4 py-2.5 text-[15px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white sm:px-[18px]',
+                    'rounded-sm px-4 py-2.5 text-[15px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white sm:px-[18px]',
                     active === id && 'bg-white font-semibold text-ink hover:bg-white',
                   )}
                 >

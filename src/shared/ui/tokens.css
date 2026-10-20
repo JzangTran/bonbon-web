@@ -62,7 +62,7 @@
   --chart-3: #1d5bd8;
   --chart-4: #0b3b24;
   --chart-5: #a15c00;
-  --radius: 0.25rem;
+  --radius: 0.5rem;
   /* workspace (seller/admin web): flat, white first */
   --ws-header: #14201a;
   --ws-ground: #e0e4e2;
@@ -203,19 +203,19 @@
   --color-highlight-subtle: var(--highlight-subtle);
   --color-highlight-fg: var(--highlight-fg);
 
-  /* one small radius for everything that is not a button (buttons use rounded-full) */
-  --radius-xs: var(--radius);
+  /* One shape for the whole product (owner decision 2026-10-20): controls 8 px (buttons, inputs, selects, menus, badges),
+     surfaces 12 px (cards, panels, dialogs, photos). No pills; circles only for avatars, switches and dots. */
+  --radius-xs: 4px;
   --radius-sm: var(--radius);
   --radius-md: var(--radius);
-  --radius-lg: var(--radius);
-  --radius-xl: var(--radius);
-  --radius-2xl: var(--radius);
-  --radius-3xl: var(--radius);
-  --radius-4xl: var(--radius);
-  /* customer-facing surfaces (radius option A): cards 24, photos 18, phone frame 44 */
+  --radius-lg: 12px;
+  --radius-xl: 12px;
+  --radius-2xl: 12px;
+  --radius-3xl: 12px;
+  --radius-4xl: 12px;
   --radius-panel: 12px;
-  --radius-card: 24px;
-  --radius-media: 18px;
+  --radius-card: 12px;
+  --radius-media: 12px;
   --radius-device: 44px;
 
   --shadow-float: 0 1px 2px rgb(20 32 26 / 0.06), 0 4px 12px rgb(20 32 26 / 0.08);

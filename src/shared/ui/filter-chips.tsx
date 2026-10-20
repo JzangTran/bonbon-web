@@ -16,7 +16,7 @@ export function FilterChips<T extends string>({ label, chips, value, onChange }:
           aria-pressed={value === c.id}
           onClick={() => onChange(c.id)}
           className={cn(
-            'h-8 rounded-full px-3.5 text-[13px] whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            'h-8 rounded-sm px-3.5 text-[13px] whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-ring',
             value === c.id ? 'bg-primary font-semibold text-primary-foreground' : 'bg-ws-fill text-foreground hover:bg-muted',
           )}
         >
