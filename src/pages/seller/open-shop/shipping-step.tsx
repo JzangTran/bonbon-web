@@ -86,7 +86,7 @@ export function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: 
       <Field id="ship-min" label="Đơn tối thiểu (₫, tuỳ chọn)" error={save.errors.minOrderValue}>
         <Input id="ship-min" inputMode="numeric" maxLength={11} value={min} onChange={(e) => setMin(e.target.value)} />
       </Field>
-      <FormRow label="Giờ mở cửa" required error={save.errors.openingHours} className="md:[&>div]:max-w-none">
+      <FormRow label="Giờ mở cửa" required error={save.errors.openingHours} className="@xl:[&>div]:max-w-none">
         <OpeningHoursEditor value={hours} onChange={setHours} />
       </FormRow>
       {save.isError ? <FormError message={problemMessage(save.error)} /> : null}

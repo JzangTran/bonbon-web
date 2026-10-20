@@ -6,6 +6,7 @@ import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { siteButtonGreen } from './buttons'
 import { siteUrl } from '@/shared/config/sites'
+import { TextSizeControl } from '@/shared/ui/text-size-control'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
@@ -54,7 +55,7 @@ export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
   return (
     <header className="pt-4 sm:pt-6">
       <Wrap>
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl bg-ink py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:pl-[30px]">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl bg-ink py-2.5 pr-2.5 pl-5 sm:pl-[30px]">
           <a href={siteUrl('public')} className="flex items-center">
             <Lockup tone="white" className="h-9" />
           </a>
@@ -66,7 +67,7 @@ export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
                   href={`#${id}`}
                   aria-current={active === id ? 'location' : undefined}
                   className={cn(
-                    'rounded-sm px-4 py-2.5 text-[15px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white sm:px-[18px]',
+                    'rounded-sm px-4 py-2.5 text-[0.9375rem] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white sm:px-[18px]',
                     active === id && 'bg-white font-semibold text-ink hover:bg-white',
                   )}
                 >
@@ -111,11 +112,14 @@ export function SiteFooter() {
             </span>
           ) : null}
         </div>
-        <nav aria-label="Pháp lý" className="flex flex-wrap items-start gap-x-6 gap-y-2">
+        <div className="flex flex-col items-start gap-4">
+          <TextSizeControl tone="light" />
+          <nav aria-label="Pháp lý" className="flex flex-wrap items-start gap-x-6 gap-y-2">
           <Link to="/legal/CUSTOMER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản sử dụng</Link>
           <Link to="/legal/SELLER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản người bán</Link>
           <Link to="/legal/PRIVACY_POLICY" className="underline-offset-4 hover:text-white hover:underline">Chính sách quyền riêng tư</Link>
-        </nav>
+          </nav>
+        </div>
       </Wrap>
     </footer>
   )

@@ -25,7 +25,7 @@ export function AdminDashboardPage() {
         {QUEUES.map((q) => (
           <li key={q.to}>
             <Link to={q.to} className="group flex h-full flex-col gap-1 rounded-md bg-ws-fill p-4 outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring">
-              <span className="flex items-center justify-between gap-2 text-[13px] font-semibold">
+              <span className="flex items-center justify-between gap-2 text-[0.8125rem] font-semibold">
                 {q.title}
                 <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </span>

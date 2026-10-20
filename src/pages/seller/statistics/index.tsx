@@ -116,7 +116,7 @@ function RevenueChart({ buckets, granularity }: { buckets: RevenueBucket[]; gran
           </div>
         ))}
       </div>
-      <div className="mt-2 flex gap-px text-[11px] text-muted-foreground sm:gap-1">
+      <div className="mt-2 flex gap-px text-[0.6875rem] text-muted-foreground sm:gap-1">
         {buckets.map((b, i) => (
           <span key={b.start} className="min-w-0 flex-1 overflow-visible whitespace-nowrap text-center">
             {i % every === 0 ? shortLabel(b.start ?? '', granularity) : ''}

@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { App } from '@/app'
 import { SITE } from '@/shared/config/sites'
+import { initTextScale } from '@/shared/lib/text-scale'
+
+initTextScale()
 
 // The seller and admin hosts share the public site's robots.txt, so they ask not to be indexed on the page itself.
 if (SITE !== 'public') {
