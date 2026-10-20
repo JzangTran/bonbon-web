@@ -19,6 +19,19 @@ const router = createBrowserRouter([
     lazy: () => import('@/pages/landing').then((m) => ({ Component: m.LandingPage })),
   },
   ] : []),
+  // Guides, blog, brand kit and help center: pages of the public site only.
+  ...(showLanding ? [
+    { path: '/huong-dan', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
+    { path: '/huong-dan/bat-dau', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
+    { path: '/huong-dan/bat-dau/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="bat-dau" /> })) },
+    { path: '/huong-dan/quan-ly-cua-hang', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.ManageHubPage })) },
+    { path: '/huong-dan/quan-ly-cua-hang/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="quan-ly-cua-hang" /> })) },
+    { path: '/blog', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.BlogHubPage })) },
+    { path: '/blog/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="blog" /> })) },
+    { path: '/bo-nhan-dien', lazy: () => import('@/pages/brand-kit').then((m) => ({ Component: m.BrandKitPage })) },
+    { path: '/tro-giup', lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpCenterPage })) },
+    { path: '/tro-giup/:id', lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpArticlePage })) },
+  ] : []),
   ...(showSeller ? [
   {
     path: sellerPath('/login'),
