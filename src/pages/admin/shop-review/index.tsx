@@ -15,7 +15,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
-import { adminPath } from '@/shared/config/sites'
+import { consolePath } from '@/shared/config/sites'
 
 const TABS = [
   { status: 'PENDING', label: 'Chờ duyệt' },
@@ -134,7 +134,7 @@ export function ShopReviewQueuePage() {
                 </TableCell>
                 <TableCell className="text-right">
                   <Button asChild variant="link" size="sm">
-                    <Link to={adminPath(`/shop-review/${shop?.vendorId}`)}>Xem hồ sơ</Link>
+                    <Link to={consolePath(`/shop-review/${shop?.vendorId}`)}>Xem hồ sơ</Link>
                   </Button>
                 </TableCell>
               </TableRow>

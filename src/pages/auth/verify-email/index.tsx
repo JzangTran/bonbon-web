@@ -34,7 +34,7 @@ export function VerifyEmailPage() {
       {result.data ? (
         <>
           <Button asChild size="lg" className="uppercase tracking-wide">
-            <a href={siteUrl('seller', '/login')}>Đăng nhập người bán</a>
+            <a href={siteUrl('merchant', '/login')}>Đăng nhập người bán</a>
           </Button>
           <p className="text-sm text-muted-foreground">Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.</p>
         </>

@@ -26,7 +26,7 @@ export function ForgotPasswordPage() {
     <AuthShell
       title="Quên mật khẩu"
       description="Nhập email đăng ký, chúng tôi sẽ gửi liên kết đặt lại mật khẩu (hiệu lực 1 giờ)."
-      footer={<a href={siteUrl('seller', '/login')} className="text-primary underline-offset-4 hover:underline">Về trang đăng nhập</a>}
+      footer={<a href={siteUrl('merchant', '/login')} className="text-primary underline-offset-4 hover:underline">Về trang đăng nhập</a>}
     >
       {sent ? (
         <FormSuccess message="Nếu email này có tài khoản, chúng tôi đã gửi liên kết đặt lại mật khẩu." />

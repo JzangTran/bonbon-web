@@ -9,7 +9,7 @@ import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 /** One ticket with the whole conversation; the shop can write again or close it. */
 export function SellerSupportTicketDetailPage() {
@@ -24,7 +24,7 @@ export function SellerSupportTicketDetailPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to={sellerPath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={merchantPath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Phiếu hỗ trợ
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}

@@ -14,7 +14,7 @@ import { FormError } from '@/widgets/auth-shell'
 import { DecideDialog } from './decide-dialog'
 import { FlagDialog } from './flag-dialog'
 import { PageTabs } from '@/shared/ui/workspace-slots'
-import { adminPath } from '@/shared/config/sites'
+import { consolePath } from '@/shared/config/sites'
 
 const TABS: { id: CaseStatus | ''; label: string }[] = [
   { id: 'APPEALED', label: 'Kháng nghị chờ quyết định' },
@@ -125,7 +125,7 @@ function CaseItem({ c, onDecide }: { c: CategoryCase; onDecide: (decision: 'ACCE
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="font-semibold">
           {c.dishName} <span className="font-normal text-muted-foreground">· </span>
-          <Link to={adminPath(`/merchants/${c.vendorId}`)} className="font-normal text-primary hover:underline">
+          <Link to={consolePath(`/merchants/${c.vendorId}`)} className="font-normal text-primary hover:underline">
             {c.shopName}
           </Link>
           <Badge className={cn('ml-2', status.className)}>{status.label}</Badge>

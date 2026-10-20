@@ -10,18 +10,20 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { WaveEdge } from '@/shared/ui/wave'
 import { FormError } from '@/widgets/auth-shell'
 import { ArticleView, ContentPage } from '@/widgets/article/article-view'
+import { helpPath, siteUrl } from '@/shared/config/sites'
 import { Breadcrumb, TagList } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 
-const BASE = '/tro-giup'
-const HOME = [{ name: 'Trang chủ', path: '/' }]
+const BASE = helpPath()
+const HOME = [{ name: 'Trang chủ', path: siteUrl('public', '/') }]
+const articlePath = (id: string | undefined) => helpPath(`/bai-viet/${id}`)
 
 function HelpCard({ article }: { article: HelpArticle }) {
   const tags = [AUDIENCE_LABEL[article.audience ?? 'ALL'] ?? 'Mọi người', ...(article.keywords ?? [])]
   return (
     <li className="min-w-0">
       <Link
-        to={`${BASE}/${article.id}`}
+        to={articlePath(article.id)}
         className="group flex h-full flex-col gap-3 rounded-lg bg-card p-2.5 outline-none transition-colors hover:bg-brand-50 focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <div className="flex aspect-[16/10] items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-100">
@@ -42,7 +44,7 @@ export function HelpCenterPage() {
   const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }]
   return (
     <ContentPage>
-      <PageSeo title="Trung tâm trợ giúp" description="Câu trả lời cho các thắc mắc thường gặp khi đặt món và bán hàng trên bonbon." path={BASE} trail={trail} />
+      <PageSeo title="Trung tâm trợ giúp" description="Câu trả lời cho các thắc mắc thường gặp khi đặt món và bán hàng trên bonbon." path={BASE} trail={trail} site="help" />
       <main id="main">
         <section className="bg-brand-50">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
@@ -89,7 +91,7 @@ export function HelpCenterPage() {
 export function HelpArticlePage() {
   const { id } = useParams()
   const article = useHelpArticle(id)
-  const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }, { name: article.data?.title ?? '…', path: `${BASE}/${id}` }]
+  const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }, { name: article.data?.title ?? '…', path: articlePath(id) }]
   if (article.isPending) {
     return (
       <ContentPage>
@@ -118,8 +120,9 @@ export function HelpArticlePage() {
       <PageSeo
         title={data.title ?? 'Bài trợ giúp'}
         description={(data.body ?? '').replace(/[#*-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 155)}
-        path={`${BASE}/${id}`}
+        path={articlePath(id)}
         trail={trail}
+        site="help"
       />
       <ArticleView trail={trail} title={data.title ?? ''} meta={`Cập nhật ${formatDateTime(data.updatedAt)}`} blocks={blocksFromText(data.body ?? '')} tags={tags} />
     </>

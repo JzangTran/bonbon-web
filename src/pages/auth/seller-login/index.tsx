@@ -15,7 +15,7 @@ import { Label } from '@/shared/ui/label'
 import { AuthHero, FormError, FormSuccess } from '@/widgets/auth-shell'
 import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 const schema = z.object({
   email: z.email('Email không hợp lệ'),
@@ -51,7 +51,7 @@ export function SellerLoginPage() {
       availableRoles: (user.availableRoles ?? []) as Role[],
     })
     const from = (location.state as { from?: string } | null)?.from
-    navigate(from && from.startsWith(sellerPath()) ? from : sellerPath(), { replace: true })
+    navigate(from && from.startsWith(merchantPath()) ? from : merchantPath(), { replace: true })
   }
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -103,7 +103,7 @@ export function SellerLoginPage() {
       footer={
         <>
           Bạn mới biết đến bonbon?{' '}
-          <Link to={sellerPath('/register')} className="font-medium text-primary hover:underline">
+          <Link to={merchantPath('/register')} className="font-medium text-primary hover:underline">
             Đăng ký
           </Link>
         </>
