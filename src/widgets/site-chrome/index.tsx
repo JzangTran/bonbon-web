@@ -5,6 +5,7 @@ import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { siteButtonGreen } from './buttons'
+import { siteUrl } from '@/shared/config/sites'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
@@ -46,17 +47,17 @@ export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
   const { session } = useSession()
   const active = useActiveSection(sections.map((s) => s.id))
   const area =
-    session?.role === 'SELLER' ? { to: '/seller', label: 'Vào trang người bán' }
-    : session?.role === 'ADMIN' ? { to: '/admin', label: 'Vào trang quản trị' }
+    session?.role === 'SELLER' ? { href: siteUrl('seller'), label: 'Vào trang người bán' }
+    : session?.role === 'ADMIN' ? { href: siteUrl('admin'), label: 'Vào trang quản trị' }
     : null
 
   return (
     <header className="pt-4 sm:pt-6">
       <Wrap>
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[28px] bg-ink py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:rounded-full sm:pl-[30px]">
-          <Link to="/" className="flex items-center">
+          <a href={siteUrl('public')} className="flex items-center">
             <Lockup tone="white" className="h-9" />
-          </Link>
+          </a>
           {sections.length > 0 ? (
             <nav aria-label="Trang chủ" className="order-3 flex w-full flex-wrap gap-1 sm:order-none sm:w-auto">
               {sections.map(({ id, label }) => (
@@ -75,18 +76,18 @@ export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
             </nav>
           ) : null}
           {area ? (
-            <Link to={area.to} className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
+            <a href={area.href} className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
               {area.label}
-            </Link>
+            </a>
           ) : sections.length > 0 ? (
             <a href="#tai-app" className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
               <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
               Tải app
             </a>
           ) : (
-            <Link to="/" className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
+            <a href={siteUrl('public')} className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
               Về trang chủ
-            </Link>
+            </a>
           )}
         </div>
       </Wrap>

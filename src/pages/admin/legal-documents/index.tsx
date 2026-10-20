@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { adminPath } from '@/shared/config/sites'
 
 /** Every version of each legal document with how many accounts accepted it (manage-legal-documents.md). */
 export function AdminLegalDocumentsPage() {
@@ -43,7 +44,7 @@ export function AdminLegalDocumentsPage() {
                     <span className="text-xs text-muted-foreground">Đang có một bản nháp</span>
                   ) : (
                     <Button asChild size="sm" variant="outline">
-                      <Link to={`/admin/legal-documents/new?type=${t.id}`}>
+                      <Link to={adminPath(`/legal-documents/new?type=${t.id}`)}>
                         <PlusIcon /> Soạn phiên bản mới
                       </Link>
                     </Button>
@@ -67,7 +68,7 @@ function VersionItem({ v }: { v: LegalVersion }) {
   const status = LEGAL_STATUS[v.status ?? ''] ?? { label: v.status ?? '', className: '' }
   return (
     <li>
-      <Link to={`/admin/legal-documents/${v.id}`} className="block rounded-sm border bg-card p-4 hover:bg-muted/50">
+      <Link to={adminPath(`/legal-documents/${v.id}`)} className="block rounded-sm border bg-card p-4 hover:bg-muted/50">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="font-semibold">
             Phiên bản {v.version} · {v.title} <Badge className={`ml-2 ${status.className}`}>{status.label}</Badge>

@@ -15,6 +15,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { Section, ShopApplicationSections } from '@/widgets/shop-application'
+import { adminPath } from '@/shared/config/sites'
 
 type Detail = components['schemas']['ShopApplicationDetail']
 
@@ -55,7 +56,7 @@ export function ShopReviewDetailPage() {
 
   return (
     <div className="flex max-w-6xl flex-col gap-6">
-      <Link to="/admin/shop-review" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+      <Link to={adminPath('/shop-review')} className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
         <ArrowLeftIcon className="size-4" /> Duyệt cửa hàng
       </Link>
       <div className="flex flex-wrap items-center gap-3">
@@ -99,7 +100,7 @@ function DecisionPanel({ shop }: { shop: Detail }) {
   const done = async (message: string) => {
     toast.success(message)
     await queryClient.invalidateQueries({ queryKey: ['admin', 'shop-review'] })
-    navigate('/admin/shop-review')
+    navigate(adminPath('/shop-review'))
   }
   const approve = useMutation({
     mutationFn: async () => {

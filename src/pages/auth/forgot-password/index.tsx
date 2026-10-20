@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { AuthShell, FormError, FormSuccess } from '@/widgets/auth-shell'
+import { siteUrl } from '@/shared/config/sites'
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -26,7 +26,7 @@ export function ForgotPasswordPage() {
     <AuthShell
       title="Quên mật khẩu"
       description="Nhập email đăng ký, chúng tôi sẽ gửi liên kết đặt lại mật khẩu (hiệu lực 1 giờ)."
-      footer={<Link to="/seller/login" className="text-primary underline-offset-4 hover:underline">Về trang đăng nhập</Link>}
+      footer={<a href={siteUrl('seller', '/login')} className="text-primary underline-offset-4 hover:underline">Về trang đăng nhập</a>}
     >
       {sent ? (
         <FormSuccess message="Nếu email này có tài khoản, chúng tôi đã gửi liên kết đặt lại mật khẩu." />

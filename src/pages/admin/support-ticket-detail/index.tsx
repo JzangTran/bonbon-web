@@ -10,6 +10,7 @@ import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { adminPath } from '@/shared/config/sites'
 
 /** One ticket for the administrators: the whole thread, who wrote it, the order it is about, and the reply box. */
 export function AdminSupportTicketDetailPage() {
@@ -27,7 +28,7 @@ export function AdminSupportTicketDetailPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to="/admin/support-tickets" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={adminPath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Hộp thư phiếu
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}
@@ -44,11 +45,11 @@ export function AdminSupportTicketDetailPage() {
               <span className="text-muted-foreground">Người gửi:</span> {t.userName} ({t.audience === 'SHOP' ? 'cửa hàng' : 'khách'})
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link className="text-primary underline" to={`/admin/lookup/customers/${t.userId}`}>
+              <Link className="text-primary underline" to={adminPath(`/lookup/customers/${t.userId}`)}>
                 Tra cứu tài khoản
               </Link>
               {t.orderId ? (
-                <Link className="text-primary underline" to={`/admin/lookup/orders/${t.orderId}`}>
+                <Link className="text-primary underline" to={adminPath(`/lookup/orders/${t.orderId}`)}>
                   Đơn #{t.orderNumber}
                 </Link>
               ) : null}

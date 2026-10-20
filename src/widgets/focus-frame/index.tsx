@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
+import { sellerPath } from '@/shared/config/sites'
 
 type Props = {
   /** what the person is doing, shown in the bar next to the logo */
@@ -20,7 +21,7 @@ type Props = {
  * A page for one task that needs the person's whole attention (open the shop, close it, delete the account): a slim black bar,
  * the task on a white block, and nothing else. No navigation, no panel, no footer; the only way out is in the bar.
  */
-export function FocusFrame({ title, exitTo, loginPath = '/seller/login', width = 'md', flat = false, children }: Props) {
+export function FocusFrame({ title, exitTo, loginPath = sellerPath('/login'), width = 'md', flat = false, children }: Props) {
   const { signOut } = useSession()
   const navigate = useNavigate()
   const barButton = 'rounded-md px-3 py-1.5 text-[13px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white'
