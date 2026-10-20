@@ -5,7 +5,26 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 
 /** Public, indexable pages; the seller/admin areas and auth pages stay out of search. */
-const PUBLIC_PATHS = ['/', '/legal/CUSTOMER_TERMS', '/legal/SELLER_TERMS', '/legal/PRIVACY_POLICY']
+const PUBLIC_PATHS = [
+  '/',
+  '/legal/CUSTOMER_TERMS',
+  '/legal/SELLER_TERMS',
+  '/legal/PRIVACY_POLICY',
+  '/huong-dan/quan-ly-cua-hang',
+  '/blog',
+  '/bo-nhan-dien',
+  '/tro-giup',
+  ...articlePaths(),
+]
+
+/** The address of every guide and blog post, read from the slugs written in src/entities/article/content. */
+function articlePaths(): string[] {
+  const bases: Record<string, string> = { start: '/huong-dan/bat-dau', manage: '/huong-dan/quan-ly-cua-hang', blog: '/blog' }
+  return Object.entries(bases).flatMap(([file, base]) => {
+    const text = readFileSync(new URL(`./src/entities/article/content/${file}.ts`, import.meta.url), 'utf8')
+    return [...text.matchAll(/^s*slug: '([a-z0-9-]+)'/gm)].map((m) => `${base}/${m[1]}`)
+  })
+}
 
 /** Emits robots.txt always, and sitemap.xml when VITE_SITE_URL (the public origin) is set for the build. */
 function seoFiles(siteUrl: string | undefined): Plugin {

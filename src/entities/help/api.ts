@@ -24,6 +24,19 @@ export function useHelpArticles(q: string) {
   })
 }
 
+/** One published article by id, for the public help center page. */
+export function useHelpArticle(id: string | undefined) {
+  return useQuery({
+    queryKey: [...HELP_KEY, 'public', 'one', id],
+    enabled: !!id,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/api/help-articles/{id}', { params: { path: { id: id! } } })
+      if (error || !data) throw error
+      return data
+    },
+  })
+}
+
 export function useAdminHelpArticles(status: HelpStatus | 'ALL_STATUSES', q: string, page: number) {
   return useQuery({
     queryKey: [...HELP_KEY, 'admin', status, q, page],

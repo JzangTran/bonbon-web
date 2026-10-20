@@ -25,12 +25,6 @@ const btn = siteButton
 const btnGreen = siteButtonGreen
 const btnPale = cn(btn, 'bg-pill-pale text-ink hover:bg-[#e3e8e5]')
 
-const SECTIONS = [
-  { id: 'dat-mon', label: 'Đặt món' },
-  { id: 'quan', label: 'Quán trong khu' },
-  { id: 'mo-quan', label: 'Mở quán' },
-  { id: 'hoi-dap', label: 'Hỏi đáp' },
-]
 
 /** Public landing page at "/": brings customers to the app and local shops to seller sign-up (look: Landing v3 on the design canvas). */
 export function LandingPage() {
@@ -41,7 +35,7 @@ export function LandingPage() {
         name="description"
         content="Đặt cơm, bún, đồ uống từ các quán ngay trong chung cư và khu công nghiệp của bạn. Quán tự giao trong khu, phí giao thấp. Chủ quán trả hoa hồng thấp hơn các ứng dụng lớn."
       />
-      <SiteHeader sections={SECTIONS} />
+      <SiteHeader />
       <main>
         <Hero />
         <NearbyShops />
