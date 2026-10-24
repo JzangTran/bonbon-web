@@ -7,9 +7,11 @@ import { Captcha } from '@/shared/ui/captcha'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { AuthShell, FormError } from '@/widgets/auth-shell'
-import { adminPath } from '@/shared/config/sites'
+import { consolePath, opsPath } from '@/shared/config/sites'
 
-export function AdminLoginPage() {
+/** Sign-in for the two administrator sites: console (content and data) and ops (infrastructure); same accounts, a session on each host. */
+export function AdminLoginPage({ area }: { area: 'console' | 'ops' }) {
+  const home = area === 'ops' ? opsPath() : consolePath()
   const { signIn } = useSession()
   const navigate = useNavigate()
   const location = useLocation()
@@ -42,11 +44,14 @@ export function AdminLoginPage() {
       role: 'ADMIN',
     })
     const from = (location.state as { from?: string } | null)?.from
-    navigate(from && from.startsWith(adminPath()) ? from : adminPath(), { replace: true })
+    navigate(from && from.startsWith(home) ? from : home, { replace: true })
   }
 
   return (
-    <AuthShell title="Đăng nhập quản trị" description="Chỉ dành cho quản trị viên bonbon.">
+    <AuthShell
+      title={area === 'ops' ? 'Đăng nhập vận hành' : 'Đăng nhập quản trị'}
+      description={area === 'ops' ? 'Chỉ dành cho quản trị viên hạ tầng của bonbon.' : 'Chỉ dành cho quản trị viên bonbon.'}
+    >
       <form onSubmit={submit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <Label htmlFor="admin-email">Email</Label>

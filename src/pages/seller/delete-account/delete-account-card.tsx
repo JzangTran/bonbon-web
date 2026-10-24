@@ -14,13 +14,13 @@ import { Label } from '@/shared/ui/label'
 import { PasswordInput } from '@/shared/ui/password-input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 const BLOCKER_LINK: Record<string, string> = {
-  ORDERS: sellerPath('/orders'),
-  ORDER_CASES: sellerPath('/order-cases'),
-  SUPPORT_TICKETS: sellerPath('/support-tickets'),
-  CLOSE_SHOP: sellerPath('/shop'),
+  ORDERS: merchantPath('/orders'),
+  ORDER_CASES: merchantPath('/order-cases'),
+  SUPPORT_TICKETS: merchantPath('/support-tickets'),
+  CLOSE_SHOP: merchantPath('/shop'),
 }
 
 /** Deleting the account (delete-account.md): says what goes and what stays, lists what still blocks it, and waits out a grace period. */
@@ -45,7 +45,7 @@ export function DeleteAccountCard() {
           onSuccess: async (scheduled) => {
             setOpen(false)
             await signOut().catch(() => undefined)
-            navigate(sellerPath('/login'), { replace: true })
+            navigate(merchantPath('/login'), { replace: true })
             toast.success(`Tài khoản sẽ được xoá vào ${formatDateTime(scheduled.executesAt)}.`, {
               description: 'Đăng nhập lại trước thời điểm đó sẽ huỷ việc xoá.',
               duration: 20_000,

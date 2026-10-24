@@ -1,3 +1,4 @@
+import type { Site } from '@/shared/config/sites'
 import { absoluteUrl } from './url'
 
 /**
@@ -11,20 +12,23 @@ export function PageSeo({
   image,
   trail,
   article,
+  site = 'public',
 }: {
   title: string
   description: string
   path: string
   image?: string
-  trail?: { name: string; path: string }[]
+  trail?: { name: string; path: string; site?: Site }[]
   article?: { updated: string; tags: string[] }
+  /** The site the page belongs to, for its canonical address. */
+  site?: Site
 }) {
   const fullTitle = `${title} | bonbon`
   const graph: Record<string, unknown>[] = []
   if (trail && trail.length > 0) {
     graph.push({
       '@type': 'BreadcrumbList',
-      itemListElement: trail.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.name, item: absoluteUrl(t.path) })),
+      itemListElement: trail.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.name, item: absoluteUrl(t.path, t.site ?? site) })),
     })
   }
   if (article) {
@@ -36,7 +40,7 @@ export function PageSeo({
       keywords: article.tags.join(', '),
       inLanguage: 'vi',
       ...(image ? { image: absoluteUrl(image) } : {}),
-      mainEntityOfPage: absoluteUrl(path),
+      mainEntityOfPage: absoluteUrl(path, site),
       publisher: { '@type': 'Organization', name: 'bonbon' },
     })
   }
@@ -44,11 +48,11 @@ export function PageSeo({
     <>
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={absoluteUrl(path)} />
+      <link rel="canonical" href={absoluteUrl(path, site)} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content={article ? 'article' : 'website'} />
-      <meta property="og:url" content={absoluteUrl(path)} />
+      <meta property="og:url" content={absoluteUrl(path, site)} />
       {image ? <meta property="og:image" content={absoluteUrl(image)} /> : null}
       {graph.length > 0 ? <script type="application/ld+json">{JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })}</script> : null}
     </>

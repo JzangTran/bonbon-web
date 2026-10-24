@@ -6,6 +6,7 @@ import { cn } from '@/shared/lib/utils'
 
 /** The trail above a page: Trang chủ / Hướng dẫn / … The last item is the page itself. */
 export function Breadcrumb({ trail }: { trail: { name: string; path: string }[] }) {
+  const away = (path: string) => /^https?:/.test(path)
   return (
     <nav aria-label="Đường dẫn" className="text-sm text-muted-foreground">
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
@@ -19,9 +20,15 @@ export function Breadcrumb({ trail }: { trail: { name: string; path: string }[] 
                   {item.name}
                 </span>
               ) : (
-                <Link to={item.path} className="underline-offset-4 hover:text-foreground hover:underline">
-                  {item.name}
-                </Link>
+                (away(item.path) ? (
+                  <a href={item.path} className="underline-offset-4 hover:text-foreground hover:underline">
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link to={item.path} className="underline-offset-4 hover:text-foreground hover:underline">
+                    {item.name}
+                  </Link>
+                ))
               )}
             </li>
           )

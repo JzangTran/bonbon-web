@@ -12,7 +12,7 @@ import { EmptyState } from '@/shared/ui/empty-state'
 import { FilterChips } from '@/shared/ui/filter-chips'
 import { FormError } from '@/widgets/auth-shell'
 import { OrderCaseTabs } from '@/widgets/seller-tabs'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 const TABS: { id: CaseStatus; label: string }[] = [
   { id: 'AWAITING_SHOP', label: 'Chờ quán trả lời' },
@@ -62,7 +62,7 @@ export function SellerOrderCasesPage() {
           const hoursLeft = item.status === 'AWAITING_SHOP' && item.shopResponseDueAt ? Math.max(0, Math.ceil((new Date(item.shopResponseDueAt).getTime() - now) / 3_600_000)) : null
           return (
             <li key={item.id}>
-              <Link to={sellerPath(`/order-cases/${item.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+              <Link to={merchantPath(`/order-cases/${item.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                 <Card className="gap-2 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">

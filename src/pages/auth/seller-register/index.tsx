@@ -16,7 +16,7 @@ import { PasswordInput } from '@/shared/ui/password-input'
 import { AuthHero, AuthStepPage, FormError, FormSuccess, SuccessMark } from '@/widgets/auth-shell'
 import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 const schema = z.object({
   name: z.string().trim().min(1, 'Vui lòng nhập họ tên').max(100, 'Tối đa 100 ký tự'),
@@ -105,7 +105,7 @@ export function SellerRegisterPage() {
         footer={
           <>
             Bạn đã có tài khoản?{' '}
-            <Link to={sellerPath('/login')} className="font-medium text-primary hover:underline">
+            <Link to={merchantPath('/login')} className="font-medium text-primary hover:underline">
               Đăng nhập
             </Link>
           </>
@@ -232,7 +232,7 @@ function SentStep({ email }: { email: string }) {
       <Button type="button" variant="outline" size="lg" disabled={wait > 0} onClick={resend}>
         {wait > 0 ? `Gửi lại sau ${wait} giây` : 'Gửi lại email xác thực'}
       </Button>
-      <Button type="button" size="lg" className="uppercase tracking-wide" onClick={() => navigate(sellerPath('/login'))}>
+      <Button type="button" size="lg" className="uppercase tracking-wide" onClick={() => navigate(merchantPath('/login'))}>
         Đến trang đăng nhập
       </Button>
     </AuthStepPage>

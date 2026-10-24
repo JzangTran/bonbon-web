@@ -338,14 +338,14 @@ function SellerBand() {
             ))}
           </ol>
           <div className="flex flex-wrap items-center gap-3">
-            <a href={siteUrl('seller', '/register')} className={cn(btn, 'bg-white text-brand-900 hover:bg-brand-50')}>
+            <a href={siteUrl('merchant', '/register')} className={cn(btn, 'bg-white text-brand-900 hover:bg-brand-50')}>
               Mở quán trên bonbon
             </a>
             <a href="#hoi-dap" className={cn(btn, 'bg-white/12 text-white hover:bg-white/20')}>
               Hồ sơ cần những gì?
             </a>
           </div>
-          <a href={siteUrl('seller', '/login')} className="self-start font-semibold text-white underline-offset-4 hover:underline">
+          <a href={siteUrl('merchant', '/login')} className="self-start font-semibold text-white underline-offset-4 hover:underline">
             Đã có tài khoản? Đăng nhập
           </a>
         </div>

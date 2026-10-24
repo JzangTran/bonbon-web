@@ -5,14 +5,16 @@ import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { siteButtonGreen } from './buttons'
-import { SITE, siteUrl } from '@/shared/config/sites'
+import { SITE, siteUrl, type Site } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
 type NavLink = { label: string; to: string }
-type NavItem = NavLink | { label: string; children: NavLink[] }
+/** A link to another site of bonbon (the help center). */
+type NavSite = { label: string; site: Site }
+type NavItem = NavLink | NavSite | { label: string; children: NavLink[] }
 
 /** The public site's menu. Hướng dẫn opens a submenu. */
 const NAV: NavItem[] = [
@@ -25,7 +27,7 @@ const NAV: NavItem[] = [
   },
   { label: 'Blog', to: '/blog' },
   { label: 'Thư viện bộ nhận diện', to: '/bo-nhan-dien' },
-  { label: 'Trung tâm trợ giúp', to: '/tro-giup' },
+  { label: 'Trung tâm trợ giúp', site: 'help' },
 ]
 
 /** A link to a page of the public site: inside the app on the public host, a plain address from the seller and admin hosts. */
@@ -46,6 +48,12 @@ export function PublicLink({ to, className, children, onClick }: { to: string; c
 
 const linkClass = 'rounded-sm px-4 py-2.5 text-[0.9375rem] font-medium text-white outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white'
 
+/** Where a menu link goes and the plain address behind it. */
+function target(item: NavLink | NavSite): { href: string; here: (pathname: string) => boolean } {
+  if ('site' in item) return { href: siteUrl(item.site), here: () => SITE === item.site }
+  return { href: item.to, here: (pathname) => isHere(pathname, item.to) }
+}
+
 function isHere(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`)
 }
@@ -59,10 +67,10 @@ export function SiteHeader() {
   const { session } = useSession()
   const { pathname } = useLocation()
   const area =
-    session?.role === 'SELLER' ? { href: siteUrl('seller'), label: 'Vào trang người bán' }
-    : session?.role === 'ADMIN' ? { href: siteUrl('admin'), label: 'Vào trang quản trị' }
+    session?.role === 'SELLER' ? { href: siteUrl('merchant'), label: 'Vào trang người bán' }
+    : session?.role === 'ADMIN' ? { href: siteUrl('console'), label: 'Vào trang quản trị' }
     : null
-  const current = (item: NavItem) => ('to' in item ? isHere(pathname, item.to) : item.children.some((c) => isHere(pathname, c.to)))
+  const current = (item: NavItem) => ('children' in item ? item.children.some((c) => isHere(pathname, c.to)) : target(item).here(pathname))
 
   return (
     <header className="pt-4 sm:pt-6">
@@ -74,10 +82,16 @@ export function SiteHeader() {
 
           <nav aria-label="Menu chính" className="hidden items-center gap-1 lg:flex">
             {NAV.map((item) =>
-              'to' in item ? (
-                <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'bg-white font-semibold text-ink hover:bg-white')}>
-                  {item.label}
-                </PublicLink>
+              !('children' in item) ? (
+                'site' in item ? (
+                  <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'bg-white font-semibold text-ink hover:bg-white')}>
+                    {item.label}
+                  </a>
+                ) : (
+                  <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'bg-white font-semibold text-ink hover:bg-white')}>
+                    {item.label}
+                  </PublicLink>
+                )
               ) : (
                 <DropdownMenu key={item.label}>
                   <DropdownMenuTrigger className={cn(linkClass, 'flex items-center gap-1.5 data-[state=open]:bg-white/10', current(item) && 'bg-white font-semibold text-ink hover:bg-white data-[state=open]:bg-white')}>
@@ -113,9 +127,9 @@ export function SiteHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-64 rounded-lg">
                 {NAV.map((item) =>
-                  'to' in item ? (
-                    <DropdownMenuItem key={item.to} asChild className="cursor-pointer text-base">
-                      <PublicLink to={item.to}>{item.label}</PublicLink>
+                  !('children' in item) ? (
+                    <DropdownMenuItem key={item.label} asChild className="cursor-pointer text-base">
+                      {'site' in item ? <a href={target(item).href}>{item.label}</a> : <PublicLink to={item.to}>{item.label}</PublicLink>}
                     </DropdownMenuItem>
                   ) : (
                     <div key={item.label}>
@@ -163,7 +177,7 @@ export function SiteFooter() {
           <PublicLink to="/huong-dan/quan-ly-cua-hang" className="underline-offset-4 hover:text-white hover:underline">Quản lý cửa hàng</PublicLink>
           <PublicLink to="/blog" className="underline-offset-4 hover:text-white hover:underline">Blog</PublicLink>
           <PublicLink to="/bo-nhan-dien" className="underline-offset-4 hover:text-white hover:underline">Thư viện bộ nhận diện</PublicLink>
-          <PublicLink to="/tro-giup" className="underline-offset-4 hover:text-white hover:underline">Trung tâm trợ giúp</PublicLink>
+          <a href={siteUrl('help')} className="underline-offset-4 hover:text-white hover:underline">Trung tâm trợ giúp</a>
         </nav>
         <div className="flex flex-col items-start gap-4">
           <TextSizeControl tone="light" />

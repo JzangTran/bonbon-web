@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router'
 import { PageTabs } from '@/shared/ui/workspace-slots'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 /** Complaints from customers and the shop's own fault record are two views of one concern: orders that went wrong. */
 export function OrderCaseTabs() {
@@ -8,8 +8,8 @@ export function OrderCaseTabs() {
     <PageTabs
       label="Trả hàng và hoàn tiền"
       tabs={[
-        { id: 'cases', label: 'Khiếu nại của khách', to: sellerPath('/order-cases') },
-        { id: 'performance', label: 'Hiệu suất và điểm phạt', to: sellerPath('/performance') },
+        { id: 'cases', label: 'Khiếu nại của khách', to: merchantPath('/order-cases') },
+        { id: 'performance', label: 'Hiệu suất và điểm phạt', to: merchantPath('/performance') },
       ]}
     />
   )
@@ -22,9 +22,9 @@ export function MenuTabs() {
     <PageTabs
       label="Thực đơn"
       tabs={[
-        { id: 'dishes', label: 'Món ăn', to: sellerPath('/menu'), active: pathname === sellerPath('/menu') || pathname === sellerPath('/menu/new') },
-        { id: 'options', label: 'Nhóm lựa chọn', to: sellerPath('/menu/options') },
-        { id: 'category-cases', label: 'Món sai ngành', to: sellerPath('/category-cases') },
+        { id: 'dishes', label: 'Món ăn', to: merchantPath('/menu'), active: pathname === merchantPath('/menu') || pathname === merchantPath('/menu/new') },
+        { id: 'options', label: 'Nhóm lựa chọn', to: merchantPath('/menu/options') },
+        { id: 'category-cases', label: 'Món sai ngành', to: merchantPath('/category-cases') },
       ]}
     />
   )
@@ -36,8 +36,8 @@ export function FinanceTabs() {
     <PageTabs
       label="Doanh thu"
       tabs={[
-        { id: 'statistics', label: 'Thống kê', to: sellerPath('/statistics') },
-        { id: 'earnings', label: 'Thu nhập và sao kê', to: sellerPath('/earnings') },
+        { id: 'statistics', label: 'Thống kê', to: merchantPath('/statistics') },
+        { id: 'earnings', label: 'Thu nhập và sao kê', to: merchantPath('/earnings') },
       ]}
     />
   )

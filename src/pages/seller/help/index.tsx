@@ -8,7 +8,7 @@ import { Card } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 /** Answers written by the Bonbon team, for sellers (browse-help-center.md). Search ignores case and accents. */
 export function SellerHelpPage() {
@@ -24,7 +24,7 @@ export function SellerHelpPage() {
           <p className="text-sm text-muted-foreground">Hướng dẫn và câu hỏi thường gặp dành cho người bán.</p>
         </div>
         <Button asChild variant="outline">
-          <Link to={sellerPath('/support-tickets')}>
+          <Link to={merchantPath('/support-tickets')}>
             <LifeBuoyIcon /> Liên hệ hỗ trợ
           </Link>
         </Button>

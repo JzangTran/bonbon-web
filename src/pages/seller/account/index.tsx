@@ -12,7 +12,7 @@ import { DangerLinkCard } from '@/shared/ui/danger-link-card'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { FormError, FormSuccess } from '@/widgets/auth-shell'
-import { sellerPath } from '@/shared/config/sites'
+import { merchantPath } from '@/shared/config/sites'
 
 const VN_MOBILE = /^(0|\+84)(3|5|7|8|9)\d{8}$/
 
@@ -179,7 +179,7 @@ function SessionsCard({ hasPassword }: { hasPassword: boolean }) {
       return
     }
     await signOut().catch(() => undefined)
-    navigate(sellerPath('/login'), { replace: true })
+    navigate(merchantPath('/login'), { replace: true })
   }
 
   return (

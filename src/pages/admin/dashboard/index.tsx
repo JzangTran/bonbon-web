@@ -1,15 +1,15 @@
 import { ArrowRightIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { AdminHomeTabs } from '@/widgets/admin-tabs'
-import { adminPath } from '@/shared/config/sites'
+import { consolePath } from '@/shared/config/sites'
 
 const QUEUES = [
-  { to: adminPath('/shop-review'), title: 'Duyệt hồ sơ cửa hàng', text: 'Hồ sơ người bán chờ duyệt hoặc cần xem lại.' },
-  { to: adminPath('/order-cases'), title: 'Khiếu nại đơn hàng', text: 'Vụ khách báo lỗi mà quán phản đối hoặc không trả lời kịp.' },
-  { to: adminPath('/refunds'), title: 'Hoàn tiền', text: 'Khoản hoàn tiền chờ chuyển khoản.' },
-  { to: adminPath('/support-tickets'), title: 'Phiếu hỗ trợ', text: 'Yêu cầu từ khách và người bán đang chờ phản hồi.' },
-  { to: adminPath('/reviews'), title: 'Kiểm duyệt đánh giá', text: 'Đánh giá và phản hồi cần ẩn hoặc khôi phục.' },
-  { to: adminPath('/category-moderation'), title: 'Món sai ngành', text: 'Món bị đánh dấu xếp sai ngành hàng, kể cả kháng nghị.' },
+  { to: consolePath('/shop-review'), title: 'Duyệt hồ sơ cửa hàng', text: 'Hồ sơ người bán chờ duyệt hoặc cần xem lại.' },
+  { to: consolePath('/order-cases'), title: 'Khiếu nại đơn hàng', text: 'Vụ khách báo lỗi mà quán phản đối hoặc không trả lời kịp.' },
+  { to: consolePath('/refunds'), title: 'Hoàn tiền', text: 'Khoản hoàn tiền chờ chuyển khoản.' },
+  { to: consolePath('/support-tickets'), title: 'Phiếu hỗ trợ', text: 'Yêu cầu từ khách và người bán đang chờ phản hồi.' },
+  { to: consolePath('/reviews'), title: 'Kiểm duyệt đánh giá', text: 'Đánh giá và phản hồi cần ẩn hoặc khôi phục.' },
+  { to: consolePath('/category-moderation'), title: 'Món sai ngành', text: 'Món bị đánh dấu xếp sai ngành hàng, kể cả kháng nghị.' },
 ]
 
 /** The administrator's starting point: where the work waits. The numbers are in the second tab. */
