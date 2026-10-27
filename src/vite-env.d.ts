@@ -8,7 +8,7 @@ interface ImportMetaEnv {
   readonly VITE_SUPPORT_EMAIL?: string
   /** Public origin (e.g. https://example.vn) for canonical URLs, robots.txt and sitemap.xml. */
   readonly VITE_SITE_URL?: string
-  /** "true" in the production build: seller and admin pages live only on seller.* and admin.* hosts, not under /seller and /admin of the public host. */
+  /** "true" in the production build: the pages of merchant.*, help.*, console.* and ops.* live only on their own hosts, not under /merchant, /help, /console and /ops of the public host. */
   readonly VITE_SUBDOMAINS?: string
 }
 

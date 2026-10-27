@@ -11,7 +11,7 @@ import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
-import { adminPath } from '@/shared/config/sites'
+import { consolePath } from '@/shared/config/sites'
 
 const TABS: { id: TicketStatus; label: string }[] = [
   { id: 'OPEN', label: 'Chờ trả lời' },
@@ -66,7 +66,7 @@ export function AdminSupportTicketsPage() {
           const status = TICKET_STATUS[t.status ?? ''] ?? { label: t.status ?? '', className: '' }
           return (
             <li key={t.id}>
-              <Link to={adminPath(`/support-tickets/${t.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+              <Link to={consolePath(`/support-tickets/${t.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                 <Card className="gap-1 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">

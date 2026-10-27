@@ -38,7 +38,7 @@ export function SetPasswordPage({ mode }: { mode: 'reset' | 'initial' }) {
     else setDone(true)
   })
 
-  const loginUrl = mode === 'initial' ? siteUrl('admin', '/login') : siteUrl('seller', '/login')
+  const loginUrl = mode === 'initial' ? siteUrl('console', '/login') : siteUrl('merchant', '/login')
   return (
     <AuthShell title={mode === 'reset' ? 'Đặt lại mật khẩu' : 'Đặt mật khẩu quản trị'}>
       {done ? (

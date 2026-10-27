@@ -12,7 +12,7 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
-import { adminPath } from '@/shared/config/sites'
+import { consolePath } from '@/shared/config/sites'
 
 const STATUS: Record<string, string> = {
   PENDING_PAYMENT: 'Chờ thanh toán',
@@ -41,7 +41,7 @@ export function AdminLookupOrderPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to={adminPath('/lookup')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/lookup')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Tra cứu
       </Link>
       {order.isError ? <FormError message={problemMessage(order.error)} /> : null}
@@ -77,7 +77,7 @@ export function AdminLookupOrderPage() {
               </p>
             ) : null}
             {o.customer?.id ? (
-              <Link className="text-primary underline" to={adminPath(`/lookup/customers/${o.customer.id}`)}>
+              <Link className="text-primary underline" to={consolePath(`/lookup/customers/${o.customer.id}`)}>
                 Tra cứu tài khoản khách
               </Link>
             ) : null}
@@ -158,7 +158,7 @@ export function AdminLookupOrderPage() {
               {(o.cases ?? []).map((c) => {
                 const st = CASE_STATUS[c.status ?? ''] ?? { label: c.status ?? '', className: '' }
                 return (
-                  <Link key={c.id} to={adminPath(`/order-cases/${c.id}`)} className="flex flex-wrap items-center gap-2 text-primary underline">
+                  <Link key={c.id} to={consolePath(`/order-cases/${c.id}`)} className="flex flex-wrap items-center gap-2 text-primary underline">
                     {CASE_TYPE_LABEL[c.type ?? ''] ?? c.type}
                     <Badge className={st.className}>{st.label}</Badge>
                     <span className="text-muted-foreground no-underline">{formatVnd(c.refundAmount)}</span>
@@ -172,7 +172,7 @@ export function AdminLookupOrderPage() {
             <Card className="gap-1 p-4 text-sm">
               <h2 className="font-semibold">Trò chuyện giữa khách và quán</h2>
               {canChat ? (
-                <Link className="text-primary underline" to={adminPath(`/conversations/${o.conversationId}`)}>
+                <Link className="text-primary underline" to={consolePath(`/conversations/${o.conversationId}`)}>
                   Đọc cuộc trò chuyện (được ghi nhật ký)
                 </Link>
               ) : (

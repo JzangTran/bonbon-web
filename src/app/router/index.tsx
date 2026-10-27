@@ -1,16 +1,19 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AdminLayout } from '@/app/layouts/admin-layout'
+import { OpsLayout } from '@/app/layouts/ops-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 import { RouteError } from './route-error'
-import { SITE, SUBDOMAINS, adminPath, sellerPath } from '@/shared/config/sites'
+import { PATH_MODE, SITE, consolePath, helpPath, merchantPath, opsPath } from '@/shared/config/sites'
 
-// One build, three hosts (see shared/config/sites.ts): each host gets its own pages, and the shared ones (email links, legal texts,
+// One build, five hosts (see shared/config/sites.ts): each host gets its own pages, and the shared ones (email links, legal texts,
 // payment return) work on all of them. Without subdomains (development, previews) every page lives on the one host.
 const showLanding = SITE === 'public'
-const showSeller = SITE === 'seller' || (SITE === 'public' && !SUBDOMAINS)
-const showAdmin = SITE === 'admin' || (SITE === 'public' && !SUBDOMAINS)
+const showMerchant = SITE === 'merchant' || PATH_MODE
+const showHelp = SITE === 'help' || PATH_MODE
+const showConsole = SITE === 'console' || PATH_MODE
+const showOps = SITE === 'ops' || PATH_MODE
 
 const router = createBrowserRouter([
   ...(showLanding ? [
@@ -19,7 +22,7 @@ const router = createBrowserRouter([
     lazy: () => import('@/pages/landing').then((m) => ({ Component: m.LandingPage })),
   },
   ] : []),
-  // Guides, blog, brand kit and help center: pages of the public site only.
+  // Guides, blog and brand kit: pages of the public site only.
   ...(showLanding ? [
     { path: '/huong-dan', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
     { path: '/huong-dan/bat-dau', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
@@ -29,24 +32,33 @@ const router = createBrowserRouter([
     { path: '/blog', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.BlogHubPage })) },
     { path: '/blog/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="blog" /> })) },
     { path: '/bo-nhan-dien', lazy: () => import('@/pages/brand-kit').then((m) => ({ Component: m.BrandKitPage })) },
-    { path: '/tro-giup', lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpCenterPage })) },
-    { path: '/tro-giup/:id', lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpArticlePage })) },
   ] : []),
-  ...(showSeller ? [
+  // The help center: its own host, /help in development.
+  ...(showHelp ? [
+    { path: helpPath(), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpCenterPage })) },
+    { path: helpPath('/bai-viet/:id'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpArticlePage })) },
+  ] : []),
+  ...(showMerchant ? [
   {
-    path: sellerPath('/login'),
+    path: merchantPath('/login'),
     lazy: () => import('@/pages/auth/seller-login').then((m) => ({ Component: m.SellerLoginPage })),
   },
   ] : []),
-  ...(showAdmin ? [
+  ...(showConsole ? [
   {
-    path: adminPath('/login'),
-    lazy: () => import('@/pages/auth/admin-login').then((m) => ({ Component: m.AdminLoginPage })),
+    path: consolePath('/login'),
+    lazy: () => import('@/pages/auth/admin-login').then((m) => ({ Component: () => <m.AdminLoginPage area="console" /> })),
   },
   ] : []),
-  ...(showSeller ? [
+  ...(showOps ? [
   {
-    path: sellerPath('/register'),
+    path: opsPath('/login'),
+    lazy: () => import('@/pages/auth/admin-login').then((m) => ({ Component: () => <m.AdminLoginPage area="ops" /> })),
+  },
+  ] : []),
+  ...(showMerchant ? [
+  {
+    path: merchantPath('/register'),
     lazy: () => import('@/pages/auth/seller-register').then((m) => ({ Component: m.SellerRegisterPage })),
   },
   ] : []),
@@ -78,10 +90,10 @@ const router = createBrowserRouter([
     path: '/legal/:type',
     lazy: () => import('@/pages/legal-document').then((m) => ({ Component: m.LegalDocumentPage })),
   },
-  ...(showSeller ? [
+  ...(showMerchant ? [
   {
     // Tasks that need the person's whole attention: a page of their own, no workspace around them.
-    element: <RequireRole role="SELLER" loginPath={sellerPath('/login')} />,
+    element: <RequireRole role="SELLER" loginPath={merchantPath('/login')} />,
     errorElement: <RouteError />,
     children: [
       {
@@ -99,10 +111,10 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <RequireRole role="SELLER" loginPath={sellerPath('/login')} />,
+    element: <RequireRole role="SELLER" loginPath={merchantPath('/login')} />,
     children: [
       {
-        path: sellerPath(),
+        path: merchantPath(),
         element: <SellerLayout />,
         errorElement: <RouteError />,
         children: [
@@ -207,12 +219,34 @@ const router = createBrowserRouter([
     ],
   },
   ] : []),
-  ...(showAdmin ? [
+  ...(showOps ? [
   {
-    element: <RequireRole role="ADMIN" loginPath={adminPath('/login')} />,
+    element: <RequireRole role="ADMIN" loginPath={opsPath('/login')} />,
     children: [
       {
-        path: adminPath(),
+        path: opsPath(),
+        element: <OpsLayout />,
+        errorElement: <RouteError />,
+        children: [
+          {
+            index: true,
+            lazy: () => import('@/pages/ops/status').then((m) => ({ Component: m.OpsStatusPage })),
+          },
+          {
+            path: 'app-config',
+            lazy: () => import('@/pages/admin/app-config').then((m) => ({ Component: m.AdminAppConfigPage })),
+          },
+        ],
+      },
+    ],
+  },
+  ] : []),
+  ...(showConsole ? [
+  {
+    element: <RequireRole role="ADMIN" loginPath={consolePath('/login')} />,
+    children: [
+      {
+        path: consolePath(),
         element: <AdminLayout />,
         errorElement: <RouteError />,
         children: [
@@ -227,10 +261,6 @@ const router = createBrowserRouter([
           {
             path: 'legal-documents/:id',
             lazy: () => import('@/pages/admin/legal-document-edit').then((m) => ({ Component: m.AdminLegalDocumentEditPage })),
-          },
-          {
-            path: 'app-config',
-            lazy: () => import('@/pages/admin/app-config').then((m) => ({ Component: m.AdminAppConfigPage })),
           },
           {
             path: 'category-moderation',

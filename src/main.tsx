@@ -7,13 +7,14 @@ import { initTextScale } from '@/shared/lib/text-scale'
 
 initTextScale()
 
-// The seller and admin hosts share the public site's robots.txt, so they ask not to be indexed on the page itself.
-if (SITE !== 'public') {
+// The merchant, console and ops hosts share the public site's robots.txt, so they ask not to be indexed on the page itself.
+// (The help center is public and sets its own title and description.)
+if (SITE === 'merchant' || SITE === 'console' || SITE === 'ops') {
   const robots = document.createElement('meta')
   robots.name = 'robots'
   robots.content = 'noindex, nofollow'
   document.head.append(robots)
-  document.title = SITE === 'seller' ? 'bonbon — Kênh người bán' : 'bonbon — Quản trị'
+  document.title = { merchant: 'bonbon — Kênh người bán', console: 'bonbon — Quản trị', ops: 'bonbon — Vận hành' }[SITE]
 }
 
 createRoot(document.getElementById('root')!).render(
