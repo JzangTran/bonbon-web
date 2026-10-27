@@ -105,7 +105,7 @@ export function UnitPicker({
                 setQuery('')
               }}
               className={cn(
-                'h-10 flex-1 border-b-2 border-transparent px-3 text-[13px] outline-none focus-visible:bg-ws-fill disabled:cursor-not-allowed disabled:text-muted-foreground',
+                'h-10 flex-1 border-b-2 border-transparent px-3 text-[0.8125rem] outline-none focus-visible:bg-ws-fill disabled:cursor-not-allowed disabled:text-muted-foreground',
                 tab === value && 'border-primary font-semibold',
               )}
             >

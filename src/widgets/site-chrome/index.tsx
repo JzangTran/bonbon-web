@@ -1,93 +1,159 @@
-import { useEffect, useState, type ReactNode } from 'react'
-import { SmartphoneIcon } from 'lucide-react'
-import { Link } from 'react-router'
+import type { ReactNode } from 'react'
+import { ChevronDownIcon, MenuIcon, SmartphoneIcon } from 'lucide-react'
+import { Link, useLocation } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
-import { siteButtonGreen } from './buttons'
+import { siteButton, siteButtonGreen } from './buttons'
+import { SITE, siteUrl, type Site } from '@/shared/config/sites'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
+import { TextSizeControl } from '@/shared/ui/text-size-control'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
-export type SiteSection = { id: string; label: string }
+type NavLink = { label: string; to: string }
+/** A link to another site of bonbon (the help center). */
+type NavSite = { label: string; site: Site }
+type NavItem = NavLink | NavSite | { label: string; children: NavLink[] }
 
-/** The section nearest the top of the screen, to mark its link in the bar. */
-function useActiveSection(ids: string[]) {
-  const [active, setActive] = useState<string | undefined>(ids[0])
-  const key = ids.join(',')
-  useEffect(() => {
-    if (ids.length === 0) return
-    const visible = new Set<string>()
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) visible.add(e.target.id)
-          else visible.delete(e.target.id)
-        }
-        const first = ids.find((id) => visible.has(id))
-        if (first) setActive(first)
-      },
-      { rootMargin: '-20% 0px -60% 0px' },
+/** The public site's menu. Hướng dẫn opens a submenu. */
+const NAV: NavItem[] = [
+  {
+    label: 'Hướng dẫn',
+    children: [
+      { label: 'Bắt đầu', to: '/huong-dan/bat-dau' },
+      { label: 'Quản lý cửa hàng', to: '/huong-dan/quan-ly-cua-hang' },
+    ],
+  },
+  { label: 'Blog', to: '/blog' },
+  { label: 'Thư viện bộ nhận diện', to: '/bo-nhan-dien' },
+  { label: 'Trung tâm trợ giúp', site: 'help' },
+]
+
+/** A link to a page of the public site: inside the app on the public host, a plain address from the seller and admin hosts. */
+export function PublicLink({ to, className, children, onClick }: { to: string; className?: string; children: ReactNode; onClick?: () => void }) {
+  if (SITE === 'public') {
+    return (
+      <Link to={to} className={className} onClick={onClick}>
+        {children}
+      </Link>
     )
-    for (const id of ids) {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    }
-    return () => observer.disconnect()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key])
-  return active
+  }
+  return (
+    <a href={siteUrl('public', to)} className={className} onClick={onClick}>
+      {children}
+    </a>
+  )
+}
+
+const linkClass = 'rounded-full px-3.5 py-2 text-[0.9375rem] font-medium text-ink outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
+
+/** Where a menu link goes and the plain address behind it. */
+function target(item: NavLink | NavSite): { href: string; here: (pathname: string) => boolean } {
+  if ('site' in item) return { href: siteUrl(item.site), here: () => SITE === item.site }
+  return { href: item.to, here: (pathname) => isHere(pathname, item.to) }
+}
+
+function isHere(pathname: string, to: string) {
+  return pathname === to || pathname.startsWith(`${to}/`)
 }
 
 /**
- * The public site's bar (landing, legal documents): the logo, an optional row of in-page section links, and one action.
- * Sign-in pages have their own slimmer bar, and the workspace, focus and payment pages show no site bar at all.
+ * The public site's bar (landing, content pages, legal documents): the logo, the menu (Hướng dẫn with a submenu, Blog, Thư viện bộ nhận
+ * diện, Trung tâm trợ giúp) and one action. Under 1024 px the menu folds into one button. Sign-in pages have their own slimmer bar, and the
+ * workspace, focus and payment pages show no site bar at all.
  */
-export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
+export function SiteHeader() {
   const { session } = useSession()
-  const active = useActiveSection(sections.map((s) => s.id))
+  const { pathname } = useLocation()
   const area =
-    session?.role === 'SELLER' ? { to: '/seller', label: 'Vào trang người bán' }
-    : session?.role === 'ADMIN' ? { to: '/admin', label: 'Vào trang quản trị' }
+    session?.role === 'SELLER' ? { href: siteUrl('merchant'), label: 'Vào trang người bán' }
+    : session?.role === 'ADMIN' ? { href: siteUrl('console'), label: 'Vào trang quản trị' }
     : null
+  const current = (item: NavItem) => ('children' in item ? item.children.some((c) => isHere(pathname, c.to)) : target(item).here(pathname))
 
   return (
-    <header className="pt-4 sm:pt-6">
+    <header className="sticky top-0 z-40 border-b bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75">
       <Wrap>
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[28px] bg-ink py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:rounded-full sm:pl-[30px]">
-          <Link to="/" className="flex items-center">
-            <Lockup tone="white" className="h-9" />
-          </Link>
-          {sections.length > 0 ? (
-            <nav aria-label="Trang chủ" className="order-3 flex w-full flex-wrap gap-1 sm:order-none sm:w-auto">
-              {sections.map(({ id, label }) => (
-                <a
-                  key={id}
-                  href={`#${id}`}
-                  aria-current={active === id ? 'location' : undefined}
-                  className={cn(
-                    'rounded-full px-4 py-2.5 text-[15px] font-medium text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white sm:px-[18px]',
-                    active === id && 'bg-white font-semibold text-ink hover:bg-white',
-                  )}
-                >
-                  {label}
-                </a>
-              ))}
-            </nav>
-          ) : null}
-          {area ? (
-            <Link to={area.to} className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
-              {area.label}
-            </Link>
-          ) : sections.length > 0 ? (
-            <a href="#tai-app" className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
-              <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
-              Tải app
-            </a>
-          ) : (
-            <Link to="/" className={cn(siteButtonGreen, 'min-h-12 px-[22px]')}>
-              Về trang chủ
-            </Link>
-          )}
+        <div className="flex h-16 items-center justify-between gap-x-4">
+          <a href={siteUrl('public')} className="flex shrink-0 items-center">
+            <Lockup className="h-8" />
+          </a>
+
+          <nav aria-label="Menu chính" className="hidden items-center gap-1 lg:flex">
+            {NAV.map((item) =>
+              !('children' in item) ? (
+                'site' in item ? (
+                  <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
+                    {item.label}
+                  </a>
+                ) : (
+                  <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
+                    {item.label}
+                  </PublicLink>
+                )
+              ) : (
+                <DropdownMenu key={item.label}>
+                  <DropdownMenuTrigger className={cn(linkClass, 'flex items-center gap-1.5 data-[state=open]:bg-muted', current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
+                    {item.label}
+                    <ChevronDownIcon className="size-4" aria-hidden="true" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="min-w-52 rounded-lg">
+                    {item.children.map((child) => (
+                      <DropdownMenuItem key={child.to} asChild className="cursor-pointer">
+                        <PublicLink to={child.to}>{child.label}</PublicLink>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ),
+            )}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            {area ? (
+              <a href={area.href} className={cn(siteButtonGreen, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
+                {area.label}
+              </a>
+            ) : (
+              <>
+              <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'hidden min-h-9 bg-muted px-4 text-sm text-ink hover:bg-border md:inline-flex')}>
+                Mở quán
+              </a>
+              <a href={siteUrl('public') + '#tai-app'} className={cn(siteButtonGreen, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
+                <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
+                Tải app
+              </a>
+              </>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger aria-label="Mở menu" className="flex size-10 items-center justify-center rounded-full text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring lg:hidden">
+                <MenuIcon className="size-6" aria-hidden="true" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-64 rounded-lg">
+                {NAV.map((item) =>
+                  !('children' in item) ? (
+                    <DropdownMenuItem key={item.label} asChild className="cursor-pointer text-base">
+                      {'site' in item ? <a href={target(item).href}>{item.label}</a> : <PublicLink to={item.to}>{item.label}</PublicLink>}
+                    </DropdownMenuItem>
+                  ) : (
+                    <div key={item.label}>
+                      <DropdownMenuLabel>{item.label}</DropdownMenuLabel>
+                      {item.children.map((child) => (
+                        <DropdownMenuItem key={child.to} asChild className="cursor-pointer pl-7 text-base">
+                          <PublicLink to={child.to}>{child.label}</PublicLink>
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  ),
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer text-base font-semibold text-primary">
+                  <a href={area ? area.href : siteUrl('public') + '#tai-app'}>{area ? area.label : 'Tải app'}</a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </Wrap>
     </header>
@@ -96,10 +162,10 @@ export function SiteHeader({ sections = [] }: { sections?: SiteSection[] }) {
 
 export function SiteFooter() {
   return (
-    <footer className="bg-ink text-brand-100">
+    <footer className="border-t bg-white text-muted-foreground">
       <Wrap className="flex flex-wrap justify-between gap-6 py-10 text-sm">
         <div className="flex flex-col gap-2">
-          <Lockup tone="white" className="h-9 self-start" />
+          <Lockup className="h-8 self-start" />
           <span>Đặt món từ quán trong khu.</span>
           {SUPPORT_EMAIL ? (
             <span>
@@ -110,11 +176,22 @@ export function SiteFooter() {
             </span>
           ) : null}
         </div>
-        <nav aria-label="Pháp lý" className="flex flex-wrap items-start gap-x-6 gap-y-2">
-          <Link to="/legal/CUSTOMER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản sử dụng</Link>
-          <Link to="/legal/SELLER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản người bán</Link>
-          <Link to="/legal/PRIVACY_POLICY" className="underline-offset-4 hover:text-white hover:underline">Chính sách quyền riêng tư</Link>
+        <nav aria-label="Tìm hiểu thêm" className="flex flex-col items-start gap-2">
+          <span className="font-semibold text-ink">Tìm hiểu thêm</span>
+          <PublicLink to="/huong-dan/bat-dau" className="underline-offset-4 hover:text-ink hover:underline">Hướng dẫn bắt đầu</PublicLink>
+          <PublicLink to="/huong-dan/quan-ly-cua-hang" className="underline-offset-4 hover:text-ink hover:underline">Quản lý cửa hàng</PublicLink>
+          <PublicLink to="/blog" className="underline-offset-4 hover:text-ink hover:underline">Blog</PublicLink>
+          <PublicLink to="/bo-nhan-dien" className="underline-offset-4 hover:text-ink hover:underline">Thư viện bộ nhận diện</PublicLink>
+          <a href={siteUrl('help')} className="underline-offset-4 hover:text-ink hover:underline">Trung tâm trợ giúp</a>
         </nav>
+        <div className="flex flex-col items-start gap-4">
+          <TextSizeControl />
+          <nav aria-label="Pháp lý" className="flex flex-wrap items-start gap-x-6 gap-y-2">
+          <Link to="/legal/CUSTOMER_TERMS" className="underline-offset-4 hover:text-ink hover:underline">Điều khoản sử dụng</Link>
+          <Link to="/legal/SELLER_TERMS" className="underline-offset-4 hover:text-ink hover:underline">Điều khoản người bán</Link>
+          <Link to="/legal/PRIVACY_POLICY" className="underline-offset-4 hover:text-ink hover:underline">Chính sách quyền riêng tư</Link>
+          </nav>
+        </div>
       </Wrap>
     </footer>
   )

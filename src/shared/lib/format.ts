@@ -41,3 +41,9 @@ export function weekdayName(weekday: number | undefined): string {
 export function formatTime(time: string | undefined): string {
   return time ? time.slice(0, 5) : '—'
 }
+
+/** A calendar date written YYYY-MM-DD as dd/mm/yyyy. */
+export function formatDate(isoDate: string): string {
+  const [y, m, d] = isoDate.split('-')
+  return `${d}/${m}/${y}`
+}

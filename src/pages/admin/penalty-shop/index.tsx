@@ -27,6 +27,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { consolePath } from '@/shared/config/sites'
 
 const SUSPENSION_STATUS: Record<string, string> = { SCHEDULED: 'Đã báo, chưa hiệu lực', APPLIED: 'Đang bị đình chỉ', CANCELLED: 'Đã huỷ', LIFTED: 'Đã khôi phục' }
 
@@ -56,7 +57,7 @@ export function AdminPenaltyShopPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to="/admin/penalties" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/penalties')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Điểm phạt các quán
       </Link>
       {history.isError ? <FormError message={problemMessage(history.error)} /> : null}

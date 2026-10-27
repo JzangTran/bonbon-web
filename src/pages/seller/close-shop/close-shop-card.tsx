@@ -11,6 +11,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Label } from '@/shared/ui/label'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { merchantPath } from '@/shared/config/sites'
 
 const REASONS = Object.keys(CLOSE_REASON_LABEL) as CloseReason[]
 
@@ -36,7 +37,7 @@ export function CloseShopCard() {
         {
           onSuccess: () => {
             toast.success('Cửa hàng đang đóng. Bạn vẫn hoàn tất các đơn đang làm.')
-            navigate('/seller/closing', { replace: true })
+            navigate(merchantPath('/closing'), { replace: true })
           },
           onError: (e) => {
             if (!gate.handle(e, attempt)) setError(problemMessage(e))

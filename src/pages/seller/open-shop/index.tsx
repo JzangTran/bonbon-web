@@ -15,6 +15,7 @@ import { ShippingStep } from './shipping-step'
 import { ShopInfoStep } from './shop-step'
 import { STEPS } from './step-logic'
 import { TaxStep } from './tax-step'
+import { merchantPath } from '@/shared/config/sites'
 
 /**
  * The open-shop flow on a page of its own (open-shop.md): the person is leaving the workspace behind until the shop is
@@ -34,7 +35,7 @@ function OpenShopPage() {
   if (shop.isPending) return <Skeleton className="h-96 max-w-4xl" />
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />
   const status = shopStatus(shop.data)
-  if (status === 'APPROVED') return <Navigate to="/seller" replace />
+  if (status === 'APPROVED') return <Navigate to={merchantPath()} replace />
   if (status === 'PENDING') return <UnderReview shop={shop.data} />
   if (status === 'SUSPENDED' || status === 'CLOSED') {
     return <p className="text-muted-foreground">Cửa hàng đang bị khoá hoặc đã đóng. Hãy liên hệ bộ phận hỗ trợ.</p>

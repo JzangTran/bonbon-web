@@ -66,14 +66,14 @@ export function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: 
 
   return (
     <StepCard title="1 · Thông tin quán" footer={<SaveButtons pending={save.isPending} onSave={submit} />}>
-      <Field id="shop-name" label="Tên cửa hàng" error={save.errors.name}>
+      <Field id="shop-name" label="Tên cửa hàng" required error={save.errors.name}>
         <Input id="shop-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
       </Field>
       <ShopAddressFields value={address} onChange={setAddress} errors={save.errors} />
-      <Field id="shop-phone" label="Số điện thoại cửa hàng" hint="Số điện thoại Việt Nam, ví dụ 0912345678." error={save.errors.phone}>
+      <Field id="shop-phone" label="Số điện thoại cửa hàng" required hint="Số điện thoại Việt Nam, ví dụ 0912345678." error={save.errors.phone}>
         <Input id="shop-phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={15} placeholder="0912345678" value={phone} onChange={(e) => setPhone(e.target.value)} />
       </Field>
-      <Field id="shop-email" label="Email cửa hàng" error={save.errors.email}>
+      <Field id="shop-email" label="Email cửa hàng" required error={save.errors.email}>
         <Input id="shop-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </Field>
       {save.isError ? <FormError message={problemMessage(save.error)} /> : null}

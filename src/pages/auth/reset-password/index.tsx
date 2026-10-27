@@ -1,13 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { AuthShell, FormError, FormSuccess } from '@/widgets/auth-shell'
+import { siteUrl } from '@/shared/config/sites'
 
 const schema = z
   .object({
@@ -37,14 +38,14 @@ export function SetPasswordPage({ mode }: { mode: 'reset' | 'initial' }) {
     else setDone(true)
   })
 
-  const loginPath = mode === 'initial' ? '/admin/login' : '/seller/login'
+  const loginUrl = mode === 'initial' ? siteUrl('console', '/login') : siteUrl('merchant', '/login')
   return (
     <AuthShell title={mode === 'reset' ? 'Đặt lại mật khẩu' : 'Đặt mật khẩu quản trị'}>
       {done ? (
         <>
           <FormSuccess message="Đã đặt mật khẩu mới. Mọi phiên đăng nhập cũ đã được đăng xuất." />
           <Button asChild>
-            <Link to={loginPath}>Đăng nhập</Link>
+            <a href={loginUrl}>Đăng nhập</a>
           </Button>
         </>
       ) : !token ? (

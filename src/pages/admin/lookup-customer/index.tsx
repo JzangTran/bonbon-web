@@ -10,6 +10,7 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { consolePath } from '@/shared/config/sites'
 
 /** One account: roles, when it was made, its latest orders. Never a password, a token or a push device. */
 export function AdminLookupCustomerPage() {
@@ -22,7 +23,7 @@ export function AdminLookupCustomerPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to="/admin/lookup" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/lookup')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Tra cứu
       </Link>
       {customer.isError ? <FormError message={problemMessage(customer.error)} /> : null}
@@ -59,7 +60,7 @@ export function AdminLookupCustomerPage() {
             <ul className="flex flex-col gap-2">
               {(c.recentOrders ?? []).map((o) => (
                 <li key={o.id}>
-                  <Link to={`/admin/lookup/orders/${o.id}`} className="flex flex-wrap items-center justify-between gap-2 hover:underline">
+                  <Link to={consolePath(`/lookup/orders/${o.id}`)} className="flex flex-wrap items-center justify-between gap-2 hover:underline">
                     <span className="flex flex-wrap items-center gap-2">
                       <span className="font-medium">#{o.number}</span>
                       <OrderStatusBadge status={(o.status ?? 'PLACED') as OrderStatus} />

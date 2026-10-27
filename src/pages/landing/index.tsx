@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import {
+  ArrowRightIcon,
   BikeIcon,
   CheckIcon,
   ChevronDownIcon,
@@ -13,22 +14,18 @@ import {
   TruckIcon,
   WalletIcon,
 } from 'lucide-react'
-import { Link } from 'react-router'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { siteButton, siteButtonGreen } from '@/widgets/site-chrome/buttons'
+import { siteUrl } from '@/shared/config/sites'
+import { Reveal } from '@/shared/ui/reveal'
+import { WaveEdge } from '@/shared/ui/wave'
 
 
 const btn = siteButton
 const btnGreen = siteButtonGreen
 const btnPale = cn(btn, 'bg-pill-pale text-ink hover:bg-[#e3e8e5]')
 
-const SECTIONS = [
-  { id: 'dat-mon', label: 'Đặt món' },
-  { id: 'quan', label: 'Quán trong khu' },
-  { id: 'mo-quan', label: 'Mở quán' },
-  { id: 'hoi-dap', label: 'Hỏi đáp' },
-]
 
 /** Public landing page at "/": brings customers to the app and local shops to seller sign-up (look: Landing v3 on the design canvas). */
 export function LandingPage() {
@@ -39,7 +36,7 @@ export function LandingPage() {
         name="description"
         content="Đặt cơm, bún, đồ uống từ các quán ngay trong chung cư và khu công nghiệp của bạn. Quán tự giao trong khu, phí giao thấp. Chủ quán trả hoa hồng thấp hơn các ứng dụng lớn."
       />
-      <SiteHeader sections={SECTIONS} />
+      <SiteHeader />
       <main>
         <Hero />
         <NearbyShops />
@@ -62,15 +59,16 @@ function Soft({ children }: { children: ReactNode }) {
   return <span className="text-headline-soft">{children}</span>
 }
 
-/** Empty, fixed-size image slot: real photos are added later (no layout shift meanwhile). */
-function ImageSlot({ label, className }: { label: string; className?: string }) {
+/** Fixed-size image slot. The photos in public/mock are temporary stand-ins (see CREDITS.md there); swap the files or the `src` later. */
+function ImageSlot({ label, className, src }: { label: string; className?: string; src?: string }) {
+  if (src) return <img src={src} alt={label} loading="lazy" decoding="async" className={cn('bg-image-slot object-cover', className)} />
   return <div role="img" aria-label={label} className={cn('bg-image-slot', className)} />
 }
 
 /** The black round badge that carries an icon next to a short point. */
 function Badge({ children }: { children: ReactNode }) {
   return (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-white [&_svg]:size-[22px]" aria-hidden="true">
+    <span className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-ink text-white [&_svg]:size-[22px]" aria-hidden="true">
       {children}
     </span>
   )
@@ -78,25 +76,26 @@ function Badge({ children }: { children: ReactNode }) {
 
 function Hero() {
   return (
-    <section id="dat-mon" className="relative scroll-mt-4 overflow-hidden">
-      <Wrap className="flex flex-wrap items-center gap-6 py-12 lg:min-h-[640px] lg:py-[88px]">
-        <div className="relative z-10 flex min-w-0 flex-[1_1_30rem] flex-col gap-7">
-          <h1 className="text-[40px] leading-[46px] font-extrabold tracking-[-0.03em] sm:text-[56px] sm:leading-[62px] lg:text-[68px] lg:leading-[74px]">
-            Đặt món
-            <br />
-            <Soft>từ quán ngay dưới sảnh</Soft>
-            <svg width="44" height="40" viewBox="0 0 44 40" fill="none" aria-hidden="true" className="ml-1 inline-block align-top">
-              <path d="M6 30 16 20M20 34l8-14M32 30l9-8" stroke="#00a44a" strokeWidth="4" strokeLinecap="round" />
-            </svg>
-            <br />
-            giao tận cửa
+    <section id="dat-mon" className="relative scroll-mt-20 overflow-hidden">
+      <Wrap className="flex flex-col items-center pt-14 pb-16 text-center lg:pt-20 lg:pb-24">
+        <Reveal className="flex flex-col items-center gap-6">
+          <a
+            href={siteUrl('merchant', '/register')}
+            className="inline-flex items-center gap-2 rounded-full bg-muted py-1 pr-3 pl-1 text-sm font-medium text-ink transition-colors hover:bg-border"
+          >
+            <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">Mới</span>
+            Mở quán trên bonbon chỉ trong vài bước
+            <ArrowRightIcon className="size-4" aria-hidden="true" />
+          </a>
+          <h1 className="max-w-4xl text-[2.5rem] leading-[1.1] font-bold tracking-[-0.025em] sm:text-[3.5rem] lg:text-[4rem]">
+            Đặt món từ quán ngay dưới sảnh, <span className="text-primary">giao tận cửa.</span>
           </h1>
-          <p className="max-w-[30rem] text-lg leading-[30px] text-muted-foreground">
+          <p className="max-w-2xl text-lg leading-[1.75rem] text-muted-foreground">
             Các quán ăn trong chung cư và khu công nghiệp của bạn, trong một ứng dụng. Quán tự mang món tới, phí giao thấp, theo dõi từng bước.
           </p>
-          <div id="tai-app" className="flex scroll-mt-6 flex-col gap-3">
-            <div className="flex flex-wrap gap-3">
-              <span aria-disabled="true" className={cn(btnGreen, 'cursor-default opacity-90 hover:bg-primary')}>
+          <div id="tai-app" className="flex scroll-mt-24 flex-col items-center gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
+              <span aria-disabled="true" className={cn(btnGreen, 'cursor-default')}>
                 <SmartphoneIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
                 Tải app đặt món
               </span>
@@ -107,122 +106,128 @@ function Hero() {
             </div>
             <p className="text-sm text-muted-foreground">Ứng dụng sắp có trên App Store và Google Play.</p>
           </div>
-          <div className="mt-2 flex flex-wrap gap-x-8 gap-y-4">
-            <div className="flex items-center gap-3">
-              <Badge>
-                <TruckIcon strokeWidth={1.75} />
-              </Badge>
-              <span className="flex flex-col">
-                <b className="text-[15px]">Quán tự giao</b>
-                <span className="text-[13px] text-muted-foreground">Trong cùng toà, vài phút là tới</span>
-              </span>
+          <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm">
+            <li className="flex items-center gap-2">
+              <TruckIcon className="size-[18px] text-primary" strokeWidth={1.75} aria-hidden="true" />
+              <b>Quán tự giao</b>
+              <span className="text-muted-foreground">trong cùng toà, vài phút là tới</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <MapPinIcon className="size-[18px] text-primary" strokeWidth={1.75} aria-hidden="true" />
+              <b>Theo dõi từng bước</b>
+              <span className="text-muted-foreground">cập nhật ngay khi quán làm</span>
+            </li>
+          </ul>
+        </Reveal>
+
+        <Reveal delay={120} className="mt-14 w-full max-w-5xl">
+          <div className="rounded-2xl bg-white p-2 text-left ring-1 ring-border">
+            <div className="flex items-center gap-1.5 px-3 py-2" aria-hidden="true">
+              <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="size-2.5 rounded-full bg-[#febc2e]" />
+              <span className="size-2.5 rounded-full bg-[#28c840]" />
             </div>
-            <div className="flex items-center gap-3">
-              <Badge>
-                <MapPinIcon strokeWidth={1.75} />
-              </Badge>
-              <span className="flex flex-col">
-                <b className="text-[15px]">Theo dõi từng bước</b>
-                <span className="text-[13px] text-muted-foreground">Cập nhật ngay khi quán làm</span>
-              </span>
+            <div className="relative grid h-[420px] grid-cols-[1fr_auto_1fr] items-center gap-6 overflow-hidden rounded-xl bg-brand-50 px-6 sm:h-[520px]">
+              <ImageSlot src="/mock/pho.jpg" label="Tô phở bò (ảnh minh hoạ)" className="hidden h-[70%] w-full rounded-xl md:block" />
+              <PhoneMock className="relative mt-16 h-[600px] w-[300px] shrink-0" />
+              <ImageSlot src="/mock/bun.jpg" label="Mâm bún riêu (ảnh minh hoạ)" className="hidden h-[70%] w-full rounded-xl md:block" />
             </div>
           </div>
-        </div>
-
-        <div className="relative hidden h-[620px] min-w-0 flex-[1_1_28rem] md:block">
-          <ImageSlot label="Ảnh món ăn (bổ sung sau)" className="absolute top-5 -right-[220px] size-[620px] rounded-full" />
-          <PhoneMock />
-        </div>
+        </Reveal>
       </Wrap>
     </section>
   )
 }
 
 /** A drawn stand-in for a screenshot of the customer app's home screen (the slot stays empty until real screenshots exist). */
-function PhoneMock() {
+function PhoneMock({ className }: { className?: string }) {
   return (
     <div
       role="img"
       aria-label="Minh hoạ màn hình trang chủ của ứng dụng bonbon"
-      className="absolute top-0 left-10 h-[600px] w-[300px] overflow-hidden rounded-device border-8 border-ink bg-background shadow-[0_24px_48px_rgb(20_32_26/0.22)]"
+      className={cn('overflow-hidden rounded-device border-8 border-ink bg-[#f4f6f5]', className)}
     >
       <div aria-hidden="true" className="flex flex-col gap-3 px-4 pt-[18px]">
         <div className="flex items-center justify-between">
           <span className="flex flex-col">
-            <small className="text-[10px] text-muted-foreground">Giao tới</small>
+            <small className="text-[0.625rem] text-muted-foreground">Giao tới</small>
             <b className="text-xs">Toà S2 · căn 1508 ▾</b>
           </span>
           <span className="flex gap-1.5">
-            <span className="size-7 rounded-full bg-white" />
-            <span className="size-7 rounded-full bg-white" />
+            <span className="size-7 rounded-sm bg-white" />
+            <span className="size-7 rounded-sm bg-white" />
           </span>
         </div>
         <div className="text-xl leading-6 font-extrabold tracking-[-0.02em]">
           Hôm nay bạn <Soft>muốn ăn gì?</Soft>
         </div>
         <div className="flex gap-1.5">
-          <span className="h-8 flex-1 rounded-full bg-white" />
-          <span className="size-8 rounded-full bg-ink" />
+          <span className="h-8 flex-1 rounded-sm bg-white" />
+          <span className="size-8 rounded-sm bg-ink" />
         </div>
-        <div className="flex gap-1.5 text-[11px] font-semibold">
-          <span className="rounded-full bg-primary px-2.5 py-1.5 text-primary-foreground">Tất cả</span>
-          <span className="rounded-full bg-white px-2.5 py-1.5">Cơm</span>
-          <span className="rounded-full bg-white px-2.5 py-1.5">Bún &amp; phở</span>
+        <div className="flex gap-1.5 text-[0.6875rem] font-semibold">
+          <span className="rounded-sm bg-primary px-2.5 py-1.5 text-primary-foreground">Tất cả</span>
+          <span className="rounded-sm bg-white px-2.5 py-1.5">Cơm</span>
+          <span className="rounded-sm bg-white px-2.5 py-1.5">Bún &amp; phở</span>
         </div>
         <div className="flex flex-col gap-2 rounded-media bg-white p-2">
-          <div className="relative h-[110px] rounded-xl bg-image-slot">
-            <span className="absolute top-2 left-2 rounded-full bg-ink px-2 py-1 text-[10px] font-semibold text-white">12 phút</span>
-            <span className="absolute top-2 right-2 rounded-full bg-white px-2 py-1 text-[10px] font-semibold text-brand-700">Miễn phí giao</span>
+          <div className="relative h-[110px] overflow-hidden rounded-lg bg-image-slot">
+            <img src="/mock/banh-mi-tray.jpg" alt="" className="absolute inset-0 size-full object-cover" />
+            <span className="absolute top-2 left-2 rounded-sm bg-ink px-2 py-1 text-[0.625rem] font-semibold text-white">12 phút</span>
+            <span className="absolute top-2 right-2 rounded-sm bg-white px-2 py-1 text-[0.625rem] font-semibold text-brand-700">Miễn phí giao</span>
           </div>
           <div className="px-1 pb-0.5">
-            <b className="text-[13px]">Cơm tấm Cô Ba</b>
-            <div className="text-[11px] text-muted-foreground tabular-nums">120 m · Sảnh toà S1</div>
+            <b className="text-[0.8125rem]">Bánh mì Nắng</b>
+            <div className="text-[0.6875rem] text-muted-foreground tabular-nums">210 m · Sảnh toà S1</div>
           </div>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute right-4 bottom-3.5 left-4 flex h-12 items-center justify-around rounded-full bg-ink">
-        <span className="size-[34px] rounded-full bg-primary" />
-        <span className="size-[34px] rounded-full bg-white/15" />
-        <span className="size-[34px] rounded-full bg-white/15" />
-        <span className="size-[34px] rounded-full bg-white/15" />
+      <div aria-hidden="true" className="absolute right-4 bottom-3.5 left-4 flex h-12 items-center justify-around rounded-lg bg-ink">
+        <span className="size-[34px] rounded-sm bg-primary" />
+        <span className="size-[34px] rounded-sm bg-white/15" />
+        <span className="size-[34px] rounded-sm bg-white/15" />
+        <span className="size-[34px] rounded-sm bg-white/15" />
       </div>
     </div>
   )
 }
 
 const SHOPS = [
-  { name: 'Cơm tấm Cô Ba', minutes: 12, meta: '120 m · phí giao 5.000 ₫', free: true },
-  { name: 'Bún chả Hà Thành', minutes: 20, meta: '350 m · phí giao 8.000 ₫' },
-  { name: 'Bánh mì Nắng', minutes: 15, meta: '210 m · phí giao 3.000 ₫' },
-  { name: 'Trà chanh Góc Sân', minutes: 10, meta: '90 m · phí giao 3.000 ₫' },
+  { name: 'Cơm tấm Cô Ba', minutes: 12, meta: '120 m · phí giao 5.000 ₫', free: true, image: '/mock/com.jpg' },
+  { name: 'Bún chả Hà Thành', minutes: 20, meta: '350 m · phí giao 8.000 ₫', image: '/mock/bun.jpg' },
+  { name: 'Bánh mì Nắng', minutes: 15, meta: '210 m · phí giao 3.000 ₫', image: '/mock/banh-mi.jpg' },
+  { name: 'Trà chanh Góc Sân', minutes: 10, meta: '90 m · phí giao 3.000 ₫', image: '/mock/tra-chanh.jpg' },
 ]
 
 function NearbyShops() {
   return (
-    <section id="quan" className="scroll-mt-4 bg-card py-12 lg:py-20">
+    <section id="quan" className="relative scroll-mt-4 bg-card py-12 lg:py-20">
+      <WaveEdge className="text-card" />
+      <Reveal>
       <Wrap className="flex flex-col gap-9">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="max-w-[620px] text-[32px] leading-10 font-extrabold tracking-[-0.02em] lg:text-[44px] lg:leading-[50px]">
+          <h2 className="max-w-[620px] text-[2rem] leading-10 font-extrabold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
             Quán ngay trong khu, <Soft>giao được tới địa chỉ của bạn</Soft>
           </h2>
-          <span className="text-[13px] text-muted-foreground">Ví dụ minh hoạ</span>
+          <span className="text-[0.8125rem] text-muted-foreground">Ví dụ minh hoạ</span>
         </div>
         <ul className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
           {SHOPS.map((shop) => (
             <li key={shop.name} className="flex flex-col gap-2.5 rounded-card bg-background p-2.5">
               <div className="relative h-[170px]">
-                <ImageSlot label={`Ảnh món của ${shop.name} (bổ sung sau)`} className="size-full rounded-media bg-[#e3e8e5]" />
-                <span className="absolute top-2.5 left-2.5 rounded-full bg-ink px-2.5 py-1.5 text-xs font-semibold text-white">{shop.minutes} phút</span>
-                {shop.free ? <span className="absolute top-2.5 right-2.5 rounded-full bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-700">Miễn phí giao</span> : null}
+                <ImageSlot src={shop.image} label={`Món của ${shop.name} (ảnh minh hoạ)`} className="size-full rounded-media bg-[#e3e8e5]" />
+                <span className="absolute top-2.5 left-2.5 rounded-sm bg-ink px-2.5 py-1.5 text-xs font-semibold text-white">{shop.minutes} phút</span>
+                {shop.free ? <span className="absolute top-2.5 right-2.5 rounded-sm bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-700">Miễn phí giao</span> : null}
               </div>
               <div className="px-1.5 pb-1.5">
-                <b className="text-[17px]">{shop.name}</b>
+                <b className="text-[1.0625rem]">{shop.name}</b>
                 <div className="text-sm text-muted-foreground tabular-nums">{shop.meta}</div>
               </div>
             </li>
           ))}
         </ul>
       </Wrap>
+      </Reveal>
     </section>
   )
 }
@@ -260,8 +265,10 @@ const STEPS = [
 
 function OrderSteps() {
   return (
+    <div className="relative">
+    <WaveEdge className="text-background" />
     <Wrap className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8 py-12 lg:py-20">
-      <h2 className="col-span-full max-w-[640px] text-[32px] leading-10 font-extrabold tracking-[-0.02em] lg:text-[44px] lg:leading-[50px]">
+      <h2 className="col-span-full max-w-[640px] text-[2rem] leading-10 font-extrabold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
         Một đơn hàng, <Soft>bốn bước rõ ràng</Soft>
       </h2>
       {STEPS.map(({ icon: Icon, chip, chipClass, title, body }) => (
@@ -269,12 +276,13 @@ function OrderSteps() {
           <Badge>
             <Icon strokeWidth={1.75} />
           </Badge>
-          <span className={cn('self-start rounded-full px-2.5 py-1.5 text-[13px] font-semibold', chipClass)}>{chip}</span>
+          <span className={cn('self-start rounded-sm px-2.5 py-1.5 text-[0.8125rem] font-semibold', chipClass)}>{chip}</span>
           <h3 className="text-lg font-bold">{title}</h3>
           <p className="leading-6 text-muted-foreground">{body}</p>
         </div>
       ))}
     </Wrap>
+    </div>
   )
 }
 
@@ -286,7 +294,8 @@ const TRUST = [
 
 function TrustRow() {
   return (
-    <section className="bg-card py-12 lg:py-16">
+    <section className="relative bg-card py-12 lg:py-16">
+      <WaveEdge className="text-card" />
       <Wrap className="grid gap-8 sm:grid-cols-3">
         {TRUST.map(({ icon: Icon, title, body }) => (
           <div key={title} className="flex gap-4">
@@ -294,7 +303,7 @@ function TrustRow() {
               <Icon strokeWidth={1.75} />
             </Badge>
             <div>
-              <h3 className="mb-1 text-[17px] font-bold">{title}</h3>
+              <h3 className="mb-1 text-[1.0625rem] font-bold">{title}</h3>
               <p className="leading-6 text-muted-foreground">{body}</p>
             </div>
           </div>
@@ -312,13 +321,15 @@ const SELLER_STEPS = [
 
 function SellerBand() {
   return (
-    <section id="mo-quan" className="scroll-mt-4 bg-brand-900 py-16 text-white lg:py-24">
+    <section id="mo-quan" className="relative scroll-mt-4 bg-brand-900 py-16 text-white lg:py-24">
+      <WaveEdge className="text-brand-900" />
+      <Reveal>
       <Wrap className="flex flex-wrap items-center gap-14">
         <div className="flex min-w-0 flex-[1_1_30rem] flex-col gap-6">
-          <h2 className="text-[34px] leading-[40px] font-extrabold tracking-[-0.03em] lg:text-[52px] lg:leading-[58px]">
+          <h2 className="text-[2.125rem] leading-[2.5rem] font-extrabold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
             Bán cho hàng xóm, <span className="text-[#8fb5a0]">giữ lại nhiều hơn từ mỗi đơn</span>
           </h2>
-          <p className="text-lg leading-[30px] text-brand-100">
+          <p className="text-lg leading-[1.875rem] text-brand-100">
             Hoa hồng thấp hơn các ứng dụng giao đồ ăn lớn. Bạn tự đặt bán kính giao, phí giao và giờ mở cửa; tự giao trong khu, không phụ thuộc tài xế.
           </p>
           <ol className="grid gap-4 border-t border-white/15 pt-6 sm:grid-cols-3">
@@ -331,21 +342,22 @@ function SellerBand() {
             ))}
           </ol>
           <div className="flex flex-wrap items-center gap-3">
-            <Link to="/seller/register" className={cn(btn, 'bg-white text-brand-900 hover:bg-brand-50')}>
+            <a href={siteUrl('merchant', '/register')} className={cn(btn, 'bg-white text-brand-900 hover:bg-brand-50')}>
               Mở quán trên bonbon
-            </Link>
+            </a>
             <a href="#hoi-dap" className={cn(btn, 'bg-white/12 text-white hover:bg-white/20')}>
               Hồ sơ cần những gì?
             </a>
           </div>
-          <Link to="/seller/login" className="self-start font-semibold text-white underline-offset-4 hover:underline">
+          <a href={siteUrl('merchant', '/login')} className="self-start font-semibold text-white underline-offset-4 hover:underline">
             Đã có tài khoản? Đăng nhập
-          </Link>
+          </a>
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
-          <ImageSlot label="Ảnh chủ quán bán hàng trên bonbon (bổ sung sau)" className="aspect-[4/5] w-full max-w-[420px] rounded-card bg-[#164a30]" />
+          <ImageSlot src="/mock/chu-quan.jpg" label="Chủ quán đang nấu tại quầy (ảnh minh hoạ)" className="aspect-[4/5] w-full max-w-[420px] rounded-card bg-[#164a30]" />
         </div>
       </Wrap>
+      </Reveal>
     </section>
   )
 }
@@ -371,9 +383,11 @@ const FAQ: { group: string; items: { q: string; a: string }[] }[] = [
 
 function Faq() {
   return (
-    <section id="hoi-dap" className="scroll-mt-4 py-12 lg:py-20">
+    <section id="hoi-dap" className="relative scroll-mt-4 bg-background py-12 lg:py-20">
+      <WaveEdge className="text-background" />
+      <Reveal>
       <Wrap className="flex flex-col gap-8">
-        <h2 className="text-[32px] leading-10 font-extrabold tracking-[-0.02em] lg:text-[44px] lg:leading-[50px]">
+        <h2 className="text-[2rem] leading-10 font-extrabold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
           Câu hỏi <Soft>thường gặp</Soft>
         </h2>
         <div className="grid gap-10 md:grid-cols-2 md:gap-12">
@@ -382,9 +396,9 @@ function Faq() {
               <h3 className="text-sm font-bold text-primary">{group.group}</h3>
               {group.items.map((item) => (
                 <details key={item.q} className="group rounded-panel bg-card px-6 py-4">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[1.0625rem] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                     {item.q}
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-pill-pale" aria-hidden="true">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-pill-pale" aria-hidden="true">
                       <ChevronDownIcon className="size-4 transition-transform group-open:rotate-180" />
                     </span>
                   </summary>
@@ -395,6 +409,7 @@ function Faq() {
           ))}
         </div>
       </Wrap>
+      </Reveal>
     </section>
   )
 }

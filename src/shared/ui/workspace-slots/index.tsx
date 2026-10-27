@@ -44,7 +44,7 @@ type Props = {
 }
 
 const tabClass =
-  'relative flex h-11 shrink-0 items-center gap-2 border-b border-ws-hairline px-5 text-[13px] text-foreground outline-none transition-colors hover:bg-ws-fill focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
+  'relative flex h-11 shrink-0 items-center gap-2 border-b border-ws-hairline px-5 text-[0.8125rem] text-foreground outline-none transition-colors hover:bg-ws-fill focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
 const selectedClass = 'font-semibold shadow-[inset_0_-2px_0_0_var(--color-primary)]'
 
 /**
@@ -98,7 +98,7 @@ function TabLabel({ tab }: { tab: PageTab }) {
         {tab.label}
       </span>
       {tab.count ? (
-        <span className={cn('rounded-full px-1.5 text-[11px] font-semibold tabular-nums', tab.alert ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>{tab.count}</span>
+        <span className={cn('rounded-full px-1.5 text-[0.6875rem] font-semibold tabular-nums', tab.alert ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>{tab.count}</span>
       ) : null}
     </>
   )

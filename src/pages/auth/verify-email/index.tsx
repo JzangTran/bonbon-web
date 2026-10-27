@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { AuthShell, FormError, FormSuccess, SuccessMark } from '@/widgets/auth-shell'
+import { siteUrl } from '@/shared/config/sites'
 
 /** Landing page of the emailed link; works for sellers and customers (customers then open the app). */
 export function VerifyEmailPage() {
@@ -33,7 +34,7 @@ export function VerifyEmailPage() {
       {result.data ? (
         <>
           <Button asChild size="lg" className="uppercase tracking-wide">
-            <Link to="/seller/login">Đăng nhập người bán</Link>
+            <a href={siteUrl('merchant', '/login')}>Đăng nhập người bán</a>
           </Button>
           <p className="text-sm text-muted-foreground">Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.</p>
         </>

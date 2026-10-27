@@ -1,6 +1,8 @@
 import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Link } from 'react-router'
+import { siteUrl } from '@/shared/config/sites'
+import { TextSizeControl } from '@/shared/ui/text-size-control'
+import { WaveBackdrop } from '@/shared/ui/wave'
 import { Lockup } from '@/shared/ui/brand'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
 
@@ -12,18 +14,21 @@ const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
  */
 export function AuthTopBar({ title }: { title: string }) {
   return (
-    <header className="px-4 pt-4 sm:pt-6">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 rounded-full bg-ink py-2.5 pr-3 pl-5 shadow-[0_8px_24px_rgb(20_32_26/0.18)] sm:pl-[30px]">
-        <Link to="/" className="flex min-w-0 items-center gap-3 text-white">
-          <Lockup tone="white" className="h-9 shrink-0" />
-          <span aria-hidden="true" className="hidden h-5 w-px bg-white/20 sm:block" />
-          <span className="hidden truncate text-[15px] font-medium text-white/80 sm:block">{title}</span>
-        </Link>
+    <header className="border-b bg-white px-4">
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4">
+        <a href={siteUrl('public')} className="flex min-w-0 items-center gap-3 text-ink">
+          <Lockup className="h-8 shrink-0" />
+          <span aria-hidden="true" className="hidden h-5 w-px bg-border sm:block" />
+          <span className="hidden truncate text-[0.9375rem] font-medium text-muted-foreground sm:block">{title}</span>
+        </a>
+        <div className="flex items-center gap-2">
+        <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline" />
         {SUPPORT_EMAIL ? (
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-full px-4 py-2.5 text-sm font-medium text-white hover:bg-white/10">
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-full px-4 py-2 text-sm font-medium text-ink hover:bg-muted">
             Bạn cần giúp đỡ?
           </a>
         ) : null}
+        </div>
       </div>
     </header>
   )
@@ -58,7 +63,7 @@ export function AuthShell({ title, description, children, footer, heading = 'Đ�
 }
 
 /**
- * Sign-in and sign-up entry: marketing copy on the left, a floating card on the right, a city skyline fading
+ * Sign-in and sign-up entry: marketing copy on the left, a floating card on the right, soft waves fading
  * out at the bottom. Below md the copy drops under the card.
  */
 export function AuthHero({ heading, eyebrow, headline, headlineSoft, points, cardTitle, children, footer }: {
@@ -76,12 +81,12 @@ export function AuthHero({ heading, eyebrow, headline, headlineSoft, points, car
     <div className="flex min-h-svh flex-col bg-background">
       <AuthTopBar title={heading} />
       <main className="relative flex flex-1 items-center overflow-hidden">
-        <Skyline />
+        <WaveBackdrop />
         <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 md:grid-cols-[minmax(0,1fr)_22rem] md:items-center md:gap-16 lg:grid-cols-[minmax(0,1fr)_24rem]">
           <section className="order-2 flex flex-col gap-6 md:order-1">
             <div>
               <p className="text-base font-semibold text-primary">{eyebrow}</p>
-              <h2 className="mt-2 max-w-md text-[40px] leading-[46px] font-extrabold tracking-[-0.03em] lg:text-[52px] lg:leading-[58px]">
+              <h2 className="mt-2 max-w-md text-[2.5rem] leading-[2.875rem] font-extrabold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
                 {headline}
                 {headlineSoft ? (
                   <>
@@ -156,30 +161,6 @@ export function SuccessMark() {
     <span className="mx-auto flex size-14 items-center justify-center rounded-full border-2 border-primary text-primary">
       <CheckIcon className="size-8" />
     </span>
-  )
-}
-
-/** Light green city silhouettes along the bottom edge of an entry page. */
-function Skyline() {
-  return (
-    <svg aria-hidden viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" className="pointer-events-none absolute inset-x-0 bottom-0 h-32 w-full text-brand-100/70 md:h-44">
-      <g fill="currentColor">
-        <rect x="40" y="120" width="70" height="100" />
-        <rect x="120" y="70" width="60" height="150" />
-        <rect x="190" y="110" width="80" height="110" />
-        <path d="M300 220V90l35-40 35 40v130z" />
-        <rect x="390" y="130" width="90" height="90" />
-        <rect x="490" y="40" width="50" height="180" />
-        <rect x="550" y="100" width="70" height="120" />
-        <rect x="640" y="150" width="100" height="70" />
-        <rect x="760" y="60" width="64" height="160" />
-        <rect x="834" y="110" width="80" height="110" />
-        <path d="M930 220V120h110v100z" />
-        <path d="M925 120h120l-12-24H937z" opacity="0.7" />
-        <rect x="1060" y="80" width="56" height="140" />
-        <rect x="1126" y="130" width="60" height="90" />
-      </g>
-    </svg>
   )
 }
 

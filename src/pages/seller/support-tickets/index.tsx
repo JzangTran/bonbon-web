@@ -14,6 +14,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
+import { merchantPath } from '@/shared/config/sites'
 
 /** The shop's tickets to the Bonbon team (support-tickets.md). Problems with a delivered order go through the order's own report. */
 export function SellerSupportTicketsPage() {
@@ -45,7 +46,7 @@ export function SellerSupportTicketsPage() {
           const status = TICKET_STATUS[t.status ?? ''] ?? { label: t.status ?? '', className: '' }
           return (
             <li key={t.id}>
-              <Link to={`/seller/support-tickets/${t.id}`} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+              <Link to={merchantPath(`/support-tickets/${t.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                 <Card className="gap-1 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">

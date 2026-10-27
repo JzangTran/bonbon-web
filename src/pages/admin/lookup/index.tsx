@@ -13,6 +13,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { consolePath } from '@/shared/config/sites'
 
 type OrderKind = OrderQuery['kind']
 type CustomerKind = CustomerQuery['kind']
@@ -82,7 +83,7 @@ function OrderSearch() {
       <ul className="flex flex-col gap-2">
         {items.map((o) => (
           <li key={o.id}>
-            <Link to={`/admin/lookup/orders/${o.id}`} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+            <Link to={consolePath(`/lookup/orders/${o.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
               <Card className="gap-1 p-3 transition-colors hover:bg-accent">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-2">
@@ -143,7 +144,7 @@ function CustomerSearch() {
       <ul className="flex flex-col gap-2">
         {items.map((c) => (
           <li key={c.id}>
-            <Link to={`/admin/lookup/customers/${c.id}`} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+            <Link to={consolePath(`/lookup/customers/${c.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
               <Card className="gap-1 p-3 transition-colors hover:bg-accent">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold">{c.name}</span>

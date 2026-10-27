@@ -24,6 +24,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { consolePath } from '@/shared/config/sites'
 
 /** One case with everything needed to decide it, and the decision itself (review-order-cases.md). */
 export function AdminOrderCaseDetailPage() {
@@ -38,7 +39,7 @@ export function AdminOrderCaseDetailPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to="/admin/order-cases" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/order-cases')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Danh sách khiếu nại
       </Link>
       {detail.isError ? <FormError message={problemMessage(detail.error)} /> : null}

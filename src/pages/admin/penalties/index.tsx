@@ -11,6 +11,7 @@ import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { consolePath } from '@/shared/config/sites'
 
 type Tab = 'shops' | 'appeals'
 
@@ -60,7 +61,7 @@ export function AdminPenaltiesPage() {
             const consequence = CONSEQUENCE[shop.consequence ?? 'NONE'] ?? CONSEQUENCE.NONE
             return (
               <li key={shop.vendorId}>
-                <Link to={`/admin/penalties/${shop.vendorId}`} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+                <Link to={consolePath(`/penalties/${shop.vendorId}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                   <Card className="gap-2 p-4 transition-colors hover:bg-accent">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2">
@@ -82,7 +83,7 @@ export function AdminPenaltiesPage() {
         <ul className="flex flex-col gap-3">
           {(appeals.data?.items ?? []).map((a) => (
             <li key={a.penaltyId}>
-              <Link to={`/admin/penalties/${a.vendorId}`} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+              <Link to={consolePath(`/penalties/${a.vendorId}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                 <Card className="gap-1 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-semibold">{a.vendorName}</span>

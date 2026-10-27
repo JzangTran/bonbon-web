@@ -11,6 +11,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { consolePath } from '@/shared/config/sites'
 
 const TABS: { id: CaseStatus; label: string }[] = [
   { id: 'OPEN', label: 'Cần quyết' },
@@ -61,7 +62,7 @@ export function AdminOrderCasesPage() {
           const status = CASE_STATUS[item.status ?? ''] ?? { label: item.status ?? '', className: '' }
           return (
             <li key={item.id}>
-              <Link to={`/admin/order-cases/${item.id}`} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+              <Link to={consolePath(`/order-cases/${item.id}`)} className="block rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                 <Card className="gap-2 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">

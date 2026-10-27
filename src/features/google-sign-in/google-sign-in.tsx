@@ -11,6 +11,7 @@ import { Label } from '@/shared/ui/label'
 import { OrDivider } from '@/shared/ui/or-divider'
 import { FormError } from '@/widgets/auth-shell'
 import { GoogleButton } from './google-button'
+import { merchantPath } from '@/shared/config/sites'
 
 type LoginResponse = components['schemas']['LoginResponse']
 type Extras = { acceptedDocumentIds?: string[]; marketingConsent?: boolean; password?: string; captchaToken?: string }
@@ -62,7 +63,7 @@ export function GoogleSignIn() {
       role: 'SELLER',
       availableRoles: (user.availableRoles ?? []) as Role[],
     })
-    navigate('/seller', { replace: true })
+    navigate(merchantPath(), { replace: true })
   }
 
   const submit = async (token: string, extras: Extras = {}) => {

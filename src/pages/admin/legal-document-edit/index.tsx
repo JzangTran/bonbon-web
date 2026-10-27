@@ -26,6 +26,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { consolePath } from '@/shared/config/sites'
 
 const MIN_NOTICE_DAYS = 15
 
@@ -50,7 +51,7 @@ export function AdminLegalDocumentEditPage() {
 
 function Back() {
   return (
-    <Link to="/admin/legal-documents" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+    <Link to={consolePath('/legal-documents')} className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
       <ArrowLeftIcon className="size-4" /> Văn bản pháp lý
     </Link>
   )
@@ -153,7 +154,7 @@ function Editor({ type }: { type: LegalDocumentType }) {
                   {
                     onSuccess: (data) => {
                       toast.success('Đã lưu bản nháp.')
-                      navigate(`/admin/legal-documents/${data.version?.id}`, { replace: true })
+                      navigate(consolePath(`/legal-documents/${data.version?.id}`), { replace: true })
                     },
                     onError: (e) => setError(problemMessage(e)),
                   },
@@ -252,7 +253,7 @@ function DraftEditor({ detail }: { detail: LegalDetail }) {
         </CardContent>
       </Card>
       {preview ? <Preview title={title} summary={summary} content={content} /> : null}
-      <PublishPanel id={v.id!} reaccept={reaccept} dirty={dirty} onDiscarded={() => navigate('/admin/legal-documents')} />
+      <PublishPanel id={v.id!} reaccept={reaccept} dirty={dirty} onDiscarded={() => navigate(consolePath('/legal-documents'))} />
     </>
   )
 }

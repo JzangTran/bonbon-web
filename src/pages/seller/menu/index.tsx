@@ -8,6 +8,7 @@ import { FormError } from '@/widgets/auth-shell'
 import { MenuTabs } from '@/widgets/seller-tabs'
 import { MenuTab } from './menu-tab'
 import { OptionsTab } from './options-tab'
+import { merchantPath } from '@/shared/config/sites'
 
 /** The seller's menu (manage-menu.md, manage-menu-options.md): sections and dishes, and the option groups dishes offer. */
 export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { startNewDish?: boolean; tab?: 'dishes' | 'options' }) {
@@ -28,7 +29,7 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
         <p className="flex flex-wrap items-center gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
           <TriangleAlertIcon className="size-4 shrink-0" />
           Có {openCases} món bị đánh dấu sai ngành hàng.
-          <Link to="/seller/category-cases" className="font-medium underline">
+          <Link to={merchantPath('/category-cases')} className="font-medium underline">
             Xem và sửa
           </Link>
         </p>
