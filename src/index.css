@@ -63,10 +63,6 @@
   th {
     font-variant-numeric: tabular-nums;
   }
-  /* Pages keep an h1 for assistive tech, but the workspace shows the page name in the header breadcrumb only. */
-  .ws-content h1 {
-    @apply sr-only;
-  }
   .ws-content > div {
     max-width: none;
   }
@@ -222,4 +218,13 @@
   font-size: 1.25rem;
   line-height: 2.125rem;
   letter-spacing: -0.01em;
+}
+
+/* The page title in the workspace, as on the GitBook docs: large, under the small breadcrumb. Outside the layers so it wins over the
+   size each page set when its title was hidden. */
+.ws-content h1 {
+  font-size: 1.875rem;
+  line-height: 2.375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }

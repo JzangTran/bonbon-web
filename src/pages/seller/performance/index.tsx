@@ -15,7 +15,6 @@ import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
@@ -152,7 +151,7 @@ export function SellerPerformancePage() {
                     {pen.status === 'WAIVED' ? <Badge className="bg-muted text-muted-foreground">Đã miễn</Badge> : null}
                     {pen.appealStatus ? <Badge variant="outline">{APPEAL_LABEL[pen.appealStatus] ?? pen.appealStatus}</Badge> : null}
                   </div>
-                  {pen.canAppeal ? (
+                  {pen.canAppeal && appealing?.id !== pen.id ? (
                     <Button
                       size="sm"
                       variant="outline"
@@ -171,37 +170,33 @@ export function SellerPerformancePage() {
                 </p>
                 {pen.reason ? <p className="text-sm">Lý do: {pen.reason}</p> : null}
                 {pen.decisionReason ? <p className="text-sm">Quản trị viên: {pen.decisionReason}</p> : null}
+                {appealing?.id === pen.id ? (
+                  <form
+                    className="mt-3 flex flex-col gap-3 rounded-xl bg-grey-50 p-4"
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      if (appealing?.id) appeal.mutate({ id: appealing.id, reason }, { onSuccess: () => setAppealing(null) })
+                    }}
+                  >
+                    <p className="text-sm text-muted-foreground">Mỗi điểm kháng nghị được một lần. Trong lúc chờ, hạn chế (nếu có) vẫn giữ nguyên; nếu được chấp nhận, điểm được miễn và hậu quả tính lại ngay.</p>
+                    <Label htmlFor={`appeal-${pen.id}`}>Vì sao điểm này không đúng?</Label>
+                    <Textarea id={`appeal-${pen.id}`} autoFocus rows={4} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ví dụ: tuần đó bếp mất điện, có biên bản của điện lực" />
+                    <div className="flex gap-2">
+                      <Button type="submit" disabled={reason.trim().length === 0 || appeal.isPending}>
+                        Gửi kháng nghị
+                      </Button>
+                      <Button type="button" variant="outline" onClick={() => setAppealing(null)}>
+                        Huỷ
+                      </Button>
+                    </div>
+                  </form>
+                ) : null}
               </Card>
             </li>
           ))}
         </ul>
       </section>
 
-      <Dialog open={appealing !== null} onOpenChange={(open) => (open ? undefined : setAppealing(null))}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Kháng nghị điểm phạt</DialogTitle>
-            <DialogDescription>Mỗi điểm kháng nghị được một lần. Trong lúc chờ, hạn chế (nếu có) vẫn giữ nguyên; nếu được chấp nhận, điểm được miễn và hậu quả tính lại ngay.</DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="appeal-reason">Vì sao điểm này không đúng?</Label>
-            <Textarea id="appeal-reason" rows={4} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ví dụ: tuần đó bếp mất điện, có biên bản của điện lực" />
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
-            </DialogClose>
-            <Button
-              disabled={reason.trim().length === 0 || appeal.isPending}
-              onClick={() => {
-                if (appealing?.id) appeal.mutate({ id: appealing.id, reason }, { onSuccess: () => setAppealing(null) })
-              }}
-            >
-              Gửi kháng nghị
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

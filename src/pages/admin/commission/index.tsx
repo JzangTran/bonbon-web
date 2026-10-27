@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useCommissionHistory, useCommissionRates, useSetCommissionRate, type CategoryCommissionRate } from '@/entities/settlement'
 import { useSession } from '@/entities/session'
 import { problemMessage } from '@/shared/api'
@@ -6,7 +6,6 @@ import { formatDateTime } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -38,6 +37,37 @@ export function AdminCommissionPage() {
   const valid = text.trim() !== '' && Number.isFinite(parsed) && parsed >= 0 && parsed <= (data?.maxRate ?? 30) && /^\d{1,2}([.,]\d{1,2})?$/.test(text.trim())
   const net = data?.vatPercent !== undefined && valid ? parsed / (1 + (data.vatPercent ?? 0) / 100) : null
 
+  /** Editing a rate right where it is shown, instead of in a dialog. */
+  const editor = target ? (
+    <form
+      className="flex flex-col gap-3 bg-grey-50 p-4"
+      onSubmit={(e) => {
+        e.preventDefault()
+        if (valid) save.mutate({ categoryId: target.categoryId, rate: parsed }, { onSuccess: () => setTarget(null) })
+      }}
+    >
+      <p className="text-sm text-muted-foreground">
+        {target.categoryId ? 'Các ngành con chưa có tỷ lệ riêng sẽ dùng tỷ lệ này.' : 'Dùng cho mọi ngành không có tỷ lệ riêng và không có ngành cha nào có.'}
+      </p>
+      <div className="flex max-w-xs flex-col gap-2">
+        <Label htmlFor="rate">
+          {target.name}: tỷ lệ (%), từ 0 đến {data?.maxRate ?? 30}
+        </Label>
+        <Input id="rate" autoFocus inputMode="decimal" value={text} onChange={(e) => setText(e.target.value)} placeholder="10" />
+        {net !== null ? <p className="text-xs text-muted-foreground">Phần ròng {percent(Math.round(net * 100) / 100)}, còn lại là VAT.</p> : null}
+      </div>
+      {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
+      <div className="flex gap-2">
+        <Button type="submit" disabled={!valid || save.isPending}>
+          Lưu
+        </Button>
+        <Button type="button" variant="outline" onClick={() => setTarget(null)}>
+          Huỷ
+        </Button>
+      </div>
+    </form>
+  ) : null
+
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
@@ -59,7 +89,10 @@ export function AdminCommissionPage() {
                 Phần ròng {percent(Math.round(((data.defaultRate ?? 0) / (1 + (data.vatPercent ?? 0) / 100)) * 100) / 100)} + VAT
               </p>
             </div>
-            <Button onClick={() => open({ categoryId: null, name: 'Tỷ lệ mặc định', current: data.defaultRate ?? null })}>Đổi tỷ lệ mặc định</Button>
+            {target?.categoryId === null ? null : (
+              <Button onClick={() => open({ categoryId: null, name: 'Tỷ lệ mặc định', current: data.defaultRate ?? null })}>Đổi tỷ lệ mặc định</Button>
+            )}
+            {target?.categoryId === null ? <div className="-mx-4 -mb-4 basis-full overflow-hidden rounded-b-xl">{editor}</div> : null}
           </Card>
 
           <Card className="gap-0 overflow-hidden p-0">
@@ -71,13 +104,15 @@ export function AdminCommissionPage() {
             </div>
             <ul>
               {(data.categories ?? []).map((category) => (
-                <CategoryRow
-                  key={category.id}
-                  category={category}
-                  busy={save.isPending}
-                  onEdit={() => open({ categoryId: category.id ?? null, name: category.name ?? '', current: category.ownRate ?? category.effectiveRate ?? null })}
-                  onClear={() => save.mutate({ categoryId: category.id ?? null, rate: null })}
-                />
+                <Fragment key={category.id}>
+                  <CategoryRow
+                    category={category}
+                    busy={save.isPending}
+                    onEdit={() => open({ categoryId: category.id ?? null, name: category.name ?? '', current: category.ownRate ?? category.effectiveRate ?? null })}
+                    onClear={() => save.mutate({ categoryId: category.id ?? null, rate: null })}
+                  />
+                  {target && target.categoryId === category.id ? <li className="border-b last:border-b-0">{editor}</li> : null}
+                </Fragment>
               ))}
             </ul>
           </Card>
@@ -113,34 +148,6 @@ export function AdminCommissionPage() {
         </>
       ) : null}
 
-      <Dialog open={target !== null} onOpenChange={(next) => (next ? undefined : setTarget(null))}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{target?.name}</DialogTitle>
-            <DialogDescription>
-              {target?.categoryId ? 'Các ngành con chưa có tỷ lệ riêng sẽ dùng tỷ lệ này.' : 'Dùng cho mọi ngành không có tỷ lệ riêng và không có ngành cha nào có.'}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="rate">Tỷ lệ hoa hồng (%), từ 0 đến {data?.maxRate ?? 30}</Label>
-            <Input id="rate" inputMode="decimal" value={text} onChange={(e) => setText(e.target.value)} placeholder="10" />
-            {net !== null ? <p className="text-xs text-muted-foreground">Phần ròng {percent(Math.round(net * 100) / 100)}, còn lại là VAT.</p> : null}
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
-            </DialogClose>
-            <Button
-              disabled={!valid || save.isPending}
-              onClick={() => {
-                if (target) save.mutate({ categoryId: target.categoryId, rate: parsed }, { onSuccess: () => setTarget(null) })
-              }}
-            >
-              Lưu
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

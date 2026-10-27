@@ -17,7 +17,6 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { CategorySelect } from '@/shared/ui/category-select'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
 import { Label } from '@/shared/ui/label'
 import { FilterChips } from '@/shared/ui/filter-chips'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -82,6 +81,8 @@ export function SellerCategoryCasesPage() {
             key={c.id}
             c={c}
             busy={confirm.isPending}
+            acting={acting && acting.kase.id === c.id ? acting.kind : null}
+            onDone={() => setActing(null)}
             onResolve={() => setActing({ kase: c, kind: 'resolve' })}
             onAppeal={() => setActing({ kase: c, kind: 'appeal' })}
             onConfirm={() =>
@@ -104,12 +105,20 @@ export function SellerCategoryCasesPage() {
         </div>
       ) : null}
 
-      <ActionDialog key={acting ? `${acting.kase.id}-${acting.kind}` : 'none'} acting={acting} onClose={() => setActing(null)} />
     </div>
   )
 }
 
-function CaseItem({ c, busy, onResolve, onAppeal, onConfirm }: { c: CategoryCase; busy: boolean; onResolve: () => void; onAppeal: () => void; onConfirm: () => void }) {
+function CaseItem({ c, busy, acting, onDone, onResolve, onAppeal, onConfirm }: {
+  c: CategoryCase
+  busy: boolean
+  /** the form open under this case, if any */
+  acting: 'resolve' | 'appeal' | null
+  onDone: () => void
+  onResolve: () => void
+  onAppeal: () => void
+  onConfirm: () => void
+}) {
   const status = STATUS[c.status ?? ''] ?? { label: c.status ?? '', className: '' }
   return (
     <li className="flex flex-col gap-2 rounded-sm border bg-card p-4">
@@ -146,14 +155,15 @@ function CaseItem({ c, busy, onResolve, onAppeal, onConfirm }: { c: CategoryCase
           Quyết định ({formatDateTime(c.decidedAt)}): {c.decisionReason}
         </p>
       ) : null}
-      {c.status === 'RESTRICTED' ? (
+      {acting ? <ActionForm key={acting} kase={c} kind={acting} onClose={onDone} /> : null}
+      {!acting && c.status === 'RESTRICTED' ? (
         <div>
           <Button size="sm" onClick={onResolve}>
             Sửa ngành
           </Button>
         </div>
       ) : null}
-      {c.status === 'AUTO_CORRECTED' ? (
+      {!acting && c.status === 'AUTO_CORRECTED' ? (
         <div className="flex flex-wrap gap-2">
           <Button size="sm" disabled={busy} onClick={onConfirm}>
             Đồng ý
@@ -167,21 +177,21 @@ function CaseItem({ c, busy, onResolve, onAppeal, onConfirm }: { c: CategoryCase
   )
 }
 
-function ActionDialog({ acting, onClose }: { acting: { kase: CategoryCase; kind: 'resolve' | 'appeal' } | null; onClose: () => void }) {
+/** Fixing the category or appealing, right under the case instead of in a dialog. */
+function ActionForm({ kase, kind, onClose }: { kase: CategoryCase; kind: 'resolve' | 'appeal'; onClose: () => void }) {
   const tree = useCategoryTree()
   const options = useMemo(() => leaves(tree.data ?? []), [tree.data])
   const resolve = useResolveMyCase()
   const appeal = useAppealMyCase()
-  const kase = acting?.kase
-  const isResolve = acting?.kind === 'resolve'
-  const [category, setCategory] = useState(isResolve ? (kase?.suggestedCategory?.id ?? '') : '')
+  const isResolve = kind === 'resolve'
+  const [category, setCategory] = useState(isResolve ? (kase.suggestedCategory?.id ?? '') : '')
   const [note, setNote] = useState('')
   const [error, setError] = useState<string | null>(null)
   const busy = resolve.isPending || appeal.isPending
 
   const submit = () => {
     setError(null)
-    const id = kase?.id ?? ''
+    const id = kase.id ?? ''
     const done = (message: string) => ({
       onSuccess: () => {
         toast.success(message)
@@ -194,16 +204,15 @@ function ActionDialog({ acting, onClose }: { acting: { kase: CategoryCase; kind:
   }
 
   return (
-    <Dialog open={acting !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{isResolve ? 'Sửa ngành của món' : 'Kháng nghị'}: {kase?.dishName}</DialogTitle>
-          <DialogDescription>
+    <div className="mt-2 flex flex-col gap-4 rounded-xl bg-grey-50 p-4">
+        <div className="flex flex-col gap-1">
+          <p className="font-medium">{isResolve ? 'Sửa ngành của món' : 'Kháng nghị'}</p>
+          <p className="text-sm text-muted-foreground">
             {isResolve
-              ? `Nên chuyển sang "${kase?.suggestedCategory?.name}". Chọn ngành khác cũng đóng vụ này, nhưng nếu quản trị viên vẫn thấy sai họ có thể đánh dấu lại.`
-              : `Hệ thống đã chuyển món sang "${kase?.finalCategory?.name}". Chọn ngành bạn cho là đúng và giải thích; mỗi vụ kháng nghị một lần.`}
-          </DialogDescription>
-        </DialogHeader>
+              ? `Nên chuyển sang "${kase.suggestedCategory?.name}". Chọn ngành khác cũng đóng vụ này, nhưng nếu quản trị viên vẫn thấy sai họ có thể đánh dấu lại.`
+              : `Hệ thống đã chuyển món sang "${kase.finalCategory?.name}". Chọn ngành bạn cho là đúng và giải thích; mỗi vụ kháng nghị một lần.`}
+          </p>
+        </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="case-category">Ngành của món</Label>
           <CategorySelect id="case-category" options={options} value={category} onChange={setCategory} loading={tree.isPending} />
@@ -215,15 +224,14 @@ function ActionDialog({ acting, onClose }: { acting: { kase: CategoryCase; kind:
           </div>
         ) : null}
         <FormError message={error} />
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Huỷ
-          </Button>
+        <div className="flex flex-wrap gap-2">
           <Button disabled={category === '' || (!isResolve && note.trim() === '') || busy} onClick={submit}>
             {isResolve ? 'Lưu ngành' : 'Gửi kháng nghị'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <Button variant="outline" onClick={onClose}>
+            Huỷ
+          </Button>
+        </div>
+    </div>
   )
 }

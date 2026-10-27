@@ -89,7 +89,7 @@ const SETTINGS: NavParent[] = [
 
 const SPACES: Space[] = [
   { key: 'operations', label: 'Vận hành', icon: WorkflowIcon, nav: OPERATIONS, extras: OPERATIONS_EXTRAS },
-  { key: 'content', label: 'Nội dung', icon: BookOpenIcon, nav: CONTENT },
+  { key: 'content', label: 'Nội dung', icon: BookOpenIcon, nav: CONTENT, extras: [{ to: consolePath('/help-articles/new'), label: 'Bài mới', under: consolePath('/help-articles') }] },
   { key: 'settings', label: 'Cài đặt', icon: SettingsIcon, nav: SETTINGS },
 ]
 

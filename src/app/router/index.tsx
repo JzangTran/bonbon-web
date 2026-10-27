@@ -188,6 +188,10 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/support-tickets').then((m) => ({ Component: m.SellerSupportTicketsPage })),
           },
           {
+            path: 'support-tickets/new',
+            lazy: () => import('@/pages/seller/support-tickets').then((m) => ({ Component: m.SellerNewTicketPage })),
+          },
+          {
             path: 'support-tickets/:id',
             lazy: () => import('@/pages/seller/support-ticket-detail').then((m) => ({ Component: m.SellerSupportTicketDetailPage })),
           },
@@ -272,8 +276,20 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/admin/category-moderation').then((m) => ({ Component: m.AdminCategoryModerationPage })),
           },
           {
+            path: 'category-moderation/flag',
+            lazy: () => import('@/pages/admin/category-moderation/flag-page').then((m) => ({ Component: m.FlagDishPage })),
+          },
+          {
             path: 'service-areas',
             lazy: () => import('@/pages/admin/service-areas').then((m) => ({ Component: m.AdminServiceAreasPage })),
+          },
+          {
+            path: 'service-areas/new',
+            lazy: () => import('@/pages/admin/service-areas').then((m) => ({ Component: m.AdminServiceAreaEditPage })),
+          },
+          {
+            path: 'service-areas/:id',
+            lazy: () => import('@/pages/admin/service-areas').then((m) => ({ Component: m.AdminServiceAreaEditPage })),
           },
           {
             path: 'merchants',
@@ -334,6 +350,14 @@ const router = createBrowserRouter([
           {
             path: 'help-articles',
             lazy: () => import('@/pages/admin/help-articles').then((m) => ({ Component: m.AdminHelpArticlesPage })),
+          },
+          {
+            path: 'help-articles/new',
+            lazy: () => import('@/pages/admin/help-articles').then((m) => ({ Component: m.AdminHelpArticleEditPage })),
+          },
+          {
+            path: 'help-articles/:id',
+            lazy: () => import('@/pages/admin/help-articles').then((m) => ({ Component: m.AdminHelpArticleEditPage })),
           },
           {
             path: 'penalties',

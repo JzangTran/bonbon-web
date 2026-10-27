@@ -12,7 +12,6 @@ import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { DecideDialog } from './decide-dialog'
-import { FlagDialog } from './flag-dialog'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
 
@@ -41,7 +40,6 @@ export function AdminCategoryModerationPage() {
   const vendorId = params.get('vendorId') ?? ''
   const [tab, setTab] = useState<CaseStatus | ''>('APPEALED')
   const [page, setPage] = useState(0)
-  const [flagging, setFlagging] = useState(false)
   const [deciding, setDeciding] = useState<{ kase: CategoryCase; decision: 'ACCEPT' | 'REJECT' } | null>(null)
   const cases = useCategoryCases(tab, vendorId, page, allowed)
   const data = cases.data
@@ -59,8 +57,10 @@ export function AdminCategoryModerationPage() {
             Hoa hồng tính theo ngành của món mà quán tự chọn, nên món xếp sang ngành rẻ hơn cần được sửa. Món bị đánh dấu ẩn khỏi tìm kiếm cho đến khi quán sửa; quá hạn hệ thống áp dụng ngành bạn gợi ý, quán có 7 ngày để đồng ý hoặc kháng nghị.
           </p>
         </div>
-        <Button onClick={() => setFlagging(true)}>
-          <FlagIcon /> Đánh dấu món
+        <Button asChild>
+          <Link to={consolePath('/category-moderation/flag') + (vendorId ? `?vendorId=${vendorId}` : '')}>
+            <FlagIcon /> Đánh dấu món
+          </Link>
         </Button>
       </div>
 
@@ -112,7 +112,6 @@ export function AdminCategoryModerationPage() {
         </div>
       ) : null}
 
-      <FlagDialog key={vendorId} open={flagging} onOpenChange={setFlagging} initialVendorId={vendorId} />
       <DecideDialog key={deciding ? `${deciding.kase.id}-${deciding.decision}` : 'none'} kase={deciding?.kase ?? null} decision={deciding?.decision ?? 'ACCEPT'} onClose={() => setDeciding(null)} />
     </div>
   )

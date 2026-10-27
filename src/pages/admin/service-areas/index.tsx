@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CheckIcon, MapPinIcon, PlusIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { SERVICE_AREAS_QUERY_KEY, useServiceAreas, type ServiceArea, type ServiceAreaInput } from '@/entities/service-area'
 import { useSession } from '@/entities/session'
@@ -10,7 +11,8 @@ import type { Errors } from '@/shared/lib/validate'
 import { requiredText } from '@/shared/lib/validate'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
+import { consolePath } from '@/shared/config/sites'
+import { SubPage, SubPageActions } from '@/shared/ui/sub-page'
 import { FormRow } from '@/shared/ui/form-row'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -36,7 +38,6 @@ function kmError(e: Errors, field: string, text: string, label: string) {
 export function AdminServiceAreasPage() {
   const { session } = useSession()
   const areas = useServiceAreas()
-  const [editing, setEditing] = useState<ServiceArea | 'new' | null>(null)
 
   if (!session?.permissions.has('merchant-approval:read')) {
     return <p className="text-muted-foreground">Bạn không có quyền xem khu vực phục vụ.</p>
@@ -54,8 +55,10 @@ export function AdminServiceAreasPage() {
           </p>
         </div>
         {canWrite ? (
-          <Button onClick={() => setEditing('new')}>
-            <PlusIcon /> Thêm khu vực
+          <Button asChild>
+            <Link to={consolePath('/service-areas/new')}>
+              <PlusIcon /> Thêm khu vực
+            </Link>
           </Button>
         ) : null}
       </div>
@@ -103,8 +106,8 @@ export function AdminServiceAreasPage() {
                 <TableCell>{a.active ? <Badge className="bg-success-subtle text-success-fg">Đang hoạt động</Badge> : <Badge variant="outline">Đã tắt</Badge>}</TableCell>
                 <TableCell className="text-right">
                   {canWrite ? (
-                    <Button variant="link" size="sm" onClick={() => setEditing(a)}>
-                      Sửa
+                    <Button asChild variant="link" size="sm">
+                      <Link to={consolePath(`/service-areas/${a.id}`)}>Sửa</Link>
                     </Button>
                   ) : null}
                 </TableCell>
@@ -114,13 +117,28 @@ export function AdminServiceAreasPage() {
         </Table>
       </div>
 
-      {editing ? <AreaDialog key={editing === 'new' ? 'new' : editing.id} area={editing === 'new' ? null : editing} onClose={() => setEditing(null)} /> : null}
     </div>
   )
 }
 
-/** Adding or editing one area. The centre is chosen on the map; the rest is typed. */
-function AreaDialog({ area, onClose }: { area: ServiceArea | null; onClose: () => void }) {
+/** /service-areas/new and /service-areas/:id: adding or editing one area, on a page of its own. */
+export function AdminServiceAreaEditPage() {
+  const { id } = useParams()
+  const { session } = useSession()
+  const areas = useServiceAreas()
+  if (!session?.permissions.has('merchant-approval:write-settings')) {
+    return <p className="text-muted-foreground">Bạn không có quyền sửa khu vực phục vụ.</p>
+  }
+  if (id && areas.isPending) return <Skeleton className="h-96 max-w-3xl" />
+  const area = id ? areas.data?.find((a) => a.id === id) : null
+  if (id && !area) return <FormError message={areas.isError ? problemMessage(areas.error) : 'Không tìm thấy khu vực.'} />
+  return <AreaForm key={id ?? 'new'} area={area ?? null} />
+}
+
+/** The form of one area. The centre is chosen on the map; the rest is typed. */
+function AreaForm({ area }: { area: ServiceArea | null }) {
+  const navigate = useNavigate()
+  const onClose = () => navigate(consolePath('/service-areas'))
   const queryClient = useQueryClient()
   const [name, setName] = useState(area?.name ?? '')
   const [centre, setCentre] = useState<{ lat: number; lng: number } | undefined>(area ? { lat: area.centerLat, lng: area.centerLng } : undefined)
@@ -158,13 +176,11 @@ function AreaDialog({ area, onClose }: { area: ServiceArea | null; onClose: () =
   }
 
   return (
-    <>
-      <Dialog open onOpenChange={(o) => (o ? null : onClose())}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{area ? 'Sửa khu vực phục vụ' : 'Thêm khu vực phục vụ'}</DialogTitle>
-            <DialogDescription>Quán thuộc khu vực có tâm gần nhất khi nhiều khu vực chồng lên nhau.</DialogDescription>
-          </DialogHeader>
+    <SubPage
+      back={{ to: consolePath('/service-areas'), label: 'Khu vực phục vụ' }}
+      title={area ? `Sửa ${area.name}` : 'Thêm khu vực phục vụ'}
+      description="Quán thuộc khu vực có tâm gần nhất khi nhiều khu vực chồng lên nhau."
+    >
           <form
             className="flex flex-col gap-4"
             noValidate
@@ -205,17 +221,15 @@ function AreaDialog({ area, onClose }: { area: ServiceArea | null; onClose: () =
               </FormRow>
             ) : null}
             {save.isError && Object.keys(errors).length === 0 ? <FormError message={problemMessage(save.error)} /> : null}
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
-                Huỷ
-              </Button>
+            <SubPageActions>
               <Button type="submit" disabled={save.isPending}>
                 Lưu
               </Button>
-            </DialogFooter>
+              <Button type="button" variant="outline" onClick={onClose}>
+                Huỷ
+              </Button>
+            </SubPageActions>
           </form>
-        </DialogContent>
-      </Dialog>
       <MapDialog
         open={mapOpen}
         onOpenChange={setMapOpen}
@@ -226,6 +240,6 @@ function AreaDialog({ area, onClose }: { area: ServiceArea | null; onClose: () =
           setMapOpen(false)
         }}
       />
-    </>
+    </SubPage>
   )
 }

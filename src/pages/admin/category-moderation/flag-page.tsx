@@ -6,7 +6,9 @@ import { problemMessage } from '@/shared/api'
 import { formatVnd } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
+import { useNavigate, useSearchParams } from 'react-router'
+import { consolePath } from '@/shared/config/sites'
+import { SubPage } from '@/shared/ui/sub-page'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -15,31 +17,25 @@ import { FormError } from '@/widgets/auth-shell'
 import { CategorySelect } from '@/shared/ui/category-select'
 
 /**
- * Three steps: find the shop, pick the misfiled dish from its menu (with category path and rate to compare), then say which category it
+ * /category-moderation/flag: three steps on a page of their own: find the shop, pick the misfiled dish from its menu (with category path and rate to compare), then say which category it
  * belongs in, why, and how long the shop has to fix it.
  */
-export function FlagDialog({ open, onOpenChange, initialVendorId }: { open: boolean; onOpenChange: (open: boolean) => void; initialVendorId: string }) {
+export function FlagDishPage() {
+  const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const initialVendorId = params.get('vendorId') ?? ''
   const [vendor, setVendor] = useState<{ id: string; name: string } | null>(initialVendorId ? { id: initialVendorId, name: '' } : null)
   const [dish, setDish] = useState<ShopDish | null>(null)
-
-  const close = (next: boolean) => {
-    if (!next) {
-      setVendor(initialVendorId ? { id: initialVendorId, name: '' } : null)
-      setDish(null)
-    }
-    onOpenChange(next)
-  }
+  const back = consolePath('/category-moderation') + (initialVendorId ? `?vendorId=${initialVendorId}` : '')
 
   return (
-    <Dialog open={open} onOpenChange={close}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Đánh dấu món sai ngành</DialogTitle>
-          <DialogDescription>Món bị ẩn khỏi tìm kiếm và lọc ngành đến khi quán sửa; quá hạn hệ thống áp dụng ngành bạn gợi ý. Món vẫn có trên thực đơn và vẫn đặt được.</DialogDescription>
-        </DialogHeader>
-        {!vendor ? <ShopStep onPick={setVendor} /> : !dish ? <DishStep vendor={vendor} onBack={() => setVendor(null)} onPick={setDish} /> : <FlagStep dish={dish} onBack={() => setDish(null)} onDone={() => close(false)} />}
-      </DialogContent>
-    </Dialog>
+    <SubPage
+      back={{ to: back, label: 'Món sai ngành' }}
+      title="Đánh dấu món sai ngành"
+      description="Món bị ẩn khỏi tìm kiếm và lọc ngành đến khi quán sửa; quá hạn hệ thống áp dụng ngành bạn gợi ý. Món vẫn có trên thực đơn và vẫn đặt được."
+    >
+      {!vendor ? <ShopStep onPick={setVendor} /> : !dish ? <DishStep vendor={vendor} onBack={() => setVendor(null)} onPick={setDish} /> : <FlagStep dish={dish} onBack={() => setDish(null)} onDone={() => navigate(back)} />}
+    </SubPage>
   )
 }
 
@@ -163,11 +159,11 @@ function FlagStep({ dish, onBack, onDone }: { dish: ShopDish; onBack: () => void
         <p className="text-xs text-muted-foreground">Quá hạn hệ thống tự chuyển món sang ngành bạn chọn; quán có 7 ngày để đồng ý hoặc kháng nghị.</p>
       </div>
       <FormError message={error} />
-      <DialogFooter>
+      <div className="flex flex-wrap gap-2">
         <Button type="submit" disabled={suggested === '' || reason.trim() === '' || !hoursValid || flag.isPending}>
           Đánh dấu món
         </Button>
-      </DialogFooter>
+      </div>
     </form>
   )
 }

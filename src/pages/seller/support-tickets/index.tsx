@@ -1,13 +1,13 @@
 import { PlusIcon } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { ImagePicker, TICKET_STATUS, useMyTickets, useOpenTicket } from '@/entities/support-ticket'
 import { problemMessage } from '@/shared/api'
 import { formatRelative } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
+import { SubPage, SubPageActions } from '@/shared/ui/sub-page'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -19,7 +19,6 @@ import { merchantPath } from '@/shared/config/sites'
 /** The shop's tickets to the Bonbon team (support-tickets.md). Problems with a delivered order go through the order's own report. */
 export function SellerSupportTicketsPage() {
   const [page, setPage] = useState(0)
-  const [opening, setOpening] = useState(false)
   const tickets = useMyTickets(page)
   const items = tickets.data?.items ?? []
   const total = tickets.data?.total ?? 0
@@ -29,11 +28,13 @@ export function SellerSupportTicketsPage() {
     <div className="flex max-w-3xl flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Liên hệ hỗ trợ</h1>
+          <h1 className="text-2xl font-semibold">Yêu cầu hỗ trợ của tôi</h1>
           <p className="text-sm text-muted-foreground">Gửi phiếu khi trợ giúp chưa trả lời được. Bạn có thể có tối đa 3 phiếu chưa xong cùng lúc.</p>
         </div>
-        <Button onClick={() => setOpening(true)}>
-          <PlusIcon /> Gửi phiếu mới
+        <Button asChild>
+          <Link to={merchantPath('/support-tickets/new')}>
+            <PlusIcon /> Gửi phiếu mới
+          </Link>
         </Button>
       </div>
 
@@ -77,24 +78,25 @@ export function SellerSupportTicketsPage() {
         </div>
       ) : null}
 
-      {opening ? <NewTicketDialog onClose={() => setOpening(false)} /> : null}
     </div>
   )
 }
 
-function NewTicketDialog({ onClose }: { onClose: () => void }) {
+/** /support-tickets/new: writing a ticket on a page of its own. */
+export function SellerNewTicketPage() {
+  const navigate = useNavigate()
+  const onClose = () => navigate(merchantPath('/support-tickets'))
   const open = useOpenTicket()
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
   const [images, setImages] = useState<File[]>([])
 
   return (
-    <Dialog open onOpenChange={(value) => !value && onClose()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Gửi phiếu hỗ trợ</DialogTitle>
-          <DialogDescription>Mô tả vấn đề thật cụ thể. Có thể đính kèm tối đa 3 ảnh chụp màn hình.</DialogDescription>
-        </DialogHeader>
+    <SubPage
+      back={{ to: merchantPath('/support-tickets'), label: 'Yêu cầu hỗ trợ của tôi' }}
+      title="Gửi phiếu hỗ trợ"
+      description="Mô tả vấn đề thật cụ thể. Có thể đính kèm tối đa 3 ảnh chụp màn hình."
+    >
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ticket-subject">Tiêu đề</Label>
@@ -102,20 +104,19 @@ function NewTicketDialog({ onClose }: { onClose: () => void }) {
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ticket-message">Nội dung</Label>
-            <Textarea id="ticket-message" rows={5} value={message} maxLength={2000} onChange={(e) => setMessage(e.target.value)} />
+            <Textarea id="ticket-message" rows={8} value={message} maxLength={2000} onChange={(e) => setMessage(e.target.value)} />
           </div>
           <ImagePicker files={images} onChange={setImages} />
           {open.isError ? <FormError message={problemMessage(open.error)} /> : null}
         </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Huỷ</Button>
-          </DialogClose>
+        <SubPageActions>
           <Button disabled={open.isPending || !subject.trim() || !message.trim()} onClick={() => open.mutate({ subject, message, images }, { onSuccess: onClose })}>
             Gửi phiếu
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <Button variant="outline" onClick={onClose}>
+            Huỷ
+          </Button>
+        </SubPageActions>
+    </SubPage>
   )
 }

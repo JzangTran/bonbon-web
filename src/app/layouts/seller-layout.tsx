@@ -89,7 +89,7 @@ const SETTINGS_NAV: NavParent[] = [
 
 const SPACES: Space[] = [
   { key: 'selling', label: 'Kênh bán hàng', icon: ShoppingBagIcon, nav: SELLING_NAV, extras: SELLING_EXTRAS },
-  { key: 'settings', label: 'Cài đặt', icon: SettingsIcon, nav: SETTINGS_NAV },
+  { key: 'settings', label: 'Cài đặt', icon: SettingsIcon, nav: SETTINGS_NAV, extras: [{ to: merchantPath('/support-tickets/new'), label: 'Gửi phiếu hỗ trợ', under: merchantPath('/support-tickets') }] },
 ]
 
 const ACCOUNT: AccountLink[] = [

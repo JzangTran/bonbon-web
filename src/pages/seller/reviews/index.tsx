@@ -102,7 +102,36 @@ export function SellerReviewsPage() {
                     ) : null}
                   </div>
                 ) : null}
-                <div className="flex flex-wrap items-center gap-2">
+                {target?.id === review.id ? (
+                  <form
+                    className="mt-2 flex flex-col gap-2"
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      submit()
+                    }}
+                  >
+                    <Label htmlFor={`reply-${review.id}`}>{editing ? 'Sửa phản hồi' : 'Phản hồi của quán'}</Label>
+                    <Textarea
+                      id={`reply-${review.id}`}
+                      autoFocus
+                      rows={4}
+                      maxLength={1000}
+                      value={text}
+                      placeholder="Hãy lịch sự và cụ thể. Phản hồi hiển thị công khai."
+                      onChange={(e) => setText(e.target.value)}
+                    />
+                    {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
+                    <div className="flex gap-2">
+                      <Button type="submit" disabled={text.trim().length === 0 || save.isPending}>
+                        {editing ? 'Lưu thay đổi' : 'Gửi phản hồi'}
+                      </Button>
+                      <Button type="button" variant="outline" onClick={() => setTarget(null)}>
+                        Huỷ
+                      </Button>
+                    </div>
+                  </form>
+                ) : null}
+                <div className={cn('flex flex-wrap items-center gap-2', target?.id === review.id && 'hidden')}>
                   {!reply ? <Button onClick={() => openReply(review)}>Phản hồi</Button> : null}
                   {reply && !reply.hidden && open ? (
                     <>
@@ -136,27 +165,6 @@ export function SellerReviewsPage() {
           </Button>
         </div>
       ) : null}
-
-      <Dialog open={target !== null} onOpenChange={(open) => (open ? undefined : setTarget(null))}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editing ? 'Sửa phản hồi' : 'Phản hồi đánh giá'}</DialogTitle>
-            <DialogDescription>Hãy lịch sự và cụ thể. Phản hồi hiển thị công khai.</DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="reply-text">Nội dung</Label>
-            <Textarea id="reply-text" rows={5} maxLength={1000} value={text} onChange={(e) => setText(e.target.value)} />
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
-            </DialogClose>
-            <Button disabled={text.trim().length === 0 || save.isPending} onClick={submit}>
-              {editing ? 'Lưu thay đổi' : 'Gửi phản hồi'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       <Dialog open={deleting !== null} onOpenChange={(open) => (open ? undefined : setDeleting(null))}>
         <DialogContent>

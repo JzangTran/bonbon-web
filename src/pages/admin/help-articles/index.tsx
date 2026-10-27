@@ -1,8 +1,12 @@
 import { PlusIcon } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { AUDIENCE_LABEL, useAdminHelpArticles, useDeleteHelpArticle, useSaveHelpArticle, type AdminHelpArticle, type HelpAudience, type HelpDraft, type HelpStatus } from '@/entities/help'
+import { Link, useNavigate, useParams } from 'react-router'
+import { AUDIENCE_LABEL, useAdminHelpArticles, useDeleteHelpArticle, useSaveHelpArticle, type AdminHelpArticle, type HelpAudience, type HelpDraft, type HelpStatus, HELP_KEY } from '@/entities/help'
 import { useSession } from '@/entities/session'
-import { problemMessage } from '@/shared/api'
+import { api, problemMessage } from '@/shared/api'
+import { consolePath } from '@/shared/config/sites'
+import { SubPage, SubPageActions } from '@/shared/ui/sub-page'
 import { formatRelative } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
@@ -30,7 +34,6 @@ export function AdminHelpArticlesPage() {
   const [filter, setFilter] = useState<HelpStatus | 'ALL_STATUSES'>('ALL_STATUSES')
   const [q, setQ] = useState('')
   const [page, setPage] = useState(0)
-  const [editing, setEditing] = useState<{ id: string | null; draft: HelpDraft } | null>(null)
   const [deleting, setDeleting] = useState<AdminHelpArticle | null>(null)
   const articles = useAdminHelpArticles(filter, q, page)
   const remove = useDeleteHelpArticle()
@@ -46,8 +49,10 @@ export function AdminHelpArticlesPage() {
           <h1 className="text-2xl font-semibold">Bài trợ giúp</h1>
           <p className="text-sm text-muted-foreground">Khách và người bán đọc các bài này không cần đăng nhập. Bài nháp chỉ quản trị viên thấy.</p>
         </div>
-        <Button onClick={() => setEditing({ id: null, draft: EMPTY })}>
-          <PlusIcon /> Bài mới
+        <Button asChild>
+          <Link to={consolePath('/help-articles/new')}>
+            <PlusIcon /> Bài mới
+          </Link>
         </Button>
       </div>
 
@@ -93,8 +98,8 @@ export function AdminHelpArticlesPage() {
               <p className="line-clamp-2 text-sm text-muted-foreground">{a.body}</p>
               {(a.keywords ?? []).length > 0 ? <p className="text-xs text-muted-foreground">Từ khoá: {a.keywords?.join(', ')}</p> : null}
               <div className="flex flex-wrap gap-2">
-                <Button size="sm" variant="outline" onClick={() => setEditing({ id: a.id ?? null, draft: { title: a.title ?? '', body: a.body ?? '', audience: (a.audience as HelpAudience) ?? 'ALL', keywords: a.keywords ?? [], status: (a.status as HelpStatus) ?? 'DRAFT' } })}>
-                  Sửa
+                <Button asChild size="sm" variant="outline">
+                  <Link to={consolePath(`/help-articles/${a.id}`)}>Sửa</Link>
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => setDeleting(a)}>
                   Xoá
@@ -119,8 +124,6 @@ export function AdminHelpArticlesPage() {
         </div>
       ) : null}
 
-      {editing ? <ArticleEditor key={editing.id ?? 'new'} initial={editing} onClose={() => setEditing(null)} /> : null}
-
       <Dialog open={!!deleting} onOpenChange={(open) => !open && setDeleting(null)}>
         <DialogContent>
           <DialogHeader>
@@ -144,7 +147,36 @@ export function AdminHelpArticlesPage() {
   )
 }
 
-function ArticleEditor({ initial, onClose }: { initial: { id: string | null; draft: HelpDraft }; onClose: () => void }) {
+const draftOf = (a: AdminHelpArticle): HelpDraft => ({
+  title: a.title ?? '',
+  body: a.body ?? '',
+  audience: (a.audience as HelpAudience) ?? 'ALL',
+  keywords: a.keywords ?? [],
+  status: (a.status as HelpStatus) ?? 'DRAFT',
+})
+
+/** /help-articles/new and /help-articles/:id: writing one article on a page of its own. */
+export function AdminHelpArticleEditPage() {
+  const { id } = useParams()
+  const { session } = useSession()
+  const article = useQuery({
+    queryKey: [...HELP_KEY, 'admin', 'one', id],
+    enabled: !!id,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/api/admin/help-articles/{id}', { params: { path: { id: id! } } })
+      if (error || !data) throw error
+      return data
+    },
+  })
+  if (!session?.permissions.has('help-center:write')) return <p className="text-muted-foreground">Bạn không có quyền soạn bài trợ giúp.</p>
+  if (id && article.isPending) return <Skeleton className="h-96 max-w-3xl" />
+  if (id && !article.data) return <FormError message={article.isError ? problemMessage(article.error) : 'Không tìm thấy bài.'} />
+  return <ArticleEditor key={id ?? 'new'} initial={{ id: id ?? null, draft: id && article.data ? draftOf(article.data) : EMPTY }} />
+}
+
+function ArticleEditor({ initial }: { initial: { id: string | null; draft: HelpDraft } }) {
+  const navigate = useNavigate()
+  const onClose = () => navigate(consolePath('/help-articles'))
   const save = useSaveHelpArticle()
   const [draft, setDraft] = useState(initial.draft)
   const [keywords, setKeywords] = useState(initial.draft.keywords.join(', '))
@@ -156,12 +188,11 @@ function ArticleEditor({ initial, onClose }: { initial: { id: string | null; dra
   }
 
   return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{initial.id ? 'Sửa bài' : 'Bài mới'}</DialogTitle>
-          <DialogDescription>Viết như đang trả lời một người đang cần giúp. Từ khoá giúp tìm bài; không cần dấu hay chữ hoa.</DialogDescription>
-        </DialogHeader>
+    <SubPage
+      back={{ to: consolePath('/help-articles'), label: 'Bài trợ giúp' }}
+      title={initial.id ? 'Sửa bài' : 'Bài mới'}
+      description="Viết như đang trả lời một người đang cần giúp. Từ khoá giúp tìm bài; không cần dấu hay chữ hoa."
+    >
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="help-title">Tiêu đề hoặc câu hỏi</Label>
@@ -169,7 +200,7 @@ function ArticleEditor({ initial, onClose }: { initial: { id: string | null; dra
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="help-body">Nội dung trả lời</Label>
-            <Textarea id="help-body" rows={8} value={draft.body} maxLength={10000} onChange={(e) => setDraft({ ...draft, body: e.target.value })} />
+            <Textarea id="help-body" rows={14} value={draft.body} maxLength={10000} onChange={(e) => setDraft({ ...draft, body: e.target.value })} />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label>Dành cho</Label>
@@ -187,18 +218,17 @@ function ArticleEditor({ initial, onClose }: { initial: { id: string | null; dra
           </div>
           {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
         </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Huỷ</Button>
-          </DialogClose>
-          <Button variant="outline" disabled={!valid || save.isPending} onClick={() => submit('DRAFT')}>
-            Lưu nháp
-          </Button>
+        <SubPageActions>
           <Button disabled={!valid || save.isPending} onClick={() => submit('PUBLISHED')}>
             Đăng bài
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <Button variant="outline" disabled={!valid || save.isPending} onClick={() => submit('DRAFT')}>
+            Lưu nháp
+          </Button>
+          <Button variant="ghost" onClick={onClose}>
+            Huỷ
+          </Button>
+        </SubPageActions>
+    </SubPage>
   )
 }
