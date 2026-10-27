@@ -20,7 +20,7 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
     <div className="flex max-w-5xl flex-col gap-6">
       <MenuTabs />
       <div>
-        <h1 className="text-2xl font-bold">Thực đơn</h1>
+        <h1 className="text-2xl font-semibold">Thực đơn</h1>
         <p className="text-sm text-muted-foreground">
           Mục thực đơn là cách bạn nhóm món cho khách xem. Nhóm lựa chọn (cỡ ly, topping…) dùng lại được cho nhiều món.
         </p>

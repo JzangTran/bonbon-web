@@ -24,7 +24,7 @@ export function SellerStatisticsPage() {
     <div className="flex max-w-5xl flex-col gap-6">
       <FinanceTabs />
       <div>
-        <h1 className="text-2xl font-bold">Thống kê</h1>
+        <h1 className="text-2xl font-semibold">Thống kê</h1>
         <p className="text-sm text-muted-foreground">
           Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam). Đây là tiền khách đã trả, gồm phí giao và chưa trừ hoa hồng; phần quán nhận được nằm ở tab Thu nhập và sao kê.
         </p>

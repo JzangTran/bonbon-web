@@ -80,7 +80,7 @@ export function UnitPicker({
           aria-expanded={open}
           aria-invalid={invalid}
           aria-describedby={describedBy}
-          className="flex h-10 w-full items-center justify-between gap-2 rounded-sm border border-input bg-card px-3 text-left text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
+          className="flex h-10 w-full items-center justify-between gap-2 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-left text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
         >
           <span className={cn('truncate', !label && 'text-muted-foreground')}>{label || 'Chọn Tỉnh/Thành phố, Phường/Xã'}</span>
           <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />

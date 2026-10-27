@@ -58,7 +58,7 @@ export function ShopReviewQueuePage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Duyệt cửa hàng</h1>
+          <h1 className="text-2xl font-semibold">Duyệt cửa hàng</h1>
           <p className="text-sm text-muted-foreground">Hồ sơ gửi sớm nhất ở trên cùng để không hồ sơ nào bị bỏ quên.</p>
         </div>
         {session.permissions.has('merchant-approval:write-settings') ? <RadiusCapCard /> : null}

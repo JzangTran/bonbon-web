@@ -50,7 +50,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
                 end
                 onClick={onNavigate}
                 aria-current={location.page?.to === parent.to ? 'page' : 'false'}
-                className={cn(rowBase, 'justify-start hover:bg-ws-fill', here && 'bg-brand-50 font-semibold text-brand-800')}
+                className={cn(rowBase, 'justify-start hover:bg-ws-fill', here && 'font-medium text-primary')}
               >
                 <span className="flex min-w-0 items-center gap-3">
                   <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -69,7 +69,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
               aria-expanded={open}
               aria-controls={listId}
               onClick={() => toggle(parent.key, open)}
-              className={cn(rowBase, 'hover:bg-ws-fill', here && !open && 'bg-brand-50 font-semibold text-brand-800')}
+              className={cn(rowBase, 'hover:bg-ws-fill', here && !open && 'font-medium text-primary')}
             >
               <span className="flex min-w-0 items-center gap-3">
                 <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -93,7 +93,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
                         className={() =>
                           cn(
                             'flex min-h-9 items-center rounded-full pr-3 pl-[42px] text-[0.8125rem] text-muted-foreground outline-none hover:bg-ws-fill hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
-                            current && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50',
+                            current && 'font-medium text-primary hover:bg-transparent',
                           )
                         }
                       >

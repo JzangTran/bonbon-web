@@ -20,18 +20,18 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
   const headings = headingsOf(blocks)
   let h = 0
   return (
-    <div className="flex flex-col gap-4 text-[1.0625rem] leading-8 text-ink">
+    <div className="flex flex-col gap-4 text-body text-ink">
       {blocks.map((b, i) => {
         switch (b.t) {
           case 'h2':
             return (
-              <h2 key={i} id={headings[h++].id} className="mt-6 scroll-mt-6 text-[1.5rem] leading-9 font-bold tracking-[-0.01em]">
+              <h2 key={i} id={headings[h++].id} className="mt-6 scroll-mt-6 text-[1.5rem] leading-9 font-semibold tracking-[-0.01em]">
                 {b.text}
               </h2>
             )
           case 'h3':
             return (
-              <h3 key={i} id={headings[h++].id} className="mt-2 scroll-mt-6 text-[1.1875rem] leading-8 font-bold">
+              <h3 key={i} id={headings[h++].id} className="mt-2 scroll-mt-6 text-[1.1875rem] leading-8 font-semibold">
                 {b.text}
               </h3>
             )
@@ -122,7 +122,7 @@ export function Toc({ headings }: { headings: Heading[] }) {
             className={cn(
               'block rounded-sm py-1.5 pr-2 leading-5 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring',
               h.level === 3 ? 'pl-6' : 'pl-3',
-              active === h.id && 'bg-brand-50 font-semibold text-brand-800',
+              active === h.id && 'font-medium text-primary',
             )}
           >
             {h.text}
@@ -164,7 +164,7 @@ export function DocsSidebar({ groups, current }: { groups: { title: string; item
               aria-current={item.to === current ? 'page' : undefined}
               className={cn(
                 'rounded-full px-3 py-1.5 text-[0.9375rem] leading-5 text-foreground/80 outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring',
-                item.to === current && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50',
+                item.to === current && 'font-medium text-primary hover:bg-transparent',
               )}
             >
               {item.label}
@@ -222,7 +222,7 @@ export function ArticleView({
         <Breadcrumb trail={trail} />
         <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
           <article className="min-w-0 max-w-3xl">
-            <h1 className="text-[2rem] leading-[2.5rem] font-bold tracking-[-0.025em] sm:text-[2.5rem] sm:leading-[3rem]">{title}</h1>
+            <h1 className="text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.025em] sm:text-[2.5rem] sm:leading-[3rem]">{title}</h1>
             {meta ? <p className="mt-3 text-sm text-muted-foreground">{meta}</p> : null}
             <div className="mt-8">
               <ArticleBody blocks={blocks} />

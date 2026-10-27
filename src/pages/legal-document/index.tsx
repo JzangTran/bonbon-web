@@ -27,7 +27,7 @@ export function LegalDocumentPage() {
       {doc.isError ? <p className="text-destructive">{problemMessage(doc.error)}</p> : null}
       {doc.data ? (
         <>
-          <h1 className="text-2xl font-bold">{doc.data.title}</h1>
+          <h1 className="text-2xl font-semibold">{doc.data.title}</h1>
           <p className="text-sm text-muted-foreground">
             Phiên bản {doc.data.version}
             {doc.data.effectiveAt ? ` · hiệu lực từ ${new Date(doc.data.effectiveAt).toLocaleDateString('vi-VN')}` : ''}

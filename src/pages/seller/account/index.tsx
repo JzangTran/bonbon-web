@@ -35,7 +35,7 @@ export function SellerAccountPage() {
   const hasPassword = profile.data?.hasPassword !== false
   return (
     <div className="flex max-w-xl flex-col gap-6">
-      <h1 className="text-2xl font-bold">Tài khoản</h1>
+      <h1 className="text-2xl font-semibold">Tài khoản</h1>
       <ProfileCard />
       {hasPassword ? <PasswordCard /> : null}
       <SessionsCard hasPassword={hasPassword} />

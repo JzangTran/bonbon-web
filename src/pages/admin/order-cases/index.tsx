@@ -37,7 +37,7 @@ export function AdminOrderCasesPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Khiếu nại đơn hàng</h1>
+        <h1 className="text-2xl font-semibold">Khiếu nại đơn hàng</h1>
         <p className="text-sm text-muted-foreground">
           Khách báo vấn đề với đơn đã giao. Quán có 12 giờ để trả lời; chỉ những khiếu nại quán phản đối hoặc không trả lời mới cần bạn quyết.
         </p>

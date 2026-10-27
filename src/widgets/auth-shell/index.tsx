@@ -51,7 +51,7 @@ export function AuthShell({ title, description, children, footer, heading = 'ƒêƒ
       <main className="flex flex-1 flex-col items-center justify-center gap-5 px-4 py-10">
         <div className="flex w-full max-w-sm flex-col gap-5 rounded-panel bg-card p-8 shadow-float">
           <div className="flex flex-col gap-1.5 text-center">
-            <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
             {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
           </div>
           {children}
@@ -86,7 +86,7 @@ export function AuthHero({ heading, eyebrow, headline, headlineSoft, points, car
           <section className="order-2 flex flex-col gap-6 md:order-1">
             <div>
               <p className="text-base font-semibold text-primary">{eyebrow}</p>
-              <h2 className="mt-2 max-w-md text-[2.5rem] leading-[2.875rem] font-extrabold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
+              <h2 className="mt-2 max-w-md text-[2.5rem] leading-[2.875rem] font-semibold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
                 {headline}
                 {headlineSoft ? (
                   <>
@@ -108,7 +108,7 @@ export function AuthHero({ heading, eyebrow, headline, headlineSoft, points, car
             </ul>
           </section>
           <div className="order-1 flex w-full max-w-sm flex-col gap-5 justify-self-center rounded-panel bg-card p-8 shadow-float md:order-2 md:max-w-none">
-            <h1 className="text-2xl font-extrabold tracking-tight">{cardTitle}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">{cardTitle}</h1>
             {children}
             <p className="text-center text-sm text-muted-foreground">{footer}</p>
           </div>
@@ -145,7 +145,7 @@ export function AuthStepPage({ heading, steps, current, title, description, onBa
             </button>
           ) : null}
           <div className="flex flex-col gap-1.5 px-8 text-center">
-            <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
             {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
           </div>
           {children}

@@ -42,7 +42,7 @@ export function AdminReviewsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Kiểm duyệt đánh giá</h1>
+        <h1 className="text-2xl font-semibold">Kiểm duyệt đánh giá</h1>
         <p className="text-sm text-muted-foreground">
           Ẩn không xoá hẳn và luôn có lý do ghi lại. Đánh giá bị ẩn không tính vào điểm của quán và không hiện công khai; khách vẫn thấy đánh giá của mình.
         </p>

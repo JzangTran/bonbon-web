@@ -57,7 +57,7 @@ export function SellerCategoryCasesPage() {
     <div className="flex max-w-4xl flex-col gap-6">
       <MenuTabs />
       <div>
-        <h1 className="text-2xl font-bold">Món sai ngành</h1>
+        <h1 className="text-2xl font-semibold">Món sai ngành</h1>
         <p className="text-sm text-muted-foreground">
           Hoa hồng tính theo ngành của món. Khi quản trị viên thấy một món xếp sai ngành, món bị ẩn khỏi tìm kiếm cho đến khi bạn sửa; món vẫn có trên thực đơn và khách vẫn đặt được. Quá hạn, hệ thống tự chuyển món sang ngành đúng và bạn có 7 ngày để đồng ý hoặc kháng nghị. Ngành mới chỉ áp dụng cho đơn đặt từ lúc đổi.
         </p>

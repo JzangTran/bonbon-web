@@ -112,7 +112,7 @@ export function SellerOrdersPage() {
     <div className="flex max-w-5xl flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Đơn hàng</h1>
+          <h1 className="text-2xl font-semibold">Đơn hàng</h1>
           <p className="text-sm text-muted-foreground">Đơn mới hiện ngay khi khách đặt. Nhận đơn trong vài phút, nếu không đơn sẽ tự bị từ chối.</p>
         </div>
         <Button variant="outline" size="sm" aria-pressed={soundOn} onClick={toggleSound}>
@@ -232,7 +232,7 @@ function History({ live, onOpen, statuses }: { live: boolean; onOpen: (id: strin
           <Label htmlFor="history-status">Trạng thái</Label>
           <select
             id="history-status"
-            className="h-10 rounded-sm border border-input bg-card px-3 text-sm"
+            className="h-10 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-sm"
             value={status}
             onChange={(e) => reset(setStatus)(e.target.value as 'ALL' | OrderStatus)}
           >
@@ -278,7 +278,7 @@ export function SellerCancelledOrdersPage() {
   const [openId, setOpenId] = useState<string | null>(null)
   return (
     <div className="flex max-w-5xl flex-col gap-4">
-      <h1 className="text-2xl font-bold">Đơn hủy</h1>
+      <h1 className="text-2xl font-semibold">Đơn hủy</h1>
       <History live={false} statuses={CANCELLED} onOpen={setOpenId} />
       <OrderSheet id={openId} onClose={() => setOpenId(null)} />
     </div>

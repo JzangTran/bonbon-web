@@ -47,7 +47,7 @@ export function AdminServiceAreasPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-2xl">
-          <h1 className="text-2xl font-bold">Khu vực phục vụ</h1>
+          <h1 className="text-2xl font-semibold">Khu vực phục vụ</h1>
           <p className="text-sm text-muted-foreground">
             Mỗi khu vực là một hình tròn quanh một tâm (một chung cư, một khu công nghiệp). Quán có vị trí nằm trong hình tròn thuộc khu vực đó
             và không đặt bán kính giao vượt mức tối đa của khu vực. Quán nằm ngoài mọi khu vực không mở được.

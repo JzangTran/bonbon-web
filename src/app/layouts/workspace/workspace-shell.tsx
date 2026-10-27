@@ -159,7 +159,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
           >
             <BellIcon className="size-[17px]" aria-hidden="true" />
             {unread > 0 ? (
-              <span className="absolute top-0 -right-0.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-[4px] bg-destructive px-1 text-[0.625rem] font-bold text-white tabular-nums">
+              <span className="absolute top-0 -right-0.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-[4px] bg-destructive px-1 text-[0.625rem] font-semibold text-white tabular-nums">
                 {unread > 99 ? '99+' : unread}
               </span>
             ) : null}
@@ -225,7 +225,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
 
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground p-2 outline-none sm:p-5">
           <div ref={setTabsHost} className="mb-3 empty:hidden sm:mb-4" />
-          <div key={pathname} className="ws-content bb-page-in rounded-xl bg-card p-3 ring-1 ring-border sm:p-6">
+          <div key={pathname} className="ws-content bb-page-in bg-card p-3 sm:p-6">
             <Outlet />
           </div>
           <ShellFooter links={footerLinks} className="mt-2 wsnav:hidden" />

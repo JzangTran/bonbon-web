@@ -46,7 +46,7 @@ function OpenShopPage() {
 function UnderReview({ shop }: { shop: ShopApplication }) {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-bold">Hồ sơ đang chờ duyệt</h1>
+      <h1 className="text-2xl font-semibold">Hồ sơ đang chờ duyệt</h1>
       <Card>
         <CardContent className="flex items-start gap-3">
           <ClockIcon className="mt-0.5 size-5 shrink-0 text-warning" />

@@ -49,7 +49,7 @@ export function OpsStatusPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Tình trạng hệ thống</h1>
+          <h1 className="text-2xl font-semibold">Tình trạng hệ thống</h1>
           <p className="text-sm text-muted-foreground">Kiểm tra các thành phần hệ thống dựa vào, cập nhật mỗi 15 giây.</p>
         </div>
         {data ? (

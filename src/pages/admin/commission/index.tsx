@@ -41,7 +41,7 @@ export function AdminCommissionPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Hoa hồng</h1>
+        <h1 className="text-2xl font-semibold">Hoa hồng</h1>
         <p className="text-sm text-muted-foreground">
           Tỷ lệ đã gồm VAT {data?.vatPercent ?? 8}%. Tỷ lệ mới chỉ áp dụng cho đơn đặt sau khi lưu; đơn đã đặt giữ tỷ lệ cũ.
         </p>

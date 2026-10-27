@@ -24,7 +24,7 @@ export function SellerDashboardPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Tổng quan cửa hàng</h1>
+        <h1 className="text-2xl font-semibold">Tổng quan cửa hàng</h1>
         <p className="text-sm text-muted-foreground">{shop.data?.shop?.name}</p>
       </div>
       <Card>

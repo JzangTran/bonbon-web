@@ -24,7 +24,7 @@ export function SellerShopPage() {
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />
   return (
     <div className="flex max-w-4xl flex-col gap-6">
-      <h1 className="text-2xl font-bold">Hồ sơ cửa hàng</h1>
+      <h1 className="text-2xl font-semibold">Hồ sơ cửa hàng</h1>
       <InfoCard key={`info-${shop.data.shop?.name}-${shop.data.shop?.address?.placeId}`} shop={shop.data} />
       <DangerLinkCard
         title="Đóng cửa hàng"

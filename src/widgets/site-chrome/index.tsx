@@ -73,7 +73,7 @@ export function SiteHeader() {
   const current = (item: NavItem) => ('children' in item ? item.children.some((c) => isHere(pathname, c.to)) : target(item).here(pathname))
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75">
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75">
       <Wrap>
         <div className="flex h-16 items-center justify-between gap-x-4">
           <a href={siteUrl('public')} className="flex shrink-0 items-center">
@@ -84,17 +84,17 @@ export function SiteHeader() {
             {NAV.map((item) =>
               !('children' in item) ? (
                 'site' in item ? (
-                  <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
+                  <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'font-medium text-primary hover:bg-transparent')}>
                     {item.label}
                   </a>
                 ) : (
-                  <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
+                  <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'font-medium text-primary hover:bg-transparent')}>
                     {item.label}
                   </PublicLink>
                 )
               ) : (
                 <DropdownMenu key={item.label}>
-                  <DropdownMenuTrigger className={cn(linkClass, 'flex items-center gap-1.5 data-[state=open]:bg-muted', current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
+                  <DropdownMenuTrigger className={cn(linkClass, 'flex items-center gap-1.5 data-[state=open]:bg-muted', current(item) && 'font-medium text-primary hover:bg-transparent')}>
                     {item.label}
                     <ChevronDownIcon className="size-4" aria-hidden="true" />
                   </DropdownMenuTrigger>
@@ -162,7 +162,7 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-white text-muted-foreground">
+    <footer className="bg-grey-50 text-muted-foreground">
       <Wrap className="flex flex-wrap justify-between gap-6 py-10 text-sm">
         <div className="flex flex-col gap-2">
           <Lockup className="h-8 self-start" />

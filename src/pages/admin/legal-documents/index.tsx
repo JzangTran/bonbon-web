@@ -22,7 +22,7 @@ export function AdminLegalDocumentsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Văn bản pháp lý</h1>
+        <h1 className="text-2xl font-semibold">Văn bản pháp lý</h1>
         <p className="text-sm text-muted-foreground">
           Điều khoản và chính sách mà người dùng phải đồng ý. Phiên bản đã đăng không sửa được nữa; muốn đổi thì đăng phiên bản mới. Thay đổi quan trọng cần báo trước và người dùng phải đồng ý lại.
         </p>

@@ -43,7 +43,7 @@ export function AdminHelpArticlesPage() {
     <div className="flex max-w-4xl flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Bài trợ giúp</h1>
+          <h1 className="text-2xl font-semibold">Bài trợ giúp</h1>
           <p className="text-sm text-muted-foreground">Khách và người bán đọc các bài này không cần đăng nhập. Bài nháp chỉ quản trị viên thấy.</p>
         </div>
         <Button onClick={() => setEditing({ id: null, draft: EMPTY })}>

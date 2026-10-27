@@ -66,7 +66,7 @@ export function AdminPenaltyShopPage() {
         <>
           <Card className="gap-2 p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h1 className="text-2xl font-bold">{h.name}</h1>
+              <h1 className="text-2xl font-semibold">{h.name}</h1>
               {canWrite ? <Button onClick={() => setAction({ kind: 'add' })}>Cộng điểm</Button> : null}
             </div>
             <div className="flex flex-wrap items-center gap-3">

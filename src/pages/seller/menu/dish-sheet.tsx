@@ -19,7 +19,7 @@ import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 
 const NATIVE_SELECT =
-  'h-10 w-full rounded-sm border border-input bg-card px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
+  'h-10 w-full rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
 
 /** "45.000" or "45000" to 45000; empty or unreadable to undefined. */
 function parseInteger(text: string): number | undefined {

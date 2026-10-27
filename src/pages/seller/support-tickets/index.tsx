@@ -29,7 +29,7 @@ export function SellerSupportTicketsPage() {
     <div className="flex max-w-3xl flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Liên hệ hỗ trợ</h1>
+          <h1 className="text-2xl font-semibold">Liên hệ hỗ trợ</h1>
           <p className="text-sm text-muted-foreground">Gửi phiếu khi trợ giúp chưa trả lời được. Bạn có thể có tối đa 3 phiếu chưa xong cùng lúc.</p>
         </div>
         <Button onClick={() => setOpening(true)}>

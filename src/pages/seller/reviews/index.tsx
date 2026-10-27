@@ -46,7 +46,7 @@ export function SellerReviewsPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Đánh giá của khách</h1>
+        <h1 className="text-2xl font-semibold">Đánh giá của khách</h1>
         <p className="text-sm text-muted-foreground">Phản hồi hiển thị công khai dưới đánh giá. Sửa hoặc xoá được trong 24 giờ kể từ lúc đăng.</p>
       </div>
 

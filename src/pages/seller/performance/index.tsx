@@ -39,7 +39,7 @@ export function SellerPerformancePage() {
     <div className="flex max-w-4xl flex-col gap-6">
       <OrderCaseTabs />
       <div>
-        <h1 className="text-2xl font-bold">Hiệu suất cửa hàng</h1>
+        <h1 className="text-2xl font-semibold">Hiệu suất cửa hàng</h1>
         <p className="text-sm text-muted-foreground">
           Đơn thất bại do quán (từ chối, không trả lời kịp, không giao đi kịp, huỷ sau khi nhận, khiếu nại hoàn cả đơn, không đến khi giao). Đơn khách huỷ, thanh toán quá hạn và hoàn một phần không bị tính.
         </p>

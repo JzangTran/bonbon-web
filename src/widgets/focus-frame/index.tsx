@@ -63,7 +63,7 @@ export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), 
       <main id="main" tabIndex={-1} className="flex-1 p-3 outline-none sm:p-6">
         <div
           className={cn(
-            'mx-auto rounded-xl bg-card p-5 ring-1 ring-border sm:p-8',
+            'mx-auto bg-card p-5 sm:p-8',
             width === 'lg' ? 'max-w-4xl' : 'max-w-2xl',
             flat && '[&_[data-slot=card]]:gap-5 [&_[data-slot=card]]:py-0 [&_[data-slot=card]]:ring-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-title]]:sr-only',
           )}
