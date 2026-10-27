@@ -96,7 +96,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
         Bỏ qua đến nội dung chính
       </a>
 
-      <header className="relative z-20 flex h-12 shrink-0 items-center justify-between gap-4 bg-ws-header px-4 text-white sm:px-5">
+      <header className="relative z-20 flex h-12 shrink-0 items-center justify-between gap-4 border-b bg-ws-header px-4 text-ink sm:px-5">
         <div className="flex min-w-0 items-center gap-3 sm:gap-4">
           {!wideNav ? (
             <button
@@ -104,43 +104,43 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
               aria-label="Mở menu"
               aria-expanded={navOpen}
               onClick={() => setNavOpen((o) => !o)}
-              className="flex size-8 items-center justify-center rounded-md hover:bg-white/10"
+              className="flex size-8 items-center justify-center rounded-full hover:bg-muted"
             >
               <MenuIcon className="size-[18px]" aria-hidden="true" />
             </button>
           ) : null}
           <Link to={homePath} className="flex items-center">
-            <Lockup tone="white" className="h-7" />
+            <Lockup className="h-7" />
           </Link>
-          <span className="hidden text-[#9DB0A5] lg:inline">{area}</span>
-          <span aria-hidden="true" className="hidden h-4 w-px bg-white/15 sm:block" />
+          <span className="hidden text-muted-foreground lg:inline">{area}</span>
+          <span aria-hidden="true" className="hidden h-4 w-px bg-border sm:block" />
           <nav aria-label="Đường dẫn" className="hidden min-w-0 sm:block">
             <ol className="flex items-baseline gap-2 whitespace-nowrap">
               <li>
                 {atHome ? (
-                  <span aria-current="page" className="font-semibold text-white">
+                  <span aria-current="page" className="font-semibold text-ink">
                     Trang chủ
                   </span>
                 ) : (
-                  <Link to={homePath} className="text-[#9DB0A5] hover:text-white">
+                  <Link to={homePath} className="text-muted-foreground hover:text-foreground">
                     Trang chủ
                   </Link>
                 )}
               </li>
               {location.parent && location.page ? (
                 <Fragment>
-                  <li aria-hidden="true" className="text-[#5E7066]">
+                  <li aria-hidden="true" className="text-border">
                     /
                   </li>
-                  <li className="text-[#9DB0A5]">{location.parent.label}</li>
+                  <li className="text-muted-foreground">{location.parent.label}</li>
                 </Fragment>
               ) : null}
               {location.page ? (
                 <Fragment>
-                  <li aria-hidden="true" className="text-[#5E7066]">
+                  <li aria-hidden="true" className="text-border">
                     /
                   </li>
-                  <li aria-current="page" className="truncate font-semibold text-white">
+                  <li aria-current="page" className="truncate font-semibold text-ink">
                     {location.page.label}
                   </li>
                 </Fragment>
@@ -155,7 +155,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
             type="button"
             aria-label={unread > 0 ? `Thông báo, ${unread} chưa đọc` : 'Thông báo'}
             onClick={() => setBellOpen(true)}
-            className="relative flex size-8 items-center justify-center rounded-md hover:bg-white/10"
+            className="relative flex size-8 items-center justify-center rounded-full hover:bg-muted"
           >
             <BellIcon className="size-[17px]" aria-hidden="true" />
             {unread > 0 ? (
@@ -170,14 +170,14 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
               aria-label="Thông tin bổ sung"
               aria-expanded={panelOpen}
               onClick={() => setPanelOpen((o) => !o)}
-              className="flex size-8 items-center justify-center rounded-md hover:bg-white/10"
+              className="flex size-8 items-center justify-center rounded-full hover:bg-muted"
             >
               <PanelRightIcon className="size-[18px]" aria-hidden="true" />
             </button>
           ) : null}
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 rounded-md px-1 py-1 text-[0.8125rem] font-medium outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white">
-              <span aria-hidden="true" className="flex size-[26px] items-center justify-center rounded-md bg-[#2B3731] text-xs font-semibold">
+            <DropdownMenuTrigger className="flex items-center gap-2 rounded-md px-1 py-1 text-[0.8125rem] font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring">
+              <span aria-hidden="true" className="flex size-[26px] items-center justify-center rounded-full bg-brand-50 text-xs font-semibold text-brand-800">
                 {name.trim().charAt(0).toUpperCase() || '?'}
               </span>
               <span className="hidden max-w-40 truncate sm:inline">{name}</span>
@@ -225,7 +225,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
 
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground p-2 outline-none sm:p-5">
           <div ref={setTabsHost} className="mb-3 empty:hidden sm:mb-4" />
-          <div key={pathname} className="ws-content bb-page-in bg-card p-3 sm:p-6">
+          <div key={pathname} className="ws-content bb-page-in rounded-xl bg-card p-3 ring-1 ring-border sm:p-6">
             <Outlet />
           </div>
           <ShellFooter links={footerLinks} className="mt-2 wsnav:hidden" />

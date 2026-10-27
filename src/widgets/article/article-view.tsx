@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import { Link } from 'react-router'
 import { headingsOf, type Block, type Heading } from '@/entities/article'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
@@ -146,6 +147,35 @@ export function Toc({ headings }: { headings: Heading[] }) {
   )
 }
 
+/**
+ * The menu of a documentation section, as on gitbook.com: small upper-case group names and the pages under them; the current page
+ * is marked in the accent colour. Sticky beside the text on wide screens.
+ */
+export function DocsSidebar({ groups, current }: { groups: { title: string; items: { label: string; to: string }[] }[]; current: string }) {
+  return (
+    <nav aria-label="Mục lục hướng dẫn" className="sticky top-24 flex max-h-[calc(100svh-7rem)] flex-col gap-6 overflow-y-auto pr-2">
+      {groups.map((g) => (
+        <div key={g.title} className="flex flex-col gap-0.5">
+          <p className="mb-1 px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">{g.title}</p>
+          {g.items.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              aria-current={item.to === current ? 'page' : undefined}
+              className={cn(
+                'rounded-full px-3 py-1.5 text-[0.9375rem] leading-5 text-foreground/80 outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring',
+                item.to === current && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50',
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      ))}
+    </nav>
+  )
+}
+
 /** Header, page container and footer shared by the content pages. */
 export function ContentPage({ children }: { children: ReactNode }) {
   return (
@@ -168,6 +198,7 @@ export function ArticleView({
   blocks,
   tags,
   after,
+  sidebar,
 }: {
   trail: { name: string; path: string }[]
   title: string
@@ -176,15 +207,22 @@ export function ArticleView({
   tags: string[]
   /** Cards to the next steps, shown after the text. */
   after?: ReactNode
+  /** The menu of the section on the left (documentation layout); the page has two columns without it. */
+  sidebar?: ReactNode
 }) {
   const headings = headingsOf(blocks)
   return (
     <ContentPage>
-      <main id="main" className="mx-auto w-full max-w-[1200px] px-4 pt-8 pb-16 sm:px-6 lg:pt-12">
+      <main
+        id="main"
+        className={cn('mx-auto grid w-full gap-x-12 px-4 pt-8 pb-16 sm:px-6 lg:pt-10', sidebar ? 'max-w-[1360px] xl:grid-cols-[15rem_minmax(0,1fr)]' : 'max-w-[1200px]')}
+      >
+        {sidebar ? <aside className="hidden xl:block">{sidebar}</aside> : null}
+        <div className="min-w-0">
         <Breadcrumb trail={trail} />
-        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-14">
-          <article className="min-w-0">
-            <h1 className="text-[2rem] leading-[2.5rem] font-extrabold tracking-[-0.02em] sm:text-[2.5rem] sm:leading-[3rem]">{title}</h1>
+        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
+          <article className="min-w-0 max-w-3xl">
+            <h1 className="text-[2rem] leading-[2.5rem] font-bold tracking-[-0.025em] sm:text-[2.5rem] sm:leading-[3rem]">{title}</h1>
             {meta ? <p className="mt-3 text-sm text-muted-foreground">{meta}</p> : null}
             <div className="mt-8">
               <ArticleBody blocks={blocks} />
@@ -199,6 +237,7 @@ export function ArticleView({
           <aside className="order-first lg:order-last">
             <Toc headings={headings} />
           </aside>
+        </div>
         </div>
       </main>
     </ContentPage>

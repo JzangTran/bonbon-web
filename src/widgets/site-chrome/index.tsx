@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
-import { siteButtonGreen } from './buttons'
+import { siteButton, siteButtonGreen } from './buttons'
 import { SITE, siteUrl, type Site } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
@@ -46,7 +46,7 @@ export function PublicLink({ to, className, children, onClick }: { to: string; c
   )
 }
 
-const linkClass = 'rounded-sm px-4 py-2.5 text-[0.9375rem] font-medium text-white outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white'
+const linkClass = 'rounded-full px-3.5 py-2 text-[0.9375rem] font-medium text-ink outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
 
 /** Where a menu link goes and the plain address behind it. */
 function target(item: NavLink | NavSite): { href: string; here: (pathname: string) => boolean } {
@@ -73,28 +73,28 @@ export function SiteHeader() {
   const current = (item: NavItem) => ('children' in item ? item.children.some((c) => isHere(pathname, c.to)) : target(item).here(pathname))
 
   return (
-    <header className="pt-4 sm:pt-6">
+    <header className="sticky top-0 z-40 border-b bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75">
       <Wrap>
-        <div className="flex items-center justify-between gap-x-4 rounded-xl bg-ink py-2.5 pr-2.5 pl-5 sm:pl-[30px]">
+        <div className="flex h-16 items-center justify-between gap-x-4">
           <a href={siteUrl('public')} className="flex shrink-0 items-center">
-            <Lockup tone="white" className="h-9" />
+            <Lockup className="h-8" />
           </a>
 
           <nav aria-label="Menu chính" className="hidden items-center gap-1 lg:flex">
             {NAV.map((item) =>
               !('children' in item) ? (
                 'site' in item ? (
-                  <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'bg-white font-semibold text-ink hover:bg-white')}>
+                  <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
                     {item.label}
                   </a>
                 ) : (
-                  <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'bg-white font-semibold text-ink hover:bg-white')}>
+                  <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
                     {item.label}
                   </PublicLink>
                 )
               ) : (
                 <DropdownMenu key={item.label}>
-                  <DropdownMenuTrigger className={cn(linkClass, 'flex items-center gap-1.5 data-[state=open]:bg-white/10', current(item) && 'bg-white font-semibold text-ink hover:bg-white data-[state=open]:bg-white')}>
+                  <DropdownMenuTrigger className={cn(linkClass, 'flex items-center gap-1.5 data-[state=open]:bg-muted', current(item) && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50')}>
                     {item.label}
                     <ChevronDownIcon className="size-4" aria-hidden="true" />
                   </DropdownMenuTrigger>
@@ -112,17 +112,22 @@ export function SiteHeader() {
 
           <div className="flex items-center gap-2">
             {area ? (
-              <a href={area.href} className={cn(siteButtonGreen, 'hidden min-h-12 px-[22px] sm:inline-flex')}>
+              <a href={area.href} className={cn(siteButtonGreen, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
                 {area.label}
               </a>
             ) : (
-              <a href={siteUrl('public') + '#tai-app'} className={cn(siteButtonGreen, 'hidden min-h-12 px-[22px] sm:inline-flex')}>
+              <>
+              <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'hidden min-h-9 bg-muted px-4 text-sm text-ink hover:bg-border md:inline-flex')}>
+                Mở quán
+              </a>
+              <a href={siteUrl('public') + '#tai-app'} className={cn(siteButtonGreen, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
                 <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
                 Tải app
               </a>
+              </>
             )}
             <DropdownMenu>
-              <DropdownMenuTrigger aria-label="Mở menu" className="flex size-12 items-center justify-center rounded-sm text-white outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white lg:hidden">
+              <DropdownMenuTrigger aria-label="Mở menu" className="flex size-10 items-center justify-center rounded-full text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring lg:hidden">
                 <MenuIcon className="size-6" aria-hidden="true" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-64 rounded-lg">
@@ -157,10 +162,10 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="bg-ink text-brand-100">
+    <footer className="border-t bg-white text-muted-foreground">
       <Wrap className="flex flex-wrap justify-between gap-6 py-10 text-sm">
         <div className="flex flex-col gap-2">
-          <Lockup tone="white" className="h-9 self-start" />
+          <Lockup className="h-8 self-start" />
           <span>Đặt món từ quán trong khu.</span>
           {SUPPORT_EMAIL ? (
             <span>
@@ -172,19 +177,19 @@ export function SiteFooter() {
           ) : null}
         </div>
         <nav aria-label="Tìm hiểu thêm" className="flex flex-col items-start gap-2">
-          <span className="font-semibold text-white">Tìm hiểu thêm</span>
-          <PublicLink to="/huong-dan/bat-dau" className="underline-offset-4 hover:text-white hover:underline">Hướng dẫn bắt đầu</PublicLink>
-          <PublicLink to="/huong-dan/quan-ly-cua-hang" className="underline-offset-4 hover:text-white hover:underline">Quản lý cửa hàng</PublicLink>
-          <PublicLink to="/blog" className="underline-offset-4 hover:text-white hover:underline">Blog</PublicLink>
-          <PublicLink to="/bo-nhan-dien" className="underline-offset-4 hover:text-white hover:underline">Thư viện bộ nhận diện</PublicLink>
-          <a href={siteUrl('help')} className="underline-offset-4 hover:text-white hover:underline">Trung tâm trợ giúp</a>
+          <span className="font-semibold text-ink">Tìm hiểu thêm</span>
+          <PublicLink to="/huong-dan/bat-dau" className="underline-offset-4 hover:text-ink hover:underline">Hướng dẫn bắt đầu</PublicLink>
+          <PublicLink to="/huong-dan/quan-ly-cua-hang" className="underline-offset-4 hover:text-ink hover:underline">Quản lý cửa hàng</PublicLink>
+          <PublicLink to="/blog" className="underline-offset-4 hover:text-ink hover:underline">Blog</PublicLink>
+          <PublicLink to="/bo-nhan-dien" className="underline-offset-4 hover:text-ink hover:underline">Thư viện bộ nhận diện</PublicLink>
+          <a href={siteUrl('help')} className="underline-offset-4 hover:text-ink hover:underline">Trung tâm trợ giúp</a>
         </nav>
         <div className="flex flex-col items-start gap-4">
-          <TextSizeControl tone="light" />
+          <TextSizeControl />
           <nav aria-label="Pháp lý" className="flex flex-wrap items-start gap-x-6 gap-y-2">
-          <Link to="/legal/CUSTOMER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản sử dụng</Link>
-          <Link to="/legal/SELLER_TERMS" className="underline-offset-4 hover:text-white hover:underline">Điều khoản người bán</Link>
-          <Link to="/legal/PRIVACY_POLICY" className="underline-offset-4 hover:text-white hover:underline">Chính sách quyền riêng tư</Link>
+          <Link to="/legal/CUSTOMER_TERMS" className="underline-offset-4 hover:text-ink hover:underline">Điều khoản sử dụng</Link>
+          <Link to="/legal/SELLER_TERMS" className="underline-offset-4 hover:text-ink hover:underline">Điều khoản người bán</Link>
+          <Link to="/legal/PRIVACY_POLICY" className="underline-offset-4 hover:text-ink hover:underline">Chính sách quyền riêng tư</Link>
           </nav>
         </div>
       </Wrap>

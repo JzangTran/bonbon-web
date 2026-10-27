@@ -57,7 +57,7 @@ export function ArticleCard({ article }: { article: Article }) {
     <li className="min-w-0">
       <Link
         to={articlePath(article.collection, article.slug)}
-        className="group flex h-full flex-col gap-3 rounded-lg bg-card p-2.5 outline-none transition-colors hover:bg-brand-50 focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="group flex h-full flex-col gap-3 rounded-xl bg-card p-2.5 ring-1 ring-border outline-none transition-shadow hover:ring-foreground/25 focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <div className="aspect-[16/10] overflow-hidden rounded-lg bg-image-slot">
           <img

@@ -24,7 +24,7 @@ function HelpCard({ article }: { article: HelpArticle }) {
     <li className="min-w-0">
       <Link
         to={articlePath(article.id)}
-        className="group flex h-full flex-col gap-3 rounded-lg bg-card p-2.5 outline-none transition-colors hover:bg-brand-50 focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="group flex h-full flex-col gap-3 rounded-xl bg-card p-2.5 ring-1 ring-border outline-none transition-shadow hover:ring-foreground/25 focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <div className="flex aspect-[16/10] items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-100">
           <LifeBuoyIcon className="size-12" strokeWidth={1.5} aria-hidden="true" />
@@ -46,7 +46,7 @@ export function HelpCenterPage() {
     <ContentPage>
       <PageSeo title="Trung tâm trợ giúp" description="Câu trả lời cho các thắc mắc thường gặp khi đặt món và bán hàng trên bonbon." path={BASE} trail={trail} site="help" />
       <main id="main">
-        <section className="bg-brand-50">
+        <section className="border-b bg-white">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
             <Breadcrumb trail={trail} />
             <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-extrabold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Trung tâm trợ giúp</h1>
@@ -58,7 +58,7 @@ export function HelpCenterPage() {
                 aria-label="Tìm trong trung tâm trợ giúp"
                 placeholder="Tìm theo tiêu đề, nội dung hoặc từ khoá"
                 maxLength={100}
-                className="h-12 bg-card pl-11"
+                className="h-12 rounded-full bg-muted pl-11 border-transparent focus-visible:bg-card"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
               />

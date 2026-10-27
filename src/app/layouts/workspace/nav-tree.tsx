@@ -5,7 +5,7 @@ import { cn } from '@/shared/lib/utils'
 import type { Location } from './locate'
 import type { NavParent } from './types'
 
-const rowBase = 'flex min-h-9 w-full items-center justify-between gap-3 px-5 text-left text-[0.8125rem] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
+const rowBase = 'flex min-h-9 w-full items-center justify-between gap-3 rounded-full px-3 text-left text-[0.8125rem] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
 
 function readOpen(storageKey: string): Record<string, boolean> {
   try {
@@ -38,7 +38,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
   }
 
   return (
-    <ul className="flex flex-col">
+    <ul className="flex flex-col gap-0.5 px-2">
       {nav.map((parent) => {
         const Icon = parent.icon
         const here = location.parent?.key === parent.key
@@ -50,7 +50,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
                 end
                 onClick={onNavigate}
                 aria-current={location.page?.to === parent.to ? 'page' : 'false'}
-                className={cn(rowBase, 'justify-start hover:bg-ws-fill', here && 'bg-ws-fill font-semibold text-brand-700')}
+                className={cn(rowBase, 'justify-start hover:bg-ws-fill', here && 'bg-brand-50 font-semibold text-brand-800')}
               >
                 <span className="flex min-w-0 items-center gap-3">
                   <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -69,7 +69,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
               aria-expanded={open}
               aria-controls={listId}
               onClick={() => toggle(parent.key, open)}
-              className={cn(rowBase, 'hover:bg-ws-fill', here && !open && 'bg-ws-fill font-semibold text-brand-700')}
+              className={cn(rowBase, 'hover:bg-ws-fill', here && !open && 'bg-brand-50 font-semibold text-brand-800')}
             >
               <span className="flex min-w-0 items-center gap-3">
                 <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -81,7 +81,7 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
               />
             </button>
             {open ? (
-              <ul id={listId} className="flex flex-col">
+              <ul id={listId} className="flex flex-col gap-0.5">
                 {parent.children.map((child) => {
                   const current = location.page?.to === child.to
                   return (
@@ -92,8 +92,8 @@ export function NavTree({ nav, location, storageKey, onNavigate }: {
                         aria-current={current ? 'page' : 'false'}
                         className={() =>
                           cn(
-                            'flex min-h-9 items-center pr-5 pl-[50px] text-[0.8125rem] text-muted-foreground outline-none hover:bg-ws-fill focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
-                            current && 'font-semibold text-brand-700',
+                            'flex min-h-9 items-center rounded-full pr-3 pl-[42px] text-[0.8125rem] text-muted-foreground outline-none hover:bg-ws-fill hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
+                            current && 'bg-brand-50 font-semibold text-brand-800 hover:bg-brand-50',
                           )
                         }
                       >

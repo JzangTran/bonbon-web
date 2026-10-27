@@ -14,17 +14,17 @@ const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
  */
 export function AuthTopBar({ title }: { title: string }) {
   return (
-    <header className="px-4 pt-4 sm:pt-6">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 rounded-xl bg-ink py-2.5 pr-3 pl-5 sm:pl-[30px]">
-        <a href={siteUrl('public')} className="flex min-w-0 items-center gap-3 text-white">
-          <Lockup tone="white" className="h-9 shrink-0" />
-          <span aria-hidden="true" className="hidden h-5 w-px bg-white/20 sm:block" />
-          <span className="hidden truncate text-[0.9375rem] font-medium text-white/80 sm:block">{title}</span>
+    <header className="border-b bg-white px-4">
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4">
+        <a href={siteUrl('public')} className="flex min-w-0 items-center gap-3 text-ink">
+          <Lockup className="h-8 shrink-0" />
+          <span aria-hidden="true" className="hidden h-5 w-px bg-border sm:block" />
+          <span className="hidden truncate text-[0.9375rem] font-medium text-muted-foreground sm:block">{title}</span>
         </a>
         <div className="flex items-center gap-2">
-        <TextSizeControl tone="light" className="[&>span]:hidden sm:[&>span]:inline" />
+        <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline" />
         {SUPPORT_EMAIL ? (
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-sm px-4 py-2.5 text-sm font-medium text-white hover:bg-white/10">
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-full px-4 py-2 text-sm font-medium text-ink hover:bg-muted">
             Bạn cần giúp đỡ?
           </a>
         ) : null}

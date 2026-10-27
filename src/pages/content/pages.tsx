@@ -11,7 +11,7 @@ import {
 } from '@/entities/article'
 import { formatDate } from '@/shared/lib/format'
 import { WaveEdge } from '@/shared/ui/wave'
-import { ArticleView, ContentPage } from '@/widgets/article/article-view'
+import { ArticleView, ContentPage, DocsSidebar } from '@/widgets/article/article-view'
 import { ArticleCard, Breadcrumb, CardGrid } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 import { NotFoundPage } from '@/pages/not-found'
@@ -26,6 +26,12 @@ function trailFor(collection: Collection, current?: string): Trail {
     collection === 'blog' ? [...HOME, own] : [...HOME, { name: 'Hướng dẫn', path: COLLECTION_BASE['bat-dau'] }, own]
   return current ? [...base, { name: current, path: '' }] : base
 }
+
+/** The guides menu: every step of Bắt đầu, then every guide of Quản lý cửa hàng. */
+const GUIDE_GROUPS = (['bat-dau', 'quan-ly-cua-hang'] as const).map((c) => ({
+  title: COLLECTION_TITLE[c],
+  items: articlesOf(c).map((a) => ({ label: a.title.replace(/^Bước \d+: /, ''), to: articlePath(c, a.slug) })),
+}))
 
 /** /huong-dan goes to the first step of "Bắt đầu"; so does /huong-dan/bat-dau. */
 export function GuideStartRedirect() {
@@ -59,6 +65,7 @@ export function ArticlePage({ collection }: { collection: Collection }) {
         blocks={article.blocks}
         tags={article.tags}
         after={next.length > 0 ? <NextSteps articles={next} /> : null}
+        sidebar={collection === 'blog' ? undefined : <DocsSidebar groups={GUIDE_GROUPS} current={path} />}
       />
     </>
   )
@@ -88,7 +95,7 @@ export function HubPage({ collection, title, intro }: { collection: Collection; 
     <ContentPage>
       <PageSeo title={title} description={intro} path={COLLECTION_BASE[collection]} trail={trail} />
       <main id="main">
-        <section className="bg-brand-50">
+        <section className="border-b bg-white">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
             <Breadcrumb trail={trail} />
             <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-extrabold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">{title}</h1>

@@ -3,8 +3,8 @@
  * Light is the default; .dark applies the dark set. shadcn components read the semantic variables
  * (--primary, --border, ...); bonbon-specific scales are exposed as Tailwind colors via @theme below.
  *
- * Shape: only buttons are fully rounded (rounded-full in Button); every other rounded-* utility
- * resolves to 4px, and panels/images stay square.
+ * Look (owner decision 2026-10-27, after gitbook.com): white ground, quiet near-neutral fills and hairlines, ink for primary
+ * buttons, green only as the accent. Shape: buttons, chips and search fields are pills; controls 8 px, surfaces 12 px.
  */
 
 :root {
@@ -37,7 +37,7 @@
   --highlight-fg: var(--amber-800);
 
   /* shadcn semantic variables */
-  --background: #f6f8f7;
+  --background: #ffffff;
   --foreground: #14201a;
   --card: #ffffff;
   --card-foreground: #14201a;
@@ -46,15 +46,15 @@
   --primary: var(--green-600);
   --primary-hover: var(--green-700);
   --primary-foreground: #ffffff;
-  --secondary: #f3f6f4;
+  --secondary: #f1f3f2;
   --secondary-foreground: #14201a;
-  --muted: #f3f6f4;
+  --muted: #f1f3f2;
   --muted-foreground: #4b5a52;
   --accent: var(--green-50);
   --accent-foreground: var(--green-700);
   --destructive: #c42b1c;
   --destructive-foreground: #ffffff;
-  --border: #e3e8e5; /* decorative only */
+  --border: #e6e9e7; /* decorative only */
   --input: #7c8a83; /* control boundary, 3.38:1 on bg */
   --ring: var(--green-600);
   --chart-1: #007f3a;
@@ -64,15 +64,15 @@
   --chart-5: #a15c00;
   --radius: 0.5rem;
   /* workspace (seller/admin web): flat, white first */
-  --ws-header: #14201a;
-  --ws-ground: #e0e4e2;
+  --ws-header: #ffffff;
+  --ws-ground: #f7f8f7;
   --ws-fill: #f1f3f2;
   --ws-hairline: #eef1f0;
 
   /* v3 customer-facing look (landing, sign-in): ink bar, two-tone headlines, pale pills */
   --ink: #14201a;
   --headline-soft: #7c8a83; /* only for text of 24px and up (3.61:1 on white) */
-  --pill-pale: #edf1ef;
+  --pill-pale: #f1f3f2;
   --sidebar: #ffffff;
   --sidebar-foreground: #14201a;
   --sidebar-primary: var(--green-600);

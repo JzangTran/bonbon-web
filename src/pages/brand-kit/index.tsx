@@ -51,7 +51,7 @@ const groundClass: Record<Asset['ground'], string> = { light: 'bg-card', dark: '
 function LogoCard({ asset }: { asset: Asset }) {
   const href = `/brand/${asset.file}`
   return (
-    <li className="flex min-w-0 flex-col gap-3 rounded-lg bg-card p-2.5">
+    <li className="flex min-w-0 flex-col gap-3 rounded-xl bg-card p-2.5 ring-1 ring-border">
       <div className={cn('flex aspect-[16/10] items-center justify-center rounded-lg p-8 ring-1 ring-border', groundClass[asset.ground])}>
         <img src={href} alt={asset.name} className="max-h-full max-w-full object-contain" />
       </div>
@@ -82,7 +82,7 @@ function Swatch({ color }: { color: (typeof COLORS)[number] }) {
     }
   }
   return (
-    <li className="flex min-w-0 flex-col gap-3 rounded-lg bg-card p-2.5">
+    <li className="flex min-w-0 flex-col gap-3 rounded-xl bg-card p-2.5 ring-1 ring-border">
       <div className="h-24 rounded-lg ring-1 ring-border" style={{ backgroundColor: color.hex }} aria-hidden="true" />
       <div className="flex items-center justify-between gap-2 px-0.5">
         <div className="min-w-0">
@@ -131,7 +131,7 @@ export function BrandKitPage() {
         trail={TRAIL}
       />
       <main id="main">
-        <section className="bg-brand-50">
+        <section className="border-b bg-white">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
             <Breadcrumb trail={TRAIL} />
             <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-extrabold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Thư viện bộ nhận diện</h1>
