@@ -1,12 +1,8 @@
 import type { ReactNode } from 'react'
 import {
   ArrowRightIcon,
-  BikeIcon,
-  CheckIcon,
   ChevronDownIcon,
-  ClockIcon,
   CompassIcon,
-  CookingPotIcon,
   MapPinIcon,
   MessageCircleIcon,
   ShieldCheckIcon,
@@ -20,11 +16,12 @@ import { siteButton, siteButtonGreen } from '@/widgets/site-chrome/buttons'
 import { siteUrl } from '@/shared/config/sites'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Reveal } from '@/shared/ui/reveal'
+import { BearScene, type BearKind } from './bear-scene'
 
 
 const btn = siteButton
 const btnGreen = siteButtonGreen
-const btnPale = cn(btn, 'bg-pill-pale text-ink hover:bg-[#e3e8e5]')
+const btnPale = cn(btn, 'bg-pill-pale text-ink hover:bg-grey-200')
 
 
 /** Public landing page at "/": brings customers to the app and local shops to seller sign-up (look: Landing v3 on the design canvas). */
@@ -147,7 +144,7 @@ function PhoneMock({ className }: { className?: string }) {
     <div
       role="img"
       aria-label="Minh hoạ màn hình trang chủ của ứng dụng bonbon"
-      className={cn('overflow-hidden rounded-device border-8 border-ink bg-[#f4f6f5]', className)}
+      className={cn('overflow-hidden rounded-device border-8 border-ink bg-grey-50', className)}
     >
       <div aria-hidden="true" className="flex flex-col gap-3 px-4 pt-[18px]">
         <div className="flex items-center justify-between">
@@ -216,7 +213,7 @@ function NearbyShops() {
           {SHOPS.map((shop) => (
             <li key={shop.name} className="flex flex-col gap-2.5 rounded-card bg-background p-2.5">
               <div className="relative h-[170px]">
-                <ImageSlot src={shop.image} label={`Món của ${shop.name} (ảnh minh hoạ)`} className="size-full rounded-media bg-[#e3e8e5]" />
+                <ImageSlot src={shop.image} label={`Món của ${shop.name} (ảnh minh hoạ)`} className="size-full rounded-media bg-grey-100" />
                 <span className="absolute top-2.5 left-2.5 rounded-sm bg-ink px-2.5 py-1.5 text-xs font-semibold text-white">{shop.minutes} phút</span>
                 {shop.free ? <span className="absolute top-2.5 right-2.5 rounded-sm bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-700">Miễn phí giao</span> : null}
               </div>
@@ -235,30 +232,26 @@ function NearbyShops() {
 
 const STEPS = [
   {
-    icon: ClockIcon,
+    bear: 'order' as BearKind,
     chip: 'Chờ quán xác nhận',
-    chipClass: 'bg-info-subtle text-info-fg',
     title: 'Chọn món và đặt',
     body: 'Thấy phí giao và tổng tiền trước khi đặt. Trả tiền mặt hoặc qua MoMo.',
   },
   {
-    icon: CookingPotIcon,
+    bear: 'cook' as BearKind,
     chip: 'Đang chuẩn bị',
-    chipClass: 'bg-warning-subtle text-warning-fg',
     title: 'Quán nhận đơn và nấu',
     body: 'Quán xác nhận trên điện thoại; bạn được báo khi món bắt đầu nấu.',
   },
   {
-    icon: BikeIcon,
+    bear: 'deliver' as BearKind,
     chip: 'Đang giao',
-    chipClass: 'bg-success-subtle text-success-fg',
     title: 'Quán tự mang tới',
     body: 'Không qua tài xế trung gian: cùng toà, cùng khu, món còn nóng.',
   },
   {
-    icon: CheckIcon,
+    bear: 'done' as BearKind,
     chip: 'Đã giao',
-    chipClass: 'bg-success-subtle text-success-fg',
     title: 'Nhận món, đánh giá quán',
     body: 'Có vấn đề với đơn? Báo ngay trong app, bonbon cùng quán giải quyết.',
   },
@@ -271,13 +264,15 @@ function OrderSteps() {
       <h2 className="col-span-full max-w-[640px] text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
         Một đơn hàng, <Soft>bốn bước rõ ràng</Soft>
       </h2>
-      {STEPS.map(({ icon: Icon, chip, chipClass, title, body }) => (
-        <div key={title} className="flex flex-col gap-3.5">
-          <Badge>
-            <Icon strokeWidth={1.75} />
-          </Badge>
-          <span className={cn('self-start rounded-sm px-2.5 py-1.5 text-[0.8125rem] font-semibold', chipClass)}>{chip}</span>
-          <h3 className="text-lg font-semibold">{title}</h3>
+      {STEPS.map(({ bear, chip, title, body }, i) => (
+        <div key={title} className="flex flex-col gap-3">
+          <div className="mb-2 overflow-hidden rounded-2xl bg-accent px-6 pt-6">
+            <BearScene kind={bear} />
+          </div>
+          <span className="text-caption font-medium tracking-wide text-primary uppercase">
+            Bước {i + 1} · {chip}
+          </span>
+          <h3 className="text-lg font-medium">{title}</h3>
           <p className="leading-6 text-muted-foreground">{body}</p>
         </div>
       ))}
@@ -352,7 +347,10 @@ function SellerBand() {
           </a>
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
-          <ImageSlot src="/mock/chu-quan.jpg" label="Chủ quán đang nấu tại quầy (ảnh minh hoạ)" className="aspect-[4/5] w-full max-w-[420px] rounded-2xl" />
+          <div className="relative w-full max-w-[460px] overflow-hidden rounded-2xl bg-primary px-8 pt-10">
+            <OrangeRings className="absolute -top-1/3 -right-1/3 w-[110%] opacity-40" />
+            <BearScene kind="shop" className="relative" />
+          </div>
         </div>
       </Wrap>
       </Reveal>

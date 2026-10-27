@@ -19,5 +19,5 @@ const NAV: NavParent[] = [
 const FOOTER: FooterLink[] = [{ to: '/legal/PRIVACY_POLICY', label: 'Chính sách riêng tư' }]
 
 export function OpsLayout() {
-  return <WorkspaceShell area="Vận hành" homePath={opsPath()} nav={NAV} footerLinks={FOOTER} loginPath={opsPath('/login')} storageKey="bonbon.nav.ops" />
+  return <WorkspaceShell area="Vận hành" homePath={opsPath()} nav={NAV} footerLinks={FOOTER} loginPath={opsPath('/login')} />
 }

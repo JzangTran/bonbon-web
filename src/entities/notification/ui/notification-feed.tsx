@@ -17,7 +17,7 @@ export function NotificationFeed({ orderPath }: { orderPath?: (orderId: string) 
   return (
     <section aria-label="Thông báo" className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-xs font-semibold text-muted-foreground">Thông báo{unread > 0 ? ` · ${unread} chưa đọc` : ''}</h2>
+        <h2 className="text-caption font-medium tracking-wide text-muted-foreground uppercase">Thông báo{unread > 0 ? ` · ${unread} chưa đọc` : ''}</h2>
         {unread > 0 ? (
           <Button variant="ghost" size="xs" disabled={ackAll.isPending} onClick={() => ackAll.mutate()}>
             Đánh dấu đã đọc

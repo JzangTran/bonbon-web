@@ -81,6 +81,6 @@ const FOOTER: FooterLink[] = [
 
 export function AdminLayout() {
   return (
-    <WorkspaceShell area="Quản trị" homePath={consolePath()} nav={NAV} extras={EXTRAS} footerLinks={FOOTER} loginPath={consolePath('/login')} storageKey="bonbon.nav.admin" />
+    <WorkspaceShell area="Quản trị" homePath={consolePath()} nav={NAV} extras={EXTRAS} footerLinks={FOOTER} loginPath={consolePath('/login')} />
   )
 }

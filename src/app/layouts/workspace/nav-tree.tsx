@@ -1,112 +1,70 @@
-import { ChevronDownIcon } from 'lucide-react'
-import { useState } from 'react'
+import { HomeIcon } from 'lucide-react'
 import { NavLink } from 'react-router'
 import { cn } from '@/shared/lib/utils'
 import type { Location } from './locate'
 import type { NavParent } from './types'
 
-const rowBase = 'flex min-h-9 w-full items-center justify-between gap-3 rounded-full px-3 text-left text-[0.8125rem] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
-
-function readOpen(storageKey: string): Record<string, boolean> {
-  try {
-    return JSON.parse(localStorage.getItem(storageKey) ?? '{}') as Record<string, boolean>
-  } catch {
-    return {}
-  }
-}
+/** A page row on the rail: grey text, the current one in orange with an orange piece of the rail beside it. */
+const rowClass = (current: boolean) =>
+  cn(
+    '-ml-px flex min-h-8 items-center rounded-r-2xl border-l py-1.5 pr-1.5 pl-3 text-ui outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
+    current ? 'border-primary font-medium text-primary' : 'border-transparent text-ink/65 hover:border-grey-400 hover:text-ink',
+  )
 
 /**
- * The left navigation: parents with an icon, children under them. Flush to the edges and square. The current page is shown in
- * green text; a light fill marks a single-page parent that is current, or a collapsed group that contains the current page.
+ * The left navigation, after the GitBook docs sidebar: a thin rail down the left, the home page on top, then each group under a
+ * small upper-case label with its pages on the rail. A single-page parent is a row of its own. Every group stays open.
  */
-export function NavTree({ nav, location, storageKey, onNavigate }: {
+export function NavTree({ nav, location, homePath, onNavigate }: {
   nav: NavParent[]
   location: Location
-  storageKey: string
+  homePath: string
   onNavigate?: () => void
 }) {
-  const [stored, setStored] = useState(() => readOpen(storageKey))
-
-  const toggle = (key: string, open: boolean) => {
-    const next = { ...stored, [key]: !open }
-    setStored(next)
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(next))
-    } catch {
-      // The choice just does not persist.
-    }
-  }
-
+  const atHome = !location.page
+  const singles = nav.filter((p) => !p.children)
+  const groups = nav.filter((p) => p.children)
   return (
-    <ul className="flex flex-col gap-0.5 px-2">
-      {nav.map((parent) => {
-        const Icon = parent.icon
-        const here = location.parent?.key === parent.key
-        if (!parent.children) {
+    <div className="flex flex-col gap-6 border-l border-grey-200">
+      <ul className="flex flex-col">
+        <li>
+          <NavLink to={homePath} end onClick={onNavigate} aria-current={atHome ? 'page' : 'false'} className={rowClass(atHome)}>
+            <HomeIcon className="mr-2.5 size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+            Trang chủ
+          </NavLink>
+        </li>
+        {singles.map((parent) => {
+          const Icon = parent.icon
+          const current = location.page?.to === parent.to
           return (
             <li key={parent.key}>
-              <NavLink
-                to={parent.to!}
-                end
-                onClick={onNavigate}
-                aria-current={location.page?.to === parent.to ? 'page' : 'false'}
-                className={cn(rowBase, 'justify-start hover:bg-ws-fill', here && 'font-medium text-primary')}
-              >
-                <span className="flex min-w-0 items-center gap-3">
-                  <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
-                  {parent.label}
-                </span>
+              <NavLink to={parent.to!} end onClick={onNavigate} aria-current={current ? 'page' : 'false'} className={rowClass(current)}>
+                <Icon className="mr-2.5 size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                {parent.label}
               </NavLink>
             </li>
           )
-        }
-        const open = stored[parent.key] ?? (here || (parent.defaultOpen ?? true))
-        const listId = `nav-${parent.key}`
-        return (
-          <li key={parent.key}>
-            <button
-              type="button"
-              aria-expanded={open}
-              aria-controls={listId}
-              onClick={() => toggle(parent.key, open)}
-              className={cn(rowBase, 'hover:bg-ws-fill', here && !open && 'font-medium text-primary')}
-            >
-              <span className="flex min-w-0 items-center gap-3">
-                <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
-                {parent.label}
-              </span>
-              <ChevronDownIcon
-                className={cn('size-3.5 shrink-0 transition-transform', open ? 'text-muted-foreground' : '-rotate-90', here && !open && 'text-brand-700')}
-                aria-hidden="true"
-              />
-            </button>
-            {open ? (
-              <ul id={listId} className="flex flex-col gap-0.5">
-                {parent.children.map((child) => {
-                  const current = location.page?.to === child.to
-                  return (
-                    <li key={child.to}>
-                      <NavLink
-                        to={child.to}
-                        onClick={onNavigate}
-                        aria-current={current ? 'page' : 'false'}
-                        className={() =>
-                          cn(
-                            'flex min-h-9 items-center rounded-full pr-3 pl-[42px] text-[0.8125rem] text-muted-foreground outline-none hover:bg-ws-fill hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
-                            current && 'font-medium text-primary hover:bg-transparent',
-                          )
-                        }
-                      >
-                        {child.label}
-                      </NavLink>
-                    </li>
-                  )
-                })}
-              </ul>
-            ) : null}
-          </li>
-        )
-      })}
-    </ul>
+        })}
+      </ul>
+      {groups.map((parent) => (
+        <section key={parent.key} aria-labelledby={`nav-${parent.key}`} className="flex flex-col gap-1">
+          <h2 id={`nav-${parent.key}`} className="pl-3 text-caption font-medium tracking-wide text-ink uppercase">
+            {parent.label}
+          </h2>
+          <ul className="flex flex-col">
+            {parent.children!.map((child) => {
+              const current = location.page?.to === child.to
+              return (
+                <li key={child.to}>
+                  <NavLink to={child.to} onClick={onNavigate} aria-current={current ? 'page' : 'false'} className={rowClass(current)}>
+                    {child.label}
+                  </NavLink>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
   )
 }

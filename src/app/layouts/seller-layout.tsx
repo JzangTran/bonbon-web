@@ -117,8 +117,7 @@ export function SellerLayout() {
       extras={EXTRAS}
       account={ACCOUNT}
       footerLinks={FOOTER}
-      loginPath={merchantPath('/login')}
-      storageKey="bonbon.nav.seller"
+      loginPath={merchantPath('/login')}
       headerExtra={approved ? <AcceptingOrdersSwitch /> : null}
       orderPath={() => merchantPath('/orders')}
     />
