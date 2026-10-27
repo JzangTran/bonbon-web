@@ -1,6 +1,8 @@
+import { CheckIcon, LinkIcon, MailIcon } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { headingsOf, type Block, type Heading } from '@/entities/article'
+import { formatDate } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { Breadcrumb, TagList } from './parts'
@@ -239,6 +241,118 @@ export function ArticleView({
           </aside>
         </div>
         </div>
+      </main>
+    </ContentPage>
+  )
+}
+
+/** Share buttons as on gitbook.com: round outlined icons. Facebook, email, and copying the address. */
+function ShareRow({ title, url }: { title: string; url: string }) {
+  const [copied, setCopied] = useState(false)
+  const round = 'flex size-10 items-center justify-center rounded-full border border-grey-300 text-ink outline-none transition-colors hover:bg-grey-50 focus-visible:ring-2 focus-visible:ring-ring'
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-h3 font-medium">Chia sẻ</p>
+      <div className="flex gap-2">
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label="Chia sẻ lên Facebook" className={round}>
+          <FacebookGlyph />
+        </a>
+        <a href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`} aria-label="Gửi qua email" className={round}>
+          <MailIcon className="size-4" aria-hidden="true" />
+        </a>
+        <button
+          type="button"
+          aria-label={copied ? 'Đã chép đường dẫn' : 'Chép đường dẫn'}
+          onClick={() => {
+            void navigator.clipboard?.writeText(url).then(() => {
+              setCopied(true)
+              setTimeout(() => setCopied(false), 2000)
+            })
+          }}
+          className={round}
+        >
+          {copied ? <CheckIcon className="size-4 text-primary" aria-hidden="true" /> : <LinkIcon className="size-4" aria-hidden="true" />}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function FacebookGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+      <path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.5V4.4c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.3H8v3h2.6V21h2.9Z" />
+    </svg>
+  )
+}
+
+/**
+ * A blog post, after the customer stories of gitbook.com: a small orange label with a link back to all posts, the title and its
+ * line, a wide picture, the text in a narrow grey column with orange-ruled call-outs; beside it a sticky column with who wrote it,
+ * the headings and the share buttons; more posts at the end.
+ */
+export function BlogPostView({
+  title,
+  description,
+  image,
+  imageAlt,
+  updated,
+  blocks,
+  tags,
+  allPath,
+  url,
+  more,
+}: {
+  title: string
+  description: string
+  image: string
+  imageAlt: string
+  updated: string
+  blocks: Block[]
+  tags: string[]
+  allPath: string
+  url: string
+  more?: ReactNode
+}) {
+  const headings = headingsOf(blocks)
+  return (
+    <ContentPage>
+      <main id="main" className="mx-auto w-full max-w-[1200px] px-4 pt-10 pb-24 sm:px-6 lg:pt-16">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
+          <article className="min-w-0">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">Blog</span>
+              <Link to={allPath} className="text-ui text-ink underline decoration-primary underline-offset-4">
+                Xem tất cả bài viết
+              </Link>
+            </div>
+            <h1 className="mt-5 text-[2rem] leading-[2.5rem] font-medium tracking-[-0.02em] sm:text-[2.375rem] sm:leading-[2.875rem]">{title}</h1>
+            <p className="mt-2 text-[1.25rem] leading-7 tracking-[-0.01em] text-ink">{description}</p>
+            <img src={image} alt={imageAlt} decoding="async" className="mt-8 aspect-[16/9] w-full rounded-xl bg-image-slot object-cover" />
+            <div className="bb-blog mt-10">
+              <ArticleBody blocks={blocks} />
+            </div>
+            {tags.length > 0 ? (
+              <footer className="mt-12">
+                <TagList tags={tags} />
+              </footer>
+            ) : null}
+          </article>
+          <aside className="flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+            <div className="flex flex-col items-center gap-1 rounded-xl border border-grey-200 bg-grey-50 p-6 text-center">
+              <img src="/brand/bonbon-mark-color.svg" alt="" className="mb-3 size-16 rounded-full bg-white p-2" />
+              <p className="text-body font-medium">Đội ngũ bonbon</p>
+              <p className="text-ui text-muted-foreground">Cập nhật ngày {formatDate(updated)}</p>
+            </div>
+            {headings.length > 0 ? (
+              <div className="rounded-xl border border-grey-200 p-5">
+                <Toc headings={headings} />
+              </div>
+            ) : null}
+            <ShareRow title={title} url={url} />
+          </aside>
+        </div>
+        {more}
       </main>
     </ContentPage>
   )

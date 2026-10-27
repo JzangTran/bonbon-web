@@ -10,7 +10,8 @@ import {
   type Collection,
 } from '@/entities/article'
 import { formatDate } from '@/shared/lib/format'
-import { ArticleView, ContentPage, DocsSidebar } from '@/widgets/article/article-view'
+import { ArticleView, BlogPostView, ContentPage, DocsSidebar } from '@/widgets/article/article-view'
+import { siteUrl } from '@/shared/config/sites'
 import { ArticleCard, Breadcrumb, CardGrid } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 import { NotFoundPage } from '@/pages/not-found'
@@ -47,16 +48,48 @@ export function ArticlePage({ collection }: { collection: Collection }) {
   const trail = trailFor(collection, article.title)
   trail[trail.length - 1].path = path
   const next = resolveArticles(article.next).slice(0, 2)
+  const seo = (
+    <PageSeo
+      title={article.title}
+      description={article.description}
+      path={path}
+      image={article.image}
+      trail={trail}
+      article={{ updated: article.updated, tags: article.tags }}
+    />
+  )
+  if (collection === 'blog') {
+    const others = articlesOf('blog').filter((a) => a.slug !== article.slug)
+    return (
+      <>
+        {seo}
+        <BlogPostView
+          title={article.title}
+          description={article.description}
+          image={article.image}
+          imageAlt={article.imageAlt}
+          updated={article.updated}
+          blocks={article.blocks}
+          tags={article.tags}
+          allPath={COLLECTION_BASE.blog}
+          url={siteUrl('public', path)}
+          more={
+            others.length > 0 ? (
+              <section aria-labelledby="bai-khac" className="mt-24">
+                <h2 id="bai-khac" className="mb-6 text-h2 font-medium">
+                  Đọc thêm bài viết
+                </h2>
+                <CardGrid articles={others} initial={3} step={3} />
+              </section>
+            ) : null
+          }
+        />
+      </>
+    )
+  }
   return (
     <>
-      <PageSeo
-        title={article.title}
-        description={article.description}
-        path={path}
-        image={article.image}
-        trail={trail}
-        article={{ updated: article.updated, tags: article.tags }}
-      />
+      {seo}
       <ArticleView
         trail={trail}
         title={article.title}
@@ -64,7 +97,7 @@ export function ArticlePage({ collection }: { collection: Collection }) {
         blocks={article.blocks}
         tags={article.tags}
         after={next.length > 0 ? <NextSteps articles={next} /> : null}
-        sidebar={collection === 'blog' ? undefined : <DocsSidebar groups={GUIDE_GROUPS} current={path} />}
+        sidebar={<DocsSidebar groups={GUIDE_GROUPS} current={path} />}
       />
     </>
   )

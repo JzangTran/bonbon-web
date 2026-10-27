@@ -29,6 +29,8 @@
   --amber-400: #ffb020;
   --amber-800: #8a5100;
   --image-slot: #f2f2f2;
+  /* the warm off-white of the gitbook.com footer */
+  --beige-50: #fafaf9;
 
   /* semantic states keep their own colours (success stays green) */
   --success: #1f7a3f;
@@ -90,6 +92,7 @@
 
 .dark {
   --image-slot: #262626;
+  --beige-50: #1a1918;
   --success: #4fc27a;
   --success-subtle: #12301f;
   --success-fg: #8fdcaa;
@@ -203,6 +206,7 @@
   --color-ink: var(--ink);
   --color-headline-soft: var(--headline-soft);
   --color-pill-pale: var(--pill-pale);
+  --color-beige-50: var(--beige-50);
   --color-grey-50: var(--grey-50);
   --color-grey-100: var(--grey-100);
   --color-grey-200: var(--grey-200);

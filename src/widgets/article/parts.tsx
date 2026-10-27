@@ -90,7 +90,7 @@ export function CardGrid({ articles, initial = 6, step = 6 }: { articles: Articl
         <button
           type="button"
           onClick={() => setShown((n) => n + step)}
-          className="min-h-11 rounded-sm bg-ink px-6 text-[0.9375rem] font-semibold text-white outline-none hover:bg-ink/90 focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="min-h-12 w-full rounded-full bg-grey-100 px-6 text-ui font-medium text-ink outline-none hover:bg-grey-200 focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           Xem thêm ({articles.length - shown})
         </button>

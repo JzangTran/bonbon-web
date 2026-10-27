@@ -224,7 +224,7 @@ function FooterAnchor({ link }: { link: FooterLink }) {
  */
 export function SiteFooter() {
   return (
-    <footer className="bg-white pt-24 pb-12">
+    <footer className="bg-beige-50 pt-24 pb-12">
       <Wrap className="flex flex-col gap-16">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
           <div className="flex flex-col gap-12">
@@ -233,7 +233,7 @@ export function SiteFooter() {
                 <h2 className="text-h3 font-medium text-ink">{group.title}</h2>
                 <div className="grid gap-8 sm:grid-cols-3 sm:gap-0">
                   {group.columns.map((col, i) => (
-                    <div key={col.label} className={cn('flex flex-col gap-3', i > 0 && 'sm:border-l sm:border-grey-100 sm:pl-8', i < group.columns.length - 1 && 'sm:pr-8')}>
+                    <div key={col.label} className={cn('flex flex-col gap-3', i > 0 && 'sm:border-l sm:border-grey-200 sm:pl-8', i < group.columns.length - 1 && 'sm:pr-8')}>
                       <h3 className="text-caption font-medium tracking-wide text-primary uppercase">{col.label}</h3>
                       <ul className="flex flex-col gap-2.5">
                         {col.links.map((link) => (
