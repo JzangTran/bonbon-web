@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
-import { siteButton, siteButtonGreen } from '@/widgets/site-chrome/buttons'
+import { siteButton, siteButtonSolid } from '@/widgets/site-chrome/buttons'
 import { siteUrl } from '@/shared/config/sites'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Reveal } from '@/shared/ui/reveal'
@@ -20,7 +20,7 @@ import { BearScene, type BearKind } from './bear-scene'
 
 
 const btn = siteButton
-const btnGreen = siteButtonGreen
+const btnSolid = siteButtonSolid
 const btnPale = cn(btn, 'bg-pill-pale text-ink hover:bg-grey-200')
 
 
@@ -92,7 +92,7 @@ function Hero() {
           </p>
           <div id="tai-app" className="flex scroll-mt-24 flex-col items-center gap-3">
             <div className="flex flex-wrap justify-center gap-3">
-              <span aria-disabled="true" className={cn(btnGreen, 'cursor-default')}>
+              <span aria-disabled="true" className={cn(btnSolid, 'cursor-default')}>
                 <SmartphoneIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
                 Tải app đặt món
               </span>
@@ -335,7 +335,7 @@ function SellerBand() {
             ))}
           </ol>
           <div className="flex flex-wrap items-center gap-3">
-            <a href={siteUrl('merchant', '/register')} className={btnGreen}>
+            <a href={siteUrl('merchant', '/register')} className={btnSolid}>
               Mở quán trên bonbon
             </a>
             <a href="#hoi-dap" className={btnPale}>

@@ -3,7 +3,7 @@ import { Slot } from 'radix-ui'
 import { cn } from '@/shared/lib/utils'
 
 /**
- * bonbon's own button (no UI kit). Pills, medium weight, 14px text. `default` is the orange main action; `outline` and `secondary`
+ * bonbon's own button (no UI kit). Pills, medium weight, 14px text. `default` is the main action, filled in ink as on gitbook.com; `outline` and `secondary`
  * are the quiet second action on a pale grey fill (no border); `ghost` is grey text that darkens on hover; `link` is orange text.
  */
 type Variant = 'default' | 'outline' | 'secondary' | 'ghost' | 'destructive' | 'link'
@@ -13,7 +13,7 @@ const BASE =
   'inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-45 aria-invalid:outline-2 aria-invalid:outline-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0'
 
 const VARIANT: Record<Variant, string> = {
-  default: 'bg-primary text-primary-foreground hover:bg-primary-hover',
+  default: 'bg-button text-button-foreground hover:bg-button-hover',
   outline: 'bg-grey-100 text-ink hover:bg-grey-200 aria-expanded:bg-grey-200',
   secondary: 'bg-grey-100 text-ink hover:bg-grey-200 aria-expanded:bg-grey-200',
   ghost: 'text-muted-foreground hover:bg-grey-100 hover:text-ink aria-expanded:bg-grey-100 aria-expanded:text-ink',

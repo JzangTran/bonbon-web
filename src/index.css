@@ -199,10 +199,3 @@
   outline: 3px solid color-mix(in oklab, var(--primary) 20%, transparent);
   outline-offset: 0;
 }
-.bb-auth [data-slot="button"][data-variant="default"] {
-  background-color: var(--ink);
-  color: #fff;
-}
-.bb-auth [data-slot="button"][data-variant="default"]:hover {
-  background-color: color-mix(in oklab, var(--ink) 85%, white);
-}

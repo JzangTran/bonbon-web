@@ -60,7 +60,7 @@ function LogoCard({ asset }: { asset: Asset }) {
       <a
         href={href}
         download
-        className="mt-auto flex min-h-11 items-center justify-center gap-2 rounded-sm bg-primary px-4 text-[0.9375rem] font-semibold text-primary-foreground outline-none hover:bg-primary-hover focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="mt-auto flex min-h-11 items-center justify-center gap-2 rounded-sm bg-button px-4 text-[0.9375rem] font-semibold text-button-foreground outline-none hover:bg-button-hover focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <DownloadIcon className="size-4" aria-hidden="true" />
         Tải xuống SVG

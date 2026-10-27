@@ -54,6 +54,10 @@
   --primary: var(--orange-500);
   --primary-hover: #ee4a12;
   --primary-foreground: #ffffff;
+  /* filled buttons are ink, as on gitbook.com; orange stays for links, selected items and accents */
+  --button: var(--ink);
+  --button-hover: #3a3a3a;
+  --button-foreground: #ffffff;
   --secondary: var(--grey-100);
   --secondary-foreground: var(--ink);
   --muted: var(--grey-100);
@@ -112,6 +116,9 @@
   --primary: #ff7a4a;
   --primary-hover: #ff9670;
   --primary-foreground: #141414;
+  --button: #ececec;
+  --button-hover: #ffffff;
+  --button-foreground: #141414;
   --secondary: #222222;
   --secondary-foreground: #ececec;
   --muted: #222222;
@@ -169,6 +176,9 @@
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
+  --color-button: var(--button);
+  --color-button-hover: var(--button-hover);
+  --color-button-foreground: var(--button-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);

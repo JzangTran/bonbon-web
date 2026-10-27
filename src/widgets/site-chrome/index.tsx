@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
-import { siteButton, siteButtonGreen } from './buttons'
+import { siteButton, siteButtonSolid } from './buttons'
 import { SITE, siteUrl, type Site } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { OrangeRings } from '@/shared/ui/orange-rings'
@@ -113,7 +113,7 @@ export function SiteHeader() {
 
           <div className="flex items-center gap-2">
             {area ? (
-              <a href={area.href} className={cn(siteButtonGreen, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
+              <a href={area.href} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
                 {area.label}
               </a>
             ) : (
@@ -121,7 +121,7 @@ export function SiteHeader() {
               <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'hidden min-h-9 bg-muted px-4 text-sm text-ink hover:bg-border md:inline-flex')}>
                 Mở quán
               </a>
-              <a href={siteUrl('public') + '#tai-app'} className={cn(siteButtonGreen, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
+              <a href={siteUrl('public') + '#tai-app'} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
                 <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
                 Tải app
               </a>
