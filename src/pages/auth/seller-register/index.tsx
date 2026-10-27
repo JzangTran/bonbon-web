@@ -119,7 +119,7 @@ export function SellerRegisterPage() {
             <Input id="email" type="email" autoComplete="email" placeholder="Email" className="h-11" aria-invalid={!!errors.email} {...form.register('email')} />
             {errors.email ? <p role="alert" className="text-sm text-destructive">{errors.email.message}</p> : null}
           </div>
-          <Button type="submit" size="lg" className="uppercase tracking-wide" disabled={email.trim().length === 0}>
+          <Button type="submit" size="lg" disabled={email.trim().length === 0}>
             Tiếp theo
           </Button>
         </form>
@@ -184,7 +184,7 @@ export function SellerRegisterPage() {
 
         <Captcha onToken={setCaptchaToken} />
         <FormError message={error} />
-        <Button type="submit" size="lg" className="uppercase tracking-wide" disabled={form.formState.isSubmitting || terms.isLoading || privacy.isLoading}>
+        <Button type="submit" size="lg" disabled={form.formState.isSubmitting || terms.isLoading || privacy.isLoading}>
           {form.formState.isSubmitting ? 'Đang tạo tài khoản…' : 'Đăng ký'}
         </Button>
       </form>
@@ -232,7 +232,7 @@ function SentStep({ email }: { email: string }) {
       <Button type="button" variant="outline" size="lg" disabled={wait > 0} onClick={resend}>
         {wait > 0 ? `Gửi lại sau ${wait} giây` : 'Gửi lại email xác thực'}
       </Button>
-      <Button type="button" size="lg" className="uppercase tracking-wide" onClick={() => navigate(merchantPath('/login'))}>
+      <Button type="button" size="lg" onClick={() => navigate(merchantPath('/login'))}>
         Đến trang đăng nhập
       </Button>
     </AuthStepPage>

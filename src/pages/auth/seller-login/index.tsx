@@ -147,7 +147,7 @@ export function SellerLoginPage() {
           </Button>
         ) : null}
         {resent ? <FormSuccess message="Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết. Hãy kiểm tra hộp thư." /> : null}
-        <Button type="submit" size="lg" className="uppercase tracking-wide" disabled={form.formState.isSubmitting}>
+        <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
         </Button>
         <Link to="/forgot-password" className="-mt-2 self-start text-xs text-primary hover:underline">

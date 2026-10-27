@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ChevronDownIcon, MenuIcon, SmartphoneIcon } from 'lucide-react'
+import { ArrowRightIcon, BookOpenIcon, ChevronDownIcon, MenuIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
@@ -7,6 +7,7 @@ import { Lockup } from '@/shared/ui/brand'
 import { siteButton, siteButtonGreen } from './buttons'
 import { SITE, siteUrl, type Site } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
+import { OrangeRings } from '@/shared/ui/orange-rings'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
@@ -160,36 +161,125 @@ export function SiteHeader() {
   )
 }
 
+type FooterLink = { label: string; to?: string; href?: string }
+type FooterColumn = { label: string; links: FooterLink[] }
+
+/** The footer groups, after gitbook.com: a large group name, columns under small orange labels. */
+function footerGroups(): { title: string; columns: FooterColumn[] }[] {
+  return [
+    {
+      title: 'Sản phẩm',
+      columns: [
+        { label: 'Đặt món', links: [{ label: 'Tải ứng dụng', href: siteUrl('public') + '#tai-app' }, { label: 'Quán trong khu', href: siteUrl('public') + '#quan' }] },
+        {
+          label: 'Bán hàng',
+          links: [
+            { label: 'Mở quán trên bonbon', href: siteUrl('merchant', '/register') },
+            { label: 'Đăng nhập kênh người bán', href: siteUrl('merchant', '/login') },
+          ],
+        },
+        { label: 'Hướng dẫn', links: [{ label: 'Bắt đầu', to: '/huong-dan/bat-dau' }, { label: 'Quản lý cửa hàng', to: '/huong-dan/quan-ly-cua-hang' }] },
+      ],
+    },
+    {
+      title: 'Tài nguyên',
+      columns: [
+        { label: 'Đọc thêm', links: [{ label: 'Blog', to: '/blog' }, { label: 'Thư viện bộ nhận diện', to: '/bo-nhan-dien' }] },
+        {
+          label: 'Hỗ trợ',
+          links: [
+            { label: 'Trung tâm trợ giúp', href: siteUrl('help') },
+            ...(SUPPORT_EMAIL ? [{ label: 'Liên hệ', href: `mailto:${SUPPORT_EMAIL}` }] : []),
+          ],
+        },
+        {
+          label: 'Pháp lý',
+          links: [
+            { label: 'Điều khoản sử dụng', to: '/legal/CUSTOMER_TERMS' },
+            { label: 'Điều khoản người bán', to: '/legal/SELLER_TERMS' },
+            { label: 'Chính sách quyền riêng tư', to: '/legal/PRIVACY_POLICY' },
+          ],
+        },
+      ],
+    },
+  ]
+}
+
+function FooterAnchor({ link }: { link: FooterLink }) {
+  const cls = 'text-small text-muted-foreground transition-colors hover:text-ink'
+  return link.to ? (
+    <PublicLink to={link.to} className={cls}>
+      {link.label}
+    </PublicLink>
+  ) : (
+    <a href={link.href} className={cls}>
+      {link.label}
+    </a>
+  )
+}
+
+/**
+ * The public footer, after gitbook.com: tall and quiet. Groups with a large name, columns under small orange upper-case labels split
+ * by faint lines, two cards on the right, then the logo, the text size, the copyright and the legal links.
+ */
 export function SiteFooter() {
   return (
-    <footer className="bg-grey-50 text-muted-foreground">
-      <Wrap className="flex flex-wrap justify-between gap-6 py-10 text-sm">
-        <div className="flex flex-col gap-2">
-          <Lockup className="h-8 self-start" />
-          <span>Đặt món từ quán trong khu.</span>
-          {SUPPORT_EMAIL ? (
-            <span>
-              Liên hệ:{' '}
-              <a href={`mailto:${SUPPORT_EMAIL}`} className="underline-offset-4 hover:underline">
-                {SUPPORT_EMAIL}
-              </a>
-            </span>
-          ) : null}
+    <footer className="bg-white pt-24 pb-12">
+      <Wrap className="flex flex-col gap-16">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
+          <div className="flex flex-col gap-12">
+            {footerGroups().map((group) => (
+              <section key={group.title} className="flex flex-col gap-5">
+                <h2 className="text-h3 font-medium text-ink">{group.title}</h2>
+                <div className="grid gap-8 sm:grid-cols-3 sm:gap-0">
+                  {group.columns.map((col, i) => (
+                    <div key={col.label} className={cn('flex flex-col gap-3', i > 0 && 'sm:border-l sm:border-grey-100 sm:pl-8', i < group.columns.length - 1 && 'sm:pr-8')}>
+                      <h3 className="text-caption font-medium tracking-wide text-primary uppercase">{col.label}</h3>
+                      <ul className="flex flex-col gap-2.5">
+                        {col.links.map((link) => (
+                          <li key={link.label}>
+                            <FooterAnchor link={link} />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+          <div className="flex flex-col gap-4">
+            <a href={siteUrl('merchant', '/register')} className="group relative flex flex-col gap-2 overflow-hidden rounded-2xl bg-primary p-6 text-white">
+              <OrangeRings className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
+              <StoreIcon className="relative size-6" strokeWidth={1.5} aria-hidden="true" />
+              <span className="relative mt-2 text-body font-medium">Mở quán trên bonbon</span>
+              <span className="relative text-small text-white/85">Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.</span>
+              <span className="relative mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-small font-medium text-ink">
+                Bắt đầu
+                <ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </span>
+            </a>
+            <PublicLink to="/huong-dan/bat-dau" className="group flex flex-col gap-2 rounded-2xl bg-accent p-6">
+              <BookOpenIcon className="size-6 text-primary" strokeWidth={1.5} aria-hidden="true" />
+              <span className="mt-2 text-body font-medium text-ink">Hướng dẫn mở quán</span>
+              <span className="text-small text-muted-foreground">Ba bước từ tạo tài khoản tới đơn hàng đầu tiên.</span>
+              <span className="mt-1 text-small font-medium text-primary underline-offset-4 group-hover:underline">Đọc hướng dẫn</span>
+            </PublicLink>
+          </div>
         </div>
-        <nav aria-label="Tìm hiểu thêm" className="flex flex-col items-start gap-2">
-          <span className="font-semibold text-ink">Tìm hiểu thêm</span>
-          <PublicLink to="/huong-dan/bat-dau" className="underline-offset-4 hover:text-ink hover:underline">Hướng dẫn bắt đầu</PublicLink>
-          <PublicLink to="/huong-dan/quan-ly-cua-hang" className="underline-offset-4 hover:text-ink hover:underline">Quản lý cửa hàng</PublicLink>
-          <PublicLink to="/blog" className="underline-offset-4 hover:text-ink hover:underline">Blog</PublicLink>
-          <PublicLink to="/bo-nhan-dien" className="underline-offset-4 hover:text-ink hover:underline">Thư viện bộ nhận diện</PublicLink>
-          <a href={siteUrl('help')} className="underline-offset-4 hover:text-ink hover:underline">Trung tâm trợ giúp</a>
-        </nav>
-        <div className="flex flex-col items-start gap-4">
-          <TextSizeControl />
-          <nav aria-label="Pháp lý" className="flex flex-wrap items-start gap-x-6 gap-y-2">
-          <Link to="/legal/CUSTOMER_TERMS" className="underline-offset-4 hover:text-ink hover:underline">Điều khoản sử dụng</Link>
-          <Link to="/legal/SELLER_TERMS" className="underline-offset-4 hover:text-ink hover:underline">Điều khoản người bán</Link>
-          <Link to="/legal/PRIVACY_POLICY" className="underline-offset-4 hover:text-ink hover:underline">Chính sách quyền riêng tư</Link>
+
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Lockup className="h-7" />
+            <TextSizeControl />
+          </div>
+          <div className="flex flex-col gap-1 text-small text-muted-foreground">
+            <span>© {new Date().getFullYear()} bonbon. Đặt món từ quán trong khu.</span>
+          </div>
+          <nav aria-label="Pháp lý" className="flex flex-wrap gap-x-6 gap-y-2">
+            <Link to="/legal/CUSTOMER_TERMS" className="text-caption text-muted-foreground hover:text-ink">Điều khoản sử dụng</Link>
+            <Link to="/legal/SELLER_TERMS" className="text-caption text-muted-foreground hover:text-ink">Điều khoản người bán</Link>
+            <Link to="/legal/PRIVACY_POLICY" className="text-caption text-muted-foreground hover:text-ink">Chính sách quyền riêng tư</Link>
           </nav>
         </div>
       </Wrap>

@@ -10,7 +10,6 @@ import {
   type Collection,
 } from '@/entities/article'
 import { formatDate } from '@/shared/lib/format'
-import { WaveEdge } from '@/shared/ui/wave'
 import { ArticleView, ContentPage, DocsSidebar } from '@/widgets/article/article-view'
 import { ArticleCard, Breadcrumb, CardGrid } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
@@ -103,7 +102,6 @@ export function HubPage({ collection, title, intro }: { collection: Collection; 
           </div>
         </section>
         <section className="relative bg-background pt-8 pb-16 lg:pt-12 lg:pb-24">
-          <WaveEdge className="text-background" />
           <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6">
             <CardGrid articles={articles} />
           </div>

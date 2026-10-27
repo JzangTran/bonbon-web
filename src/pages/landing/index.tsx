@@ -18,8 +18,8 @@ import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { siteButton, siteButtonGreen } from '@/widgets/site-chrome/buttons'
 import { siteUrl } from '@/shared/config/sites'
+import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Reveal } from '@/shared/ui/reveal'
-import { WaveEdge } from '@/shared/ui/wave'
 
 
 const btn = siteButton
@@ -68,7 +68,7 @@ function ImageSlot({ label, className, src }: { label: string; className?: strin
 /** The black round badge that carries an icon next to a short point. */
 function Badge({ children }: { children: ReactNode }) {
   return (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-ink text-white [&_svg]:size-[22px]" aria-hidden="true">
+    <span className="flex size-10 shrink-0 items-center justify-center text-primary [&_svg]:size-6" aria-hidden="true">
       {children}
     </span>
   )
@@ -77,7 +77,7 @@ function Badge({ children }: { children: ReactNode }) {
 function Hero() {
   return (
     <section id="dat-mon" className="relative scroll-mt-20 overflow-hidden">
-      <Wrap className="flex flex-col items-center pt-14 pb-16 text-center lg:pt-20 lg:pb-24">
+      <Wrap className="flex flex-col items-center pt-14 pb-24 text-center lg:pt-20 lg:pb-40">
         <Reveal className="flex flex-col items-center gap-6">
           <a
             href={siteUrl('merchant', '/register')}
@@ -120,14 +120,16 @@ function Hero() {
           </ul>
         </Reveal>
 
-        <Reveal delay={120} className="mt-14 w-full max-w-5xl">
-          <div className="rounded-2xl bg-grey-50 p-2 text-left">
+        <Reveal delay={120} className="relative mt-14 w-full max-w-5xl">
+          <OrangeRings className="absolute -bottom-[12%] -left-[30%] w-[58%]" />
+          <OrangeRings className="absolute -right-[28%] -bottom-[18%] w-[54%]" />
+          <div className="relative rounded-2xl bg-white p-2 text-left shadow-[0_30px_80px_rgb(0_0_0/0.10)]">
             <div className="flex items-center gap-1.5 px-3 py-2" aria-hidden="true">
               <span className="size-2.5 rounded-full bg-[#ff5f57]" />
               <span className="size-2.5 rounded-full bg-[#febc2e]" />
               <span className="size-2.5 rounded-full bg-[#28c840]" />
             </div>
-            <div className="relative grid h-[420px] grid-cols-[1fr_auto_1fr] items-center gap-6 overflow-hidden rounded-xl bg-brand-50 px-6 sm:h-[520px]">
+            <div className="relative grid h-[420px] grid-cols-[1fr_auto_1fr] items-center gap-6 overflow-hidden rounded-xl bg-grey-50 px-6 sm:h-[520px]">
               <ImageSlot src="/mock/pho.jpg" label="Tô phở bò (ảnh minh hoạ)" className="hidden h-[70%] w-full rounded-xl md:block" />
               <PhoneMock className="relative mt-16 h-[600px] w-[300px] shrink-0" />
               <ImageSlot src="/mock/bun.jpg" label="Mâm bún riêu (ảnh minh hoạ)" className="hidden h-[70%] w-full rounded-xl md:block" />
@@ -202,7 +204,6 @@ const SHOPS = [
 function NearbyShops() {
   return (
     <section id="quan" className="relative scroll-mt-4 bg-card py-12 lg:py-20">
-      <WaveEdge className="text-card" />
       <Reveal>
       <Wrap className="flex flex-col gap-9">
         <div className="flex flex-wrap items-end justify-between gap-4">
@@ -266,7 +267,6 @@ const STEPS = [
 function OrderSteps() {
   return (
     <div className="relative">
-    <WaveEdge className="text-background" />
     <Wrap className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8 py-12 lg:py-20">
       <h2 className="col-span-full max-w-[640px] text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
         Một đơn hàng, <Soft>bốn bước rõ ràng</Soft>
@@ -295,7 +295,6 @@ const TRUST = [
 function TrustRow() {
   return (
     <section className="relative bg-card py-12 lg:py-16">
-      <WaveEdge className="text-card" />
       <Wrap className="grid gap-8 sm:grid-cols-3">
         {TRUST.map(({ icon: Icon, title, body }) => (
           <div key={title} className="flex gap-4">
@@ -321,40 +320,39 @@ const SELLER_STEPS = [
 
 function SellerBand() {
   return (
-    <section id="mo-quan" className="relative scroll-mt-4 bg-brand-900 py-16 text-white lg:py-24">
-      <WaveEdge className="text-brand-900" />
+    <section id="mo-quan" className="relative scroll-mt-20 bg-grey-50 py-20 lg:py-28">
       <Reveal>
       <Wrap className="flex flex-wrap items-center gap-14">
         <div className="flex min-w-0 flex-[1_1_30rem] flex-col gap-6">
           <h2 className="text-[2.125rem] leading-[2.5rem] font-semibold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
-            Bán cho hàng xóm, <span className="text-[#8fb5a0]">giữ lại nhiều hơn từ mỗi đơn</span>
+            Bán cho hàng xóm, <span className="text-primary">giữ lại nhiều hơn từ mỗi đơn</span>
           </h2>
-          <p className="text-lg leading-[1.875rem] text-brand-100">
+          <p className="text-lead text-muted-foreground">
             Hoa hồng thấp hơn các ứng dụng giao đồ ăn lớn. Bạn tự đặt bán kính giao, phí giao và giờ mở cửa; tự giao trong khu, không phụ thuộc tài xế.
           </p>
-          <ol className="grid gap-4 border-t border-white/15 pt-6 sm:grid-cols-3">
+          <ol className="grid gap-6 pt-2 sm:grid-cols-3">
             {SELLER_STEPS.map((step, i) => (
               <li key={step.title} className="flex flex-col gap-1">
-                <span className="text-sm text-brand-100">Bước {i + 1}</span>
-                <b className="text-base">{step.title}</b>
-                <span className="text-sm leading-6 text-brand-100">{step.body}</span>
+                <span className="text-caption font-medium tracking-wide text-primary uppercase">Bước {i + 1}</span>
+                <b className="text-body font-medium">{step.title}</b>
+                <span className="text-ui text-muted-foreground">{step.body}</span>
               </li>
             ))}
           </ol>
           <div className="flex flex-wrap items-center gap-3">
-            <a href={siteUrl('merchant', '/register')} className={cn(btn, 'bg-white text-brand-900 hover:bg-brand-50')}>
+            <a href={siteUrl('merchant', '/register')} className={btnGreen}>
               Mở quán trên bonbon
             </a>
-            <a href="#hoi-dap" className={cn(btn, 'bg-white/12 text-white hover:bg-white/20')}>
+            <a href="#hoi-dap" className={btnPale}>
               Hồ sơ cần những gì?
             </a>
           </div>
-          <a href={siteUrl('merchant', '/login')} className="self-start font-semibold text-white underline-offset-4 hover:underline">
+          <a href={siteUrl('merchant', '/login')} className="self-start text-ui font-medium text-ink underline-offset-4 hover:underline">
             Đã có tài khoản? Đăng nhập
           </a>
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
-          <ImageSlot src="/mock/chu-quan.jpg" label="Chủ quán đang nấu tại quầy (ảnh minh hoạ)" className="aspect-[4/5] w-full max-w-[420px] rounded-card bg-[#164a30]" />
+          <ImageSlot src="/mock/chu-quan.jpg" label="Chủ quán đang nấu tại quầy (ảnh minh hoạ)" className="aspect-[4/5] w-full max-w-[420px] rounded-2xl" />
         </div>
       </Wrap>
       </Reveal>
@@ -384,7 +382,6 @@ const FAQ: { group: string; items: { q: string; a: string }[] }[] = [
 function Faq() {
   return (
     <section id="hoi-dap" className="relative scroll-mt-4 bg-background py-12 lg:py-20">
-      <WaveEdge className="text-background" />
       <Reveal>
       <Wrap className="flex flex-col gap-8">
         <h2 className="text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">

@@ -1,14 +1,6 @@
 @import "tailwindcss";
-@import "@fontsource/be-vietnam-pro/vietnamese-400.css";
-@import "@fontsource/be-vietnam-pro/latin-400.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-500.css";
-@import "@fontsource/be-vietnam-pro/latin-500.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-600.css";
-@import "@fontsource/be-vietnam-pro/latin-600.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-700.css";
-@import "@fontsource/be-vietnam-pro/latin-700.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-800.css";
-@import "@fontsource/be-vietnam-pro/latin-800.css";
+/* Inter, the font of app.gitbook.com; the variable file carries every weight and the Vietnamese letters */
+@import "@fontsource-variable/inter";
 @import "./shared/ui/tokens.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -186,4 +178,31 @@
 }
 .bb-sheet[data-state="closed"] {
   animation: bb-out 140ms ease-in;
+}
+
+/* Sign-in pages, after app.gitbook.com/join: the app shape (6px corners, 36px tall), white fields with a light outline. */
+.bb-auth [data-slot="button"] {
+  border-radius: 6px;
+}
+.bb-auth [data-slot="button"][data-size="default"],
+.bb-auth [data-slot="button"][data-size="lg"] {
+  height: 2.25rem;
+  font-size: 0.875rem;
+}
+.bb-auth [data-slot="input"] {
+  border-radius: 6px;
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px var(--grey-300);
+}
+.bb-auth [data-slot="input"]:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--primary);
+  outline: 3px solid color-mix(in oklab, var(--primary) 20%, transparent);
+  outline-offset: 0;
+}
+.bb-auth [data-slot="button"][data-variant="default"] {
+  background-color: var(--ink);
+  color: #fff;
+}
+.bb-auth [data-slot="button"][data-variant="default"]:hover {
+  background-color: color-mix(in oklab, var(--ink) 85%, white);
 }

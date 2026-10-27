@@ -1,7 +1,6 @@
 import { CheckIcon, CopyIcon, DownloadIcon } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/shared/lib/utils'
-import { WaveEdge } from '@/shared/ui/wave'
 import { ContentPage } from '@/widgets/article/article-view'
 import { Breadcrumb, TagList } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
@@ -141,7 +140,6 @@ export function BrandKitPage() {
           </div>
         </section>
         <div className="relative bg-background pt-10 pb-16 lg:pt-14 lg:pb-24">
-          <WaveEdge className="text-background" />
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-16 px-4 sm:px-6">
             <Section id="logo" title="Logo và biểu tượng" intro="Tất cả là SVG, phóng to không vỡ. Chọn bản màu cho nền sáng và bản trắng cho nền tối.">
               <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

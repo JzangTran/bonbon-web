@@ -1,125 +1,146 @@
 import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { siteUrl } from '@/shared/config/sites'
-import { TextSizeControl } from '@/shared/ui/text-size-control'
-import { WaveBackdrop } from '@/shared/ui/wave'
-import { Lockup } from '@/shared/ui/brand'
+import { Lockup, Mark } from '@/shared/ui/brand'
+import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
+import { TextSizeControl } from '@/shared/ui/text-size-control'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
-/**
- * The bar every sign-in and sign-up page starts with: the logo and the page name side by side on the left, a help
- * link on the right (shown only when a support address is configured).
- */
-export function AuthTopBar({ title }: { title: string }) {
+/** Pictures of the seller site, stacked and tilted on the orange rings: the right half of the sign-in pages. */
+function AuthArt() {
+  const shots = ['/guides/tong-quan.jpg', '/guides/thuc-don.jpg', '/guides/don-hang.jpg']
   return (
-    <header className="border-b bg-white px-4">
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4">
-        <a href={siteUrl('public')} className="flex min-w-0 items-center gap-3 text-ink">
-          <Lockup className="h-8 shrink-0" />
-          <span aria-hidden="true" className="hidden h-5 w-px bg-border sm:block" />
-          <span className="hidden truncate text-[0.9375rem] font-medium text-muted-foreground sm:block">{title}</span>
-        </a>
-        <div className="flex items-center gap-2">
-        <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline" />
-        {SUPPORT_EMAIL ? (
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="rounded-full px-4 py-2 text-sm font-medium text-ink hover:bg-muted">
-            Bạn cần giúp đỡ?
-          </a>
-        ) : null}
+    <div aria-hidden="true" className="relative hidden overflow-hidden lg:block">
+      <OrangeRings className="absolute top-1/2 -left-[22%] h-[130%] w-auto -translate-y-1/2" />
+      <div className="absolute top-1/2 left-[18%] w-[78%] -translate-y-1/2 [perspective:1600px]">
+        <div className="flex flex-col gap-6 [transform:rotateX(28deg)_rotateZ(-18deg)] [transform-style:preserve-3d]">
+          {shots.map((src, i) => (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              className="w-full rounded-xl bg-white shadow-[0_20px_50px_rgb(0_0_0/0.12)]"
+              style={{ transform: `translateX(${i * 6}%)` }}
+            />
+          ))}
         </div>
       </div>
-    </header>
-  )
-}
-
-/** A centered card under the top bar: sign-in help pages (forgot password, verify email, admin sign-in). */
-export function AuthShell({ title, description, children, footer, heading = 'Đăng nhập', bare = false }: {
-  title: string
-  description?: string
-  children: ReactNode
-  footer?: ReactNode
-  /** The name shown beside the logo in the top bar. */
-  heading?: string
-  /** No bar at all: pages reached from outside (a payment provider) that only say goodbye. */
-  bare?: boolean
-}) {
-  return (
-    <div className="flex min-h-svh flex-col bg-background">
-      {bare ? null : <AuthTopBar title={heading} />}
-      <main className="flex flex-1 flex-col items-center justify-center gap-5 px-4 py-10">
-        <div className="flex w-full max-w-sm flex-col gap-5 rounded-panel bg-card p-8 shadow-float">
-          <div className="flex flex-col gap-1.5 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-            {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
-          </div>
-          {children}
-        </div>
-        {footer ? <div className="text-center text-sm text-muted-foreground">{footer}</div> : null}
-      </main>
     </div>
   )
 }
 
 /**
- * Sign-in and sign-up entry: marketing copy on the left, a floating card on the right, soft waves fading
- * out at the bottom. Below md the copy drops under the card.
+ * The frame of every sign-in and sign-up page, after app.gitbook.com/join: the form in a narrow column on the left of a white page, the
+ * logo above it, the orange rings with pictures of the product on the right half (from 1024px). Buttons and fields inside get the
+ * squarer app shape (6px) through the .bb-auth class in index.css.
  */
-export function AuthHero({ heading, eyebrow, headline, headlineSoft, points, cardTitle, children, footer }: {
+function AuthFrame({ children, footer }: { children: ReactNode; footer?: ReactNode }) {
+  return (
+    <div className="bb-auth grid min-h-svh bg-white lg:grid-cols-2">
+      <div className="flex min-h-svh flex-col px-6 sm:px-12 xl:pl-[8.5rem]">
+        <header className="flex h-20 items-center justify-between gap-4">
+          <a href={siteUrl('public')} aria-label="bonbon, trang chủ" className="flex items-center">
+            <Lockup className="h-7" />
+          </a>
+          <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline" />
+        </header>
+        <main className="flex w-full max-w-[30rem] flex-1 flex-col justify-center gap-6 py-10">{children}</main>
+        <footer className="flex flex-wrap items-center gap-x-5 gap-y-1 pb-8 text-small text-muted-foreground">
+          {footer}
+          {SUPPORT_EMAIL ? (
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-ink">
+              Bạn cần giúp đỡ?
+            </a>
+          ) : null}
+        </footer>
+      </div>
+      <AuthArt />
+    </div>
+  )
+}
+
+/** Two lines in the style of the GitBook sign-up: the first in a soft grey, the second in ink. */
+function Heading({ first, second, as = 'h1' }: { first: string; second?: string; as?: 'h1' | 'h2' }) {
+  const Tag = as
+  return (
+    <Tag className="text-[1.875rem] leading-9 font-medium tracking-[-0.015em]">
+      {second ? (
+        <>
+          <span className="block text-ink/60">{first}</span>
+          <span className="block text-ink">{second}</span>
+        </>
+      ) : (
+        <span className="block text-ink">{first}</span>
+      )}
+    </Tag>
+  )
+}
+
+/** A sign-in help page (forgot password, verify email, admin sign-in): the title, an optional line under it, the form. */
+export function AuthShell({ title, description, children, footer, bare = false }: {
+  title: string
+  description?: string
+  children: ReactNode
+  footer?: ReactNode
+  /** Kept for the pages that still pass it; the frame no longer shows a page name beside the logo. */
+  heading?: string
+  /** Pages reached from outside (a payment provider) that only say goodbye: no pictures, just the message. */
+  bare?: boolean
+}) {
+  const body = (
+    <>
+      <div className="flex flex-col gap-2">
+        <Heading first={title} />
+        {description ? <p className="text-ui text-muted-foreground">{description}</p> : null}
+      </div>
+      {children}
+      {footer ? <div className="text-ui text-muted-foreground">{footer}</div> : null}
+    </>
+  )
+  if (bare) {
+    return (
+      <div className="bb-auth flex min-h-svh flex-col items-center justify-center gap-6 bg-white px-6">
+        <div className="flex w-full max-w-[30rem] flex-col gap-6">{body}</div>
+      </div>
+    )
+  }
+  return <AuthFrame>{body}</AuthFrame>
+}
+
+/**
+ * The sign-in and sign-up entry: a two-line heading (`headline` soft, `headlineSoft` in ink), the form, and a line under it
+ * ("Bạn mới biết đến bonbon? Đăng ký"). `cardTitle` names the form for assistive tech; `eyebrow` sits above the heading.
+ */
+export function AuthHero({ eyebrow, headline, headlineSoft, cardTitle, children, footer }: {
   heading: string
   eyebrow: string
   headline: string
-  /** the rest of the headline, in the soft gray */
   headlineSoft?: string
-  points: { icon: ReactNode; text: string }[]
+  points?: { icon: ReactNode; text: string }[]
   cardTitle: string
   children: ReactNode
   footer: ReactNode
 }) {
   return (
-    <div className="flex min-h-svh flex-col bg-background">
-      <AuthTopBar title={heading} />
-      <main className="relative flex flex-1 items-center overflow-hidden">
-        <WaveBackdrop />
-        <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 md:grid-cols-[minmax(0,1fr)_22rem] md:items-center md:gap-16 lg:grid-cols-[minmax(0,1fr)_24rem]">
-          <section className="order-2 flex flex-col gap-6 md:order-1">
-            <div>
-              <p className="text-base font-semibold text-primary">{eyebrow}</p>
-              <h2 className="mt-2 max-w-md text-[2.5rem] leading-[2.875rem] font-semibold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
-                {headline}
-                {headlineSoft ? (
-                  <>
-                    <br />
-                    <span className="text-headline-soft">{headlineSoft}</span>
-                  </>
-                ) : null}
-              </h2>
-            </div>
-            <ul className="flex max-w-md flex-col gap-4">
-              {points.map((point) => (
-                <li key={point.text} className="flex items-start gap-3 text-foreground">
-                  <span aria-hidden="true" className="flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-white [&_svg]:size-[22px]">
-                    {point.icon}
-                  </span>
-                  <span className="pt-2.5">{point.text}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <div className="order-1 flex w-full max-w-sm flex-col gap-5 justify-self-center rounded-panel bg-card p-8 shadow-float md:order-2 md:max-w-none">
-            <h1 className="text-2xl font-semibold tracking-tight">{cardTitle}</h1>
-            {children}
-            <p className="text-center text-sm text-muted-foreground">{footer}</p>
-          </div>
-        </div>
-      </main>
-    </div>
+    <AuthFrame>
+      <div className="flex flex-col gap-3">
+        <Mark className="h-9 self-start" />
+        <p className="text-small font-medium text-primary">{eyebrow}</p>
+        <Heading as="h2" first={headline} second={headlineSoft} />
+      </div>
+      <section aria-label={cardTitle} className="flex flex-col gap-4">
+        <h1 className="sr-only">{cardTitle}</h1>
+        {children}
+      </section>
+      <p className="text-ui text-muted-foreground">{footer}</p>
+    </AuthFrame>
   )
 }
 
-/** The pages after the entry card: three steps over a centered card with a back arrow. */
-export function AuthStepPage({ heading, steps, current, title, description, onBack, children }: {
+/** The pages after the entry: the steps, a back arrow, the title and the form, in the same frame. */
+export function AuthStepPage({ steps, current, title, description, onBack, children }: {
   heading: string
   steps: StepperStep[]
   current: number
@@ -129,37 +150,34 @@ export function AuthStepPage({ heading, steps, current, title, description, onBa
   children: ReactNode
 }) {
   return (
-    <div className="flex min-h-svh flex-col bg-background">
-      <AuthTopBar title={heading} />
-      <main className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center gap-8 px-4 py-10">
-        <Stepper steps={steps} current={current} className="max-w-md" />
-        <div className="relative flex w-full flex-col gap-5 rounded-panel bg-card p-8 shadow-float">
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              aria-label="Quay lại"
-              className="absolute top-5 left-5 flex size-8 items-center justify-center rounded-sm text-primary hover:bg-muted"
-            >
-              <ArrowLeftIcon className="size-5" />
-            </button>
-          ) : null}
-          <div className="flex flex-col gap-1.5 px-8 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-            {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
-          </div>
-          {children}
+    <AuthFrame>
+      <Stepper steps={steps} current={current} className="max-w-md" />
+      <div className="flex items-start gap-3">
+        {onBack ? (
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Quay lại"
+            className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-grey-100 hover:text-ink"
+          >
+            <ArrowLeftIcon className="size-5" />
+          </button>
+        ) : null}
+        <div className="flex flex-col gap-2">
+          <Heading first={title} />
+          {description ? <p className="text-ui text-muted-foreground">{description}</p> : null}
         </div>
-      </main>
-    </div>
+      </div>
+      {children}
+    </AuthFrame>
   )
 }
 
 /** The big outlined check of a finished flow. */
 export function SuccessMark() {
   return (
-    <span className="mx-auto flex size-14 items-center justify-center rounded-full border-2 border-primary text-primary">
-      <CheckIcon className="size-8" />
+    <span className="flex size-12 items-center justify-center rounded-full bg-accent text-primary">
+      <CheckIcon className="size-6" />
     </span>
   )
 }
@@ -167,7 +185,7 @@ export function SuccessMark() {
 export function FormError({ message }: { message: string | null }) {
   if (!message) return null
   return (
-    <p role="alert" className="rounded-md bg-danger-subtle px-3 py-2 text-sm text-danger-fg">
+    <p role="alert" className="rounded-md bg-danger-subtle px-3 py-2 text-ui text-danger-fg">
       {message}
     </p>
   )
@@ -175,7 +193,7 @@ export function FormError({ message }: { message: string | null }) {
 
 export function FormSuccess({ message }: { message: string }) {
   return (
-    <p role="status" className="rounded-md bg-success-subtle px-3 py-2 text-sm text-success-fg">
+    <p role="status" className="rounded-md bg-success-subtle px-3 py-2 text-ui text-success-fg">
       {message}
     </p>
   )

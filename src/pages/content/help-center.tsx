@@ -7,7 +7,6 @@ import { problemMessage } from '@/shared/api'
 import { formatDateTime } from '@/shared/lib/format'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
-import { WaveEdge } from '@/shared/ui/wave'
 import { FormError } from '@/widgets/auth-shell'
 import { ArticleView, ContentPage } from '@/widgets/article/article-view'
 import { helpPath, siteUrl } from '@/shared/config/sites'
@@ -66,7 +65,6 @@ export function HelpCenterPage() {
           </div>
         </section>
         <section className="relative bg-background pt-8 pb-16 lg:pt-12 lg:pb-24">
-          <WaveEdge className="text-background" />
           <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6">
             {articles.isError ? <FormError message={problemMessage(articles.error)} /> : null}
             {articles.isPending ? (
