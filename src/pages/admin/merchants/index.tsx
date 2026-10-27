@@ -50,7 +50,7 @@ export function AdminMerchantsPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Cửa hàng</h1>
+        <h1 className="text-2xl font-semibold">Cửa hàng</h1>
         <p className="text-sm text-muted-foreground">
           Danh sách mọi cửa hàng đã gửi hồ sơ và vùng phủ thực tế. Muốn xử lý hồ sơ chờ duyệt, vào mục Duyệt cửa hàng.
         </p>

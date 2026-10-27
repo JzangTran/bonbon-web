@@ -49,7 +49,7 @@ export function AdminPlatformStatsPage() {
     <div className="flex min-w-0 max-w-5xl flex-col gap-6">
       <AdminHomeTabs />
       <div>
-        <h1 className="text-2xl font-bold">Thống kê hệ thống</h1>
+        <h1 className="text-2xl font-semibold">Thống kê hệ thống</h1>
         <p className="text-sm text-muted-foreground">
           Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam). Doanh thu gộp là tiền khách đã trả, gồm phí giao; hoa hồng là thu nhập của nền tảng, chưa trừ phần hoàn lại do khiếu nại.
         </p>

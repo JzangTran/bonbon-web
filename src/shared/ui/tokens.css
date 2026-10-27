@@ -1,93 +1,94 @@
 /*
- * bonbon design tokens v2 (deep green) — values from docs/reference/design-tokens.md (contrast checked there).
- * Light is the default; .dark applies the dark set. shadcn components read the semantic variables
- * (--primary, --border, ...); bonbon-specific scales are exposed as Tailwind colors via @theme below.
+ * bonbon design tokens v4 (orange, quiet) — owner decision 2026-10-27, after gitbook.com.
+ * White first and a lot of space; text in a near-black and two greys so the content stands out; borders only where something is
+ * selected or needs a boundary; a selected item changes its text colour, not its background. Brand colour: orange.
  *
- * Look (owner decision 2026-10-27, after gitbook.com): white ground, quiet near-neutral fills and hairlines, ink for primary
- * buttons, green only as the accent. Shape: buttons, chips and search fields are pills; controls 8 px, surfaces 12 px.
+ * Contrast (checked with the WCAG formula):
+ *   orange-500 #FE551B  3.22:1 on white  → large shapes, icons, text of 24px and up only
+ *   orange-600 #CC3D0B  4.95:1 on white  → links, selected items, buttons with white text
+ *   ink        #1D1D1D 16.9:1  ·  grey-600 #6E6E6E 5.10:1  ·  grey-400 #A3A3A3 decorative only
  */
 
 :root {
-  /* brand green; green-500 only for large shapes with ink text (white on it fails AA) */
-  --green-50: #e8f5ee;
-  --green-100: #cdebda;
-  --green-500: #00a44a;
-  --green-600: #007f3a;
-  --green-700: #006c35;
-  --green-800: #005c2e;
-  --green-900: #0b3b24;
+  /* brand orange */
+  --orange-50: #fff4ee;
+  --orange-100: #ffe3d4;
+  --orange-500: #fe551b;
+  --orange-600: #cc3d0b;
+  --orange-700: #a8320a;
+  --orange-900: #4a1704;
+  /* neutral greys */
+  --grey-50: #fafafa;
+  --grey-100: #f5f5f5;
+  --grey-200: #ededed;
+  --grey-300: #e0e0e0;
+  --grey-400: #a3a3a3;
+  --grey-600: #6e6e6e;
+  --ink: #1d1d1d;
   --amber-50: #fff6e0;
   --amber-400: #ffb020;
   --amber-800: #8a5100;
-  --image-slot: #e9eeeb;
+  --image-slot: #f2f2f2;
 
-  /* semantic (solid takes white text; subtle bg pairs with its -fg) */
-  --success: #006c35;
-  --success-subtle: #e8f5ee;
-  --success-fg: #006c35;
+  /* semantic states keep their own colours (success stays green) */
+  --success: #1f7a3f;
+  --success-subtle: #ebf6ef;
+  --success-fg: #1f6b38;
   --warning: #a15c00;
   --warning-subtle: #fff4e0;
   --warning-fg: #8a4b00;
   --info: #1d5bd8;
-  --info-subtle: #eaf1ff;
+  --info-subtle: #eef3ff;
   --info-fg: #1d4fb8;
   --danger-subtle: #fdecea;
   --danger-fg: #b3261e;
   --highlight-subtle: var(--amber-50);
   --highlight-fg: var(--amber-800);
 
-  /* shadcn semantic variables */
   --background: #ffffff;
-  --foreground: #14201a;
+  --foreground: var(--ink);
   --card: #ffffff;
-  --card-foreground: #14201a;
+  --card-foreground: var(--ink);
   --popover: #ffffff;
-  --popover-foreground: #14201a;
-  --primary: var(--green-600);
-  --primary-hover: var(--green-700);
+  --popover-foreground: var(--ink);
+  --primary: var(--orange-600);
+  --primary-hover: var(--orange-700);
   --primary-foreground: #ffffff;
-  --secondary: #f1f3f2;
-  --secondary-foreground: #14201a;
-  --muted: #f1f3f2;
-  --muted-foreground: #4b5a52;
-  --accent: var(--green-50);
-  --accent-foreground: var(--green-700);
+  --secondary: var(--grey-100);
+  --secondary-foreground: var(--ink);
+  --muted: var(--grey-100);
+  --muted-foreground: var(--grey-600);
+  --accent: var(--orange-50);
+  --accent-foreground: var(--orange-600);
   --destructive: #c42b1c;
   --destructive-foreground: #ffffff;
-  --border: #e6e9e7; /* decorative only */
-  --input: #7c8a83; /* control boundary, 3.38:1 on bg */
-  --ring: var(--green-600);
-  --chart-1: #007f3a;
+  /* a hairline, used sparingly (selected things, tables) */
+  --border: var(--grey-200);
+  /* the boundary of a control that has no fill */
+  --input: var(--grey-300);
+  --ring: var(--orange-500);
+  --chart-1: var(--orange-500);
   --chart-2: #ffb020;
   --chart-3: #1d5bd8;
-  --chart-4: #0b3b24;
+  --chart-4: var(--orange-900);
   --chart-5: #a15c00;
   --radius: 0.5rem;
-  /* workspace (seller/admin web): flat, white first */
-  --ws-header: #ffffff;
-  --ws-ground: #f7f8f7;
-  --ws-fill: #f1f3f2;
-  --ws-hairline: #eef1f0;
 
-  /* v3 customer-facing look (landing, sign-in): ink bar, two-tone headlines, pale pills */
-  --ink: #14201a;
-  --headline-soft: #7c8a83; /* only for text of 24px and up (3.61:1 on white) */
-  --pill-pale: #f1f3f2;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #14201a;
-  --sidebar-primary: var(--green-600);
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--green-50);
-  --sidebar-accent-foreground: var(--green-700);
-  --sidebar-border: #e3e8e5;
-  --sidebar-ring: var(--green-600);
+  /* merchant, console and ops: white everywhere */
+  --ws-header: #ffffff;
+  --ws-ground: #ffffff;
+  --ws-fill: var(--grey-100);
+  --ws-hairline: var(--grey-200);
+
+  --headline-soft: var(--grey-400); /* only for text of 24px and up */
+  --pill-pale: var(--grey-100);
 }
 
 .dark {
-  --image-slot: #1e2a24;
-  --success: #3cc77a;
+  --image-slot: #262626;
+  --success: #4fc27a;
   --success-subtle: #12301f;
-  --success-fg: #7fd9a6;
+  --success-fg: #8fdcaa;
   --warning-subtle: #33240a;
   --warning-fg: #f5c26b;
   --info-subtle: #14223f;
@@ -97,44 +98,67 @@
   --highlight-subtle: #2e2410;
   --highlight-fg: #f2cb7a;
 
-  --ws-header: #0e1512;
-  --ws-ground: #0e1512;
-  --ws-fill: #1e2a24;
+  --ws-header: #141414;
+  --ws-ground: #141414;
+  --ws-fill: #222222;
   --ws-hairline: rgb(255 255 255 / 8%);
 
-  --background: #0e1512;
-  --foreground: #e6ede9;
-  --card: #16201b;
-  --card-foreground: #e6ede9;
-  --popover: #16201b;
-  --popover-foreground: #e6ede9;
-  --primary: #3cc77a;
-  --primary-hover: #5fd493;
-  --primary-foreground: #0e1512;
-  --secondary: #1e2a24;
-  --secondary-foreground: #e6ede9;
-  --muted: #1e2a24;
-  --muted-foreground: #9db0a5;
-  --accent: #12301f;
-  --accent-foreground: #7fd9a6;
+  --background: #141414;
+  --foreground: #ececec;
+  --card: #141414;
+  --card-foreground: #ececec;
+  --popover: #1c1c1c;
+  --popover-foreground: #ececec;
+  --primary: #ff7a4a;
+  --primary-hover: #ff9670;
+  --primary-foreground: #141414;
+  --secondary: #222222;
+  --secondary-foreground: #ececec;
+  --muted: #222222;
+  --muted-foreground: #a3a3a3;
+  --accent: #2e1a10;
+  --accent-foreground: #ff9670;
   --destructive: #f07b6e;
-  --destructive-foreground: #0e1512;
+  --destructive-foreground: #141414;
   --border: rgb(255 255 255 / 10%);
-  --input: #5e7066;
-  --ring: #3cc77a;
-  --sidebar: #0e1512;
-  --sidebar-foreground: #e6ede9;
-  --sidebar-primary: #3cc77a;
-  --sidebar-primary-foreground: #0e1512;
-  --sidebar-accent: #12301f;
-  --sidebar-accent-foreground: #7fd9a6;
-  --sidebar-border: rgb(255 255 255 / 10%);
-  --sidebar-ring: #3cc77a;
+  --input: rgb(255 255 255 / 18%);
+  --ring: #ff7a4a;
+  --ink: #ececec;
 }
 
 @theme inline {
   --font-sans: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-sans);
+
+  /*
+   * Type scale (size / line height / weight). Headings are semibold at most; body text is regular; small UI text is 14px.
+   *   display 48/56 · h1 36/44 · h2 24/32 · h3 18/28 · lead 18/28 · body 16/26 · ui 14/20 · small 13/20 · caption 12/16
+   */
+  --text-display: 3rem;
+  --text-display--line-height: 3.5rem;
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 600;
+  --text-h1: 2.25rem;
+  --text-h1--line-height: 2.75rem;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 600;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 2rem;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h2--font-weight: 600;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.75rem;
+  --text-h3--font-weight: 600;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.75rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
+  --text-ui: 0.875rem;
+  --text-ui--line-height: 1.25rem;
+  --text-small: 0.8125rem;
+  --text-small--line-height: 1.25rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -161,14 +185,6 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 
   --color-ws-header: var(--ws-header);
   --color-ws-ground: var(--ws-ground);
@@ -177,14 +193,21 @@
   --color-ink: var(--ink);
   --color-headline-soft: var(--headline-soft);
   --color-pill-pale: var(--pill-pale);
+  --color-grey-50: var(--grey-50);
+  --color-grey-100: var(--grey-100);
+  --color-grey-200: var(--grey-200);
+  --color-grey-300: var(--grey-300);
+  --color-grey-400: var(--grey-400);
+  --color-grey-600: var(--grey-600);
 
-  --color-brand-50: var(--green-50);
-  --color-brand-100: var(--green-100);
-  --color-brand-500: var(--green-500);
-  --color-brand-600: var(--green-600);
-  --color-brand-700: var(--green-700);
-  --color-brand-800: var(--green-800);
-  --color-brand-900: var(--green-900);
+  /* "brand" is orange now; the old names stay so the pages keep working */
+  --color-brand-50: var(--orange-50);
+  --color-brand-100: var(--orange-100);
+  --color-brand-500: var(--orange-500);
+  --color-brand-600: var(--orange-600);
+  --color-brand-700: var(--orange-600);
+  --color-brand-800: var(--orange-700);
+  --color-brand-900: var(--orange-900);
   --color-amber-50: var(--amber-50);
   --color-amber-400: var(--amber-400);
   --color-amber-800: var(--amber-800);
@@ -203,21 +226,20 @@
   --color-highlight-subtle: var(--highlight-subtle);
   --color-highlight-fg: var(--highlight-fg);
 
-  /* One shape for the whole product (owner decision 2026-10-20): controls 8 px (buttons, inputs, selects, menus, badges),
-     surfaces 12 px (cards, panels, dialogs, photos). No pills; circles only for avatars, switches and dots. */
+  /* Shape: buttons, chips, tabs and search fields are pills (rounded-full); controls 8 px; surfaces 12 px. */
   --radius-xs: 4px;
   --radius-sm: var(--radius);
   --radius-md: var(--radius);
   --radius-lg: 12px;
   --radius-xl: 12px;
-  --radius-2xl: 12px;
-  --radius-3xl: 12px;
-  --radius-4xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 16px;
+  --radius-4xl: 16px;
   --radius-panel: 12px;
   --radius-card: 12px;
   --radius-media: 12px;
   --radius-device: 44px;
 
-  /* flat, not raised: a floating layer (menu, popover, drawer) is set apart by a hairline, never a cast shadow */
-  --shadow-float: 0 0 0 1px rgb(20 32 26 / 0.1);
+  /* a floating layer (menu, popover, dialog) needs to stand off the page: a soft, wide shadow, no outline */
+  --shadow-float: 0 8px 28px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.06);
 }

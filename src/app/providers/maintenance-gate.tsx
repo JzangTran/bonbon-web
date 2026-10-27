@@ -36,7 +36,7 @@ export function MaintenanceGate() {
     return (
       <div role="alert" className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-background px-6 text-center">
         <Illustration name="maintenance" className="w-44" />
-        <h1 className="text-2xl font-bold">Bonbon đang bảo trì</h1>
+        <h1 className="text-2xl font-semibold">Bonbon đang bảo trì</h1>
         <p className="max-w-md text-muted-foreground">{m?.message || 'Hệ thống đang được bảo trì. Bạn vui lòng quay lại sau ít phút.'}</p>
         {m?.endsAt ? <p className="text-sm">Dự kiến xong lúc {formatDateTime(m.endsAt)}.</p> : null}
         <p className="text-xs text-muted-foreground">Trang tự kiểm tra lại và mở khi bảo trì xong.</p>

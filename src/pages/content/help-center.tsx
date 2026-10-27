@@ -24,13 +24,13 @@ function HelpCard({ article }: { article: HelpArticle }) {
     <li className="min-w-0">
       <Link
         to={articlePath(article.id)}
-        className="group flex h-full flex-col gap-3 rounded-xl bg-card p-2.5 ring-1 ring-border outline-none transition-shadow hover:ring-foreground/25 focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="group flex h-full flex-col gap-3 rounded-xl bg-card p-2.5 outline-none transition-colors hover:bg-grey-50 focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <div className="flex aspect-[16/10] items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-100">
           <LifeBuoyIcon className="size-12" strokeWidth={1.5} aria-hidden="true" />
         </div>
         <TagList tags={tags} oneLine />
-        <h3 className="px-0.5 pb-1 text-[1.0625rem] leading-6 font-bold text-ink">{article.title}</h3>
+        <h3 className="px-0.5 pb-1 text-[1.0625rem] leading-6 font-semibold text-ink">{article.title}</h3>
       </Link>
     </li>
   )
@@ -49,7 +49,7 @@ export function HelpCenterPage() {
         <section className="border-b bg-white">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
             <Breadcrumb trail={trail} />
-            <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-extrabold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Trung tâm trợ giúp</h1>
+            <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Trung tâm trợ giúp</h1>
             <p className="max-w-2xl text-[1.0625rem] leading-7 text-muted-foreground">Tìm câu trả lời nhanh, hoặc đọc các bài hướng dẫn do đội ngũ bonbon viết.</p>
             <div className="relative mt-2 w-full max-w-xl">
               <SearchIcon className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />

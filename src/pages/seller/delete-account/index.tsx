@@ -6,7 +6,7 @@ import { merchantPath } from '@/shared/config/sites'
 export function SellerDeleteAccountPage() {
   return (
     <FocusFrame title="Xoá tài khoản" exitTo={merchantPath('/account')} flat>
-      <h1 className="mb-4 text-2xl font-bold">Xoá tài khoản</h1>
+      <h1 className="mb-4 text-2xl font-semibold">Xoá tài khoản</h1>
       <DeleteAccountCard />
     </FocusFrame>
   )

@@ -60,7 +60,7 @@ export function ShopReviewDetailPage() {
         <ArrowLeftIcon className="size-4" /> Duyệt cửa hàng
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-bold">{shop.name ?? '(chưa đặt tên)'}</h1>
+        <h1 className="text-2xl font-semibold">{shop.name ?? '(chưa đặt tên)'}</h1>
         <Badge className={status.className}>{status.label}</Badge>
         <span className="text-sm text-muted-foreground" title={formatDateTime(shop.submittedAt)}>
           Gửi {formatRelative(shop.submittedAt)}

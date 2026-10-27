@@ -44,8 +44,8 @@ type Props = {
 }
 
 const tabClass =
-  'relative flex h-11 shrink-0 items-center gap-2 border-b border-ws-hairline px-5 text-[0.8125rem] text-foreground outline-none transition-colors hover:bg-ws-fill focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
-const selectedClass = 'font-semibold shadow-[inset_0_-2px_0_0_var(--color-primary)]'
+  'relative flex h-11 shrink-0 items-center gap-2 px-4 text-ui text-muted-foreground outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
+const selectedClass = 'font-medium text-primary shadow-[inset_0_-2px_0_0_var(--color-primary)]'
 
 /**
  * The tab bar of a workspace page: a white block of its own above the content block. One tab per business concern; the thin
@@ -67,7 +67,7 @@ export function PageTabs({ label, tabs, value, onValueChange }: Props) {
           <TabLabel tab={t} />
         </NavLink>
       ))}
-      <span aria-hidden="true" className="min-w-0 flex-1 border-b border-ws-hairline" />
+      <span aria-hidden="true" className="min-w-0 flex-1" />
     </nav>
   ) : (
     <div role="tablist" aria-label={label} className="flex overflow-x-auto bg-card">
@@ -83,7 +83,7 @@ export function PageTabs({ label, tabs, value, onValueChange }: Props) {
           <TabLabel tab={t} />
         </button>
       ))}
-      <span aria-hidden="true" className="min-w-0 flex-1 border-b border-ws-hairline" />
+      <span aria-hidden="true" className="min-w-0 flex-1" />
     </div>
   )
   if (!slots) return content

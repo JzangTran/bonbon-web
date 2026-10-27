@@ -32,7 +32,7 @@ export function AdminPenaltiesPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Điểm phạt các quán</h1>
+        <h1 className="text-2xl font-semibold">Điểm phạt các quán</h1>
         <p className="text-sm text-muted-foreground">
           Quán nào đang có điểm, miễn hoặc cộng điểm, quyết kháng nghị và đình chỉ. Từ 6 điểm quán được đánh dấu để xem xét đình chỉ; hệ thống không bao giờ tự đình chỉ.
         </p>

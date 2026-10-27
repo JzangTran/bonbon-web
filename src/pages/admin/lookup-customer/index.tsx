@@ -31,7 +31,7 @@ export function AdminLookupCustomerPage() {
       {c ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-bold">{c.name}</h1>
+            <h1 className="text-2xl font-semibold">{c.name}</h1>
             {(c.roles ?? []).map((r) => (
               <Badge key={r} variant="outline">
                 {r === 'SELLER' ? 'Người bán' : 'Khách'}

@@ -31,7 +31,7 @@ function Viewer({ id, onBack }: { id: string; onBack: () => void }) {
         <ArrowLeftIcon className="size-4" /> Quay lại
       </button>
       <div>
-        <h1 className="text-2xl font-bold">Trò chuyện khách – quán</h1>
+        <h1 className="text-2xl font-semibold">Trò chuyện khách – quán</h1>
         {conversation.data ? (
           <p className="text-sm text-muted-foreground">
             {conversation.data.customerName} ↔ {conversation.data.shopName} · từ {formatDateTime(conversation.data.createdAt)}

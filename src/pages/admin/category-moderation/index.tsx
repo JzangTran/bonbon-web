@@ -54,7 +54,7 @@ export function AdminCategoryModerationPage() {
     <div className="flex max-w-5xl flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Món sai ngành</h1>
+          <h1 className="text-2xl font-semibold">Món sai ngành</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
             Hoa hồng tính theo ngành của món mà quán tự chọn, nên món xếp sang ngành rẻ hơn cần được sửa. Món bị đánh dấu ẩn khỏi tìm kiếm cho đến khi quán sửa; quá hạn hệ thống áp dụng ngành bạn gợi ý, quán có 7 ngày để đồng ý hoặc kháng nghị.
           </p>

@@ -19,7 +19,7 @@ export function SellerClosingPage() {
   if (status === 'CLOSED') {
     return (
       <div className="flex max-w-3xl flex-col gap-3">
-        <h1 className="text-2xl font-bold">Cửa hàng đã đóng</h1>
+        <h1 className="text-2xl font-semibold">Cửa hàng đã đóng</h1>
         <p className="text-muted-foreground">Mọi việc đã xong và cửa hàng đã đóng. Muốn bán lại, hãy mở một cửa hàng mới hoặc liên hệ hỗ trợ.</p>
       </div>
     )
@@ -33,7 +33,7 @@ export function SellerClosingPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Cửa hàng đang đóng</h1>
+        <h1 className="text-2xl font-semibold">Cửa hàng đang đóng</h1>
         <p className="text-sm text-muted-foreground">
           Cửa hàng không còn hiện với khách và không nhận đơn mới. Các đơn đang làm vẫn làm tiếp, và bạn vẫn xem được thu nhập. Cửa hàng tự đóng hẳn khi tất cả các việc dưới đây xong; đóng rồi không mở lại được.
         </p>

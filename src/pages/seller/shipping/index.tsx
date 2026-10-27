@@ -20,7 +20,7 @@ export function SellerShippingPage() {
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />
   return (
     <div className="flex max-w-4xl flex-col gap-6">
-      <h1 className="text-2xl font-bold">Cài đặt vận chuyển</h1>
+      <h1 className="text-2xl font-semibold">Cài đặt vận chuyển</h1>
       <IntakeCard shop={shop.data} />
       <ShippingCard key={`ship-${JSON.stringify(shop.data.shipping)}`} shop={shop.data} />
       <HoursCard key={`hours-${JSON.stringify(shop.data.shipping?.openingHours)}`} shop={shop.data} />

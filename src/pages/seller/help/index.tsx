@@ -20,7 +20,7 @@ export function SellerHelpPage() {
     <div className="flex max-w-3xl flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Trợ giúp</h1>
+          <h1 className="text-2xl font-semibold">Trợ giúp</h1>
           <p className="text-sm text-muted-foreground">Hướng dẫn và câu hỏi thường gặp dành cho người bán.</p>
         </div>
         <Button asChild variant="outline">

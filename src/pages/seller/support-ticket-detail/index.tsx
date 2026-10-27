@@ -32,7 +32,7 @@ export function SellerSupportTicketDetailPage() {
       {t ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-bold">{t.subject}</h1>
+            <h1 className="text-2xl font-semibold">{t.subject}</h1>
             <Badge className={status.className}>{status.label}</Badge>
           </div>
           {t.orderNumber ? <p className="text-sm text-muted-foreground">Về đơn #{t.orderNumber}</p> : null}

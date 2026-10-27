@@ -64,7 +64,7 @@ function Preview({ title, summary, content }: { title: string; summary: string; 
         <CardTitle>Xem trước</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <h2 className="text-xl font-bold">{title || '(chưa có tiêu đề)'}</h2>
+        <h2 className="text-xl font-semibold">{title || '(chưa có tiêu đề)'}</h2>
         {summary ? (
           <div className="rounded-sm bg-muted px-3 py-2 text-sm">
             <p className="font-medium">Tóm tắt thay đổi</p>
@@ -137,7 +137,7 @@ function Editor({ type }: { type: LegalDocumentType }) {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <Back />
-      <h1 className="text-2xl font-bold">Soạn phiên bản mới: {label}</h1>
+      <h1 className="text-2xl font-semibold">Soạn phiên bản mới: {label}</h1>
       <Card size="sm">
         <CardContent className="flex flex-col gap-4">
           <Fields title={title} setTitle={setTitle} summary={summary} setSummary={setSummary} content={content} setContent={setContent} reaccept={reaccept} setReaccept={setReaccept} />
@@ -180,7 +180,7 @@ function VersionView({ detail }: { detail: LegalDetail }) {
     <div className="flex max-w-4xl flex-col gap-6">
       <Back />
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-2xl font-semibold">
           {typeLabel} · phiên bản {v.version}
         </h1>
         <Badge className={status.className}>{status.label}</Badge>

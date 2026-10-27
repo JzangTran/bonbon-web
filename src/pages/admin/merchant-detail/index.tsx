@@ -49,7 +49,7 @@ export function AdminMerchantDetailPage() {
         <ArrowLeftIcon className="size-4" /> Cửa hàng
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-bold">{shop.name ?? '(chưa đặt tên)'}</h1>
+        <h1 className="text-2xl font-semibold">{shop.name ?? '(chưa đặt tên)'}</h1>
         <Badge className={status.className}>{status.label}</Badge>
       </div>
 

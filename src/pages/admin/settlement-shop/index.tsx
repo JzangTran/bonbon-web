@@ -50,7 +50,7 @@ export function AdminSettlementShopPage() {
         <Link to={consolePath('/settlement')} className="text-sm text-primary hover:underline">
           ← Đối soát
         </Link>
-        <h1 className="text-2xl font-bold">{v?.name ?? 'Quán'}</h1>
+        <h1 className="text-2xl font-semibold">{v?.name ?? 'Quán'}</h1>
       </div>
       {vendor.isError ? <FormError message={problemMessage(vendor.error)} /> : null}
       {vendor.isPending ? <Skeleton className="h-24" /> : null}
@@ -99,7 +99,7 @@ export function AdminSettlementShopPage() {
             </Label>
             <select
               id="type-filter"
-              className="h-9 rounded-sm border border-input bg-card px-2 text-sm"
+              className="h-9 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-2 text-sm"
               value={type ?? ''}
               onChange={(e) => {
                 setType(e.target.value || null)

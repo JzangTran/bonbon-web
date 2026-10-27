@@ -31,7 +31,7 @@ export function SellerEarningsPage() {
     <div className="flex max-w-5xl flex-col gap-6">
       <FinanceTabs />
       <div>
-        <h1 className="text-2xl font-bold">Thu nhập</h1>
+        <h1 className="text-2xl font-semibold">Thu nhập</h1>
         <p className="text-sm text-muted-foreground">Tiền giữa quán và bonbon. Mọi con số lấy từ sổ cái, cùng một sổ mà quản trị viên đối soát.</p>
       </div>
       {summary.isError ? <FormError message={problemMessage(summary.error)} /> : null}

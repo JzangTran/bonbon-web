@@ -39,7 +39,7 @@ export function SellerChatPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-bold">Tin nhắn</h1>
+        <h1 className="text-2xl font-semibold">Tin nhắn</h1>
         <p className="text-sm text-muted-foreground">
           Khách nhắn hỏi về món, thời gian hoặc địa chỉ giao. Khách chỉ thấy &quot;cửa hàng&quot; trả lời, không thấy ai bên bạn viết. {live ? 'Tin mới hiện ngay.' : 'Đang kiểm tra tin mới mỗi vài giây.'}
         </p>

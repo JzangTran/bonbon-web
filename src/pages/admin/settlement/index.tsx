@@ -37,7 +37,7 @@ export function AdminSettlementPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Đối soát</h1>
+        <h1 className="text-2xl font-semibold">Đối soát</h1>
         <p className="text-sm text-muted-foreground">
           Số dư dương: nền tảng nợ quán (chủ yếu tiền khách trả online). Số dư âm: quán nợ nền tảng (hoa hồng đơn tiền mặt). Mọi số liệu tính từ sổ cái.
         </p>

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cn } from "cn"
+import { cn } from "@/shared/lib/utils"
 
 /**
  * A ceiling for what can be typed when the field names none: the backend limits every field, so nothing the person types
@@ -11,7 +11,7 @@ const DEFAULT_MAX_LENGTH: Record<string, number> = { text: 255, search: 100, ema
 const COUNTED_TYPES = new Set(["text", "search", "email", "tel", "url"])
 
 const FIELD_CLASS =
-  "h-10 w-full min-w-0 rounded-sm border border-input bg-card px-3 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
+  "h-10 w-full min-w-0 rounded-lg bg-grey-100 px-3 py-1 text-ui text-ink transition-colors outline-none placeholder:text-grey-600/70 hover:bg-grey-200/70 focus-visible:bg-white focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-ui file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:bg-danger-subtle aria-invalid:outline-2 aria-invalid:outline-destructive"
 
 /**
  * `showCount` puts "typed/max" (for example 12/100) at the right inside the field. It needs a controlled `value`; a form row turns

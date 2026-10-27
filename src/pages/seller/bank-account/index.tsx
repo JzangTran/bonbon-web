@@ -15,7 +15,7 @@ export function SellerBankAccountPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-6">
-      <h1 className="text-2xl font-bold">Tài khoản ngân hàng</h1>
+      <h1 className="text-2xl font-semibold">Tài khoản ngân hàng</h1>
       {payout ? (
         <dl className="grid grid-cols-[10rem_1fr] gap-x-6 gap-y-4">
           <dt className="text-muted-foreground">Ngân hàng</dt>

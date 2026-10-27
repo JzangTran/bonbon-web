@@ -19,10 +19,10 @@ export function TextSizeControl({ className, tone = 'default' }: { className?: s
               title={`${s.label} (${s.percent}%)`}
               onClick={() => setTextScale(s.id)}
               className={cn(
-                'flex size-8 items-center justify-center rounded-sm font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                'flex size-8 items-center justify-center rounded-full font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 tone === 'light'
                   ? selected ? 'bg-white text-ink' : 'text-white hover:bg-white/10'
-                  : selected ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted',
+                  : selected ? 'text-primary ring-1 ring-primary/40' : 'text-muted-foreground hover:text-ink',
               )}
               style={{ fontSize: `${0.8 + i * 0.15}rem` }}
             >

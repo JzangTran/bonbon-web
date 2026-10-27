@@ -87,7 +87,7 @@ function Hero() {
             Mở quán trên bonbon chỉ trong vài bước
             <ArrowRightIcon className="size-4" aria-hidden="true" />
           </a>
-          <h1 className="max-w-4xl text-[2.5rem] leading-[1.1] font-bold tracking-[-0.025em] sm:text-[3.5rem] lg:text-[4rem]">
+          <h1 className="max-w-4xl text-[2.5rem] leading-[1.1] font-semibold tracking-[-0.025em] sm:text-[3.5rem] lg:text-[4rem]">
             Đặt món từ quán ngay dưới sảnh, <span className="text-primary">giao tận cửa.</span>
           </h1>
           <p className="max-w-2xl text-lg leading-[1.75rem] text-muted-foreground">
@@ -121,7 +121,7 @@ function Hero() {
         </Reveal>
 
         <Reveal delay={120} className="mt-14 w-full max-w-5xl">
-          <div className="rounded-2xl bg-white p-2 text-left ring-1 ring-border">
+          <div className="rounded-2xl bg-grey-50 p-2 text-left">
             <div className="flex items-center gap-1.5 px-3 py-2" aria-hidden="true">
               <span className="size-2.5 rounded-full bg-[#ff5f57]" />
               <span className="size-2.5 rounded-full bg-[#febc2e]" />
@@ -158,7 +158,7 @@ function PhoneMock({ className }: { className?: string }) {
             <span className="size-7 rounded-sm bg-white" />
           </span>
         </div>
-        <div className="text-xl leading-6 font-extrabold tracking-[-0.02em]">
+        <div className="text-xl leading-6 font-semibold tracking-[-0.02em]">
           Hôm nay bạn <Soft>muốn ăn gì?</Soft>
         </div>
         <div className="flex gap-1.5">
@@ -206,7 +206,7 @@ function NearbyShops() {
       <Reveal>
       <Wrap className="flex flex-col gap-9">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="max-w-[620px] text-[2rem] leading-10 font-extrabold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
+          <h2 className="max-w-[620px] text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
             Quán ngay trong khu, <Soft>giao được tới địa chỉ của bạn</Soft>
           </h2>
           <span className="text-[0.8125rem] text-muted-foreground">Ví dụ minh hoạ</span>
@@ -268,7 +268,7 @@ function OrderSteps() {
     <div className="relative">
     <WaveEdge className="text-background" />
     <Wrap className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8 py-12 lg:py-20">
-      <h2 className="col-span-full max-w-[640px] text-[2rem] leading-10 font-extrabold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
+      <h2 className="col-span-full max-w-[640px] text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
         Một đơn hàng, <Soft>bốn bước rõ ràng</Soft>
       </h2>
       {STEPS.map(({ icon: Icon, chip, chipClass, title, body }) => (
@@ -277,7 +277,7 @@ function OrderSteps() {
             <Icon strokeWidth={1.75} />
           </Badge>
           <span className={cn('self-start rounded-sm px-2.5 py-1.5 text-[0.8125rem] font-semibold', chipClass)}>{chip}</span>
-          <h3 className="text-lg font-bold">{title}</h3>
+          <h3 className="text-lg font-semibold">{title}</h3>
           <p className="leading-6 text-muted-foreground">{body}</p>
         </div>
       ))}
@@ -303,7 +303,7 @@ function TrustRow() {
               <Icon strokeWidth={1.75} />
             </Badge>
             <div>
-              <h3 className="mb-1 text-[1.0625rem] font-bold">{title}</h3>
+              <h3 className="mb-1 text-[1.0625rem] font-semibold">{title}</h3>
               <p className="leading-6 text-muted-foreground">{body}</p>
             </div>
           </div>
@@ -326,7 +326,7 @@ function SellerBand() {
       <Reveal>
       <Wrap className="flex flex-wrap items-center gap-14">
         <div className="flex min-w-0 flex-[1_1_30rem] flex-col gap-6">
-          <h2 className="text-[2.125rem] leading-[2.5rem] font-extrabold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
+          <h2 className="text-[2.125rem] leading-[2.5rem] font-semibold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
             Bán cho hàng xóm, <span className="text-[#8fb5a0]">giữ lại nhiều hơn từ mỗi đơn</span>
           </h2>
           <p className="text-lg leading-[1.875rem] text-brand-100">
@@ -387,13 +387,13 @@ function Faq() {
       <WaveEdge className="text-background" />
       <Reveal>
       <Wrap className="flex flex-col gap-8">
-        <h2 className="text-[2rem] leading-10 font-extrabold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
+        <h2 className="text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
           Câu hỏi <Soft>thường gặp</Soft>
         </h2>
         <div className="grid gap-10 md:grid-cols-2 md:gap-12">
           {FAQ.map((group) => (
             <div key={group.group} className="flex flex-col gap-3">
-              <h3 className="text-sm font-bold text-primary">{group.group}</h3>
+              <h3 className="text-sm font-semibold text-primary">{group.group}</h3>
               {group.items.map((item) => (
                 <details key={item.q} className="group rounded-panel bg-card px-6 py-4">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[1.0625rem] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">

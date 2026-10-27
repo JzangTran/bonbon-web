@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cn } from "cn"
+import { cn } from "@/shared/lib/utils"
 
 const DEFAULT_MAX_LENGTH = 2000
 
@@ -11,7 +11,7 @@ function Textarea({ className, showCount, ...props }: React.ComponentProps<"text
     <textarea
       data-slot="textarea"
       className={cn(
-        "flex field-sizing-content min-h-16 w-full rounded-sm border border-input bg-card px-3 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        "flex field-sizing-content min-h-20 w-full rounded-lg bg-grey-100 px-3 py-2.5 text-ui text-ink transition-colors outline-none placeholder:text-grey-600/70 hover:bg-grey-200/70 focus-visible:bg-white focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:bg-danger-subtle aria-invalid:outline-2 aria-invalid:outline-destructive",
         counted && "pb-7",
         className
       )}

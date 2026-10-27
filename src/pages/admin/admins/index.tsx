@@ -38,7 +38,7 @@ export function AdminsPage() {
 
   return (
     <div className="flex max-w-lg flex-col gap-6">
-      <h1 className="text-2xl font-bold">Quản trị viên</h1>
+      <h1 className="text-2xl font-semibold">Quản trị viên</h1>
       <Card>
         <CardHeader>
           <CardTitle>Thêm quản trị viên</CardTitle>

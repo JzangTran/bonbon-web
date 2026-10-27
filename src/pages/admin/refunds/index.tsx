@@ -68,7 +68,7 @@ export function AdminRefundsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Hoàn tiền</h1>
+        <h1 className="text-2xl font-semibold">Hoàn tiền</h1>
         <p className="text-sm text-muted-foreground">
           Các khoản MoMo không hoàn lại được. Chuyển đúng số tiền tới tài khoản khách nhập, rồi ghi mã giao dịch của ngân hàng. Không sửa được số tiền.
         </p>

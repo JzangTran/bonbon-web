@@ -109,7 +109,7 @@ export function AdminCategoriesPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Ngành hàng</h1>
+        <h1 className="text-2xl font-semibold">Ngành hàng</h1>
         <p className="text-sm text-muted-foreground">
           Cây 3 cấp, cấp 1 cố định. Mỗi món thuộc một ngành cấp 3; hoa hồng lấy theo ngành gần nhất có đặt tỷ lệ.
         </p>
@@ -258,7 +258,7 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
                 <Label htmlFor="cat-move">Chuyển sang ngành cha</Label>
                 <select
                   id="cat-move"
-                  className="h-9 rounded-lg border border-input bg-transparent px-2.5 text-sm"
+                  className="h-9 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-2.5 text-sm"
                   defaultValue=""
                   onChange={(e) => e.target.value && move.mutate(e.target.value)}
                 >

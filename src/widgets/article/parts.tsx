@@ -43,7 +43,7 @@ export function TagList({ tags, oneLine, className }: { tags: string[]; oneLine?
   return (
     <ul aria-label="Thẻ" className={cn('flex gap-1.5', oneLine ? 'flex-nowrap overflow-hidden' : 'flex-wrap', className)}>
       {tags.map((tag) => (
-        <li key={tag} className="shrink-0 rounded-sm bg-brand-50 px-2.5 py-1 text-[0.8125rem] font-medium whitespace-nowrap text-brand-800">
+        <li key={tag} className="shrink-0 rounded-full bg-grey-100 px-2.5 py-0.5 text-caption whitespace-nowrap text-grey-600">
           {tag}
         </li>
       ))}
@@ -57,7 +57,7 @@ export function ArticleCard({ article }: { article: Article }) {
     <li className="min-w-0">
       <Link
         to={articlePath(article.collection, article.slug)}
-        className="group flex h-full flex-col gap-3 rounded-xl bg-card p-2.5 ring-1 ring-border outline-none transition-shadow hover:ring-foreground/25 focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="group flex h-full flex-col gap-3 rounded-xl bg-card p-2.5 outline-none transition-colors hover:bg-grey-50 focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <div className="aspect-[16/10] overflow-hidden rounded-lg bg-image-slot">
           <img
@@ -69,7 +69,7 @@ export function ArticleCard({ article }: { article: Article }) {
           />
         </div>
         <TagList tags={article.tags} oneLine />
-        <h3 className="px-0.5 pb-1 text-[1.0625rem] leading-6 font-bold text-ink">{article.title}</h3>
+        <h3 className="px-0.5 pb-1 text-[1.0625rem] leading-6 font-semibold text-ink">{article.title}</h3>
       </Link>
     </li>
   )

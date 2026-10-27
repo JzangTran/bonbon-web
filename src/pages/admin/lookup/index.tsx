@@ -30,7 +30,7 @@ export function AdminLookupPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-bold">Tra cứu đơn và tài khoản</h1>
+        <h1 className="text-2xl font-semibold">Tra cứu đơn và tài khoản</h1>
         <p className="text-sm text-muted-foreground">
           Nhập đúng một mã: không có danh sách người dùng để duyệt. Số điện thoại, email và địa chỉ được che; muốn xem đầy đủ phải chọn lý do và việc đó được ghi nhật ký.
         </p>

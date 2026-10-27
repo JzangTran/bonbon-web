@@ -58,7 +58,7 @@ export function AdminAppConfigPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Cấu hình app</h1>
+        <h1 className="text-2xl font-semibold">Cấu hình app</h1>
         <p className="text-sm text-muted-foreground">Chỉ ảnh hưởng ứng dụng điện thoại. Mọi thay đổi cần lý do và bạn đã đăng nhập trong 10 phút gần nhất.</p>
       </div>
       {config.isError ? <FormError message={problemMessage(config.error)} /> : null}

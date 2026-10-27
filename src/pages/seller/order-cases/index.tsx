@@ -36,7 +36,7 @@ export function SellerOrderCasesPage() {
     <div className="flex max-w-4xl flex-col gap-6">
       <OrderCaseTabs />
       <div>
-        <h1 className="text-2xl font-bold">Khiếu nại của khách</h1>
+        <h1 className="text-2xl font-semibold">Khiếu nại của khách</h1>
         <p className="text-sm text-muted-foreground">
           Khách báo chưa nhận được hàng, thiếu món, sai món hoặc chất lượng. Bạn có 12 giờ để chấp nhận (khách được hoàn tiền) hoặc phản đối (quản trị viên quyết định). Không trả lời kịp cũng chuyển cho quản trị viên.
         </p>
