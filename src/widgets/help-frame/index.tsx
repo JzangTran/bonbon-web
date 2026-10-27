@@ -53,7 +53,14 @@ export function HelpSidebar({ groups, current }: { groups: HelpNavGroup[]; curre
  * The help site, shared by customers, sellers and administrators, after the GitBook docs: a header with the logo, tabs for the help
  * center, contact and legal documents, the section's menu on the left, the page in the middle and its headings on the right.
  */
-export function HelpFrame({ tab, sidebar, aside, children }: { tab: HelpTab; sidebar?: ReactNode; aside?: ReactNode; children: ReactNode }) {
+export function HelpFrame({ tab, sidebar, aside, wide = false, children }: {
+  tab: HelpTab
+  sidebar?: ReactNode
+  aside?: ReactNode
+  /** the page uses the whole width (the contact form), with no reading column */
+  wide?: boolean
+  children: ReactNode
+}) {
   return (
     <div className="flex min-h-svh flex-col bg-background text-ink">
       <a href="#main" className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-ui font-medium text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
@@ -99,7 +106,7 @@ export function HelpFrame({ tab, sidebar, aside, children }: { tab: HelpTab; sid
       </header>
       <div className={cn('mx-auto grid w-full max-w-[1440px] flex-1 gap-10 px-4 py-8 sm:px-6 lg:py-10', sidebar ? 'lg:grid-cols-[16rem_minmax(0,1fr)]' : '', sidebar && aside ? 'xl:grid-cols-[16rem_minmax(0,1fr)_15rem]' : '')}>
         {sidebar ? <aside className="hidden lg:block lg:sticky lg:top-36 lg:max-h-[calc(100svh-10rem)] lg:self-start lg:overflow-y-auto">{sidebar}</aside> : null}
-        <main id="main" className="min-w-0 max-w-3xl">
+        <main id="main" className={cn('min-w-0', !wide && 'max-w-3xl')}>
           {children}
         </main>
         {aside ? <aside className="hidden xl:block xl:sticky xl:top-36 xl:self-start">{aside}</aside> : null}

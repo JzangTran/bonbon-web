@@ -39,6 +39,7 @@ const OPERATIONS: NavParent[] = [
     icon: LifeBuoyIcon,
     children: [
       { to: consolePath('/support-tickets'), label: 'Phiếu hỗ trợ' },
+      { to: consolePath('/contact-requests'), label: 'Yêu cầu liên hệ' },
       { to: consolePath('/lookup'), label: 'Tra cứu đơn và tài khoản' },
     ],
   },

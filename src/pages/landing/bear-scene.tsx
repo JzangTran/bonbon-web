@@ -153,3 +153,13 @@ export function BearScene({ kind, className }: { kind: BearKind; className?: str
     </svg>
   )
 }
+
+/** The bear and what it holds, without the round ground: for placing inside a larger drawing with a transform. */
+export function BearFigure({ kind }: { kind: Exclude<BearKind, 'shop'> }) {
+  return (
+    <g>
+      <Bear happy={kind === 'done'} />
+      <Props kind={kind} />
+    </g>
+  )
+}

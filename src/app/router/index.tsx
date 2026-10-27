@@ -332,6 +332,14 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/admin/support-ticket-detail').then((m) => ({ Component: m.AdminSupportTicketDetailPage })),
           },
           {
+            path: 'contact-requests',
+            lazy: () => import('@/pages/admin/contact-requests').then((m) => ({ Component: m.AdminContactRequestsPage })),
+          },
+          {
+            path: 'contact-requests/:id',
+            lazy: () => import('@/pages/admin/contact-requests').then((m) => ({ Component: m.AdminContactRequestPage })),
+          },
+          {
             path: 'lookup',
             lazy: () => import('@/pages/admin/lookup').then((m) => ({ Component: m.AdminLookupPage })),
           },

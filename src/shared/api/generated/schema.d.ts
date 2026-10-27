@@ -692,6 +692,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/public/contact-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Gửi yêu cầu liên hệ
+         * @description Không cần đăng nhập. Câu trả lời được gửi tới `email`.
+         *
+         *     **Không cần đăng nhập.**
+         */
+        post: operations["submitContactRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/payments/momo/ipn": {
         parameters: {
             query?: never;
@@ -1760,6 +1782,50 @@ export interface paths {
          *     **Cần đăng nhập**, quyền `ticket:reply`.
          */
         post: operations["answerSupportTicket"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/support/contact-requests/{id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Đóng yêu cầu
+         * @description Khi không cần trả lời thêm (đã xong, thư rác, trùng lặp). Không gửi email.
+         *
+         *     **Cần đăng nhập**, quyền `ticket:reply`.
+         */
+        post: operations["closeContactRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/support/contact-requests/{id}/answer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Trả lời qua email
+         * @description Gửi câu trả lời tới email người gửi; yêu cầu thành `ANSWERED`. Trả lời thêm được khi chưa đóng.
+         *
+         *     **Cần đăng nhập**, quyền `ticket:reply`.
+         */
+        post: operations["answerContactRequest"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3836,6 +3902,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/support/contact-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Hộp thư liên hệ
+         * @description Theo `status` (mặc định OPEN). OPEN xếp cũ nhất trước, các trạng thái khác mới nhất trước.
+         *
+         *     **Cần đăng nhập**, quyền `ticket:read`.
+         */
+        get: operations["listContactRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/support/contact-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Chi tiết yêu cầu liên hệ
+         * @description Nội dung người gửi viết và các câu trả lời đã gửi, kèm tên quản trị viên trả lời.
+         *
+         *     **Cần đăng nhập**, quyền `ticket:read`.
+         */
+        get: operations["getContactRequest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/stats/user-growth": {
         parameters: {
             query?: never;
@@ -5391,6 +5501,35 @@ export interface components {
         PushDeviceRevokeRequest: {
             token: string;
         };
+        SubmitContactRequest: {
+            /** @description Họ tên, tối đa 100 ký tự. */
+            fullName: string;
+            /**
+             * Format: email
+             * @description Email nhận câu trả lời.
+             */
+            email: string;
+            /** @description Người gửi là ai: `CUSTOMER` (đặt món), `SELLER` (bán hàng) hoặc `OTHER`. */
+            role: string;
+            /** @description Chủ đề: `ORDER`, `ACCOUNT`, `SHOP`, `PAYMENT` hoặc `OTHER`. */
+            topic: string;
+            /** @description Nội dung, tối đa 2.000 ký tự. */
+            message: string;
+            /** @description Mã reCAPTCHA của biểu mẫu. */
+            captchaToken?: string;
+        };
+        ContactRequestReceipt: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            createdAt?: string;
+        };
         /** @description Thông báo thanh toán (IPN) do MoMo gửi từ máy chủ tới máy chủ, ký bằng HMAC-SHA256. */
         MomoIpn: {
             partnerCode?: string;
@@ -6141,6 +6280,58 @@ export interface components {
              * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
              */
             createdAt?: string;
+        };
+        ContactRequestAnswer: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            adminId?: string;
+            adminName?: string;
+            body?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            createdAt?: string;
+        };
+        ContactRequestDetail: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            fullName?: string;
+            email?: string;
+            role?: string;
+            topic?: string;
+            status?: string;
+            message?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            updatedAt?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            closedAt?: string;
+            answers?: components["schemas"]["ContactRequestAnswer"][];
+        };
+        AnswerContactRequest: {
+            /** @description Câu trả lời gửi tới email của người hỏi, tối đa 2.000 ký tự. */
+            body: string;
         };
         AddPenaltyRequest: {
             /**
@@ -7907,6 +8098,40 @@ export interface components {
             audience?: string;
             /** Format: int64 */
             orderNumber?: number;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            updatedAt?: string;
+        };
+        ContactRequestPage: {
+            items?: components["schemas"]["ContactRequestSummary"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            total?: number;
+        };
+        ContactRequestSummary: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            fullName?: string;
+            email?: string;
+            role?: string;
+            topic?: string;
+            /** @description OPEN (chưa trả lời), ANSWERED (đã trả lời qua email) hoặc CLOSED. */
+            status?: string;
+            /** @description Đầu nội dung, tối đa 160 ký tự. */
+            preview?: string;
             /**
              * Format: date-time
              * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
@@ -11970,6 +12195,61 @@ export interface operations {
             };
         };
     };
+    submitContactRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitContactRequest"];
+            };
+        };
+        responses: {
+            /** @description Đã nhận. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestReceipt"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             *     - `CAPTCHA_REQUIRED`: Thiếu hoặc sai `captchaToken`.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `TOO_MANY_CONTACT_REQUESTS`: Quá 5 yêu cầu mỗi giờ từ một địa chỉ IP, hoặc quá 3 yêu cầu mỗi ngày từ một email. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
     receiveMomoIpn: {
         parameters: {
             query?: never;
@@ -15900,6 +16180,168 @@ export interface operations {
                 };
             };
             /** @description - `TICKET_CLOSED`: Phiếu đã đóng. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    closeContactRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestDetail"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `ticket:reply`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `CONTACT_REQUEST_NOT_FOUND`: Không có yêu cầu này. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `CONTACT_REQUEST_CLOSED`: Yêu cầu đã đóng. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    answerContactRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnswerContactRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestDetail"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `ticket:reply`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `CONTACT_REQUEST_NOT_FOUND`: Không có yêu cầu này. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `CONTACT_REQUEST_CLOSED`: Yêu cầu đã đóng. */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -23239,6 +23681,141 @@ export interface operations {
                 };
             };
             /** @description - `TICKET_NOT_FOUND`: Không có phiếu này. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    listContactRequests: {
+        parameters: {
+            query?: {
+                status?: string;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestPage"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             *     - `INVALID_STATUS`: `status` không phải OPEN, ANSWERED hoặc CLOSED.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `ticket:read`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getContactRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactRequestDetail"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `ticket:read`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `CONTACT_REQUEST_NOT_FOUND`: Không có yêu cầu này. */
             404: {
                 headers: {
                     [name: string]: unknown;

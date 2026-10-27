@@ -17,6 +17,7 @@ import { siteUrl } from '@/shared/config/sites'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Reveal } from '@/shared/ui/reveal'
 import { BearScene, type BearKind } from './bear-scene'
+import { NeighbourhoodScene } from './neighbourhood-scene'
 
 
 const btn = siteButton
@@ -121,73 +122,11 @@ function Hero() {
           <OrangeRings className="absolute -bottom-[12%] -left-[30%] w-[58%]" />
           <OrangeRings className="absolute -right-[28%] -bottom-[18%] w-[54%]" />
           <div className="relative rounded-2xl bg-white p-2 text-left shadow-[0_30px_80px_rgb(0_0_0/0.10)]">
-            <div className="flex items-center gap-1.5 px-3 py-2" aria-hidden="true">
-              <span className="size-2.5 rounded-full bg-[#ff5f57]" />
-              <span className="size-2.5 rounded-full bg-[#febc2e]" />
-              <span className="size-2.5 rounded-full bg-[#28c840]" />
-            </div>
-            <div className="relative grid h-[420px] grid-cols-[1fr_auto_1fr] items-center gap-6 overflow-hidden rounded-xl bg-grey-50 px-6 sm:h-[520px]">
-              <ImageSlot src="/mock/pho.jpg" label="Tô phở bò (ảnh minh hoạ)" className="hidden h-[70%] w-full rounded-xl md:block" />
-              <PhoneMock className="relative mt-16 h-[600px] w-[300px] shrink-0" />
-              <ImageSlot src="/mock/bun.jpg" label="Mâm bún riêu (ảnh minh hoạ)" className="hidden h-[70%] w-full rounded-xl md:block" />
-            </div>
+            <NeighbourhoodScene />
           </div>
         </Reveal>
       </Wrap>
     </section>
-  )
-}
-
-/** A drawn stand-in for a screenshot of the customer app's home screen (the slot stays empty until real screenshots exist). */
-function PhoneMock({ className }: { className?: string }) {
-  return (
-    <div
-      role="img"
-      aria-label="Minh hoạ màn hình trang chủ của ứng dụng bonbon"
-      className={cn('overflow-hidden rounded-device border-8 border-ink bg-grey-50', className)}
-    >
-      <div aria-hidden="true" className="flex flex-col gap-3 px-4 pt-[18px]">
-        <div className="flex items-center justify-between">
-          <span className="flex flex-col">
-            <small className="text-[0.625rem] text-muted-foreground">Giao tới</small>
-            <b className="text-xs">Toà S2 · căn 1508 ▾</b>
-          </span>
-          <span className="flex gap-1.5">
-            <span className="size-7 rounded-sm bg-white" />
-            <span className="size-7 rounded-sm bg-white" />
-          </span>
-        </div>
-        <div className="text-xl leading-6 font-semibold tracking-[-0.02em]">
-          Hôm nay bạn <Soft>muốn ăn gì?</Soft>
-        </div>
-        <div className="flex gap-1.5">
-          <span className="h-8 flex-1 rounded-sm bg-white" />
-          <span className="size-8 rounded-sm bg-ink" />
-        </div>
-        <div className="flex gap-1.5 text-[0.6875rem] font-semibold">
-          <span className="rounded-sm bg-primary px-2.5 py-1.5 text-primary-foreground">Tất cả</span>
-          <span className="rounded-sm bg-white px-2.5 py-1.5">Cơm</span>
-          <span className="rounded-sm bg-white px-2.5 py-1.5">Bún &amp; phở</span>
-        </div>
-        <div className="flex flex-col gap-2 rounded-media bg-white p-2">
-          <div className="relative h-[110px] overflow-hidden rounded-lg bg-image-slot">
-            <img src="/mock/banh-mi-tray.jpg" alt="" className="absolute inset-0 size-full object-cover" />
-            <span className="absolute top-2 left-2 rounded-sm bg-ink px-2 py-1 text-[0.625rem] font-semibold text-white">12 phút</span>
-            <span className="absolute top-2 right-2 rounded-sm bg-white px-2 py-1 text-[0.625rem] font-semibold text-brand-700">Miễn phí giao</span>
-          </div>
-          <div className="px-1 pb-0.5">
-            <b className="text-[0.8125rem]">Bánh mì Nắng</b>
-            <div className="text-[0.6875rem] text-muted-foreground tabular-nums">210 m · Sảnh toà S1</div>
-          </div>
-        </div>
-      </div>
-      <div aria-hidden="true" className="absolute right-4 bottom-3.5 left-4 flex h-12 items-center justify-around rounded-lg bg-ink">
-        <span className="size-[34px] rounded-sm bg-primary" />
-        <span className="size-[34px] rounded-sm bg-white/15" />
-        <span className="size-[34px] rounded-sm bg-white/15" />
-        <span className="size-[34px] rounded-sm bg-white/15" />
-      </div>
-    </div>
   )
 }
 
