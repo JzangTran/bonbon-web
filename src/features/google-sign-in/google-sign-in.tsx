@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useSession, type Role } from '@/entities/session'
 import { api, isApiProblem, problemCode, problemMessage, type components } from '@/shared/api'
 import { env } from '@/shared/config/env'
@@ -11,7 +11,7 @@ import { Label } from '@/shared/ui/label'
 import { OrDivider } from '@/shared/ui/or-divider'
 import { FormError } from '@/widgets/auth-shell'
 import { GoogleButton } from './google-button'
-import { merchantPath } from '@/shared/config/sites'
+import { merchantPath, legalUrl } from '@/shared/config/sites'
 
 type LoginResponse = components['schemas']['LoginResponse']
 type Extras = { acceptedDocumentIds?: string[]; marketingConsent?: boolean; password?: string; captchaToken?: string }
@@ -121,13 +121,13 @@ export function GoogleSignIn() {
             <input type="checkbox" className="mt-0.5 size-4" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
             <span>
               Tôi đồng ý với{' '}
-              <Link to="/legal/SELLER_TERMS" target="_blank" className="text-primary underline">
+              <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-primary underline">
                 {terms.data?.title ?? 'Điều khoản dành cho người bán'}
-              </Link>{' '}
+              </a>{' '}
               và đã đọc{' '}
-              <Link to="/legal/PRIVACY_POLICY" target="_blank" className="text-primary underline">
+              <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-primary underline">
                 {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
-              </Link>
+              </a>
               .
             </span>
           </label>

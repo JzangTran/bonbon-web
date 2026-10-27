@@ -1,18 +1,18 @@
-import { ClipboardListIcon, MessageCircleIcon, StoreIcon, UserRoundIcon, UtensilsIcon, WalletIcon } from 'lucide-react'
+import { ClipboardListIcon, LifeBuoyIcon, MessageCircleIcon, SettingsIcon, ShoppingBagIcon, StoreIcon, UserRoundIcon, UtensilsIcon, WalletIcon } from 'lucide-react'
 import { Navigate, useLocation } from 'react-router'
 import { shopStatus, useShop } from '@/entities/shop'
 import { AcceptingOrdersSwitch } from '@/features/accepting-orders'
-import { WorkspaceShell, type AccountLink, type ExtraPage, type FooterLink, type NavParent } from './workspace'
-import { merchantPath } from '@/shared/config/sites'
+import { WorkspaceShell, type AccountLink, type ExtraPage, type FooterLink, type NavParent, type Space } from './workspace'
+import { merchantPath, siteUrl } from '@/shared/config/sites'
 
 /** Pages a seller without an approved shop may open (open-shop.md: selling features stay blocked until then). */
 const OPEN_BEFORE_APPROVAL = [merchantPath('/account')]
 
 /** A closing shop keeps what it needs to finish: orders, cases, earnings, support (close-shop.md). */
-const WHILE_CLOSING = [merchantPath('/closing'), merchantPath('/orders'), merchantPath('/order-cases'), merchantPath('/performance'), merchantPath('/earnings'), merchantPath('/support-tickets'), merchantPath('/help'), merchantPath('/account'), merchantPath('/chat')]
+const WHILE_CLOSING = [merchantPath('/closing'), merchantPath('/orders'), merchantPath('/order-cases'), merchantPath('/performance'), merchantPath('/earnings'), merchantPath('/support-tickets'), merchantPath('/account'), merchantPath('/chat')]
 
-/** The seller's menu (owner's list, web-workspace-layout.md 7.5). Trang chủ is the breadcrumb root, not a row. */
-const APPROVED_NAV: NavParent[] = [
+/** The selling channel: everything about orders, the menu, customers and money (owner's list, web-workspace-layout.md 7.5). */
+const SELLING_NAV: NavParent[] = [
   {
     key: 'orders',
     label: 'Quản lý đơn hàng',
@@ -21,7 +21,6 @@ const APPROVED_NAV: NavParent[] = [
       { to: merchantPath('/orders'), label: 'Tất cả' },
       { to: merchantPath('/orders/cancelled'), label: 'Đơn hủy' },
       { to: merchantPath('/order-cases'), label: 'Trả hàng/hoàn tiền' },
-      { to: merchantPath('/shipping'), label: 'Cài đặt vận chuyển' },
     ],
   },
   {
@@ -48,37 +47,61 @@ const APPROVED_NAV: NavParent[] = [
     icon: WalletIcon,
     children: [
       { to: merchantPath('/statistics'), label: 'Doanh thu' },
-      { to: merchantPath('/bank-account'), label: 'Tài khoản ngân hàng' },
+      { to: merchantPath('/earnings'), label: 'Thu nhập và sao kê' },
     ],
   },
 ]
 
-/** Pages without a row in the menu: they sit under a parent in the breadcrumb, or are reached from the account menu or the footer. */
-const EXTRAS: ExtraPage[] = [
-  // Tabs of a menu row: the row stays selected and is the breadcrumb.
+/** Tabs of a menu row: the row stays selected and is the breadcrumb. */
+const SELLING_EXTRAS: ExtraPage[] = [
   { to: merchantPath('/performance'), label: 'Hiệu suất và điểm phạt', under: merchantPath('/order-cases') },
   { to: merchantPath('/category-cases'), label: 'Món sai ngành', under: merchantPath('/menu') },
-  { to: merchantPath('/earnings'), label: 'Thu nhập và sao kê', under: merchantPath('/statistics') },
-  { to: merchantPath('/shop'), label: 'Hồ sơ cửa hàng' },
-  { to: merchantPath('/account'), label: 'Tài khoản và bảo mật' },
-  { to: merchantPath('/notification-settings'), label: 'Cài đặt thông báo' },
-  { to: merchantPath('/help'), label: 'Trung tâm trợ giúp' },
-  { to: merchantPath('/support-tickets'), label: 'Liên hệ hỗ trợ' },
-  { to: merchantPath('/closing'), label: 'Đóng cửa hàng' },
+]
+
+/** Settings: how the shop is set up, the person's account and security, and their own support requests. Nothing about selling day to day. */
+const SETTINGS_NAV: NavParent[] = [
+  {
+    key: 'shop',
+    label: 'Cửa hàng',
+    icon: StoreIcon,
+    children: [
+      { to: merchantPath('/shop'), label: 'Hồ sơ cửa hàng' },
+      { to: merchantPath('/shipping'), label: 'Cài đặt vận chuyển' },
+      { to: merchantPath('/bank-account'), label: 'Tài khoản ngân hàng' },
+    ],
+  },
+  {
+    key: 'account',
+    label: 'Tài khoản',
+    icon: UserRoundIcon,
+    children: [
+      { to: merchantPath('/account'), label: 'Tài khoản và bảo mật' },
+      { to: merchantPath('/notification-settings'), label: 'Cài đặt thông báo' },
+    ],
+  },
+  {
+    key: 'support',
+    label: 'Hỗ trợ',
+    icon: LifeBuoyIcon,
+    children: [{ to: merchantPath('/support-tickets'), label: 'Yêu cầu hỗ trợ của tôi' }],
+  },
+]
+
+const SPACES: Space[] = [
+  { key: 'selling', label: 'Kênh bán hàng', icon: ShoppingBagIcon, nav: SELLING_NAV, extras: SELLING_EXTRAS },
+  { key: 'settings', label: 'Cài đặt', icon: SettingsIcon, nav: SETTINGS_NAV },
 ]
 
 const ACCOUNT: AccountLink[] = [
-  { to: merchantPath('/shop'), label: 'Hồ sơ cửa hàng' },
-  { to: merchantPath('/account'), label: 'Tài khoản và bảo mật' },
-  { to: merchantPath('/notification-settings'), label: 'Cài đặt thông báo' },
-  { to: merchantPath('/help'), label: 'Trung tâm trợ giúp' },
-  { to: merchantPath('/support-tickets'), label: 'Liên hệ hỗ trợ' },
+  { to: merchantPath('/shop'), label: 'Cài đặt' },
+  { to: siteUrl('help'), label: 'Trung tâm trợ giúp', external: true },
+  { to: siteUrl('help', '/lien-he'), label: 'Liên hệ hỗ trợ', external: true },
 ]
 
 const FOOTER: FooterLink[] = [
-  { to: merchantPath('/help'), label: 'Hỗ trợ' },
-  { to: '/legal/SELLER_TERMS', label: 'Điều khoản người bán' },
-  { to: '/legal/PRIVACY_POLICY', label: 'Chính sách riêng tư' },
+  { to: siteUrl('help'), label: 'Trợ giúp', external: true },
+  { to: siteUrl('help', '/phap-ly/SELLER_TERMS'), label: 'Điều khoản người bán', external: true },
+  { to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: 'Chính sách riêng tư', external: true },
 ]
 
 /** While the shop is not approved or is closing, the menu is a short list of single pages. */
@@ -113,11 +136,10 @@ export function SellerLayout() {
     <WorkspaceShell
       area="Kênh người bán"
       homePath={merchantPath()}
-      nav={approved ? APPROVED_NAV : closing ? CLOSING_NAV : SETUP_NAV}
-      extras={EXTRAS}
+      spaces={approved ? SPACES : [{ key: 'only', label: 'Kênh người bán', icon: StoreIcon, nav: closing ? CLOSING_NAV : SETUP_NAV }]}
       account={ACCOUNT}
       footerLinks={FOOTER}
-      loginPath={merchantPath('/login')}
+      loginPath={merchantPath('/login')}
       headerExtra={approved ? <AcceptingOrdersSwitch /> : null}
       orderPath={() => merchantPath('/orders')}
     />

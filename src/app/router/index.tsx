@@ -37,6 +37,9 @@ const router = createBrowserRouter([
   ...(showHelp ? [
     { path: helpPath(), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpCenterPage })) },
     { path: helpPath('/bai-viet/:id'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpArticlePage })) },
+    { path: helpPath('/lien-he'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.ContactPage })) },
+    { path: helpPath('/phap-ly'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.LegalIndexRedirect })) },
+    { path: helpPath('/phap-ly/:type'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.LegalPage })) },
   ] : []),
   ...(showMerchant ? [
   {
@@ -87,8 +90,9 @@ const router = createBrowserRouter([
     lazy: () => import('@/pages/captcha-bridge').then((m) => ({ Component: m.CaptchaBridgePage })),
   },
   {
+    // Old address of the legal documents: they live on the help site now.
     path: '/legal/:type',
-    lazy: () => import('@/pages/legal-document').then((m) => ({ Component: m.LegalDocumentPage })),
+    lazy: () => import('@/pages/content/redirects').then((m) => ({ Component: m.LegacyLegalRedirect })),
   },
   ...(showMerchant ? [
   {
@@ -175,8 +179,9 @@ const router = createBrowserRouter([
             lazy: () => import('@/pages/seller/chat').then((m) => ({ Component: m.SellerChatPage })),
           },
           {
+            // The help center is shared by everyone on the help site.
             path: 'help',
-            lazy: () => import('@/pages/seller/help').then((m) => ({ Component: m.SellerHelpPage })),
+            lazy: () => import('@/pages/content/redirects').then((m) => ({ Component: m.HelpSiteRedirect })),
           },
           {
             path: 'support-tickets',

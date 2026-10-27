@@ -1,17 +1,15 @@
-import { LayersIcon, LifeBuoyIcon, ShieldCheckIcon, SlidersHorizontalIcon, StoreIcon, WalletIcon } from 'lucide-react'
-import { WorkspaceShell, type ExtraPage, type FooterLink, type NavParent } from './workspace'
-import { consolePath } from '@/shared/config/sites'
+import { BookOpenIcon, LayersIcon, LifeBuoyIcon, MapPinnedIcon, SettingsIcon, ShieldCheckIcon, StoreIcon, UsersIcon, WalletIcon, WorkflowIcon } from 'lucide-react'
+import { WorkspaceShell, type ExtraPage, type FooterLink, type NavParent, type Space } from './workspace'
+import { consolePath, siteUrl } from '@/shared/config/sites'
 
-/** The administrator's menu: Trang chủ is the breadcrumb root; groups start closed except the one with the current page. */
-const NAV: NavParent[] = [
+/** Operations: the day-to-day work on shops, money, quality and the people who ask for help. */
+const OPERATIONS: NavParent[] = [
   {
     key: 'shops',
     label: 'Cửa hàng',
     icon: StoreIcon,
-    defaultOpen: false,
     children: [
       { to: consolePath('/shop-review'), label: 'Duyệt hồ sơ' },
-      { to: consolePath('/service-areas'), label: 'Khu vực phục vụ' },
       { to: consolePath('/merchants'), label: 'Danh sách và vùng phủ' },
     ],
   },
@@ -19,7 +17,6 @@ const NAV: NavParent[] = [
     key: 'money',
     label: 'Tiền',
     icon: WalletIcon,
-    defaultOpen: false,
     children: [
       { to: consolePath('/settlement'), label: 'Đối soát' },
       { to: consolePath('/commission'), label: 'Hoa hồng' },
@@ -30,7 +27,6 @@ const NAV: NavParent[] = [
     key: 'quality',
     label: 'Chất lượng',
     icon: ShieldCheckIcon,
-    defaultOpen: false,
     children: [
       { to: consolePath('/order-cases'), label: 'Khiếu nại đơn hàng' },
       { to: consolePath('/penalties'), label: 'Điểm phạt các quán' },
@@ -38,49 +34,67 @@ const NAV: NavParent[] = [
     ],
   },
   {
-    key: 'content',
-    label: 'Nội dung',
-    icon: LayersIcon,
-    defaultOpen: false,
+    key: 'support',
+    label: 'Hỗ trợ',
+    icon: LifeBuoyIcon,
     children: [
-      { to: consolePath('/categories'), label: 'Ngành hàng' },
+      { to: consolePath('/support-tickets'), label: 'Phiếu hỗ trợ' },
+      { to: consolePath('/lookup'), label: 'Tra cứu đơn và tài khoản' },
+    ],
+  },
+]
+
+const OPERATIONS_EXTRAS: ExtraPage[] = [
+  { to: consolePath('/statistics'), label: 'Thống kê hệ thống' },
+  { to: consolePath('/conversations'), label: 'Hội thoại', parentKey: 'support' },
+]
+
+/** Content: what customers and sellers read and choose from (categories, help articles, legal documents). */
+const CONTENT: NavParent[] = [
+  {
+    key: 'catalog',
+    label: 'Ngành hàng',
+    icon: LayersIcon,
+    children: [
+      { to: consolePath('/categories'), label: 'Cây ngành hàng' },
       { to: consolePath('/category-moderation'), label: 'Món sai ngành' },
     ],
   },
   {
-    key: 'support',
-    label: 'Hỗ trợ',
-    icon: LifeBuoyIcon,
-    defaultOpen: false,
+    key: 'documents',
+    label: 'Tài liệu',
+    icon: BookOpenIcon,
     children: [
-      { to: consolePath('/support-tickets'), label: 'Phiếu hỗ trợ' },
-      { to: consolePath('/lookup'), label: 'Tra cứu đơn và tài khoản' },
       { to: consolePath('/help-articles'), label: 'Bài trợ giúp' },
-    ],
-  },
-  {
-    key: 'system',
-    label: 'Hệ thống',
-    icon: SlidersHorizontalIcon,
-    defaultOpen: false,
-    children: [
-      { to: consolePath('/admins'), label: 'Quản trị viên' },
       { to: consolePath('/legal-documents'), label: 'Văn bản pháp lý' },
     ],
   },
 ]
 
-const EXTRAS: ExtraPage[] = [
-  { to: consolePath('/statistics'), label: 'Thống kê hệ thống' },
-  { to: consolePath('/conversations'), label: 'Hội thoại', parentKey: 'support' },
+/** Settings: how the platform is set up and who may work in the console. */
+const SETTINGS: NavParent[] = [
+  {
+    key: 'platform',
+    label: 'Nền tảng',
+    icon: MapPinnedIcon,
+    children: [{ to: consolePath('/service-areas'), label: 'Khu vực phục vụ' }],
+  },
+  {
+    key: 'access',
+    label: 'Truy cập',
+    icon: UsersIcon,
+    children: [{ to: consolePath('/admins'), label: 'Quản trị viên' }],
+  },
 ]
 
-const FOOTER: FooterLink[] = [
-  { to: '/legal/PRIVACY_POLICY', label: 'Chính sách riêng tư' },
+const SPACES: Space[] = [
+  { key: 'operations', label: 'Vận hành', icon: WorkflowIcon, nav: OPERATIONS, extras: OPERATIONS_EXTRAS },
+  { key: 'content', label: 'Nội dung', icon: BookOpenIcon, nav: CONTENT },
+  { key: 'settings', label: 'Cài đặt', icon: SettingsIcon, nav: SETTINGS },
 ]
+
+const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: 'Chính sách riêng tư', external: true }]
 
 export function AdminLayout() {
-  return (
-    <WorkspaceShell area="Quản trị" homePath={consolePath()} nav={NAV} extras={EXTRAS} footerLinks={FOOTER} loginPath={consolePath('/login')} />
-  )
+  return <WorkspaceShell area="Quản trị" homePath={consolePath()} spaces={SPACES} footerLinks={FOOTER} loginPath={consolePath('/login')} />
 }

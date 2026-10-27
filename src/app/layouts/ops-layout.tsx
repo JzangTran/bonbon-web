@@ -1,6 +1,6 @@
 import { ActivityIcon } from 'lucide-react'
 import { WorkspaceShell, type FooterLink, type NavParent } from './workspace'
-import { opsPath } from '@/shared/config/sites'
+import { opsPath, siteUrl } from '@/shared/config/sites'
 
 /** The infrastructure administrator's menu (ops.*): how the system is doing, and the settings an operator changes. */
 const NAV: NavParent[] = [
@@ -16,8 +16,8 @@ const NAV: NavParent[] = [
   },
 ]
 
-const FOOTER: FooterLink[] = [{ to: '/legal/PRIVACY_POLICY', label: 'Chính sách riêng tư' }]
+const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: 'Chính sách riêng tư', external: true }]
 
 export function OpsLayout() {
-  return <WorkspaceShell area="Vận hành" homePath={opsPath()} nav={NAV} footerLinks={FOOTER} loginPath={opsPath('/login')} />
+  return <WorkspaceShell area="Vận hành" homePath={opsPath()} spaces={[{ key: 'ops', label: 'Vận hành', icon: ActivityIcon, nav: NAV }]} footerLinks={FOOTER} loginPath={opsPath('/login')} />
 }

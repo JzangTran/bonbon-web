@@ -8,6 +8,7 @@ import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { legalUrl } from '@/shared/config/sites'
 
 const TYPE_ROUTE: Record<string, string> = { CUSTOMER_TERMS: 'CUSTOMER_TERMS', SELLER_TERMS: 'SELLER_TERMS', PRIVACY_POLICY: 'PRIVACY_POLICY' }
 
@@ -72,7 +73,7 @@ export function LegalGate() {
               </p>
               <p className="text-xs text-muted-foreground">Có hiệu lực từ {formatDateTime(d.effectiveAt)}</p>
               {d.summary ? <p className="whitespace-pre-line">{d.summary}</p> : <p className="text-muted-foreground">Không có tóm tắt thay đổi.</p>}
-              <a className="text-primary hover:underline" href={`/legal/${TYPE_ROUTE[d.type ?? ''] ?? d.type}`} target="_blank" rel="noreferrer">
+              <a className="text-primary hover:underline" href={legalUrl(TYPE_ROUTE[d.type ?? ''] ?? d.type ?? '')} target="_blank" rel="noreferrer">
                 Đọc toàn văn
               </a>
             </li>

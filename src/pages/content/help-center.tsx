@@ -1,128 +1,263 @@
-import { LifeBuoyIcon, SearchIcon } from 'lucide-react'
-import { useDeferredValue, useState } from 'react'
-import { Link, useParams } from 'react-router'
-import { blocksFromText } from '@/entities/article'
+import { useQuery } from '@tanstack/react-query'
+import { ArrowRightIcon, MailIcon, SearchIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
+import { useDeferredValue, useState, type ReactNode } from 'react'
+import { Link, Navigate, useParams } from 'react-router'
+import { blocksFromText, headingsOf } from '@/entities/article'
 import { AUDIENCE_LABEL, useHelpArticle, useHelpArticles, type HelpArticle } from '@/entities/help'
-import { problemMessage } from '@/shared/api'
+import { api, problemMessage } from '@/shared/api'
+import { helpPath, siteUrl } from '@/shared/config/sites'
 import { formatDateTime } from '@/shared/lib/format'
+import { buttonClass } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
-import { FormError } from '@/widgets/auth-shell'
-import { ArticleView, ContentPage } from '@/widgets/article/article-view'
-import { helpPath, siteUrl } from '@/shared/config/sites'
+import { ArticleBody, Toc } from '@/widgets/article/article-view'
 import { Breadcrumb, TagList } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
+import { FormError } from '@/widgets/auth-shell'
+import { HelpFrame, HelpSidebar, type HelpNavGroup } from '@/widgets/help-frame'
 
 const BASE = helpPath()
 const HOME = [{ name: 'Trang chủ', path: siteUrl('public', '/') }]
+const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 const articlePath = (id: string | undefined) => helpPath(`/bai-viet/${id}`)
 
-function HelpCard({ article }: { article: HelpArticle }) {
-  const tags = [AUDIENCE_LABEL[article.audience ?? 'ALL'] ?? 'Mọi người', ...(article.keywords ?? [])]
+/** The help articles grouped by who they are for, as the left menu. */
+function useHelpGroups(): HelpNavGroup[] {
+  const all = useHelpArticles('')
+  const items = all.data?.items ?? []
+  return (['ALL', 'CUSTOMER', 'SELLER'] as const)
+    .map((aud) => ({
+      title: AUDIENCE_LABEL[aud],
+      items: items.filter((a) => (a.audience ?? 'ALL') === aud).map((a) => ({ label: a.title ?? '', to: articlePath(a.id) })),
+    }))
+    .filter((g) => g.items.length > 0)
+}
+
+function PageTitle({ title, lead }: { title: string; lead?: ReactNode }) {
   return (
-    <li className="min-w-0">
-      <Link
-        to={articlePath(article.id)}
-        className="group flex h-full flex-col gap-3 rounded-xl bg-card p-2.5 outline-none transition-colors hover:bg-grey-50 focus-visible:ring-3 focus-visible:ring-ring/50"
-      >
-        <div className="flex aspect-[16/10] items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-100">
-          <LifeBuoyIcon className="size-12" strokeWidth={1.5} aria-hidden="true" />
-        </div>
-        <TagList tags={tags} oneLine />
-        <h3 className="px-0.5 pb-1 text-[1.0625rem] leading-6 font-semibold text-ink">{article.title}</h3>
+    <div className="flex flex-col gap-3">
+      <h1 className="text-h1 font-semibold">{title}</h1>
+      {lead ? <p className="text-lead text-muted-foreground">{lead}</p> : null}
+    </div>
+  )
+}
+
+function HelpRow({ article }: { article: HelpArticle }) {
+  return (
+    <li>
+      <Link to={articlePath(article.id)} className="group flex flex-col gap-2 rounded-xl border border-grey-200 p-5 outline-none transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring">
+        <span className="text-caption font-medium tracking-wide text-primary uppercase">{AUDIENCE_LABEL[article.audience ?? 'ALL'] ?? 'Mọi người'}</span>
+        <span className="text-body font-medium text-ink">{article.title}</span>
+        {article.keywords?.length ? <TagList tags={article.keywords} oneLine /> : null}
       </Link>
     </li>
   )
 }
 
-/** The public help center: the articles the bonbon team wrote, with a search that ignores case and accents. */
+/** The help center: one place for customers, sellers and administrators; a search that ignores case and accents. */
 export function HelpCenterPage() {
   const [q, setQ] = useState('')
   const deferred = useDeferredValue(q)
   const articles = useHelpArticles(deferred)
+  const groups = useHelpGroups()
   const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }]
   return (
-    <ContentPage>
+    <HelpFrame tab="help" sidebar={<HelpSidebar groups={groups} />}>
       <PageSeo title="Trung tâm trợ giúp" description="Câu trả lời cho các thắc mắc thường gặp khi đặt món và bán hàng trên bonbon." path={BASE} trail={trail} site="help" />
-      <main id="main">
-        <section className="border-b bg-white">
-          <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
-            <Breadcrumb trail={trail} />
-            <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Trung tâm trợ giúp</h1>
-            <p className="max-w-2xl text-[1.0625rem] leading-7 text-muted-foreground">Tìm câu trả lời nhanh, hoặc đọc các bài hướng dẫn do đội ngũ bonbon viết.</p>
-            <div className="relative mt-2 w-full max-w-xl">
-              <SearchIcon className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-              <Input
-                type="search"
-                aria-label="Tìm trong trung tâm trợ giúp"
-                placeholder="Tìm theo tiêu đề, nội dung hoặc từ khoá"
-                maxLength={100}
-                className="h-12 rounded-full bg-muted pl-11 border-transparent focus-visible:bg-card"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-              />
-            </div>
-          </div>
-        </section>
-        <section className="relative bg-background pt-8 pb-16 lg:pt-12 lg:pb-24">
-          <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6">
-            {articles.isError ? <FormError message={problemMessage(articles.error)} /> : null}
-            {articles.isPending ? (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 3 }, (_, i) => (
-                  <Skeleton key={i} className="h-64 rounded-lg" />
-                ))}
-              </div>
-            ) : null}
-            {articles.data?.items?.length === 0 ? <p className="text-muted-foreground">Không có bài nào phù hợp. Thử từ khoá khác.</p> : null}
-            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {articles.data?.items?.map((a) => <HelpCard key={a.id} article={a} />)}
-            </ul>
-          </div>
-        </section>
-      </main>
-    </ContentPage>
+      <div className="flex flex-col gap-8">
+        <PageTitle title="Trung tâm trợ giúp" lead="Tìm câu trả lời nhanh, hoặc đọc các bài hướng dẫn do đội ngũ bonbon viết." />
+        <div className="relative">
+          <SearchIcon className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+          <Input
+            type="search"
+            aria-label="Tìm trong trung tâm trợ giúp"
+            placeholder="Tìm theo tiêu đề, nội dung hoặc từ khoá"
+            maxLength={100}
+            className="h-11 rounded-full pl-10"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+        </div>
+        {articles.isError ? <FormError message={problemMessage(articles.error)} /> : null}
+        {articles.isPending ? <Skeleton className="h-48 rounded-xl" /> : null}
+        {articles.data?.items?.length === 0 ? <p className="text-muted-foreground">Không có bài nào phù hợp. Thử từ khoá khác.</p> : null}
+        <ul className="grid gap-3 sm:grid-cols-2">{articles.data?.items?.map((a) => <HelpRow key={a.id} article={a} />)}</ul>
+        <Link to={helpPath('/lien-he')} className="group flex items-center justify-between gap-4 rounded-xl bg-accent p-5 outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <span className="flex flex-col gap-1">
+            <span className="text-body font-medium">Chưa thấy câu trả lời?</span>
+            <span className="text-ui text-muted-foreground">Gửi câu hỏi cho đội hỗ trợ bonbon.</span>
+          </span>
+          <ArrowRightIcon className="size-5 text-primary transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </Link>
+      </div>
+    </HelpFrame>
   )
 }
 
-/** One help article, in the shared page format (its body is plain text; "## " lines are headings and "- " lines a list). */
+/** One help article: the menu on the left, the text in the middle, its headings on the right. */
 export function HelpArticlePage() {
   const { id } = useParams()
   const article = useHelpArticle(id)
-  const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }, { name: article.data?.title ?? '…', path: articlePath(id) }]
-  if (article.isPending) {
-    return (
-      <ContentPage>
-        <main id="main" className="mx-auto w-full max-w-[1200px] px-4 py-12 sm:px-6">
-          <Skeleton className="h-96 rounded-lg" />
-        </main>
-      </ContentPage>
-    )
-  }
-  if (article.isError || !article.data) {
-    return (
-      <ContentPage>
-        <main id="main" className="mx-auto w-full max-w-[1200px] px-4 py-12 sm:px-6">
+  const groups = useHelpGroups()
+  const data = article.data
+  const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }, { name: data?.title ?? '…', path: articlePath(id) }]
+  const blocks = blocksFromText(data?.body ?? '')
+  return (
+    <HelpFrame tab="help" sidebar={<HelpSidebar groups={groups} current={articlePath(id)} />} aside={data ? <Toc headings={headingsOf(blocks)} /> : null}>
+      {article.isPending ? <Skeleton className="h-96 rounded-xl" /> : null}
+      {article.isError || (!article.isPending && !data) ? (
+        <div className="flex flex-col gap-4">
           <FormError message={article.isError ? problemMessage(article.error) : 'Không tìm thấy bài.'} />
-          <Link to={BASE} className="mt-4 inline-block text-primary underline underline-offset-4">
+          <Link to={BASE} className="text-primary underline underline-offset-4">
             Về trung tâm trợ giúp
           </Link>
-        </main>
-      </ContentPage>
-    )
-  }
-  const data = article.data
-  const tags = [AUDIENCE_LABEL[data.audience ?? 'ALL'] ?? 'Mọi người', ...(data.keywords ?? [])]
+        </div>
+      ) : null}
+      {data ? (
+        <>
+          <PageSeo
+            title={data.title ?? 'Bài trợ giúp'}
+            description={(data.body ?? '').replace(/[#*-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 155)}
+            path={articlePath(id)}
+            trail={trail}
+            site="help"
+          />
+          <article className="flex flex-col gap-6">
+            <Breadcrumb trail={trail.slice(1)} />
+            <PageTitle title={data.title ?? ''} />
+            <p className="-mt-3 text-small text-muted-foreground">Cập nhật {formatDateTime(data.updatedAt)}</p>
+            <ArticleBody blocks={blocks} />
+            <TagList tags={[AUDIENCE_LABEL[data.audience ?? 'ALL'] ?? 'Mọi người', ...(data.keywords ?? [])]} className="mt-6" />
+          </article>
+        </>
+      ) : null}
+    </HelpFrame>
+  )
+}
+
+const CONTACT_GROUPS: HelpNavGroup[] = [
+  {
+    title: 'Liên hệ hỗ trợ',
+    items: [
+      { label: 'Khách đặt món', to: helpPath('/lien-he') + '#khach' },
+      { label: 'Người bán', to: helpPath('/lien-he') + '#nguoi-ban' },
+      { label: 'Email', to: helpPath('/lien-he') + '#email' },
+    ],
+  },
+]
+
+function Channel({ id, icon, title, children, action }: { id: string; icon: ReactNode; title: string; children: ReactNode; action?: ReactNode }) {
   return (
-    <>
-      <PageSeo
-        title={data.title ?? 'Bài trợ giúp'}
-        description={(data.body ?? '').replace(/[#*-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 155)}
-        path={articlePath(id)}
-        trail={trail}
-        site="help"
-      />
-      <ArticleView trail={trail} title={data.title ?? ''} meta={`Cập nhật ${formatDateTime(data.updatedAt)}`} blocks={blocksFromText(data.body ?? '')} tags={tags} />
-    </>
+    <section id={id} aria-labelledby={`${id}-t`} className="flex scroll-mt-36 flex-col gap-3 rounded-xl border border-grey-200 p-6">
+      <span className="text-primary [&_svg]:size-6">{icon}</span>
+      <h2 id={`${id}-t`} className="text-h3 font-medium">
+        {title}
+      </h2>
+      <div className="flex flex-col gap-2 text-body text-muted-foreground">{children}</div>
+      {action ? <div className="mt-2">{action}</div> : null}
+    </section>
+  )
+}
+
+/** How each kind of user reaches the bonbon team. Requests are sent from where the person is signed in, so the team knows who asks. */
+export function ContactPage() {
+  const path = helpPath('/lien-he')
+  const trail = [...HOME, { name: 'Liên hệ hỗ trợ', path }]
+  return (
+    <HelpFrame tab="contact" sidebar={<HelpSidebar groups={CONTACT_GROUPS} />}>
+      <PageSeo title="Liên hệ hỗ trợ" description="Cách gửi câu hỏi và yêu cầu hỗ trợ cho đội ngũ bonbon." path={path} trail={trail} site="help" />
+      <div className="flex flex-col gap-8">
+        <PageTitle
+          title="Liên hệ hỗ trợ"
+          lead={
+            <>
+              Trước khi gửi, thử tìm trong{' '}
+              <Link to={BASE} className="text-ink underline decoration-primary underline-offset-4">
+                trung tâm trợ giúp
+              </Link>
+              : phần lớn câu hỏi đã có câu trả lời.
+            </>
+          }
+        />
+        <Channel id="khach" icon={<SmartphoneIcon strokeWidth={1.5} />} title="Bạn đặt món trên bonbon">
+          <p>Mở ứng dụng bonbon, vào Tài khoản rồi chọn Hỗ trợ để gửi yêu cầu. Nếu câu hỏi về một đơn cụ thể, mở đơn đó và chọn Báo vấn đề để bonbon thấy ngay đơn nào.</p>
+        </Channel>
+        <Channel
+          id="nguoi-ban"
+          icon={<StoreIcon strokeWidth={1.5} />}
+          title="Bạn bán hàng trên bonbon"
+          action={
+            <a href={siteUrl('merchant', '/support-tickets')} className={buttonClass()}>
+              Gửi yêu cầu trong kênh người bán
+            </a>
+          }
+        >
+          <p>Đăng nhập kênh người bán để gửi yêu cầu và theo dõi trả lời. Trên điện thoại, dùng mục Hỗ trợ trong ứng dụng bonbon dành cho người bán.</p>
+        </Channel>
+        {SUPPORT_EMAIL ? (
+          <Channel id="email" icon={<MailIcon strokeWidth={1.5} />} title="Email">
+            <p>
+              Khi không đăng nhập được, viết cho{' '}
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="text-ink underline decoration-primary underline-offset-4">
+                {SUPPORT_EMAIL}
+              </a>{' '}
+              và ghi email tài khoản của bạn.
+            </p>
+          </Channel>
+        ) : null}
+      </div>
+    </HelpFrame>
+  )
+}
+
+type DocumentType = 'CUSTOMER_TERMS' | 'SELLER_TERMS' | 'PRIVACY_POLICY'
+const LEGAL: { type: DocumentType; label: string }[] = [
+  { type: 'CUSTOMER_TERMS', label: 'Điều khoản sử dụng' },
+  { type: 'SELLER_TERMS', label: 'Điều khoản người bán' },
+  { type: 'PRIVACY_POLICY', label: 'Chính sách quyền riêng tư' },
+]
+const legalPath = (type: string) => helpPath(`/phap-ly/${type}`)
+const LEGAL_GROUPS: HelpNavGroup[] = [{ title: 'Văn bản pháp lý', items: LEGAL.map((d) => ({ label: d.label, to: legalPath(d.type) })) }]
+
+/** /phap-ly opens the first document. */
+export function LegalIndexRedirect() {
+  return <Navigate to={legalPath(LEGAL[0].type)} replace />
+}
+
+/** The version of a legal document in force (linked from the consent checkboxes everywhere). */
+export function LegalPage() {
+  const { type } = useParams()
+  const known = LEGAL.find((d) => d.type === type)
+  const doc = useQuery({
+    queryKey: ['legal-document', type],
+    enabled: !!known,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/api/legal/documents/{type}', { params: { path: { type: type as DocumentType } } })
+      if (error || !data) throw error
+      return data
+    },
+  })
+  const path = legalPath(type ?? '')
+  const trail = [...HOME, { name: 'Pháp lý', path: helpPath('/phap-ly') }, { name: known?.label ?? 'Văn bản', path }]
+  return (
+    <HelpFrame tab="legal" sidebar={<HelpSidebar groups={LEGAL_GROUPS} current={path} />}>
+      {known ? <PageSeo title={known.label} description={`${known.label} của bonbon, phiên bản đang có hiệu lực.`} path={path} trail={trail} site="help" /> : null}
+      <div className="flex flex-col gap-6">
+        <Breadcrumb trail={trail.slice(1)} />
+        {!known ? <p>Không tìm thấy văn bản.</p> : null}
+        {doc.isPending && known ? <Skeleton className="h-96 rounded-xl" /> : null}
+        {doc.isError ? <FormError message={problemMessage(doc.error)} /> : null}
+        {doc.data ? (
+          <>
+            <PageTitle title={doc.data.title ?? known?.label ?? ''} />
+            <p className="-mt-3 text-small text-muted-foreground">
+              Phiên bản {doc.data.version}
+              {doc.data.effectiveAt ? ` · hiệu lực từ ${new Date(doc.data.effectiveAt).toLocaleDateString('vi-VN')}` : ''}
+            </p>
+            <article className="text-body leading-7 whitespace-pre-line text-ink">{doc.data.content}</article>
+          </>
+        ) : null}
+      </div>
+    </HelpFrame>
   )
 }

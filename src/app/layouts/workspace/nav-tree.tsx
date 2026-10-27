@@ -18,7 +18,8 @@ const rowClass = (current: boolean) =>
 export function NavTree({ nav, location, homePath, onNavigate }: {
   nav: NavParent[]
   location: Location
-  homePath: string
+  /** the workspace home, shown as the first row in the first space only */
+  homePath?: string
   onNavigate?: () => void
 }) {
   const atHome = !location.page
@@ -26,13 +27,15 @@ export function NavTree({ nav, location, homePath, onNavigate }: {
   const groups = nav.filter((p) => p.children)
   return (
     <div className="flex flex-col gap-6 border-l border-grey-200">
-      <ul className="flex flex-col">
-        <li>
-          <NavLink to={homePath} end onClick={onNavigate} aria-current={atHome ? 'page' : 'false'} className={rowClass(atHome)}>
-            <HomeIcon className="mr-2.5 size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
-            Trang chủ
-          </NavLink>
-        </li>
+      <ul className="flex flex-col empty:hidden">
+        {homePath ? (
+          <li>
+            <NavLink to={homePath} end onClick={onNavigate} aria-current={atHome ? 'page' : 'false'} className={rowClass(atHome)}>
+              <HomeIcon className="mr-2.5 size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+              Trang chủ
+            </NavLink>
+          </li>
+        ) : null}
         {singles.map((parent) => {
           const Icon = parent.icon
           const current = location.page?.to === parent.to

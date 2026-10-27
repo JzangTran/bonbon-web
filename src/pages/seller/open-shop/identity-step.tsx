@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { CheckIcon } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router'
 import { toast } from 'sonner'
 import type { ShopApplication } from '@/entities/shop'
 import { api, problemMessage } from '@/shared/api'
@@ -11,6 +10,7 @@ import { Input } from '@/shared/ui/input'
 import { FormError } from '@/widgets/auth-shell'
 import { Field, SaveButtons, StepCard, UploadField } from './step-kit'
 import { str, useStep } from './step-logic'
+import { legalUrl } from '@/shared/config/sites'
 
 type Body = {
   docType?: 'CCCD' | 'CMND'
@@ -144,9 +144,9 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
               <input type="checkbox" className="mt-0.5 size-4" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
               <span>
                 Tôi đồng ý với{' '}
-                <Link to="/legal/SELLER_TERMS" target="_blank" className="text-primary underline">
+                <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-primary underline">
                   {terms.data?.title ?? 'Điều khoản dành cho người bán'}
-                </Link>
+                </a>
                 .
               </span>
             </label>
@@ -162,9 +162,9 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
               <input type="checkbox" className="mt-0.5 size-4" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
               <span>
                 Tôi đồng ý để bonbon xử lý dữ liệu định danh nhằm xác minh cửa hàng — xem{' '}
-                <Link to="/legal/PRIVACY_POLICY" target="_blank" className="text-primary underline">
+                <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-primary underline">
                   {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
-                </Link>
+                </a>
                 .
               </span>
             </label>

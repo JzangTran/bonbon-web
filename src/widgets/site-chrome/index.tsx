@@ -5,12 +5,11 @@ import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { siteButton, siteButtonSolid } from './buttons'
-import { SITE, siteUrl, type Site } from '@/shared/config/sites'
+import { SITE, siteUrl, type Site, legalUrl } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
 
-const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
 type NavLink = { label: string; to: string }
 /** A link to another site of bonbon (the help center). */
@@ -189,15 +188,15 @@ function footerGroups(): { title: string; columns: FooterColumn[] }[] {
           label: 'Hỗ trợ',
           links: [
             { label: 'Trung tâm trợ giúp', href: siteUrl('help') },
-            ...(SUPPORT_EMAIL ? [{ label: 'Liên hệ', href: `mailto:${SUPPORT_EMAIL}` }] : []),
+            { label: 'Liên hệ hỗ trợ', href: siteUrl('help', '/lien-he') },
           ],
         },
         {
           label: 'Pháp lý',
           links: [
-            { label: 'Điều khoản sử dụng', to: '/legal/CUSTOMER_TERMS' },
-            { label: 'Điều khoản người bán', to: '/legal/SELLER_TERMS' },
-            { label: 'Chính sách quyền riêng tư', to: '/legal/PRIVACY_POLICY' },
+            { label: 'Điều khoản sử dụng', href: legalUrl('CUSTOMER_TERMS') },
+            { label: 'Điều khoản người bán', href: legalUrl('SELLER_TERMS') },
+            { label: 'Chính sách quyền riêng tư', href: legalUrl('PRIVACY_POLICY') },
           ],
         },
       ],
@@ -277,9 +276,9 @@ export function SiteFooter() {
             <span>© {new Date().getFullYear()} bonbon. Đặt món từ quán trong khu.</span>
           </div>
           <nav aria-label="Pháp lý" className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/legal/CUSTOMER_TERMS" className="text-caption text-muted-foreground hover:text-ink">Điều khoản sử dụng</Link>
-            <Link to="/legal/SELLER_TERMS" className="text-caption text-muted-foreground hover:text-ink">Điều khoản người bán</Link>
-            <Link to="/legal/PRIVACY_POLICY" className="text-caption text-muted-foreground hover:text-ink">Chính sách quyền riêng tư</Link>
+            <a href={legalUrl('CUSTOMER_TERMS')} className="text-caption text-muted-foreground hover:text-ink">Điều khoản sử dụng</a>
+            <a href={legalUrl('SELLER_TERMS')} className="text-caption text-muted-foreground hover:text-ink">Điều khoản người bán</a>
+            <a href={legalUrl('PRIVACY_POLICY')} className="text-caption text-muted-foreground hover:text-ink">Chính sách quyền riêng tư</a>
           </nav>
         </div>
       </Wrap>

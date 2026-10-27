@@ -16,7 +16,7 @@ import { PasswordInput } from '@/shared/ui/password-input'
 import { AuthHero, AuthStepPage, FormError, FormSuccess, SuccessMark } from '@/widgets/auth-shell'
 import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
-import { merchantPath } from '@/shared/config/sites'
+import { merchantPath, legalUrl } from '@/shared/config/sites'
 
 const schema = z.object({
   name: z.string().trim().min(1, 'Vui lòng nhập họ tên').max(100, 'Tối đa 100 ký tự'),
@@ -166,11 +166,11 @@ export function SellerRegisterPage() {
           <input type="checkbox" className="mt-1" {...form.register('acceptTerms')} />
           <span>
             Tôi đồng ý với{' '}
-            <a href="/legal/SELLER_TERMS" target="_blank" rel="noreferrer" className="text-primary hover:underline">
+            <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-primary hover:underline">
               {terms.data?.title ?? 'Điều khoản dành cho người bán'}
             </a>{' '}
             và đã đọc{' '}
-            <a href="/legal/PRIVACY_POLICY" target="_blank" rel="noreferrer" className="text-primary hover:underline">
+            <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-primary hover:underline">
               {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
             </a>
             .

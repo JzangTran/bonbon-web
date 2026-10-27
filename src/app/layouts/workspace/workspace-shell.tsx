@@ -22,14 +22,14 @@ import { useSlotHosts } from '@/shared/ui/workspace-slots/context'
 import { locate } from './locate'
 import { NavTree } from './nav-tree'
 import { PageSearch } from './page-search'
-import type { AccountLink, ExtraPage, FooterLink, NavParent } from './types'
+import type { AccountLink, FooterLink, Space } from './types'
 
 export type WorkspaceProps = {
   /** "Kênh người bán" / "Quản trị": shown next to the logo */
   area: string
   homePath: string
-  nav: NavParent[]
-  extras?: ExtraPage[]
+  /** one or more parts with their own navigation; with two or more, tabs under the header switch between them */
+  spaces: Space[]
   account?: AccountLink[]
   footerLinks?: FooterLink[]
   loginPath: string
@@ -52,11 +52,15 @@ export function WorkspaceShell(props: WorkspaceProps) {
   )
 }
 
-function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [], loginPath, headerExtra, orderPath }: WorkspaceProps) {
+function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPath, headerExtra, orderPath }: WorkspaceProps) {
   const { session, signOut } = useSession()
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const location = locate(pathname, nav, extras)
+  const found = spaces.map((s) => ({ space: s, location: locate(pathname, s.nav, s.extras ?? []) }))
+  const here = found.find((f) => f.location.page) ?? found[0]
+  const { space, location } = here
+  const allNav = spaces.flatMap((s) => s.nav)
+  const allExtras = spaces.flatMap((s) => s.extras ?? [])
   const { setPanelHost, setTabsHost, custom } = useSlotHosts()
   const notifications = useNotifications()
   const unread = notifications.data?.unread ?? 0
@@ -115,7 +119,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
           <span className="hidden text-ui text-muted-foreground lg:inline">{area}</span>
         </div>
 
-        <PageSearch nav={nav} extras={extras} className="hidden w-full max-w-[25rem] md:block" />
+        <PageSearch nav={allNav} extras={allExtras} className="hidden w-full max-w-[25rem] md:block" />
 
         <div className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3">
           {headerExtra}
@@ -155,7 +159,7 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
               <DropdownMenuLabel>{session?.email}</DropdownMenuLabel>
               {account.map((link) => (
                 <DropdownMenuItem key={link.to} asChild>
-                  <Link to={link.to}>{link.label}</Link>
+                  {link.external ? <a href={link.to}>{link.label}</a> : <Link to={link.to}>{link.label}</Link>}
                 </DropdownMenuItem>
               ))}
               {account.length > 0 ? <DropdownMenuSeparator /> : null}
@@ -164,6 +168,11 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
           </DropdownMenu>
         </div>
       </header>
+      {spaces.length > 1 && wideNav ? (
+        <div className="shrink-0 border-b border-grey-200 bg-ws-header px-4 sm:px-5">
+          <SpaceTabs spaces={spaces} current={space.key} />
+        </div>
+      ) : null}
 
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
         {(navOpen && !wideNav) || (panelOpen && !widePanel) ? (
@@ -186,9 +195,10 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
             navOpen ? 'translate-x-0' : '-translate-x-full',
           )}
         >
-          {!wideNav ? <PageSearch nav={nav} extras={extras} className="mb-6" /> : null}
+          {!wideNav ? <PageSearch nav={allNav} extras={allExtras} className="mb-6" /> : null}
           <nav aria-label={area}>
-            <NavTree nav={nav} location={location} homePath={homePath} onNavigate={() => setNavOpen(false)} />
+            {!wideNav && spaces.length > 1 ? <SpaceTabs spaces={spaces} current={space.key} vertical onNavigate={() => setNavOpen(false)} /> : null}
+            <NavTree nav={space.nav} location={location} homePath={space === spaces[0] ? homePath : undefined} onNavigate={() => setNavOpen(false)} />
           </nav>
         </aside>
 
@@ -263,6 +273,40 @@ function Shell({ area, homePath, nav, extras = [], account = [], footerLinks = [
   )
 }
 
+/** The first page of a space: its first single page or the first page of its first group. */
+const firstPage = (s: Space) => s.nav[0]?.to ?? s.nav[0]?.children?.[0]?.to ?? '/'
+
+/**
+ * The tabs of the spaces, after the GitBook docs: an icon and a name; the current one in orange with an orange line under it.
+ * Stacked as a short list at the top of the navigation drawer on a narrow screen.
+ */
+function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: Space[]; current: string; vertical?: boolean; onNavigate?: () => void }) {
+  return (
+    <nav aria-label="Khu vực làm việc" className={cn(vertical ? 'mb-6 flex flex-col gap-1' : '-mb-px flex gap-2 overflow-x-auto')}>
+      {spaces.map((s) => {
+        const Icon = s.icon
+        const on = s.key === current
+        return (
+          <Link
+            key={s.key}
+            to={firstPage(s)}
+            onClick={onNavigate}
+            aria-current={on ? 'page' : undefined}
+            className={cn(
+              'flex shrink-0 items-center gap-2 text-ui whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              vertical ? 'rounded-full px-3 py-2' : 'border-b-2 px-3 py-2.5',
+              on ? cn('font-medium text-primary', vertical ? 'bg-accent' : 'border-primary') : cn('text-muted-foreground hover:text-ink', !vertical && 'border-transparent'),
+            )}
+          >
+            <Icon className="size-4" strokeWidth={1.75} aria-hidden="true" />
+            {s.label}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+
 /** Copyright, version and links. Below md it ends the scrolling work area instead of taking a fixed strip of the screen. */
 function ShellFooter({ links, className }: { links: FooterLink[]; className?: string }) {
   return (
@@ -273,9 +317,15 @@ function ShellFooter({ links, className }: { links: FooterLink[]; className?: st
       <TextSizeControl className="[&_button]:size-6" />
       <nav aria-label="Liên kết chân trang" className="flex flex-wrap gap-x-5">
         {links.map((link) => (
-          <Link key={link.to} to={link.to} className="hover:text-foreground">
-            {link.label}
-          </Link>
+          link.external ? (
+            <a key={link.to} href={link.to} className="hover:text-foreground">
+              {link.label}
+            </a>
+          ) : (
+            <Link key={link.to} to={link.to} className="hover:text-foreground">
+              {link.label}
+            </Link>
+          )
         ))}
       </nav>
     </footer>

@@ -51,6 +51,9 @@ export const helpPath = (rest = ''): string => prefixed('help', rest)
  * Where a page of `site` lives, from wherever the person is now: a plain path when it is the same site (or all sites share the host),
  * else the full address on the other host. Use it with an <a href>, because it can leave the app.
  */
+/** A legal document on the help site, from any site: legalUrl('SELLER_TERMS'). */
+export const legalUrl = (type: string): string => siteUrl('help', `/phap-ly/${type}`)
+
 export function siteUrl(site: Site, rest = ''): string {
   const path = rest === '' ? '/' : rest
   if (site === SITE) return path
