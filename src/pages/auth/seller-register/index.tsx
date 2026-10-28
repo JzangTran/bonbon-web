@@ -105,7 +105,7 @@ export function SellerRegisterPage() {
         footer={
           <>
             Bạn đã có tài khoản?{' '}
-            <Link to={merchantPath('/login')} className="font-medium text-primary hover:underline">
+            <Link to={merchantPath('/login')} className="text-link font-medium">
               Đăng nhập
             </Link>
           </>
@@ -166,11 +166,11 @@ export function SellerRegisterPage() {
           <input type="checkbox" className="mt-1" {...form.register('acceptTerms')} />
           <span>
             Tôi đồng ý với{' '}
-            <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+            <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
               {terms.data?.title ?? 'Điều khoản dành cho người bán'}
             </a>{' '}
             và đã đọc{' '}
-            <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+            <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-link">
               {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
             </a>
             .

@@ -122,7 +122,7 @@ export function Toc({ headings }: { headings: Heading[] }) {
             href={`#${h.id}`}
             aria-current={active === h.id ? 'location' : undefined}
             className={cn(
-              'block rounded-sm py-1.5 pr-2 leading-5 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring',
+              'block rounded-md py-1.5 pr-2 leading-5 text-muted-foreground outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring',
               h.level === 3 ? 'pl-6' : 'pl-3',
               active === h.id && 'font-medium text-primary',
             )}
@@ -158,15 +158,15 @@ export function DocsSidebar({ groups, current }: { groups: { title: string; item
     <nav aria-label="Mục lục hướng dẫn" className="sticky top-24 flex max-h-[calc(100svh-7rem)] flex-col gap-6 overflow-y-auto pr-2">
       {groups.map((g) => (
         <div key={g.title} className="flex flex-col gap-0.5">
-          <p className="mb-1 px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">{g.title}</p>
+          <p className="mb-1 px-3 text-caption font-medium tracking-wide text-muted-foreground uppercase">{g.title}</p>
           {g.items.map((item) => (
             <Link
               key={item.to}
               to={item.to}
               aria-current={item.to === current ? 'page' : undefined}
               className={cn(
-                'rounded-full px-3 py-1.5 text-[0.9375rem] leading-5 text-foreground/80 outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring',
-                item.to === current && 'font-medium text-primary hover:bg-transparent',
+                'rounded-md px-3 py-1.5 text-ui leading-5 text-muted-foreground outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring',
+                item.to === current && 'font-medium text-primary',
               )}
             >
               {item.label}
@@ -322,7 +322,7 @@ export function BlogPostView({
           <article className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">Blog</span>
-              <Link to={allPath} className="text-ui text-ink underline decoration-primary underline-offset-4">
+              <Link to={allPath} className="text-link text-ui text-ink">
                 Xem tất cả bài viết
               </Link>
             </div>

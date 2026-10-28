@@ -1,3 +1,4 @@
+import { articlePath, articlesOf, COLLECTION_BASE, type Article } from '@/entities/article'
 import { API_REFERENCE_URL } from '@/shared/config/env'
 import { legalUrl, siteUrl } from '@/shared/config/sites'
 
@@ -13,6 +14,7 @@ export const RESOURCE_COLUMNS: ResourceColumn[] = [
       { label: 'Màu sắc', to: '/bo-nhan-dien#mau-sac' },
       { label: 'Font chữ', to: '/bo-nhan-dien#chu' },
       { label: 'Quy tắc sử dụng', to: '/bo-nhan-dien#quy-tac' },
+      { label: 'Components', to: '/bo-nhan-dien/components' },
     ],
   },
   {
@@ -34,3 +36,24 @@ export const RESOURCE_COLUMNS: ResourceColumn[] = [
     ],
   },
 ]
+
+const short = (a: Article) => a.title.replace(/^Bước \d+: /, '')
+
+/** The guides: every step of Bắt đầu, the first guides of Quản lý cửa hàng and the way to all of them. */
+export const GUIDE_COLUMNS: ResourceColumn[] = [
+  { label: 'Bắt đầu', links: articlesOf('bat-dau').map((a, i) => ({ label: `${i + 1}. ${short(a)}`, to: articlePath('bat-dau', a.slug) })) },
+  {
+    label: 'Quản lý cửa hàng',
+    links: [
+      ...articlesOf('quan-ly-cua-hang').slice(0, 4).map((a) => ({ label: a.title, to: articlePath('quan-ly-cua-hang', a.slug) })),
+      { label: 'Xem tất cả hướng dẫn', to: COLLECTION_BASE['quan-ly-cua-hang'] },
+    ],
+  },
+]
+
+/** The menus of the public bar, each opening the same large panel. */
+export const MENUS = {
+  guides: { columns: GUIDE_COLUMNS, here: ['/huong-dan'] },
+  resources: { columns: RESOURCE_COLUMNS, here: ['/bo-nhan-dien', '/nha-phat-trien'] },
+} as const
+export type MenuKey = keyof typeof MENUS

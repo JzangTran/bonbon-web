@@ -1,54 +1,61 @@
 import { ArrowRightIcon, ChevronDownIcon, StoreIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
-import { articlePath, articlesOf } from '@/entities/article'
+import { articlePath, type Article } from '@/entities/article'
 import { siteUrl } from '@/shared/config/sites'
 import { formatDate } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
-import { RESOURCE_COLUMNS, type ResourceLink } from './resources'
+import type { ResourceColumn, ResourceLink } from './resources'
+
+type RenderLink = (link: ResourceLink, className: string, onClick: () => void) => ReactNode
+
+/** The trigger of a menu in the public bar: the same small grey text and slightly rounded hover ground as the plain links. */
+export const barItemClass =
+  'flex items-center gap-1 rounded-md px-2.5 py-1.5 text-ui font-medium text-muted-foreground outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-grey-100 data-[state=open]:text-ink'
 
 /**
- * "Tài nguyên" in the public bar, after the gitbook.com menus: columns under small orange upper-case labels split by faint lines,
- * the newest blog post as a card on the right, and an orange band at the bottom inviting shops to open.
+ * Every menu of the public bar opens the same panel, after the gitbook.com menus: columns under small orange upper-case labels
+ * split by faint lines, an article as a card on the right, and an orange band at the bottom inviting shops to open.
  */
-export function ResourcesMenu({ current, renderLink }: { current: boolean; renderLink: (link: ResourceLink, className: string, onClick: () => void) => ReactNode }) {
+export function MegaMenu({ label, current, columns, feature, renderLink }: {
+  label: string
+  current: boolean
+  columns: ResourceColumn[]
+  /** the article shown as a card, with the line above its title (a date, or what it is) */
+  feature?: { article: Article; kicker?: string; action: string }
+  renderLink: RenderLink
+}) {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
-  const latest = [...articlesOf('blog')].sort((a, b) => b.updated.localeCompare(a.updated))[0]
-  const link = 'block rounded-md py-1.5 text-ui text-muted-foreground outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-ring'
+  const link = '-mx-2 block rounded-md px-2 py-1.5 text-ui text-muted-foreground outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring'
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        className={cn(
-          'flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.9375rem] font-medium text-ink outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-muted',
-          current && 'text-primary hover:bg-transparent',
-        )}
-      >
-        Tài nguyên
+      <PopoverTrigger className={cn(barItemClass, current && 'text-primary')}>
+        {label}
         <ChevronDownIcon className={cn('size-4 transition-transform', open && 'rotate-180')} aria-hidden="true" />
       </PopoverTrigger>
-      <PopoverContent align="center" sideOffset={10} className="w-[min(58rem,calc(100vw-2rem))] min-w-0 rounded-2xl border border-grey-200 p-6">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_17rem]">
-          <nav aria-label="Tài nguyên" className="grid gap-6 sm:grid-cols-3 sm:gap-0">
-            {RESOURCE_COLUMNS.map((col, i) => (
-              <div key={col.label} className={cn('flex flex-col gap-2', i > 0 && 'sm:border-l sm:border-grey-200 sm:pl-6', i < RESOURCE_COLUMNS.length - 1 && 'sm:pr-6')}>
-                <p className="mb-1 font-mono text-caption font-medium tracking-wide text-primary uppercase">{col.label}</p>
+      <PopoverContent align="center" sideOffset={10} className="w-[min(56rem,calc(100vw-2rem))] min-w-0 rounded-xl border border-grey-200 p-6">
+        <div className={cn('grid gap-6', feature && 'lg:grid-cols-[minmax(0,1fr)_16rem]')}>
+          <nav aria-label={label} className={cn('grid gap-6 sm:gap-0', columns.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2')}>
+            {columns.map((col, i) => (
+              <div key={col.label} className={cn('flex flex-col gap-1', i > 0 && 'sm:border-l sm:border-grey-200 sm:pl-6', i < columns.length - 1 && 'sm:pr-6')}>
+                <p className="mb-2 font-mono text-caption font-medium tracking-wide text-primary uppercase">{col.label}</p>
                 {col.links.map((l) => (
                   <div key={l.label}>{renderLink(l, link, close)}</div>
                 ))}
               </div>
             ))}
           </nav>
-          {latest ? (
-            <div className="flex flex-col gap-3 rounded-xl border border-grey-200 bg-beige-50 p-3">
-              <img src={latest.image} alt={latest.imageAlt} className="aspect-[16/9] w-full rounded-lg bg-image-slot object-cover" />
-              <p className="px-1 text-small text-primary">{formatDate(latest.updated)}</p>
-              <p className="line-clamp-3 px-1 text-ui text-ink">{latest.title}</p>
+          {feature ? (
+            <div className="flex flex-col gap-3 rounded-lg border border-grey-200 bg-beige-50 p-3">
+              <img src={feature.article.image} alt={feature.article.imageAlt} className="aspect-[16/9] w-full rounded-md bg-image-slot object-cover" />
+              <p className="px-1 text-small text-primary">{feature.kicker ?? formatDate(feature.article.updated)}</p>
+              <p className="line-clamp-3 px-1 text-ui text-ink">{feature.article.title}</p>
               {renderLink(
-                { label: 'Đọc bài', to: articlePath('blog', latest.slug) },
-                'mt-auto flex h-10 items-center justify-center gap-2 rounded-full bg-button text-ui font-medium text-button-foreground outline-none hover:bg-button-hover focus-visible:ring-2 focus-visible:ring-ring',
+                { label: feature.action, to: articlePath(feature.article.collection, feature.article.slug) },
+                'mt-auto flex h-9 items-center justify-center gap-2 rounded-full bg-button text-ui font-medium text-button-foreground outline-none hover:bg-button-hover focus-visible:ring-2 focus-visible:ring-ring',
                 close,
               )}
             </div>
@@ -57,7 +64,7 @@ export function ResourcesMenu({ current, renderLink }: { current: boolean; rende
         <a
           href={siteUrl('merchant', '/register')}
           onClick={close}
-          className="group relative mt-6 flex items-center justify-between gap-4 overflow-hidden rounded-xl bg-primary px-5 py-4 text-white outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="group relative mt-6 flex items-center justify-between gap-4 overflow-hidden rounded-lg bg-primary px-5 py-4 text-white outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <OrangeRings className="pointer-events-none absolute -top-40 right-24 w-96 opacity-40 mix-blend-screen" />
           <span className="relative flex items-center gap-3">

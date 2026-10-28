@@ -73,7 +73,7 @@ export function LegalGate() {
               </p>
               <p className="text-xs text-muted-foreground">Có hiệu lực từ {formatDateTime(d.effectiveAt)}</p>
               {d.summary ? <p className="whitespace-pre-line">{d.summary}</p> : <p className="text-muted-foreground">Không có tóm tắt thay đổi.</p>}
-              <a className="text-primary hover:underline" href={legalUrl(TYPE_ROUTE[d.type ?? ''] ?? d.type ?? '')} target="_blank" rel="noreferrer">
+              <a className="text-link" href={legalUrl(TYPE_ROUTE[d.type ?? ''] ?? d.type ?? '')} target="_blank" rel="noreferrer">
                 Đọc toàn văn
               </a>
             </li>

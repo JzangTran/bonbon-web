@@ -295,7 +295,9 @@ function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: 
             className={cn(
               'flex shrink-0 items-center gap-2 text-ui whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-ring',
               vertical ? 'rounded-full px-3 py-2' : 'border-b-2 px-3 py-2.5',
-              on ? cn('font-medium text-primary', vertical ? 'bg-accent' : 'border-primary') : cn('text-muted-foreground hover:text-ink', !vertical && 'border-transparent'),
+              'transition-colors hover:bg-grey-100 hover:text-ink',
+              !vertical && 'rounded-t-md',
+              on ? cn('font-medium text-primary', !vertical && 'border-primary') : cn('text-muted-foreground', !vertical && 'border-transparent'),
             )}
           >
             <Icon className="size-4" strokeWidth={1.75} aria-hidden="true" />

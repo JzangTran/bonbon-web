@@ -52,7 +52,7 @@ export function ImageUpload({
         <input id={id} type="file" accept={accept} aria-label={label} aria-describedby={describedBy} className="sr-only" onChange={change} />
       </label>
       {previewUrl ? (
-        <a className="text-sm text-primary hover:underline" href={previewUrl} target="_blank" rel="noreferrer">
+        <a className="text-link text-sm" href={previewUrl} target="_blank" rel="noreferrer">
           {pdf ? 'Xem tệp đã tải' : 'Xem ảnh'}
         </a>
       ) : null}

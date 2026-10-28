@@ -43,7 +43,7 @@ export function ShopApplicationSections({ shop, canViewIdentity }: { shop: Detai
         </Row>
         {shop.lat !== undefined && shop.lng !== undefined ? (
           <Row label="Toạ độ">
-            <a className="text-primary hover:underline" href={`https://www.google.com/maps?q=${shop.lat},${shop.lng}`} target="_blank" rel="noreferrer">
+            <a className="text-link" href={`https://www.google.com/maps?q=${shop.lat},${shop.lng}`} target="_blank" rel="noreferrer">
               {shop.lat.toFixed(5)}, {shop.lng.toFixed(5)}
             </a>
           </Row>
@@ -69,7 +69,7 @@ export function ShopApplicationSections({ shop, canViewIdentity }: { shop: Detai
         <Row label="Email hoá đơn">{shop.invoiceEmails?.join(', ') || '—'}</Row>
         {shop.businessLicenseUrl ? (
           <Row label="Giấy phép kinh doanh">
-            <a className="text-primary hover:underline" href={shop.businessLicenseUrl} target="_blank" rel="noreferrer">
+            <a className="text-link" href={shop.businessLicenseUrl} target="_blank" rel="noreferrer">
               Mở tệp (liên kết hết hạn sau 5 phút)
             </a>
           </Row>

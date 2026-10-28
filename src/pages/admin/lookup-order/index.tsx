@@ -77,7 +77,7 @@ export function AdminLookupOrderPage() {
               </p>
             ) : null}
             {o.customer?.id ? (
-              <Link className="text-primary underline" to={consolePath(`/lookup/customers/${o.customer.id}`)}>
+              <Link className="text-link" to={consolePath(`/lookup/customers/${o.customer.id}`)}>
                 Tra cứu tài khoản khách
               </Link>
             ) : null}
@@ -172,7 +172,7 @@ export function AdminLookupOrderPage() {
             <Card className="gap-1 p-4 text-sm">
               <h2 className="font-semibold">Trò chuyện giữa khách và quán</h2>
               {canChat ? (
-                <Link className="text-primary underline" to={consolePath(`/conversations/${o.conversationId}`)}>
+                <Link className="text-link" to={consolePath(`/conversations/${o.conversationId}`)}>
                   Đọc cuộc trò chuyện (được ghi nhật ký)
                 </Link>
               ) : (

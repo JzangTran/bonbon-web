@@ -59,7 +59,7 @@ export function SellerDashboardPage() {
         <ChartPanel
           title="7 ngày qua"
           description={
-            <Link to={merchantPath('/statistics')} className="inline-flex items-center gap-1 text-ink underline decoration-primary underline-offset-4">
+            <Link to={merchantPath('/statistics')} className="text-link inline-flex items-center gap-1 text-ink">
               Xem đầy đủ trong Doanh thu <ArrowRightIcon className="size-3.5" aria-hidden="true" />
             </Link>
           }

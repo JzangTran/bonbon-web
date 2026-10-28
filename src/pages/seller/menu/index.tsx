@@ -29,7 +29,7 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
         <p className="flex flex-wrap items-center gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
           <TriangleAlertIcon className="size-4 shrink-0" />
           Có {openCases} món bị đánh dấu sai ngành hàng.
-          <Link to={merchantPath('/category-cases')} className="font-medium underline">
+          <Link to={merchantPath('/category-cases')} className="text-link font-medium">
             Xem và sửa
           </Link>
         </p>

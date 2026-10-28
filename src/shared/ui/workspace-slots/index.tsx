@@ -44,7 +44,7 @@ type Props = {
 }
 
 const tabClass =
-  'relative flex h-11 shrink-0 items-center gap-2 px-4 text-ui text-muted-foreground outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
+  'relative flex h-11 shrink-0 items-center gap-2 rounded-t-md px-4 text-ui text-muted-foreground outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
 const selectedClass = 'font-medium text-primary shadow-[inset_0_-2px_0_0_var(--color-primary)]'
 
 /**

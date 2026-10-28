@@ -45,11 +45,11 @@ export function AdminSupportTicketDetailPage() {
               <span className="text-muted-foreground">Người gửi:</span> {t.userName} ({t.audience === 'SHOP' ? 'cửa hàng' : 'khách'})
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link className="text-primary underline" to={consolePath(`/lookup/customers/${t.userId}`)}>
+              <Link className="text-link" to={consolePath(`/lookup/customers/${t.userId}`)}>
                 Tra cứu tài khoản
               </Link>
               {t.orderId ? (
-                <Link className="text-primary underline" to={consolePath(`/lookup/orders/${t.orderId}`)}>
+                <Link className="text-link" to={consolePath(`/lookup/orders/${t.orderId}`)}>
                   Đơn #{t.orderNumber}
                 </Link>
               ) : null}

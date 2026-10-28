@@ -103,7 +103,7 @@ export function SellerLoginPage() {
       footer={
         <>
           Bạn mới biết đến bonbon?{' '}
-          <Link to={merchantPath('/register')} className="font-medium text-primary hover:underline">
+          <Link to={merchantPath('/register')} className="text-link font-medium">
             Đăng ký
           </Link>
         </>
@@ -150,7 +150,7 @@ export function SellerLoginPage() {
         <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
         </Button>
-        <Link to="/forgot-password" className="-mt-2 self-start text-xs text-primary hover:underline">
+        <Link to="/forgot-password" className="text-link -mt-2 self-start text-xs">
           Quên mật khẩu
         </Link>
       </form>

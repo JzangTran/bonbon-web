@@ -86,7 +86,7 @@ function Item({ done, title, detail, to, action }: { done: boolean; title: strin
         <span className={done ? 'text-muted-foreground' : ''}>{done ? 'Xong' : detail}</span>
       </div>
       {!done ? (
-        <Link to={to} className="shrink-0 text-primary hover:underline">
+        <Link to={to} className="text-link shrink-0">
           {action}
         </Link>
       ) : null}

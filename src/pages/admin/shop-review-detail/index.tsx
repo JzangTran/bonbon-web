@@ -56,7 +56,7 @@ export function ShopReviewDetailPage() {
 
   return (
     <div className="flex max-w-6xl flex-col gap-10">
-      <Link to={consolePath('/shop-review')} className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+      <Link to={consolePath('/shop-review')} className="text-link inline-flex items-center gap-1 text-sm">
         <ArrowLeftIcon className="size-4" /> Duyệt cửa hàng
       </Link>
       <div className="flex flex-wrap items-center gap-3">

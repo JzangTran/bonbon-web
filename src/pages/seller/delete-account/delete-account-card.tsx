@@ -86,7 +86,7 @@ export function DeleteAccountCard() {
                 <li key={b.code}>
                   {b.message}{' '}
                   {b.link && BLOCKER_LINK[b.link] ? (
-                    <Link className="font-medium underline" to={BLOCKER_LINK[b.link]}>
+                    <Link className="text-link font-medium" to={BLOCKER_LINK[b.link]}>
                       Xử lý
                     </Link>
                   ) : null}

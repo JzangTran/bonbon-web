@@ -72,7 +72,8 @@ export function Pagination({ paging, total, className }: { paging: Paging; total
                 aria-label={`Trang ${p + 1}`}
                 aria-current={p === page ? 'page' : undefined}
                 onClick={() => setPage(p)}
-                className={cn(square, 'min-w-8 px-1.5', p === page ? 'font-medium text-primary' : 'text-ink hover:bg-grey-100')}
+                className={cn(square, 'min-w-8 px-1.5', 'hover:bg-grey-100 hover:text-ink',
+                  p === page ? 'font-medium text-primary' : 'text-muted-foreground')}
               >
                 {p + 1}
               </button>

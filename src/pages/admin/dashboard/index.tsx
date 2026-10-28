@@ -61,7 +61,7 @@ export function AdminDashboardPage() {
         <ChartPanel
           title="30 ngày qua"
           description={
-            <Link to={consolePath('/statistics')} className="inline-flex items-center gap-1 text-ink underline decoration-primary underline-offset-4">
+            <Link to={consolePath('/statistics')} className="text-link inline-flex items-center gap-1 text-ink">
               Xem đầy đủ trong Thống kê hệ thống <ArrowRightIcon className="size-3.5" aria-hidden="true" />
             </Link>
           }

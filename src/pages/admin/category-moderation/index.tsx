@@ -113,7 +113,7 @@ function CaseItem({ c, onDecide }: { c: CategoryCase; onDecide: (decision: 'ACCE
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="font-semibold">
           {c.dishName} <span className="font-normal text-muted-foreground">· </span>
-          <Link to={consolePath(`/merchants/${c.vendorId}`)} className="font-normal text-primary hover:underline">
+          <Link to={consolePath(`/merchants/${c.vendorId}`)} className="text-link font-normal">
             {c.shopName}
           </Link>
           <Badge className={cn('ml-2', status.className)}>{status.label}</Badge>

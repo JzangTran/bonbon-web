@@ -58,7 +58,7 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                 {data.contactMasked ? (
                   data.customerPhone
                 ) : (
-                  <a className="text-primary underline-offset-4 hover:underline" href={`tel:${data.customerPhone}`}>
+                  <a className="text-link" href={`tel:${data.customerPhone}`}>
                     {data.customerPhone}
                   </a>
                 )}

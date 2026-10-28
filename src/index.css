@@ -228,3 +228,18 @@
   font-weight: 600;
   letter-spacing: -0.02em;
 }
+
+/* A text link anywhere: its text keeps the colour around it, an orange underline marks it and thickens on hover. The thickness grows
+   downwards from a fixed offset, so the text never moves. */
+@utility text-link {
+  text-decoration-line: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-skip-ink: none;
+  transition: text-decoration-thickness 120ms ease;
+  &:hover,
+  &:focus-visible {
+    text-decoration-thickness: 3px;
+  }
+}

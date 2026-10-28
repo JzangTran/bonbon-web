@@ -146,7 +146,7 @@ export function AdminContactRequestPage() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <Badge className={status.className}>{status.label}</Badge>
-            <span>{ROLE[r.role ?? ''] ?? r.role}</span>·<a href={`mailto:${r.email}`} className="text-ink underline underline-offset-4">{r.email}</a>·
+            <span>{ROLE[r.role ?? ''] ?? r.role}</span>·<a href={`mailto:${r.email}`} className="text-link text-ink">{r.email}</a>·
             <span>{formatDateTime(r.createdAt)}</span>
           </div>
           <p className="rounded-xl bg-grey-50 p-4 whitespace-pre-wrap">{r.message}</p>

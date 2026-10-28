@@ -281,7 +281,7 @@ function SellerBand() {
               Hồ sơ cần những gì?
             </a>
           </div>
-          <a href={siteUrl('merchant', '/login')} className="self-start text-ui font-medium text-ink underline-offset-4 hover:underline">
+          <a href={siteUrl('merchant', '/login')} className="text-link self-start text-ui font-medium text-ink">
             Đã có tài khoản? Đăng nhập
           </a>
         </div>

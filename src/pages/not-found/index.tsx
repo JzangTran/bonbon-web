@@ -7,7 +7,7 @@ export function NotFoundPage() {
       <Illustration name="no-result" />
       <h1 className="text-2xl font-semibold">Không tìm thấy trang</h1>
       <p className="text-sm text-muted-foreground">Đường dẫn này không có gì, hoặc đã được chuyển đi nơi khác.</p>
-      <Link to="/" className="text-primary underline underline-offset-4">
+      <Link to="/" className="text-link">
         Về trang chủ
       </Link>
     </main>

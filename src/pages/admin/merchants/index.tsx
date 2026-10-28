@@ -213,7 +213,7 @@ function Coverage() {
               {items.map((s) => (
                 <tr key={s.vendorId} className={cn('border-t border-grey-100 hover:bg-grey-50', s.outlier && 'bg-warning-subtle/40')}>
                   <td className="px-3 py-3">
-                    <Link to={consolePath(`/merchants/${s.vendorId}`)} className="font-medium text-primary hover:underline">
+                    <Link to={consolePath(`/merchants/${s.vendorId}`)} className="text-link font-medium">
                       {s.name}
                     </Link>
                     <p className="text-xs text-muted-foreground">{s.address}</p>

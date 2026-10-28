@@ -57,7 +57,7 @@ export function ReauthDialog({ open, onOpenChange, onDone }: { open: boolean; on
           <FormError message={error} />
           <p className="text-xs text-muted-foreground">
             Đăng nhập bằng Google, không có mật khẩu?{' '}
-            <button type="button" className="text-primary hover:underline" onClick={() => void signOut()}>
+            <button type="button" className="text-link" onClick={() => void signOut()}>
               Đăng xuất
             </button>{' '}
             rồi đăng nhập lại.

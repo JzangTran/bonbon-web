@@ -8,7 +8,8 @@ import type { NavParent } from './types'
 const rowClass = (current: boolean) =>
   cn(
     '-ml-px flex min-h-8 items-center rounded-r-2xl border-l py-1.5 pr-1.5 pl-3 text-ui outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
-    current ? 'border-primary font-medium text-primary' : 'border-transparent text-ink/65 hover:border-grey-400 hover:text-ink',
+    'hover:bg-grey-100 hover:text-ink',
+    current ? 'border-primary font-medium text-primary' : 'border-transparent text-muted-foreground hover:border-grey-400',
   )
 
 /**
@@ -51,7 +52,7 @@ export function NavTree({ nav, location, homePath, onNavigate }: {
       </ul>
       {groups.map((parent) => (
         <section key={parent.key} aria-labelledby={`nav-${parent.key}`} className="flex flex-col gap-1">
-          <h2 id={`nav-${parent.key}`} className="pl-3 text-caption font-medium tracking-wide text-ink uppercase">
+          <h2 id={`nav-${parent.key}`} className="pl-3 text-caption font-medium tracking-wide text-muted-foreground uppercase">
             {parent.label}
           </h2>
           <ul className="flex flex-col">

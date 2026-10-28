@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ArrowRightIcon, BookOpenIcon, ChevronDownIcon, MenuIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
+import { ArrowRightIcon, BookOpenIcon, MenuIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
@@ -9,28 +9,23 @@ import { SITE, siteUrl, type Site, legalUrl } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
-import { ResourcesMenu } from './resources-menu'
-import { RESOURCE_COLUMNS, type ResourceLink } from './resources'
+import { MegaMenu, barItemClass } from './resources-menu'
+import { MENUS, type MenuKey, type ResourceLink } from './resources'
+import { articlesOf } from '@/entities/article'
 
 
 type NavLink = { label: string; to: string }
 /** A link to another site of bonbon (the help center). */
 type NavSite = { label: string; site: Site }
-/** "Tài nguyên": the large menu of brand, developer, reading and help sources. */
-type NavResources = { label: string; resources: true }
-type NavItem = NavLink | NavSite | NavResources | { label: string; children: NavLink[] }
+/** A menu that opens the large panel (Hướng dẫn, Tài nguyên). */
+type NavMenu = { label: string; menu: MenuKey }
+type NavItem = NavLink | NavSite | NavMenu
 
 /** The public site's menu. Hướng dẫn opens a submenu. */
 const NAV: NavItem[] = [
-  {
-    label: 'Hướng dẫn',
-    children: [
-      { label: 'Bắt đầu', to: '/huong-dan/bat-dau' },
-      { label: 'Quản lý cửa hàng', to: '/huong-dan/quan-ly-cua-hang' },
-    ],
-  },
+  { label: 'Hướng dẫn', menu: 'guides' },
   { label: 'Blog', to: '/blog' },
-  { label: 'Tài nguyên', resources: true },
+  { label: 'Tài nguyên', menu: 'resources' },
   { label: 'Trung tâm trợ giúp', site: 'help' },
 ]
 
@@ -50,7 +45,7 @@ export function PublicLink({ to, className, children, onClick }: { to: string; c
   )
 }
 
-const linkClass = 'rounded-full px-3.5 py-2 text-[0.9375rem] font-medium text-ink outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
+const linkClass = barItemClass
 
 /** Where a menu link goes and the plain address behind it. */
 function target(item: NavLink | NavSite): { href: string; here: (pathname: string) => boolean } {
@@ -74,12 +69,11 @@ export function SiteHeader() {
     session?.role === 'SELLER' ? { href: siteUrl('merchant'), label: 'Vào trang người bán' }
     : session?.role === 'ADMIN' ? { href: siteUrl('console'), label: 'Vào trang quản trị' }
     : null
-  const current = (item: NavItem) =>
-    'resources' in item
-      ? ['/bo-nhan-dien', '/nha-phat-trien'].some((to) => isHere(pathname, to))
-      : 'children' in item
-        ? item.children.some((c) => isHere(pathname, c.to))
-        : target(item).here(pathname)
+  const current = (item: NavItem) => ('menu' in item ? MENUS[item.menu].here.some((to) => isHere(pathname, to)) : target(item).here(pathname))
+  const firstStep = articlesOf('bat-dau')[0]
+  const latestPost = [...articlesOf('blog')].sort((a, b) => b.updated.localeCompare(a.updated))[0]
+  const feature = (menu: MenuKey) =>
+    menu === 'guides' ? (firstStep ? { article: firstStep, kicker: 'Bắt đầu tại đây', action: 'Đọc bước 1' } : undefined) : latestPost ? { article: latestPost, action: 'Đọc bài' } : undefined
   const resourceLink = (l: ResourceLink, className: string, onClick: () => void) =>
     l.to ? (
       <PublicLink to={l.to} className={className} onClick={onClick}>
@@ -101,32 +95,16 @@ export function SiteHeader() {
 
           <nav aria-label="Menu chính" className="hidden items-center gap-1 lg:flex">
             {NAV.map((item) =>
-              'resources' in item ? (
-                <ResourcesMenu key={item.label} current={current(item)} renderLink={resourceLink} />
-              ) : !('children' in item) ? (
-                'site' in item ? (
-                  <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'font-medium text-primary hover:bg-transparent')}>
-                    {item.label}
-                  </a>
-                ) : (
-                  <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'font-medium text-primary hover:bg-transparent')}>
-                    {item.label}
-                  </PublicLink>
-                )
+              'menu' in item ? (
+                <MegaMenu key={item.label} label={item.label} current={current(item)} columns={[...MENUS[item.menu].columns]} feature={feature(item.menu)} renderLink={resourceLink} />
+              ) : 'site' in item ? (
+                <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'text-primary')}>
+                  {item.label}
+                </a>
               ) : (
-                <DropdownMenu key={item.label}>
-                  <DropdownMenuTrigger className={cn(linkClass, 'flex items-center gap-1.5 data-[state=open]:bg-muted', current(item) && 'font-medium text-primary hover:bg-transparent')}>
-                    {item.label}
-                    <ChevronDownIcon className="size-4" aria-hidden="true" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="min-w-52 rounded-lg">
-                    {item.children.map((child) => (
-                      <DropdownMenuItem key={child.to} asChild className="cursor-pointer">
-                        <PublicLink to={child.to}>{child.label}</PublicLink>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <PublicLink key={item.to} to={item.to} className={cn(linkClass, current(item) && 'text-primary')}>
+                  {item.label}
+                </PublicLink>
               ),
             )}
           </nav>
@@ -153,32 +131,23 @@ export function SiteHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-64 rounded-lg">
                 {NAV.map((item) =>
-                  'resources' in item ? (
+                  'menu' in item ? (
                     <div key={item.label}>
-                      {RESOURCE_COLUMNS.map((col) => (
+                      {MENUS[item.menu].columns.map((col) => (
                         <div key={col.label}>
                           <DropdownMenuLabel>{col.label}</DropdownMenuLabel>
                           {col.links.map((l) => (
-                            <DropdownMenuItem key={l.label} asChild className="cursor-pointer pl-7 text-base">
+                            <DropdownMenuItem key={l.label} asChild className="cursor-pointer pl-6">
                               {resourceLink(l, '', () => {})}
                             </DropdownMenuItem>
                           ))}
                         </div>
                       ))}
                     </div>
-                  ) : !('children' in item) ? (
-                    <DropdownMenuItem key={item.label} asChild className="cursor-pointer text-base">
+                  ) : (
+                    <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                       {'site' in item ? <a href={target(item).href}>{item.label}</a> : <PublicLink to={item.to}>{item.label}</PublicLink>}
                     </DropdownMenuItem>
-                  ) : (
-                    <div key={item.label}>
-                      <DropdownMenuLabel>{item.label}</DropdownMenuLabel>
-                      {item.children.map((child) => (
-                        <DropdownMenuItem key={child.to} asChild className="cursor-pointer pl-7 text-base">
-                          <PublicLink to={child.to}>{child.label}</PublicLink>
-                        </DropdownMenuItem>
-                      ))}
-                    </div>
                   ),
                 )}
                 <DropdownMenuSeparator />
@@ -296,7 +265,7 @@ export function SiteFooter() {
               <BookOpenIcon className="size-6 text-primary" strokeWidth={1.5} aria-hidden="true" />
               <span className="mt-2 text-body font-medium text-ink">Hướng dẫn mở quán</span>
               <span className="text-small text-muted-foreground">Ba bước từ tạo tài khoản tới đơn hàng đầu tiên.</span>
-              <span className="mt-1 text-small font-medium text-primary underline-offset-4 group-hover:underline">Đọc hướng dẫn</span>
+              <span className="text-link mt-1 text-small font-medium">Đọc hướng dẫn</span>
             </PublicLink>
           </div>
         </div>

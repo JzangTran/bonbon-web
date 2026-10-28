@@ -10,10 +10,10 @@ export function RouteError() {
       <Illustration name="error" />
       <h1 className="text-2xl font-semibold">Có lỗi xảy ra</h1>
       <p className="text-sm text-muted-foreground">Trang này gặp sự cố. Hãy tải lại; nếu vẫn lỗi, liên hệ hỗ trợ của bonbon.</p>
-      <button type="button" className="text-primary underline underline-offset-4" onClick={() => window.location.reload()}>
+      <button type="button" className="text-link" onClick={() => window.location.reload()}>
         Tải lại trang
       </button>
-      <Link to="/" className="text-sm text-muted-foreground underline underline-offset-4">
+      <Link to="/" className="text-link text-sm text-muted-foreground">
         Về trang chủ
       </Link>
     </main>

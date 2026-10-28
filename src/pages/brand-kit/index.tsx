@@ -1,11 +1,21 @@
 import { CheckIcon, CopyIcon, DownloadIcon } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/shared/lib/utils'
-import { ContentPage } from '@/widgets/article/article-view'
+import { DocsRail } from '@/shared/ui/docs-frame'
+import { Toc } from '@/widgets/article/article-view'
+import { BRAND_PATH, BrandFrame, BrandSection } from './frame'
 import { Breadcrumb, TagList } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 
-const PATH = '/bo-nhan-dien'
+const PATH = BRAND_PATH
+const SECTIONS = [
+  { id: 'logo', text: 'Logo và biểu tượng' },
+  { id: 'mau-sac', text: 'Màu sắc' },
+  { id: 'chu', text: 'Font chữ' },
+  { id: 'quy-tac', text: 'Quy tắc sử dụng logo' },
+]
+const HEADINGS = SECTIONS.map((x) => ({ ...x, level: 2 as const }))
+const GROUPS = [{ title: 'Nhận diện', items: SECTIONS.map((x) => ({ label: x.text, to: `${PATH}#${x.id}` })) }]
 const TRAIL = [
   { name: 'Trang chủ', path: '/' },
   { name: 'Tài nguyên', path: PATH },
@@ -25,14 +35,15 @@ const LOGOS: Asset[] = [
 ]
 
 const COLORS = [
-  { name: 'Cam bonbon', hex: '#FE551B', use: 'Màu thương hiệu: logo, hình lớn, chữ từ 24px.' },
-  { name: 'Cam đậm', hex: '#CC3D0B', use: 'Nút chính, liên kết, mục đang chọn (đạt độ tương phản cho chữ nhỏ).' },
-  { name: 'Cam nhạt', hex: '#FFF4EE', use: 'Nền ghi chú, điểm nhấn rất nhẹ.' },
-  { name: 'Mực', hex: '#1D1D1D', use: 'Chữ chính.' },
-  { name: 'Xám chữ', hex: '#6E6E6E', use: 'Chữ phụ, mô tả, mục chưa chọn.' },
-  { name: 'Xám nền', hex: '#F5F5F5', use: 'Nền ô nhập, nút phụ, thẻ nhỏ.' },
+  { name: 'Cam bonbon', hex: '#FE551B', use: 'Màu thương hiệu: logo, mục đang chọn, gạch chân liên kết, hình minh hoạ, chuỗi số liệu đầu tiên.' },
+  { name: 'Cam nhạt', hex: '#FFF4EE', use: 'Nền ghi chú và thẻ nhấn rất nhẹ.' },
+  { name: 'Mực', hex: '#1D1D1D', use: 'Chữ nội dung và nút chính.' },
+  { name: 'Xám chữ', hex: '#6E6E6E', use: 'Chữ điều hướng, mô tả, nhãn và mục chưa chọn.' },
+  { name: 'Be', hex: '#FAFAF9', use: 'Nền khối số liệu, biểu đồ và chân trang.' },
+  { name: 'Xám nền', hex: '#F5F5F5', use: 'Nền ô nhập, nút phụ và nền khi rê chuột.' },
   { name: 'Xám kẻ', hex: '#EDEDED', use: 'Đường kẻ mảnh, chỉ khi thật cần.' },
-  { name: 'Vàng', hex: '#FFB020', use: 'Sao đánh giá (chữ trên nền này là màu mực).' },
+  { name: 'Xanh dương', hex: '#2A78D6', use: 'Chuỗi số liệu thứ hai trên biểu đồ.' },
+  { name: 'Xanh ngọc', hex: '#1BAF7A', use: 'Chuỗi số liệu thứ ba trên biểu đồ.' },
 ]
 
 const WEIGHTS = [
@@ -61,7 +72,7 @@ function LogoCard({ asset }: { asset: Asset }) {
       <a
         href={href}
         download
-        className="mt-auto flex min-h-11 items-center justify-center gap-2 rounded-sm bg-button px-4 text-[0.9375rem] font-semibold text-button-foreground outline-none hover:bg-button-hover focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="mt-auto flex h-10 items-center justify-center gap-2 rounded-full bg-button px-4 text-ui font-medium text-button-foreground outline-none hover:bg-button-hover focus-visible:ring-2 focus-visible:ring-ring"
       >
         <DownloadIcon className="size-4" aria-hidden="true" />
         Tải xuống SVG
@@ -106,68 +117,48 @@ function Swatch({ color }: { color: (typeof COLORS)[number] }) {
   )
 }
 
-function Section({ id, title, intro, children }: { id: string; title: string; intro: string; children: React.ReactNode }) {
-  return (
-    <section aria-labelledby={id} className="flex flex-col gap-6">
-      <div className="flex max-w-2xl flex-col gap-2">
-        <h2 id={id} className="text-[1.75rem] leading-9 font-semibold tracking-[-0.01em]">
-          {title}
-        </h2>
-        <p className="leading-7 text-muted-foreground">{intro}</p>
-      </div>
-      {children}
-    </section>
-  )
-}
-
 /** Logos to download, colours, type and the rules for using them. */
 export function BrandKitPage() {
   return (
-    <ContentPage>
+    <BrandFrame tab="identity" sidebar={<DocsRail groups={GROUPS} label="Nhận diện" />} aside={<Toc headings={HEADINGS} />}>
       <PageSeo
         title="Thương hiệu"
         description="Logo, biểu tượng, màu sắc và font chữ của bonbon, kèm quy tắc sử dụng, để đối tác và báo chí dùng đúng."
         path={PATH}
         trail={TRAIL}
       />
-      <main id="main">
-        <section className="border-b bg-white">
-          <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
-            <Breadcrumb trail={TRAIL} />
-            <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Thương hiệu bonbon</h1>
-            <p className="max-w-2xl text-[1.0625rem] leading-7 text-muted-foreground">
-              Logo, màu sắc và font chữ của bonbon. Tải về và dùng theo quy tắc bên dưới để mọi nơi nhìn bonbon đều giống nhau.
-            </p>
-          </div>
-        </section>
-        <div className="relative bg-background pt-10 pb-16 lg:pt-14 lg:pb-24">
-          <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-16 px-4 sm:px-6">
-            <Section id="logo" title="Logo và biểu tượng" intro="Tất cả là SVG, phóng to không vỡ. Chọn bản màu cho nền sáng và bản trắng cho nền tối.">
-              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-3">
+          <Breadcrumb trail={TRAIL} />
+          <h1 className="text-h1 font-semibold">Nhận diện thương hiệu</h1>
+          <p className="text-lead text-ink">Logo, màu sắc và font chữ của bonbon. Tải về và dùng theo quy tắc bên dưới để mọi nơi nhìn bonbon đều giống nhau.</p>
+        </div>
+            <BrandSection id="logo" title="Logo và biểu tượng" intro="Tất cả là SVG, phóng to không vỡ. Chọn bản màu cho nền sáng và bản trắng cho nền tối.">
+              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {LOGOS.map((asset) => (
                   <LogoCard key={asset.file} asset={asset} />
                 ))}
               </ul>
-            </Section>
+            </BrandSection>
 
-            <Section id="mau-sac" title="Màu sắc" intro="Bấm biểu tượng sao chép để lấy mã màu. Các màu chữ và nền đã được kiểm tra độ tương phản.">
-              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <BrandSection id="mau-sac" title="Màu sắc" intro="Bấm biểu tượng sao chép để lấy mã màu. Các màu chữ và nền đã được kiểm tra độ tương phản.">
+              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {COLORS.map((c) => (
                   <Swatch key={c.hex} color={c} />
                 ))}
               </ul>
-            </Section>
+            </BrandSection>
 
-            <Section id="chu" title="Font chữ" intro="bonbon dùng Inter, hỗ trợ đầy đủ tiếng Việt. Font miễn phí, có trên Google Fonts.">
+            <BrandSection id="chu" title="Font chữ" intro="bonbon dùng Inter, hỗ trợ đầy đủ tiếng Việt. Font miễn phí, có trên Google Fonts.">
               <div className="grid gap-4 rounded-lg bg-card p-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:p-8">
                 <div className="flex flex-col gap-2">
                   <p className="text-[4rem] leading-none font-semibold tracking-[-0.03em]">Aa</p>
                   <p className="text-xl font-semibold">Inter</p>
                   <a
-                    href="https://fonts.google.com/specimen/Be+Vietnam+Pro"
+                    href="https://fonts.google.com/specimen/Inter"
                     target="_blank"
                     rel="noreferrer"
-                    className="w-fit text-primary underline underline-offset-4"
+                    className="text-link w-fit"
                   >
                     Tải font trên Google Fonts
                   </a>
@@ -185,9 +176,9 @@ export function BrandKitPage() {
                   ))}
                 </ul>
               </div>
-            </Section>
+            </BrandSection>
 
-            <Section id="quy-tac" title="Quy tắc sử dụng logo" intro="Vài nguyên tắc đơn giản để logo luôn rõ ràng.">
+            <BrandSection id="quy-tac" title="Quy tắc sử dụng logo" intro="Vài nguyên tắc đơn giản để logo luôn rõ ràng.">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="flex flex-col gap-3 rounded-lg bg-grey-50 p-6">
                   <h3 className="text-h3 text-ink">Nên</h3>
@@ -206,10 +197,8 @@ export function BrandKitPage() {
                   </ul>
                 </div>
               </div>
-            </Section>
-          </div>
-        </div>
-      </main>
-    </ContentPage>
+            </BrandSection>
+      </div>
+    </BrandFrame>
   )
 }

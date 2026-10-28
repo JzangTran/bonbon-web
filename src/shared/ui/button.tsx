@@ -18,7 +18,7 @@ const VARIANT: Record<Variant, string> = {
   secondary: 'bg-grey-100 text-ink hover:bg-grey-200 aria-expanded:bg-grey-200',
   ghost: 'text-muted-foreground hover:bg-grey-100 hover:text-ink aria-expanded:bg-grey-100 aria-expanded:text-ink',
   destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-  link: 'h-auto px-0 text-primary underline-offset-4 hover:underline',
+  link: 'text-link h-auto px-0 text-ink',
 }
 
 const SIZE: Record<Size, string> = {

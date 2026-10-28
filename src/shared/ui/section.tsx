@@ -89,7 +89,8 @@ export function Segmented<T extends string>({ label, options, value, onChange, c
           onClick={() => onChange(o.id)}
           className={cn(
             'flex h-7 items-center gap-1.5 rounded-full px-3 text-small whitespace-nowrap outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-3.5',
-            o.id === value ? 'bg-white font-medium text-primary' : 'text-muted-foreground hover:text-ink',
+            'hover:bg-grey-200 hover:text-ink',
+            o.id === value ? 'bg-white font-medium text-primary' : 'text-muted-foreground',
           )}
         >
           {o.label}

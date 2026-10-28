@@ -121,11 +121,11 @@ export function GoogleSignIn() {
             <input type="checkbox" className="mt-0.5 size-4" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
             <span>
               Tôi đồng ý với{' '}
-              <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-primary underline">
+              <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
                 {terms.data?.title ?? 'Điều khoản dành cho người bán'}
               </a>{' '}
               và đã đọc{' '}
-              <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-primary underline">
+              <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-link">
                 {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
               </a>
               .

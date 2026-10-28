@@ -45,7 +45,7 @@ export function AdminMerchantDetailPage() {
 
   return (
     <div className="flex max-w-4xl flex-col gap-10">
-      <Link to={consolePath('/merchants')} className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+      <Link to={consolePath('/merchants')} className="text-link inline-flex items-center gap-1 text-sm">
         <ArrowLeftIcon className="size-4" /> Cửa hàng
       </Link>
       <div className="flex flex-wrap items-center gap-3">
@@ -61,7 +61,7 @@ export function AdminMerchantDetailPage() {
           <ul className="flex flex-col gap-1">
             {duplicates.map((d) => (
               <li key={d.vendorId}>
-                <Link to={consolePath(`/merchants/${d.vendorId}`)} className="font-medium underline">
+                <Link to={consolePath(`/merchants/${d.vendorId}`)} className="text-link font-medium">
                   {d.name}
                 </Link>{' '}
                 ({STATUS[d.status ?? '']?.label ?? d.status}) — {DUPLICATE_REASON[d.reason ?? ''] ?? d.reason}
@@ -78,17 +78,17 @@ export function AdminMerchantDetailPage() {
         <p className="text-sm text-muted-foreground">Điểm phạt, hạn chế hiển thị, đình chỉ và số dư của quán nằm ở các trang riêng.</p>
         <div className="flex flex-wrap gap-3 text-sm">
           {session?.permissions.has('shop-penalty:read') ? (
-            <Link className="text-primary hover:underline" to={consolePath(`/penalties/${shop.vendorId}`)}>
+            <Link className="text-link" to={consolePath(`/penalties/${shop.vendorId}`)}>
               Điểm phạt và đình chỉ
             </Link>
           ) : null}
           {session?.permissions.has('settlement:read') ? (
-            <Link className="text-primary hover:underline" to={consolePath(`/settlement/${shop.vendorId}`)}>
+            <Link className="text-link" to={consolePath(`/settlement/${shop.vendorId}`)}>
               Sổ số dư và hoa hồng
             </Link>
           ) : null}
           {session?.permissions.has('dish:moderate') ? (
-            <Link className="text-primary hover:underline" to={consolePath(`/category-moderation?vendorId=${shop.vendorId}`)}>
+            <Link className="text-link" to={consolePath(`/category-moderation?vendorId=${shop.vendorId}`)}>
               Món sai ngành
             </Link>
           ) : null}

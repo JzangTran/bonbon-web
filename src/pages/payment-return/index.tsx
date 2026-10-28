@@ -9,7 +9,7 @@ export function PaymentReturnPage() {
   return (
     <AuthShell bare title="Đã nhận kết quả từ MoMo" description="Quay lại ứng dụng bonbon để xem đơn của bạn. Trạng thái đơn sẽ tự cập nhật trong ít giây.">
       <SuccessMark />
-      <Link to="/" className="text-center text-sm text-primary hover:underline">
+      <Link to="/" className="text-link text-center text-sm">
         Về trang chủ bonbon
       </Link>
     </AuthShell>

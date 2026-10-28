@@ -112,7 +112,7 @@ export function HelpArticlePage() {
       {article.isError || (!article.isPending && !data) ? (
         <div className="flex flex-col gap-4">
           <FormError message={article.isError ? problemMessage(article.error) : 'Không tìm thấy bài.'} />
-          <Link to={BASE} className="text-primary underline underline-offset-4">
+          <Link to={BASE} className="text-link">
             Về trung tâm trợ giúp
           </Link>
         </div>
@@ -211,7 +211,7 @@ export function ContactPage() {
           </p>
           <p className="text-ui text-muted-foreground">
             Câu hỏi thường gặp đã có trong{' '}
-            <Link to={BASE} className="text-ink underline decoration-primary underline-offset-4">
+            <Link to={BASE} className="text-link text-ink">
               trung tâm trợ giúp
             </Link>
             . Vấn đề về một đơn cụ thể, mở đơn trong ứng dụng và chọn Báo vấn đề để quán và bonbon thấy ngay đơn nào.
@@ -233,7 +233,7 @@ export function ContactPage() {
                 </p>
                 <button
                   type="button"
-                  className="text-ui text-ink underline decoration-primary underline-offset-4"
+                  className="text-link text-ui text-ink"
                   onClick={() => {
                     setForm({ fullName: '', email: '', role: '', topic: '', message: '' })
                     setCaptchaToken(null)
@@ -321,13 +321,13 @@ export function ContactPage() {
                 </Button>
                 <p className="text-center text-small text-muted-foreground">
                   Khi gửi, bạn đồng ý với{' '}
-                  <Link to={helpPath('/phap-ly/PRIVACY_POLICY')} className="underline underline-offset-4 hover:text-ink">
+                  <Link to={helpPath('/phap-ly/PRIVACY_POLICY')} className="text-link hover:text-ink">
                     chính sách quyền riêng tư
                   </Link>
                   .{SUPPORT_EMAIL ? (
                     <>
                       {' '}Bạn cũng có thể viết cho{' '}
-                      <a href={`mailto:${SUPPORT_EMAIL}`} className="underline underline-offset-4 hover:text-ink">
+                      <a href={`mailto:${SUPPORT_EMAIL}`} className="text-link hover:text-ink">
                         {SUPPORT_EMAIL}
                       </a>
                       .

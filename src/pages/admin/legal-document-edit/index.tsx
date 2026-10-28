@@ -51,7 +51,7 @@ export function AdminLegalDocumentEditPage() {
 
 function Back() {
   return (
-    <Link to={consolePath('/legal-documents')} className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+    <Link to={consolePath('/legal-documents')} className="text-link inline-flex items-center gap-1 text-sm">
       <ArrowLeftIcon className="size-4" /> Văn bản pháp lý
     </Link>
   )

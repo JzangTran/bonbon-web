@@ -21,11 +21,11 @@ export function Breadcrumb({ trail }: { trail: { name: string; path: string }[] 
                 </span>
               ) : (
                 (away(item.path) ? (
-                  <a href={item.path} className="underline-offset-4 hover:text-foreground hover:underline">
+                  <a href={item.path} className="hover:text-ink">
                     {item.name}
                   </a>
                 ) : (
-                  <Link to={item.path} className="underline-offset-4 hover:text-foreground hover:underline">
+                  <Link to={item.path} className="hover:text-ink">
                     {item.name}
                   </Link>
                 ))

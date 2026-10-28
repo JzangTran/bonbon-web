@@ -50,7 +50,7 @@ export function AdminSettlementShopPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-10">
       <div>
-        <Link to={consolePath('/settlement')} className="text-sm text-primary hover:underline">
+        <Link to={consolePath('/settlement')} className="text-link text-sm">
           ← Đối soát
         </Link>
         <h1 className="text-2xl font-semibold">{v?.name ?? 'Quán'}</h1>
