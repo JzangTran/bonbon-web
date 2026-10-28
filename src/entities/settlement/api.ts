@@ -24,13 +24,13 @@ export function useCommissionRates(enabled: boolean) {
   })
 }
 
-export function useCommissionHistory(page: number, enabled: boolean) {
+export function useCommissionHistory(page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...COMMISSION_KEY, 'history', page],
+    queryKey: [...COMMISSION_KEY, 'history', page, size],
     enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/commission-rates/history', { params: { query: { page, size: 10 } } })
+      const { data, error } = await api.GET('/api/admin/commission-rates/history', { params: { query: { page, size } } })
       if (error || !data) throw error
       return data
     },
@@ -61,14 +61,14 @@ export function useSetCommissionRate() {
 
 export type ShopFilter = 'ALL' | 'OWED_TO_SHOP' | 'OWED_BY_SHOP'
 
-export function useSettlementOverview(filter: ShopFilter, page: number, enabled: boolean) {
+export function useSettlementOverview(filter: ShopFilter, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...SETTLEMENT_KEY, 'overview', filter, page],
+    queryKey: [...SETTLEMENT_KEY, 'overview', filter, page, size],
     enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/settlement/overview', {
-        params: { query: { page, size: 20, ...(filter === 'ALL' ? {} : { status: filter }) } },
+        params: { query: { page, size, ...(filter === 'ALL' ? {} : { status: filter }) } },
       })
       if (error || !data) throw error
       return data
@@ -88,14 +88,14 @@ export function useSettlementVendor(id: string, enabled: boolean) {
   })
 }
 
-export function useVendorLedger(id: string, type: string | null, page: number, enabled: boolean) {
+export function useVendorLedger(id: string, type: string | null, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...SETTLEMENT_KEY, 'ledger', id, type, page],
+    queryKey: [...SETTLEMENT_KEY, 'ledger', id, type, page, size],
     enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/settlement/vendors/{id}/ledger', {
-        params: { path: { id }, query: { page, size: 20, ...(type ? { type } : {}) } },
+        params: { path: { id }, query: { page, size, ...(type ? { type } : {}) } },
       })
       if (error || !data) throw error
       return data

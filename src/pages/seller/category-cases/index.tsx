@@ -10,6 +10,8 @@ import {
   type CaseStatus,
   type CategoryCase,
 } from '@/entities/dish-category-case'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatRelative } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
@@ -44,12 +46,11 @@ const STATUS: Record<string, { label: string; className: string }> = {
 /** Dishes an administrator found in the wrong category (view-category-violations.md, appeal-category-correction.md): fix, agree or appeal. */
 export function SellerCategoryCasesPage() {
   const [tab, setTab] = useState<CaseStatus | ''>('RESTRICTED')
-  const [page, setPage] = useState(0)
+  const paging = usePaging()
   const [acting, setActing] = useState<{ kase: CategoryCase; kind: 'resolve' | 'appeal' } | null>(null)
-  const cases = useMyCategoryCases(tab, page)
+  const cases = useMyCategoryCases(tab, paging.page, paging.size)
   const confirm = useConfirmMyCase()
   const data = cases.data
-  const size = data?.size ?? 20
   const total = data?.total ?? 0
 
   return (
@@ -68,7 +69,7 @@ export function SellerCategoryCasesPage() {
         value={tab}
         onChange={(id) => {
           setTab(id)
-          setPage(0)
+          paging.reset()
         }}
       />
 
@@ -91,19 +92,7 @@ export function SellerCategoryCasesPage() {
           />
         ))}
       </ul>
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
 
     </div>
   )

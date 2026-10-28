@@ -16,6 +16,8 @@ import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 type Kind = RecordInput['type']
 type Tab = 'ledger' | 'statement'
@@ -35,9 +37,9 @@ export function AdminSettlementShopPage() {
   const vendor = useSettlementVendor(vendorId, canRead)
   const [tab, setTab] = useState<Tab>('ledger')
   const [type, setType] = useState<string | null>(null)
-  const [page, setPage] = useState(0)
+  const paging = usePaging()
   const [granularity, setGranularity] = useState<Granularity>('week')
-  const ledger = useVendorLedger(vendorId, type, page, canRead && tab === 'ledger')
+  const ledger = useVendorLedger(vendorId, type, paging.page, canRead && tab === 'ledger', paging.size)
   const statement = useVendorStatement(vendorId, granularity, canRead && tab === 'statement')
   const [kind, setKind] = useState<Kind | null>(null)
 
@@ -103,7 +105,7 @@ export function AdminSettlementShopPage() {
               value={type ?? ''}
               onChange={(e) => {
                 setType(e.target.value || null)
-                setPage(0)
+                paging.reset()
               }}
             >
               <option value="">Tất cả</option>
@@ -134,19 +136,7 @@ export function AdminSettlementShopPage() {
               </li>
             ))}
           </ul>
-          {(ledger.data?.total ?? 0) > (ledger.data?.size ?? 20) ? (
-            <div className="flex items-center justify-between">
-              <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-                Trang trước
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                Trang {page + 1} / {Math.ceil((ledger.data?.total ?? 0) / (ledger.data?.size ?? 20))}
-              </span>
-              <Button variant="outline" disabled={(page + 1) * (ledger.data?.size ?? 20) >= (ledger.data?.total ?? 0)} onClick={() => setPage(page + 1)}>
-                Trang sau
-              </Button>
-            </div>
-          ) : null}
+          <Pagination paging={paging} total={ledger.data?.total ?? 0} />
         </section>
       ) : (
         <section className="flex flex-col gap-3">
@@ -159,12 +149,12 @@ export function AdminSettlementShopPage() {
           </div>
           {statement.isError ? <FormError message={problemMessage(statement.error)} /> : null}
           {statement.data && (statement.data.periods ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">Chưa có số liệu trong 90 ngày gần nhất.</Card> : null}
-          <div className="overflow-x-auto rounded-sm border bg-card">
-            <table className="w-full text-sm">
-              <thead className="bg-muted text-xs text-muted-foreground">
+          <div className="overflow-x-auto rounded-xl bg-beige-50 px-2 py-1 sm:px-3">
+            <table className="w-full text-ui">
+              <thead className="text-small text-muted-foreground">
                 <tr>
                   {['Kỳ', 'Đơn', 'Tiền món', 'Hoa hồng', 'Đã chi trả', 'Đã thu', 'Điều chỉnh', 'Số dư cuối'].map((h) => (
-                    <th key={h} className="px-3 py-2 text-right font-medium first:text-left">
+                    <th key={h} className="px-3 py-2.5 text-right font-normal whitespace-nowrap first:text-left">
                       {h}
                     </th>
                   ))}
@@ -172,17 +162,17 @@ export function AdminSettlementShopPage() {
               </thead>
               <tbody>
                 {(statement.data?.periods ?? []).map((p) => (
-                  <tr key={p.start} className="border-t">
-                    <td className="px-3 py-2">{periodLabel(p.start ?? '', granularity)}</td>
-                    <td className="px-3 py-2 text-right tabular-nums">{p.orders}</td>
-                    <td className="px-3 py-2 text-right tabular-nums">{formatVnd(p.foodValue)}</td>
-                    <td className="px-3 py-2 text-right tabular-nums" title={`ròng ${formatVnd(p.commissionNet)} + VAT ${formatVnd(p.commissionVat)}`}>
+                  <tr key={p.start} className="border-t border-grey-200">
+                    <td className="px-3 py-3">{periodLabel(p.start ?? '', granularity)}</td>
+                    <td className="px-3 py-3 text-right tabular-nums">{p.orders}</td>
+                    <td className="px-3 py-3 text-right tabular-nums">{formatVnd(p.foodValue)}</td>
+                    <td className="px-3 py-3 text-right tabular-nums" title={`ròng ${formatVnd(p.commissionNet)} + VAT ${formatVnd(p.commissionVat)}`}>
                       {formatVnd(p.commission)}
                     </td>
-                    <td className="px-3 py-2 text-right tabular-nums">{formatVnd(p.payouts)}</td>
-                    <td className="px-3 py-2 text-right tabular-nums">{formatVnd(p.collections)}</td>
-                    <td className="px-3 py-2 text-right tabular-nums">{formatSigned(p.adjustments)}</td>
-                    <td className="px-3 py-2 text-right font-medium tabular-nums">{formatSigned(p.closingBalance)}</td>
+                    <td className="px-3 py-3 text-right tabular-nums">{formatVnd(p.payouts)}</td>
+                    <td className="px-3 py-3 text-right tabular-nums">{formatVnd(p.collections)}</td>
+                    <td className="px-3 py-3 text-right tabular-nums">{formatSigned(p.adjustments)}</td>
+                    <td className="px-3 py-3 text-right font-medium tabular-nums">{formatSigned(p.closingBalance)}</td>
                   </tr>
                 ))}
               </tbody>

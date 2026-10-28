@@ -5,7 +5,6 @@ import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatVnd } from '@/shared/lib/format'
 import { useNow } from '@/shared/lib/use-now'
 import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
@@ -13,6 +12,8 @@ import { FilterChips } from '@/shared/ui/filter-chips'
 import { FormError } from '@/widgets/auth-shell'
 import { OrderCaseTabs } from '@/widgets/seller-tabs'
 import { merchantPath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const TABS: { id: CaseStatus; label: string }[] = [
   { id: 'AWAITING_SHOP', label: 'Chờ quán trả lời' },
@@ -24,13 +25,12 @@ const TABS: { id: CaseStatus; label: string }[] = [
 /** What customers reported about this shop's delivered orders (respond-to-order-case.md). */
 export function SellerOrderCasesPage() {
   const [tab, setTab] = useState<CaseStatus>('AWAITING_SHOP')
-  const [page, setPage] = useState(0)
-  const cases = useShopCases(tab, page)
+  const paging = usePaging()
+  const cases = useShopCases(tab, paging.page, paging.size)
   const now = useNow(60_000)
   const data = cases.data
   const items = data?.items ?? []
   const total = data?.total ?? 0
-  const size = data?.size ?? 20
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
@@ -48,7 +48,7 @@ export function SellerOrderCasesPage() {
         value={tab}
         onChange={(id) => {
           setTab(id)
-          setPage(0)
+          paging.reset()
         }}
       />
 
@@ -83,19 +83,7 @@ export function SellerOrderCasesPage() {
         })}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
     </div>
   )
 }

@@ -8,14 +8,14 @@ export type CaseStatus = 'RESTRICTED' | 'AUTO_CORRECTED' | 'APPEALED' | 'RESOLVE
 
 export const CATEGORY_CASES_KEY = ['admin', 'category-cases'] as const
 
-export function useCategoryCases(status: CaseStatus | '', vendorId: string, page: number, enabled: boolean) {
+export function useCategoryCases(status: CaseStatus | '', vendorId: string, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...CATEGORY_CASES_KEY, 'list', status, vendorId, page],
+    queryKey: [...CATEGORY_CASES_KEY, 'list', status, vendorId, page, size],
     placeholderData: keepPreviousData,
     enabled,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/category-cases', {
-        params: { query: { status: status || undefined, vendorId: vendorId || undefined, page, size: 20 } },
+        params: { query: { status: status || undefined, vendorId: vendorId || undefined, page, size } },
       })
       if (error || !data) throw error
       return data
@@ -96,12 +96,12 @@ export function leaves(nodes: CategoryNode[], path: string[] = []): { id: string
 
 export const MY_CASES_KEY = ['merchant', 'category-cases'] as const
 
-export function useMyCategoryCases(status: CaseStatus | '', page: number) {
+export function useMyCategoryCases(status: CaseStatus | '', page: number, size = 25) {
   return useQuery({
-    queryKey: [...MY_CASES_KEY, status, page],
+    queryKey: [...MY_CASES_KEY, status, page, size],
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/merchant/category-cases', { params: { query: { status: status || undefined, page, size: 20 } } })
+      const { data, error } = await api.GET('/api/merchant/category-cases', { params: { query: { status: status || undefined, page, size } } })
       if (error || !data) throw error
       return data
     },

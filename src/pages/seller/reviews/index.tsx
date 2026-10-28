@@ -11,6 +11,8 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const TABS = [
   { unreplied: false, label: 'Tất cả' },
@@ -20,8 +22,8 @@ const TABS = [
 /** Customers' reviews of the shop and the one reply each (respond-to-review.md); a reply can change for 24 hours. */
 export function SellerReviewsPage() {
   const [unreplied, setUnreplied] = useState(false)
-  const [page, setPage] = useState(0)
-  const reviews = useSellerReviews(unreplied, page)
+  const paging = usePaging()
+  const reviews = useSellerReviews(unreplied, paging.page, paging.size)
   const { save, remove } = useReplyActions()
   const now = useNow(60_000)
   const [target, setTarget] = useState<Review | null>(null)
@@ -30,7 +32,6 @@ export function SellerReviewsPage() {
   const data = reviews.data
   const items = data?.items ?? []
   const total = data?.total ?? 0
-  const size = data?.size ?? 20
   const editing = !!target?.reply
 
   const openReply = (review: Review) => {
@@ -58,7 +59,7 @@ export function SellerReviewsPage() {
             aria-selected={unreplied === tab.unreplied}
             onClick={() => {
               setUnreplied(tab.unreplied)
-              setPage(0)
+              paging.reset()
             }}
             className={cn(
               '-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap',
@@ -152,19 +153,7 @@ export function SellerReviewsPage() {
         })}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
 
       <Dialog open={deleting !== null} onOpenChange={(open) => (open ? undefined : setDeleting(null))}>
         <DialogContent>

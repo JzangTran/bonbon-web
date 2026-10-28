@@ -10,28 +10,28 @@ export type ShopSuspension = components['schemas']['ShopSuspension']
 
 export const PENALTIES_KEY = ['admin', 'penalties'] as const
 
-export function usePenaltyShops(page: number, enabled: boolean) {
+export function usePenaltyShops(page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...PENALTIES_KEY, 'shops', page],
+    queryKey: [...PENALTIES_KEY, 'shops', page, size],
     enabled,
     placeholderData: keepPreviousData,
     refetchInterval: 60_000,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/shop-penalties', { params: { query: { page, size: 20 } } })
+      const { data, error } = await api.GET('/api/admin/shop-penalties', { params: { query: { page, size } } })
       if (error || !data) throw error
       return data
     },
   })
 }
 
-export function usePenaltyAppeals(page: number, enabled: boolean) {
+export function usePenaltyAppeals(page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...PENALTIES_KEY, 'appeals', page],
+    queryKey: [...PENALTIES_KEY, 'appeals', page, size],
     enabled,
     placeholderData: keepPreviousData,
     refetchInterval: 60_000,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/shop-penalties/appeals', { params: { query: { page, size: 20 } } })
+      const { data, error } = await api.GET('/api/admin/shop-penalties/appeals', { params: { query: { page, size } } })
       if (error || !data) throw error
       return data
     },

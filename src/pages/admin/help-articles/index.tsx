@@ -18,6 +18,8 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const FILTERS: { id: HelpStatus | 'ALL_STATUSES'; label: string }[] = [
   { id: 'ALL_STATUSES', label: 'Tất cả' },
@@ -33,12 +35,11 @@ export function AdminHelpArticlesPage() {
   const allowed = !!session?.permissions.has('help-center:write')
   const [filter, setFilter] = useState<HelpStatus | 'ALL_STATUSES'>('ALL_STATUSES')
   const [q, setQ] = useState('')
-  const [page, setPage] = useState(0)
+  const paging = usePaging()
   const [deleting, setDeleting] = useState<AdminHelpArticle | null>(null)
-  const articles = useAdminHelpArticles(filter, q, page)
+  const articles = useAdminHelpArticles(filter, q, paging.page, paging.size)
   const remove = useDeleteHelpArticle()
   const total = articles.data?.total ?? 0
-  const size = articles.data?.size ?? 20
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền soạn bài trợ giúp.</p>
 
@@ -63,7 +64,7 @@ export function AdminHelpArticlesPage() {
           value={filter}
           onValueChange={(id) => {
             setFilter(id as HelpStatus | 'ALL_STATUSES')
-            setPage(0)
+            paging.reset()
           }}
         />
         <Input
@@ -72,7 +73,7 @@ export function AdminHelpArticlesPage() {
           value={q}
           onChange={(e) => {
             setQ(e.target.value)
-            setPage(0)
+            paging.reset()
           }}
           placeholder="Tìm bài"
           aria-label="Tìm bài"
@@ -110,19 +111,7 @@ export function AdminHelpArticlesPage() {
         ))}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
 
       <Dialog open={!!deleting} onOpenChange={(open) => !open && setDeleting(null)}>
         <DialogContent>

@@ -64,7 +64,7 @@ export function AdminServiceAreasPage() {
       </div>
 
       {areas.isError ? <FormError message={problemMessage(areas.error)} /> : null}
-      <div className="overflow-x-auto rounded-lg border bg-card">
+      <div className="overflow-x-auto rounded-xl border border-grey-200">
         <Table>
           <TableHeader>
             <TableRow>

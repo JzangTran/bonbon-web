@@ -83,12 +83,12 @@ export function SellerPerformancePage() {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Theo tuần</h2>
-        <div className="overflow-x-auto rounded-sm border bg-card">
-          <table className="w-full text-sm">
-            <thead className="bg-muted text-xs text-muted-foreground">
+        <div className="overflow-x-auto rounded-xl bg-beige-50 px-2 py-1 sm:px-3">
+          <table className="w-full text-ui">
+            <thead className="text-small text-muted-foreground">
               <tr>
                 {['Tuần', 'Đơn kết thúc', 'Đơn lỗi', 'Tỷ lệ lỗi', 'Kết quả', ''].map((h) => (
-                  <th key={h} className="px-3 py-2 text-right font-medium first:text-left">
+                  <th key={h} className="px-3 py-2.5 text-right font-normal whitespace-nowrap first:text-left">
                     {h}
                   </th>
                 ))}
@@ -96,18 +96,18 @@ export function SellerPerformancePage() {
             </thead>
             <tbody>
               {(p?.weeks ?? []).map((w) => (
-                <tr key={w.start} className={cn('border-t', week === w.start && 'bg-accent')}>
-                  <td className="px-3 py-2">
+                <tr key={w.start} className={cn('border-t border-grey-200', week === w.start && 'font-medium text-primary')}>
+                  <td className="px-3 py-3">
                     {formatDay(w.start)} – {formatDay(w.end)}
                     {w.current ? <span className="ml-2 text-xs text-muted-foreground">(tạm tính)</span> : null}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">{w.finishedOrders}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{w.faultOrders}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{w.ratePercent}%</td>
-                  <td className="px-3 py-2 text-right text-xs">
+                  <td className="px-3 py-3 text-right tabular-nums">{w.finishedOrders}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{w.faultOrders}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{w.ratePercent}%</td>
+                  <td className="px-3 py-3 text-right text-xs">
                     {w.current ? '' : w.penalised ? <span className="text-danger-fg">+1 điểm</span> : w.counted ? 'Đạt' : `Chưa đủ ${p?.minOrders} đơn`}
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-3 text-right">
                     {(w.faultOrders ?? 0) > 0 ? (
                       <Button size="sm" variant={week === w.start ? 'default' : 'outline'} onClick={() => setWeek(week === w.start ? null : (w.start ?? null))}>
                         {week === w.start ? 'Ẩn' : 'Xem đơn'}

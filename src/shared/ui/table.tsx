@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cn } from '@/shared/lib/utils'
 
-/** Tables: no outer frame, a faint line between rows, grey 13px column names. */
+/** Tables: no outer frame of their own (the page puts a hairline frame, or the beige statistics ground, around them), a faint line between rows, grey 13px column names, 16 px at both ends. */
 export function Table({ className, ...props }: React.ComponentProps<'table'>) {
   return (
     <div data-slot="table-container" className="relative w-full overflow-x-auto">
@@ -30,14 +30,14 @@ export function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
   return (
     <th
       data-slot="table-head"
-      className={cn('h-10 px-3 text-left align-middle text-small font-normal whitespace-nowrap text-muted-foreground [&:has([role=checkbox])]:pr-0', className)}
+      className={cn('h-11 px-3 text-left align-middle text-small font-normal whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4 [&:has([role=checkbox])]:pr-0', className)}
       {...props}
     />
   )
 }
 
 export function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
-  return <td data-slot="table-cell" className={cn('px-3 py-3 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0', className)} {...props} />
+  return <td data-slot="table-cell" className={cn('px-3 py-3 align-middle whitespace-nowrap first:pl-4 last:pr-4 [&:has([role=checkbox])]:pr-0', className)} {...props} />
 }
 
 export function TableCaption({ className, ...props }: React.ComponentProps<'caption'>) {

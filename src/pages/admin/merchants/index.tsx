@@ -13,6 +13,8 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const STATUS_TABS: { id: MerchantStatus; label: string }[] = [
   { id: 'APPROVED', label: 'Đang hoạt động' },
@@ -73,10 +75,9 @@ function Directory() {
   const [status, setStatus] = useState<MerchantStatus>('APPROVED')
   const [search, setSearch] = useState('')
   const [q, setQ] = useState('')
-  const [page, setPage] = useState(0)
-  const merchants = useMerchants(status, q, page, true)
+  const paging = usePaging()
+  const merchants = useMerchants(status, q, paging.page, true, paging.size)
   const data = merchants.data
-  const size = data?.size ?? 20
   const total = data?.total ?? 0
 
   return (
@@ -86,7 +87,7 @@ function Directory() {
         onSubmit={(e) => {
           e.preventDefault()
           setQ(search)
-          setPage(0)
+          paging.reset()
         }}
       >
         <Input className="max-w-xs" type="search" placeholder="Tìm theo tên, phường, tỉnh" aria-label="Tìm cửa hàng" value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -103,7 +104,7 @@ function Directory() {
             aria-pressed={status === t.id}
             onClick={() => {
               setStatus(t.id)
-              setPage(0)
+              paging.reset()
             }}
           >
             {t.label}
@@ -118,19 +119,7 @@ function Directory() {
           <MerchantItem key={m.vendorId} m={m} />
         ))}
       </ul>
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
     </div>
   )
 }
@@ -209,12 +198,12 @@ function Coverage() {
       ) : null}
       {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">Không có cửa hàng nào trong phạm vi này.</Card> : null}
       {items.length > 0 ? (
-        <div className="overflow-x-auto rounded-sm border bg-card">
-          <table className="w-full text-sm">
-            <thead className="bg-muted text-xs text-muted-foreground">
+        <div className="overflow-x-auto rounded-xl border border-grey-200">
+          <table className="w-full text-ui">
+            <thead className="text-small text-muted-foreground">
               <tr>
                 {['Cửa hàng', 'Khu vực', 'Bán kính', 'Trung vị tỉnh', 'Đơn đã giao'].map((h) => (
-                  <th key={h} className="px-3 py-2 text-left font-medium [&:nth-child(n+3)]:text-right">
+                  <th key={h} className="px-3 py-2.5 text-left font-normal whitespace-nowrap [&:nth-child(n+3)]:text-right">
                     {h}
                   </th>
                 ))}
@@ -222,20 +211,20 @@ function Coverage() {
             </thead>
             <tbody>
               {items.map((s) => (
-                <tr key={s.vendorId} className={cn('border-t', s.outlier && 'bg-warning-subtle/40')}>
-                  <td className="px-3 py-2">
+                <tr key={s.vendorId} className={cn('border-t border-grey-100 hover:bg-grey-50', s.outlier && 'bg-warning-subtle/40')}>
+                  <td className="px-3 py-3">
                     <Link to={consolePath(`/merchants/${s.vendorId}`)} className="font-medium text-primary hover:underline">
                       {s.name}
                     </Link>
                     <p className="text-xs text-muted-foreground">{s.address}</p>
                   </td>
-                  <td className="px-3 py-2">{[s.ward, s.province].filter(Boolean).join(', ') || '—'}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-3">{[s.ward, s.province].filter(Boolean).join(', ') || '—'}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">
                     {s.radiusKm} km
                     {s.outlier ? <Badge className="ml-2 bg-warning-subtle text-warning-fg">Xem kỹ</Badge> : null}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">{s.provinceMedianRadiusKm} km</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{(s.deliveredOrders ?? 0).toLocaleString('vi-VN')}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{s.provinceMedianRadiusKm} km</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{(s.deliveredOrders ?? 0).toLocaleString('vi-VN')}</td>
                 </tr>
               ))}
             </tbody>

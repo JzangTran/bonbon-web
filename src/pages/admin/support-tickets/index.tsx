@@ -6,12 +6,13 @@ import { problemMessage } from '@/shared/api'
 import { formatRelative } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 import { consolePath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const TABS: { id: TicketStatus; label: string }[] = [
   { id: 'OPEN', label: 'Chờ trả lời' },
@@ -24,11 +25,10 @@ export function AdminSupportTicketsPage() {
   const { session } = useSession()
   const allowed = !!session?.permissions.has('ticket:read')
   const [tab, setTab] = useState<TicketStatus>('OPEN')
-  const [page, setPage] = useState(0)
-  const inbox = useTicketInbox(tab, page, allowed)
+  const paging = usePaging()
+  const inbox = useTicketInbox(tab, paging.page, allowed, paging.size)
   const items = inbox.data?.items ?? []
   const total = inbox.data?.total ?? 0
-  const size = inbox.data?.size ?? 20
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem phiếu hỗ trợ.</p>
 
@@ -47,7 +47,7 @@ export function AdminSupportTicketsPage() {
             aria-selected={tab === t.id}
             onClick={() => {
               setTab(t.id)
-              setPage(0)
+              paging.reset()
             }}
             className={cn('-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap', tab === t.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
           >
@@ -87,19 +87,7 @@ export function AdminSupportTicketsPage() {
         })}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
     </div>
   )
 }

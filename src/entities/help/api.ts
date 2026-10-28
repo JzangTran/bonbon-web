@@ -37,13 +37,13 @@ export function useHelpArticle(id: string | undefined) {
   })
 }
 
-export function useAdminHelpArticles(status: HelpStatus | 'ALL_STATUSES', q: string, page: number) {
+export function useAdminHelpArticles(status: HelpStatus | 'ALL_STATUSES', q: string, page: number, size = 25) {
   return useQuery({
-    queryKey: [...HELP_KEY, 'admin', status, q, page],
+    queryKey: [...HELP_KEY, 'admin', status, q, page, size],
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/help-articles', {
-        params: { query: { ...(status === 'ALL_STATUSES' ? {} : { status }), ...(q.trim() ? { q: q.trim() } : {}), page, size: 20 } },
+        params: { query: { ...(status === 'ALL_STATUSES' ? {} : { status }), ...(q.trim() ? { q: q.trim() } : {}), page, size } },
       })
       if (error || !data) throw error
       return data

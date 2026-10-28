@@ -18,12 +18,12 @@ export const TICKET_STATUS: Record<string, { label: string; className: string }>
 
 // --- the person asking for help
 
-export function useMyTickets(page: number) {
+export function useMyTickets(page: number, size = 25) {
   return useQuery({
-    queryKey: [...TICKETS_KEY, 'mine', page],
+    queryKey: [...TICKETS_KEY, 'mine', page, size],
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/support/tickets', { params: { query: { page, size: 20 } } })
+      const { data, error } = await api.GET('/api/support/tickets', { params: { query: { page, size } } })
       if (error || !data) throw error
       return data
     },
@@ -103,14 +103,14 @@ export function useCloseTicket(id: string) {
 
 // --- the administrators' inbox
 
-export function useTicketInbox(status: TicketStatus, page: number, enabled: boolean) {
+export function useTicketInbox(status: TicketStatus, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...TICKETS_KEY, 'admin', status, page],
+    queryKey: [...TICKETS_KEY, 'admin', status, page, size],
     enabled,
     placeholderData: keepPreviousData,
     refetchInterval: 30_000,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/support/tickets', { params: { query: { status, page, size: 20 } } })
+      const { data, error } = await api.GET('/api/admin/support/tickets', { params: { query: { status, page, size } } })
       if (error || !data) throw error
       return data
     },

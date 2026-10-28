@@ -15,6 +15,8 @@ import { SubPage } from '@/shared/ui/sub-page'
 import { Textarea } from '@/shared/ui/textarea'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { FormError } from '@/widgets/auth-shell'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 type Status = 'OPEN' | 'ANSWERED' | 'CLOSED'
 const KEY = ['contact-requests'] as const
@@ -36,20 +38,19 @@ export function AdminContactRequestsPage() {
   const { session } = useSession()
   const allowed = !!session?.permissions.has('ticket:read')
   const [tab, setTab] = useState<Status>('OPEN')
-  const [page, setPage] = useState(0)
+  const paging = usePaging()
   const inbox = useQuery({
-    queryKey: [...KEY, tab, page],
+    queryKey: [...KEY, tab, paging.page, paging.size],
     enabled: allowed,
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/support/contact-requests', { params: { query: { status: tab, page, size: 20 } } })
+      const { data, error } = await api.GET('/api/admin/support/contact-requests', { params: { query: { status: tab, page: paging.page, size: paging.size } } })
       if (error || !data) throw error
       return data
     },
   })
   const items = inbox.data?.items ?? []
   const total = inbox.data?.total ?? 0
-  const size = inbox.data?.size ?? 20
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem yêu cầu liên hệ.</p>
 
@@ -61,7 +62,7 @@ export function AdminContactRequestsPage() {
         value={tab}
         onValueChange={(id) => {
           setTab(id as Status)
-          setPage(0)
+          paging.reset()
         }}
       />
       <div>
@@ -91,19 +92,7 @@ export function AdminContactRequestsPage() {
           </li>
         ))}
       </ul>
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
     </div>
   )
 }

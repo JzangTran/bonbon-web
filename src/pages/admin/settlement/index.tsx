@@ -6,12 +6,13 @@ import { problemMessage } from '@/shared/api'
 import { formatRelative, formatVnd } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const TABS: { id: ShopFilter; label: string }[] = [
   { id: 'ALL', label: 'Tất cả quán' },
@@ -26,8 +27,8 @@ export function AdminSettlementPage() {
   const { session } = useSession()
   const allowed = !!session?.permissions.has('settlement:read')
   const [filter, setFilter] = useState<ShopFilter>('ALL')
-  const [page, setPage] = useState(0)
-  const overview = useSettlementOverview(filter, page, allowed)
+  const paging = usePaging()
+  const overview = useSettlementOverview(filter, paging.page, allowed, paging.size)
   const data = overview.data
   const totals = data?.totals
   const shops = data?.shops
@@ -60,7 +61,7 @@ export function AdminSettlementPage() {
         value={filter}
         onValueChange={(id) => {
           setFilter(id as ShopFilter)
-          setPage(0)
+          paging.reset()
         }}
       />
 
@@ -91,19 +92,7 @@ export function AdminSettlementPage() {
         ))}
       </ul>
 
-      {(shops?.total ?? 0) > (shops?.size ?? 20) ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil((shops?.total ?? 0) / (shops?.size ?? 20))}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * (shops?.size ?? 20) >= (shops?.total ?? 0)} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={shops?.total ?? 0} />
     </div>
   )
 }

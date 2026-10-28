@@ -13,6 +13,8 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const TABS = [
   { hidden: undefined, label: 'Tất cả' },
@@ -27,15 +29,14 @@ export function AdminReviewsPage() {
   const allowed = !!session?.permissions.has('review:moderate')
   const [hidden, setHidden] = useState<boolean | undefined>(undefined)
   const [lowOnly, setLowOnly] = useState(false)
-  const [page, setPage] = useState(0)
-  const reviews = useAdminReviews({ hidden, maxRating: lowOnly ? 2 : undefined, page }, allowed)
+  const paging = usePaging()
+  const reviews = useAdminReviews({ hidden, maxRating: lowOnly ? 2 : undefined, page: paging.page, size: paging.size }, allowed)
   const { hide, unhide } = useModerationActions()
   const [target, setTarget] = useState<ModerationTarget | null>(null)
   const [reason, setReason] = useState('')
   const data = reviews.data
   const items = data?.items ?? []
   const total = data?.total ?? 0
-  const size = data?.size ?? 20
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền kiểm duyệt đánh giá.</p>
 
@@ -55,7 +56,7 @@ export function AdminReviewsPage() {
           value={String(hidden)}
           onValueChange={(id) => {
             setHidden(TABS.find((t) => String(t.hidden) === id)?.hidden)
-            setPage(0)
+            paging.reset()
           }}
         />
         <label className="mb-2 flex min-h-10 items-center gap-2 text-sm">
@@ -64,7 +65,7 @@ export function AdminReviewsPage() {
             checked={lowOnly}
             onChange={(e) => {
               setLowOnly(e.target.checked)
-              setPage(0)
+              paging.reset()
             }}
           />
           Chỉ 1–2 sao
@@ -91,19 +92,7 @@ export function AdminReviewsPage() {
         ))}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
 
       <Dialog open={target !== null} onOpenChange={(open) => (open ? undefined : setTarget(null))}>
         <DialogContent>

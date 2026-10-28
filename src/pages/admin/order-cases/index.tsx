@@ -5,13 +5,14 @@ import { useSession } from '@/entities/session'
 import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatRelative, formatVnd } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const TABS: { id: CaseStatus; label: string }[] = [
   { id: 'OPEN', label: 'Cần quyết' },
@@ -25,12 +26,11 @@ export function AdminOrderCasesPage() {
   const { session } = useSession()
   const allowed = !!session?.permissions.has('order-case:read')
   const [tab, setTab] = useState<CaseStatus>('OPEN')
-  const [page, setPage] = useState(0)
-  const cases = useAdminCases(tab, page, allowed)
+  const paging = usePaging()
+  const cases = useAdminCases(tab, paging.page, allowed, paging.size)
   const data = cases.data
   const items = data?.items ?? []
   const total = data?.total ?? 0
-  const size = data?.size ?? 20
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem khiếu nại về đơn hàng.</p>
 
@@ -49,7 +49,7 @@ export function AdminOrderCasesPage() {
         value={tab}
         onValueChange={(id) => {
           setTab(id as CaseStatus)
-          setPage(0)
+          paging.reset()
         }}
       />
 
@@ -85,19 +85,7 @@ export function AdminOrderCasesPage() {
         })}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
     </div>
   )
 }

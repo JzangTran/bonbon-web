@@ -14,14 +14,14 @@ export const CASES_KEY = ['order-cases'] as const
 
 // --- the administrators' queue
 
-export function useAdminCases(status: CaseStatus, page: number, enabled: boolean) {
+export function useAdminCases(status: CaseStatus, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...CASES_KEY, 'admin', status, page],
+    queryKey: [...CASES_KEY, 'admin', status, page, size],
     enabled,
     placeholderData: keepPreviousData,
     refetchInterval: 30_000,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/order-cases', { params: { query: { status, page, size: 20 } } })
+      const { data, error } = await api.GET('/api/admin/order-cases', { params: { query: { status, page, size } } })
       if (error || !data) throw error
       return data
     },
@@ -86,13 +86,13 @@ export function useReopenCase() {
 
 // --- the shop's side
 
-export function useShopCases(status: CaseStatus | null, page: number) {
+export function useShopCases(status: CaseStatus | null, page: number, size = 25) {
   return useQuery({
-    queryKey: [...CASES_KEY, 'shop', status, page],
+    queryKey: [...CASES_KEY, 'shop', status, page, size],
     placeholderData: keepPreviousData,
     refetchInterval: 30_000,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/merchant/order-cases', { params: { query: { page, size: 20, ...(status ? { status } : {}) } } })
+      const { data, error } = await api.GET('/api/merchant/order-cases', { params: { query: { page, size, ...(status ? { status } : {}) } } })
       if (error || !data) throw error
       return data
     },

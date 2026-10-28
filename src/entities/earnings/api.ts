@@ -34,7 +34,7 @@ export function useEarningsStatement(granularity: Granularity) {
 }
 
 /** The ledger, newest first; the start and end of a period narrow it to the orders behind one statement row. */
-export function useEarningsLedger(filter: { type: string | null; from?: string; to?: string; page: number }) {
+export function useEarningsLedger(filter: { type: string | null; from?: string; to?: string; page: number; size?: number }) {
   return useQuery({
     queryKey: [...EARNINGS_KEY, 'ledger', filter],
     placeholderData: keepPreviousData,
@@ -43,7 +43,7 @@ export function useEarningsLedger(filter: { type: string | null; from?: string; 
         params: {
           query: {
             page: filter.page,
-            size: 20,
+            size: filter.size ?? 25,
             ...(filter.type ? { type: filter.type } : {}),
             ...(filter.from ? { from: filter.from } : {}),
             ...(filter.to ? { to: filter.to } : {}),

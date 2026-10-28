@@ -8,13 +8,13 @@ export type MerchantStatus = 'APPROVED' | 'PENDING' | 'SUSPENDED' | 'REJECTED' |
 
 export const MERCHANT_DIRECTORY_KEY = ['admin', 'merchants'] as const
 
-export function useMerchants(status: MerchantStatus, q: string, page: number, enabled: boolean) {
+export function useMerchants(status: MerchantStatus, q: string, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...MERCHANT_DIRECTORY_KEY, 'list', status, q, page],
+    queryKey: [...MERCHANT_DIRECTORY_KEY, 'list', status, q, page, size],
     placeholderData: keepPreviousData,
     enabled,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/merchants', { params: { query: { status, q: q.trim() || undefined, page, size: 20 } } })
+      const { data, error } = await api.GET('/api/admin/merchants', { params: { query: { status, q: q.trim() || undefined, page, size } } })
       if (error || !data) throw error
       return data
     },

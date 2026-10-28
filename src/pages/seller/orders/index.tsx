@@ -10,6 +10,8 @@ import {
   type OrderStatus,
   type ShopOrderSummary,
 } from '@/entities/order'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 import { useSession } from '@/entities/session'
 import { problemMessage } from '@/shared/api'
 import { formatRelative, formatVnd } from '@/shared/lib/format'
@@ -215,13 +217,12 @@ function History({ live, onOpen, statuses }: { live: boolean; onOpen: (id: strin
   const [status, setStatus] = useState<'ALL' | OrderStatus>('ALL')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
-  const [page, setPage] = useState(0)
-  const query = useShopOrders({ statuses: statuses ?? (status === 'ALL' ? FINISHED : [status]), from, to, page, size: 20 }, live)
+  const paging = usePaging()
+  const query = useShopOrders({ statuses: statuses ?? (status === 'ALL' ? FINISHED : [status]), from, to, page: paging.page, size: paging.size }, live)
   const total = query.data?.total ?? 0
-  const pages = Math.max(1, Math.ceil(total / 20))
   const reset = <T,>(set: (value: T) => void) => (value: T) => {
     set(value)
-    setPage(0)
+    paging.reset()
   }
 
   return (
@@ -254,19 +255,7 @@ function History({ live, onOpen, statuses }: { live: boolean; onOpen: (id: strin
         </div>
       </div>
       <OrderList query={query} empty="Không có đơn nào trong bộ lọc này." onOpen={onOpen} />
-      {total > 20 ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground tabular-nums">
-            Trang {page + 1}/{pages} · {total} đơn
-          </span>
-          <Button variant="outline" size="sm" disabled={page + 1 >= pages} onClick={() => setPage((p) => p + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
     </div>
   )
 }

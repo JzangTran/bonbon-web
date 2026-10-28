@@ -14,6 +14,8 @@ import { FormError } from '@/widgets/auth-shell'
 import { DecideDialog } from './decide-dialog'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const TABS: { id: CaseStatus | ''; label: string }[] = [
   { id: 'APPEALED', label: 'Kháng nghị chờ quyết định' },
@@ -39,11 +41,10 @@ export function AdminCategoryModerationPage() {
   const [params, setParams] = useSearchParams()
   const vendorId = params.get('vendorId') ?? ''
   const [tab, setTab] = useState<CaseStatus | ''>('APPEALED')
-  const [page, setPage] = useState(0)
+  const paging = usePaging()
   const [deciding, setDeciding] = useState<{ kase: CategoryCase; decision: 'ACCEPT' | 'REJECT' } | null>(null)
-  const cases = useCategoryCases(tab, vendorId, page, allowed)
+  const cases = useCategoryCases(tab, vendorId, paging.page, allowed, paging.size)
   const data = cases.data
-  const size = data?.size ?? 20
   const total = data?.total ?? 0
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền kiểm duyệt ngành hàng của món.</p>
@@ -72,7 +73,7 @@ export function AdminCategoryModerationPage() {
             variant="outline"
             onClick={() => {
               setParams({})
-              setPage(0)
+              paging.reset()
             }}
           >
             Bỏ lọc
@@ -86,7 +87,7 @@ export function AdminCategoryModerationPage() {
         value={tab || 'all'}
         onValueChange={(id) => {
           setTab(id === 'all' ? '' : (id as CaseStatus))
-          setPage(0)
+          paging.reset()
         }}
       />
 
@@ -98,19 +99,7 @@ export function AdminCategoryModerationPage() {
           <CaseItem key={c.id} c={c} onDecide={(decision) => setDeciding({ kase: c, decision })} />
         ))}
       </ul>
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
 
       <DecideDialog key={deciding ? `${deciding.kase.id}-${deciding.decision}` : 'none'} kase={deciding?.kase ?? null} decision={deciding?.decision ?? 'ACCEPT'} onClose={() => setDeciding(null)} />
     </div>

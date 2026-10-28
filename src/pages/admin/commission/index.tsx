@@ -10,6 +10,8 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 const percent = (rate: number | undefined | null) => (rate === undefined || rate === null ? '—' : `${rate.toLocaleString('vi-VN')}%`)
 
@@ -20,8 +22,8 @@ export function AdminCommissionPage() {
   const { session } = useSession()
   const allowed = !!session?.permissions.has('commission:write')
   const rates = useCommissionRates(allowed)
-  const [page, setPage] = useState(0)
-  const history = useCommissionHistory(page, allowed)
+  const paging = usePaging()
+  const history = useCommissionHistory(paging.page, allowed, paging.size)
   const save = useSetCommissionRate()
   const [target, setTarget] = useState<Target | null>(null)
   const [text, setText] = useState('')
@@ -134,16 +136,7 @@ export function AdminCommissionPage() {
                 </li>
               ))}
             </ul>
-            {(history.data?.total ?? 0) > (history.data?.size ?? 10) ? (
-              <div className="flex items-center justify-between">
-                <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-                  Trang trước
-                </Button>
-                <Button variant="outline" disabled={(page + 1) * (history.data?.size ?? 10) >= (history.data?.total ?? 0)} onClick={() => setPage(page + 1)}>
-                  Trang sau
-                </Button>
-              </div>
-            ) : null}
+            <Pagination paging={paging} total={history.data?.total ?? 0} />
           </section>
         </>
       ) : null}

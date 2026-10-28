@@ -15,14 +15,15 @@ import { Textarea } from '@/shared/ui/textarea'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 import { merchantPath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
 
 /** The shop's tickets to the Bonbon team (support-tickets.md). Problems with a delivered order go through the order's own report. */
 export function SellerSupportTicketsPage() {
-  const [page, setPage] = useState(0)
-  const tickets = useMyTickets(page)
+  const paging = usePaging()
+  const tickets = useMyTickets(paging.page, paging.size)
   const items = tickets.data?.items ?? []
   const total = tickets.data?.total ?? 0
-  const size = tickets.data?.size ?? 20
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
@@ -64,19 +65,7 @@ export function SellerSupportTicketsPage() {
         })}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
 
     </div>
   )

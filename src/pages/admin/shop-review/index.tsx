@@ -84,7 +84,7 @@ export function ShopReviewQueuePage() {
       </div>
 
       {queue.isError ? <FormError message={problemMessage(queue.error)} /> : null}
-      <div className="overflow-x-auto rounded-lg border bg-card">
+      <div className="overflow-x-auto rounded-xl border border-grey-200">
         <Table>
           <TableHeader>
             <TableRow>
