@@ -35,7 +35,7 @@ export function AdminOrderCasesPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem khiếu nại về đơn hàng.</p>
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Khiếu nại đơn hàng</h1>
         <p className="text-sm text-muted-foreground">

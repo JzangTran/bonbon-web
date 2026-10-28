@@ -13,6 +13,7 @@ import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { StatRow, StatsPanel, StatTile } from '@/shared/ui/section'
 
 const TABS: { id: ShopFilter; label: string }[] = [
   { id: 'ALL', label: 'Tất cả quán' },
@@ -36,7 +37,7 @@ export function AdminSettlementPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem đối soát.</p>
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex max-w-5xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Đối soát</h1>
         <p className="text-sm text-muted-foreground">
@@ -47,12 +48,14 @@ export function AdminSettlementPage() {
       {overview.isPending ? <Skeleton className="h-32" /> : null}
 
       {totals ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <StatsPanel>
+          <StatRow>
           <Stat label="Hoa hồng đã tính" value={formatVnd(totals.commission)} hint={`ròng ${formatVnd(totals.commissionNet)} · VAT ${formatVnd(totals.commissionVat)}`} />
           <Stat label="Tỷ lệ thực tế bình quân" value={percent(totals.effectiveRate)} hint={`${totals.orders?.toLocaleString('vi-VN')} đơn · ${totals.shops} quán`} />
           <Stat label="Nền tảng đang nợ các quán" value={formatVnd(totals.owedToShops)} hint="tổng các số dư dương" />
           <Stat label="Các quán đang nợ nền tảng" value={formatVnd(totals.owedByShops)} hint="tổng các số dư âm" />
-        </div>
+          </StatRow>
+        </StatsPanel>
       ) : null}
 
       <PageTabs
@@ -98,11 +101,5 @@ export function AdminSettlementPage() {
 }
 
 function Stat({ label, value, hint }: { label: string; value: string; hint: string }) {
-  return (
-    <Card className="gap-1 p-4">
-      <p className="text-sm text-muted-foreground">{label}</p>
-      <p className="text-xl font-semibold tabular-nums">{value}</p>
-      <p className="text-xs text-muted-foreground">{hint}</p>
-    </Card>
-  )
+  return <StatTile label={label} value={value} hint={hint} />
 }

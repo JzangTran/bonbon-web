@@ -33,7 +33,7 @@ export function SellerOrderCasesPage() {
   const total = data?.total ?? 0
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <OrderCaseTabs />
       <div>
         <h1 className="text-2xl font-semibold">Khiếu nại của khách</h1>

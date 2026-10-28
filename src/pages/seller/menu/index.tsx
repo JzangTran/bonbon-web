@@ -17,7 +17,7 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
   const openCases = useMyOpenCaseCount()
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex max-w-5xl flex-col gap-10">
       <MenuTabs />
       <div>
         <h1 className="text-2xl font-semibold">Thực đơn</h1>

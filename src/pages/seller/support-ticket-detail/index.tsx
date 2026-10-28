@@ -23,7 +23,7 @@ export function SellerSupportTicketDetailPage() {
   const status = TICKET_STATUS[t?.status ?? ''] ?? { label: t?.status ?? '', className: '' }
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex max-w-3xl flex-col gap-10">
       <Link to={merchantPath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Phiếu hỗ trợ
       </Link>

@@ -44,7 +44,7 @@ export function AdminMerchantDetailPage() {
   const status = STATUS[shop.status ?? ''] ?? { label: shop.status ?? '', className: '' }
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <Link to={consolePath('/merchants')} className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
         <ArrowLeftIcon className="size-4" /> Cửa hàng
       </Link>

@@ -33,7 +33,7 @@ export function AdminSupportTicketsPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem phiếu hỗ trợ.</p>
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Phiếu hỗ trợ</h1>
         <p className="text-sm text-muted-foreground">Khách và người bán hỏi những việc chưa có hướng dẫn. Vấn đề về đơn đã giao đi qua khiếu nại, không qua đây.</p>

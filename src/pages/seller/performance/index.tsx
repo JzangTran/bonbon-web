@@ -38,7 +38,7 @@ export function SellerPerformancePage() {
   const consequence = CONSEQUENCE[standing?.consequence ?? 'NONE'] ?? CONSEQUENCE.NONE
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <OrderCaseTabs />
       <div>
         <h1 className="text-2xl font-semibold">Hiệu suất cửa hàng</h1>

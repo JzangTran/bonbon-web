@@ -19,7 +19,7 @@ export function SellerShippingPage() {
   if (shop.isPending) return <Skeleton className="h-96 max-w-4xl" />
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <h1 className="text-2xl font-semibold">Cài đặt vận chuyển</h1>
       <IntakeCard shop={shop.data} />
       <ShippingCard key={`ship-${JSON.stringify(shop.data.shipping)}`} shop={shop.data} />

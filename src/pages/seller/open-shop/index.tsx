@@ -68,7 +68,7 @@ function Wizard({ shop }: { shop: ShopApplication }) {
   const next = () => setStep((s) => Math.min(5, s + 1))
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <h1 className="sr-only">Mở cửa hàng</h1>
       {shop.status === 'REJECTED' ? (
         <p role="alert" className="flex items-start gap-2 rounded-sm bg-danger-subtle px-3 py-2 text-sm text-danger-fg">

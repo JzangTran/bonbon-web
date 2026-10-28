@@ -55,7 +55,7 @@ export function AdminContactRequestsPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem yêu cầu liên hệ.</p>
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <PageTabs
         label="Yêu cầu liên hệ"
         tabs={TABS}

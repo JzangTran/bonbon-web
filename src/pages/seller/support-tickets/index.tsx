@@ -26,7 +26,7 @@ export function SellerSupportTicketsPage() {
   const total = tickets.data?.total ?? 0
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex max-w-3xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Yêu cầu hỗ trợ của tôi</h1>

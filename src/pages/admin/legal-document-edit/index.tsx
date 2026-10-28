@@ -135,7 +135,7 @@ function Editor({ type }: { type: LegalDocumentType }) {
   const label = LEGAL_TYPES.find((t) => t.id === type)?.label
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <Back />
       <h1 className="text-2xl font-semibold">Soạn phiên bản mới: {label}</h1>
       <Card size="sm">
@@ -177,7 +177,7 @@ function VersionView({ detail }: { detail: LegalDetail }) {
   const typeLabel = LEGAL_TYPES.find((t) => t.id === v.type)?.label
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <Back />
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold">

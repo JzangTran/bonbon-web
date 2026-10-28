@@ -20,7 +20,7 @@ export function AdminLegalDocumentsPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền quản lý văn bản pháp lý.</p>
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Văn bản pháp lý</h1>
         <p className="text-sm text-muted-foreground">

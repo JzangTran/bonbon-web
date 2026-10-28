@@ -67,7 +67,7 @@ export function AdminRefundsPage() {
   }
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Hoàn tiền</h1>
         <p className="text-sm text-muted-foreground">

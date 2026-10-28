@@ -41,7 +41,7 @@ export function AdminReviewsPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền kiểm duyệt đánh giá.</p>
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Kiểm duyệt đánh giá</h1>
         <p className="text-sm text-muted-foreground">

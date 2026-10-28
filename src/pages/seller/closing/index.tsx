@@ -31,7 +31,7 @@ export function SellerClosingPage() {
   const b = c?.blockers
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex max-w-3xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Cửa hàng đang đóng</h1>
         <p className="text-sm text-muted-foreground">

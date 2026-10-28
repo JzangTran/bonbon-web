@@ -40,7 +40,7 @@ export function AdminLookupOrderPage() {
   const full = reveal.data
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex max-w-3xl flex-col gap-10">
       <Link to={consolePath('/lookup')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Tra cứu
       </Link>

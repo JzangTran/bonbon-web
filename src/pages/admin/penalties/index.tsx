@@ -30,7 +30,7 @@ export function AdminPenaltiesPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem điểm phạt của các quán.</p>
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Điểm phạt các quán</h1>
         <p className="text-sm text-muted-foreground">

@@ -19,7 +19,7 @@ export function SellerNotificationSettingsPage() {
   const settings = prefs.data
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex max-w-3xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Cài đặt thông báo</h1>
         <p className="text-sm text-muted-foreground">Tắt một kênh chỉ ngăn thông báo đến máy bạn; mọi thông báo vẫn nằm trong danh sách trong ứng dụng.</p>

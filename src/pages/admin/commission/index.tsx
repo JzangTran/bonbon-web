@@ -73,7 +73,7 @@ export function AdminCommissionPage() {
   ) : null
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <PageTabs
         label="Hoa hồng"
         tabs={[
@@ -96,7 +96,7 @@ export function AdminCommissionPage() {
         <>
           {tab === 'rates' ? (
             <div className="flex flex-col gap-6">
-          <Card className="flex-row flex-wrap items-center justify-between gap-4 p-4">
+          <Card className="flex-row flex-wrap items-center justify-between gap-4 bg-beige-50 p-5">
             <div>
               <p className="text-sm text-muted-foreground">Tỷ lệ mặc định (ngành không có tỷ lệ riêng)</p>
               <p className="text-3xl font-semibold tabular-nums">{percent(data.defaultRate)}</p>

@@ -48,7 +48,7 @@ export function AdminSettlementShopPage() {
   const v = vendor.data
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex max-w-5xl flex-col gap-10">
       <div>
         <Link to={consolePath('/settlement')} className="text-sm text-primary hover:underline">
           ← Đối soát

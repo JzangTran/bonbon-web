@@ -40,7 +40,7 @@ export function SellerEarningsPage() {
   const owing = (s?.balance ?? 0) < 0
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex max-w-5xl flex-col gap-10">
       <FinanceTabs />
       <div>
         <h1 className="text-2xl font-semibold">Thu nhập</h1>

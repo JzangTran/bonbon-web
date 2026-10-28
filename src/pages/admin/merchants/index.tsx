@@ -50,7 +50,7 @@ export function AdminMerchantsPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem danh sách cửa hàng.</p>
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex max-w-5xl flex-col gap-10">
       <div>
         <h1 className="text-2xl font-semibold">Cửa hàng</h1>
         <p className="text-sm text-muted-foreground">

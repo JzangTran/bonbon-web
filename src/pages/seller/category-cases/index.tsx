@@ -54,7 +54,7 @@ export function SellerCategoryCasesPage() {
   const total = data?.total ?? 0
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <MenuTabs />
       <div>
         <h1 className="text-2xl font-semibold">Món sai ngành</h1>

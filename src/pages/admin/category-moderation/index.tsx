@@ -50,7 +50,7 @@ export function AdminCategoryModerationPage() {
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền kiểm duyệt ngành hàng của món.</p>
 
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
+    <div className="flex max-w-5xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Món sai ngành</h1>

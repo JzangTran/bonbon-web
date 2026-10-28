@@ -56,7 +56,7 @@ export function AdminPenaltyShopPage() {
   if (!canRead) return <p className="text-muted-foreground">Bạn không có quyền xem điểm phạt của các quán.</p>
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex max-w-3xl flex-col gap-10">
       <Link to={consolePath('/penalties')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" /> Điểm phạt các quán
       </Link>
