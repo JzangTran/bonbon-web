@@ -33,7 +33,8 @@ const router = createBrowserRouter([
     { path: '/nha-phat-trien', lazy: () => import('@/pages/content/developers').then((m) => ({ Component: m.DevelopersPage })) },
     { path: '/blog/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="blog" /> })) },
     { path: '/bo-nhan-dien', lazy: () => import('@/pages/brand-kit').then((m) => ({ Component: m.BrandKitPage })) },
-    { path: '/bo-nhan-dien/components', lazy: () => import('@/pages/brand-kit/components').then((m) => ({ Component: m.ComponentsPage })) },
+    { path: '/bo-nhan-dien/components', lazy: () => import('@/pages/brand-kit/components').then((m) => ({ Component: m.ComponentsIndexPage })) },
+    { path: '/bo-nhan-dien/components/:slug', lazy: () => import('@/pages/brand-kit/components').then((m) => ({ Component: m.ComponentPage })) },
   ] : []),
   // The help center: its own host, /help in development.
   ...(showHelp ? [
