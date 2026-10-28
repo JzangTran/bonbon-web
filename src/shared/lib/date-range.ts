@@ -1,10 +1,12 @@
 /** The ranges a shop usually wants: today, the last week, the last month, or two dates of its own. */
-export type RangePreset = 'today' | '7d' | '30d' | 'custom'
+export type RangePreset = 'today' | '7d' | '30d' | '90d' | '12m' | 'custom'
 
 export const PRESET_LABEL: Record<RangePreset, string> = {
   today: 'Hôm nay',
   '7d': '7 ngày qua',
   '30d': '30 ngày qua',
+  '90d': '90 ngày qua',
+  '12m': '12 tháng qua',
   custom: 'Tuỳ chọn',
 }
 
@@ -28,7 +30,14 @@ export function daysInRange(from: string, to: string): number {
 
 export function presetRange(preset: Exclude<RangePreset, 'custom'>, today: string): { from: string; to: string } {
   if (preset === 'today') return { from: today, to: today }
-  return { from: addDays(today, preset === '7d' ? -6 : -29), to: today }
+  const back = { '7d': 6, '30d': 29, '90d': 89, '12m': 364 }[preset]
+  return { from: addDays(today, -back), to: today }
+}
+
+/** The same number of days just before a range: what "so với kỳ trước" compares with. */
+export function previousRange(range: { from: string; to: string }): { from: string; to: string } {
+  const days = daysInRange(range.from, range.to)
+  return { from: addDays(range.from, -days), to: addDays(range.from, -1) }
 }
 
 /** The label under a bar: "05/10" for a day or the Monday of a week, "10/2026" for a month. */

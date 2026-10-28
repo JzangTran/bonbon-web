@@ -1,10 +1,17 @@
+import { ArrowRightIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { useShopCases } from '@/entities/order-case'
 import { useShopOrders, type OrderStatus } from '@/entities/order'
 import { useSellerReviews } from '@/entities/review'
 import { useShop } from '@/entities/shop'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { useRevenueStats, type RevenueBucket } from '@/entities/statistics'
 import { merchantPath } from '@/shared/config/sites'
+import { presetRange, shortLabel, vietnamToday } from '@/shared/lib/date-range'
+import { formatVnd } from '@/shared/lib/format'
+import { periodLabel } from '@/shared/lib/ledger'
+import { useNow } from '@/shared/lib/use-now'
+import { PageStack, Section, StatsPanel } from '@/shared/ui/section'
+import { ChartPanel, type ChartMetric } from '@/widgets/chart-panel'
 
 type Todo = { label: string; statuses: OrderStatus[] }
 
@@ -16,54 +23,68 @@ const TODOS: Todo[] = [
   { label: 'Đã huỷ hoặc từ chối', statuses: ['CANCELLED', 'REJECTED', 'NOT_DELIVERED'] },
 ]
 
-/** What needs the shop right now: counts of orders by stage and reviews still waiting for an answer. */
+const METRICS: ChartMetric<RevenueBucket>[] = [
+  { id: 'revenue', label: 'Doanh thu', value: (b) => b.revenue, format: formatVnd },
+  { id: 'orders', label: 'Đơn đã giao', value: (b) => b.orders, format: (n) => `${n.toLocaleString('vi-VN')} đơn` },
+]
+
+/** What needs the shop right now (orders by stage, cases and reviews waiting), then how the last seven days went. */
 export function SellerDashboardPage() {
   const shop = useShop()
   const unreplied = useSellerReviews(true, 0)
   const waitingCases = useShopCases('AWAITING_SHOP', 0)
+  const week = presetRange('7d', vietnamToday(useNow(60_000)))
+  const revenue = useRevenueStats(week, 'day')
+
   return (
-    <div className="flex max-w-5xl flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Tổng quan cửa hàng</h1>
-        <p className="text-sm text-muted-foreground">{shop.data?.shop?.name}</p>
+    <PageStack>
+      <div className="flex flex-col gap-2">
+        <h1>Tổng quan cửa hàng</h1>
+        <p className="text-ui text-muted-foreground">{shop.data?.shop?.name}</p>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Danh sách cần làm</CardTitle>
-          <CardDescription>Những việc bạn cần xử lý ngay.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="grid grid-cols-2 gap-y-6 sm:grid-cols-3 lg:grid-cols-7">
+
+      <Section title="Cần làm ngay" description="Bấm vào một ô để mở danh sách tương ứng.">
+        <StatsPanel className="p-2 sm:p-3">
+          <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">
             {TODOS.map((todo) => (
               <TodoCount key={todo.label} todo={todo} />
             ))}
-            <li>
-              <Link to={merchantPath('/order-cases')} className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
-                <span className="text-2xl font-semibold text-primary tabular-nums">{waitingCases.data?.total ?? '–'}</span>
-                <span className="text-center text-sm text-muted-foreground">Khiếu nại chờ trả lời</span>
-              </Link>
-            </li>
-            <li>
-              <Link to={merchantPath('/reviews')} className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
-                <span className="text-2xl font-semibold text-primary tabular-nums">{unreplied.data?.total ?? '–'}</span>
-                <span className="text-center text-sm text-muted-foreground">Đánh giá chưa phản hồi</span>
-              </Link>
-            </li>
+            <Count to={merchantPath('/order-cases')} value={waitingCases.data?.total} label="Khiếu nại chờ trả lời" />
+            <Count to={merchantPath('/reviews')} value={unreplied.data?.total} label="Đánh giá chưa phản hồi" />
           </ul>
-        </CardContent>
-      </Card>
-    </div>
+        </StatsPanel>
+      </Section>
+
+      {revenue.data ? (
+        <ChartPanel
+          title="7 ngày qua"
+          description={
+            <Link to={merchantPath('/statistics')} className="inline-flex items-center gap-1 text-ink underline decoration-primary underline-offset-4">
+              Xem đầy đủ trong Doanh thu <ArrowRightIcon className="size-3.5" aria-hidden="true" />
+            </Link>
+          }
+          metrics={METRICS}
+          current={revenue.data.buckets ?? []}
+          label={(b) => shortLabel(b.start ?? '', 'day')}
+          full={(b) => periodLabel(b.start ?? '', 'day')}
+        />
+      ) : null}
+    </PageStack>
+  )
+}
+
+function Count({ to, value, label }: { to: string; value: number | undefined; label: string }) {
+  return (
+    <li>
+      <Link to={to} className="flex h-full flex-col gap-1 rounded-lg px-3 py-3 outline-none hover:bg-white/70 focus-visible:ring-2 focus-visible:ring-ring">
+        <span className="text-[1.75rem] leading-9 font-semibold tabular-nums">{value ?? '–'}</span>
+        <span className="text-small text-muted-foreground">{label}</span>
+      </Link>
+    </li>
   )
 }
 
 function TodoCount({ todo }: { todo: Todo }) {
   const orders = useShopOrders({ statuses: todo.statuses, size: 1 }, false)
-  return (
-    <li>
-      <Link to={merchantPath('/orders')} className="flex flex-col items-center gap-1 rounded-sm px-2 py-1 hover:bg-muted">
-        <span className="text-2xl font-semibold text-primary tabular-nums">{orders.data?.total ?? '–'}</span>
-        <span className="text-center text-sm text-muted-foreground">{todo.label}</span>
-      </Link>
-    </li>
-  )
+  return <Count to={merchantPath('/orders')} value={orders.data?.total} label={todo.label} />
 }
