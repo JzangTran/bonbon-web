@@ -13,6 +13,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { FormError, FormSuccess } from '@/widgets/auth-shell'
 import { merchantPath } from '@/shared/config/sites'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const VN_MOBILE = /^(0|\+84)(3|5|7|8|9)\d{8}$/
 
@@ -29,22 +30,42 @@ const passwordSchema = z
   })
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: 'Mật khẩu nhập lại không khớp' })
 
+type Tab = 'profile' | 'security' | 'delete'
+
+/** The person's account in three tabs, one job each: who they are, how they sign in (password, devices), and leaving. */
 export function SellerAccountPage() {
   const profile = useProfile()
+  const [tab, setTab] = useState<Tab>('profile')
   // Google-only accounts have no password to change or to confirm with.
   const hasPassword = profile.data?.hasPassword !== false
   return (
-    <div className="flex max-w-xl flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Tài khoản</h1>
-      <ProfileCard />
-      {hasPassword ? <PasswordCard /> : null}
-      <SessionsCard hasPassword={hasPassword} />
-      <DangerLinkCard
-        title="Xoá tài khoản"
-        description="Xoá toàn bộ tài khoản, gồm cả vai trò khách và người bán nếu bạn có cả hai. Có thời gian chờ trước khi xoá thật."
-        to="/focus/delete-account"
-        action="Xoá tài khoản"
+    <div className="flex max-w-xl flex-col gap-8">
+      <PageTabs
+        label="Tài khoản"
+        tabs={[
+          { id: 'profile', label: 'Thông tin cá nhân' },
+          { id: 'security', label: 'Đăng nhập và bảo mật' },
+          { id: 'delete', label: 'Xoá tài khoản' },
+        ]}
+        value={tab}
+        onValueChange={(id) => setTab(id as Tab)}
       />
+      <h1>Tài khoản và bảo mật</h1>
+      {tab === 'profile' ? <ProfileCard /> : null}
+      {tab === 'security' ? (
+        <div className="flex flex-col gap-12">
+          {hasPassword ? <PasswordCard /> : null}
+          <SessionsCard hasPassword={hasPassword} />
+        </div>
+      ) : null}
+      {tab === 'delete' ? (
+        <DangerLinkCard
+          title="Xoá tài khoản"
+          description="Xoá toàn bộ tài khoản, gồm cả vai trò khách và người bán nếu bạn có cả hai. Có thời gian chờ trước khi xoá thật."
+          to="/focus/delete-account"
+          action="Xoá tài khoản"
+        />
+      ) : null}
     </div>
   )
 }

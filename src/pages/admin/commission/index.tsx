@@ -12,6 +12,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const percent = (rate: number | undefined | null) => (rate === undefined || rate === null ? '—' : `${rate.toLocaleString('vi-VN')}%`)
 
@@ -28,6 +29,7 @@ export function AdminCommissionPage() {
   const [target, setTarget] = useState<Target | null>(null)
   const [text, setText] = useState('')
   const data = rates.data
+  const [tab, setTab] = useState<'rates' | 'history'>('rates')
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền đặt tỷ lệ hoa hồng.</p>
 
@@ -72,6 +74,15 @@ export function AdminCommissionPage() {
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
+      <PageTabs
+        label="Hoa hồng"
+        tabs={[
+          { id: 'rates', label: 'Tỷ lệ theo ngành' },
+          { id: 'history', label: 'Lịch sử thay đổi' },
+        ]}
+        value={tab}
+        onValueChange={(id) => setTab(id as 'rates' | 'history')}
+      />
       <div>
         <h1 className="text-2xl font-semibold">Hoa hồng</h1>
         <p className="text-sm text-muted-foreground">
@@ -83,6 +94,8 @@ export function AdminCommissionPage() {
 
       {data ? (
         <>
+          {tab === 'rates' ? (
+            <div className="flex flex-col gap-6">
           <Card className="flex-row flex-wrap items-center justify-between gap-4 p-4">
             <div>
               <p className="text-sm text-muted-foreground">Tỷ lệ mặc định (ngành không có tỷ lệ riêng)</p>
@@ -119,9 +132,10 @@ export function AdminCommissionPage() {
             </ul>
           </Card>
 
+            </div>
+          ) : (
           <section className="flex flex-col gap-2">
-            <h2 className="text-lg font-semibold">Lịch sử thay đổi</h2>
-            {history.isError ? <FormError message={problemMessage(history.error)} /> : null}
+                        {history.isError ? <FormError message={problemMessage(history.error)} /> : null}
             {history.data && (history.data.items ?? []).length === 0 ? <p className="text-sm text-muted-foreground">Chưa có thay đổi nào.</p> : null}
             <ul className="flex flex-col divide-y rounded-sm border bg-card">
               {(history.data?.items ?? []).map((row) => (
@@ -138,6 +152,7 @@ export function AdminCommissionPage() {
             </ul>
             <Pagination paging={paging} total={history.data?.total ?? 0} />
           </section>
+          )}
         </>
       ) : null}
 

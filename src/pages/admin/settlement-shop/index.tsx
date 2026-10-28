@@ -18,6 +18,7 @@ import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { ChartPanel } from '@/widgets/chart-panel'
 
 type Kind = RecordInput['type']
 type Tab = 'ledger' | 'statement'
@@ -148,6 +149,19 @@ export function AdminSettlementShopPage() {
             ))}
           </div>
           {statement.isError ? <FormError message={problemMessage(statement.error)} /> : null}
+          {statement.data && (statement.data.periods ?? []).length > 0 ? (
+            <ChartPanel
+              title="Tiền theo kỳ"
+              metrics={[
+                { id: 'food', label: 'Tiền món', value: (p) => p.foodValue, format: formatVnd },
+                { id: 'commission', label: 'Hoa hồng', value: (p) => p.commission, format: formatVnd },
+                { id: 'payouts', label: 'Đã chi trả', value: (p) => p.payouts, format: formatVnd },
+              ]}
+              current={[...(statement.data.periods ?? [])].reverse()}
+              label={(p) => periodLabel(p.start ?? '', granularity)}
+              full={(p) => periodLabel(p.start ?? '', granularity)}
+            />
+          ) : null}
           {statement.data && (statement.data.periods ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">Chưa có số liệu trong 90 ngày gần nhất.</Card> : null}
           <div className="overflow-x-auto rounded-xl bg-beige-50 px-2 py-1 sm:px-3">
             <table className="w-full text-ui">

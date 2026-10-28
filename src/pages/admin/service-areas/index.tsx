@@ -13,6 +13,8 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { consolePath } from '@/shared/config/sites'
 import { SubPage, SubPageActions } from '@/shared/ui/sub-page'
+import { PageTabs } from '@/shared/ui/workspace-slots'
+import { RadiusCapForm } from './radius-cap'
 import { FormRow } from '@/shared/ui/form-row'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -38,14 +40,26 @@ function kmError(e: Errors, field: string, text: string, label: string) {
 export function AdminServiceAreasPage() {
   const { session } = useSession()
   const areas = useServiceAreas()
+  const [tab, setTab] = useState<'areas' | 'cap'>('areas')
 
   if (!session?.permissions.has('merchant-approval:read')) {
     return <p className="text-muted-foreground">Bạn không có quyền xem khu vực phục vụ.</p>
   }
   const canWrite = session.permissions.has('merchant-approval:write-settings')
 
+  if (tab === 'cap') {
+    return (
+      <div className="flex flex-col gap-8">
+        <Tabs tab={tab} setTab={setTab} canWrite={canWrite} />
+        <h1>Khu vực phục vụ</h1>
+        {canWrite ? <RadiusCapForm /> : <p className="text-muted-foreground">Bạn không có quyền đổi bán kính tối đa.</p>}
+      </div>
+    )
+  }
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
+      <Tabs tab={tab} setTab={setTab} canWrite={canWrite} />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-2xl">
           <h1 className="text-2xl font-semibold">Khu vực phục vụ</h1>
@@ -118,6 +132,17 @@ export function AdminServiceAreasPage() {
       </div>
 
     </div>
+  )
+}
+
+function Tabs({ tab, setTab, canWrite }: { tab: 'areas' | 'cap'; setTab: (t: 'areas' | 'cap') => void; canWrite: boolean }) {
+  return (
+    <PageTabs
+      label="Khu vực phục vụ"
+      tabs={[{ id: 'areas', label: 'Khu vực' }, ...(canWrite ? [{ id: 'cap', label: 'Bán kính giao tối đa' }] : [])]}
+      value={tab}
+      onValueChange={(id) => setTab(id as 'areas' | 'cap')}
+    />
   )
 }
 

@@ -11,6 +11,14 @@ import { FormError } from '@/widgets/auth-shell'
 import { FinanceTabs } from '@/widgets/seller-tabs'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { Segmented, StatsPanel } from '@/shared/ui/section'
+import { ChartPanel, type ChartMetric } from '@/widgets/chart-panel'
+
+const PERIOD_METRICS: ChartMetric<EarningsPeriod>[] = [
+  { id: 'food', label: 'Tiền món', value: (p) => p.foodValue, format: formatVnd },
+  { id: 'commission', label: 'Hoa hồng', value: (p) => p.commission, format: formatVnd },
+  { id: 'orders', label: 'Số đơn', value: (p) => p.orders, format: (n) => `${n} đơn` },
+]
 
 const GRANULARITY_LABEL: Record<Granularity, string> = { day: 'Ngày', week: 'Tuần', month: 'Tháng' }
 
@@ -21,6 +29,7 @@ export function SellerEarningsPage() {
   const statement = useEarningsStatement(granularity)
   const [period, setPeriod] = useState<EarningsPeriod | null>(null)
   const paging = usePaging()
+  const [view, setView] = useState<'statement' | 'ledger'>('statement')
   const ledger = useEarningsLedger({
     type: null,
     page: paging.page,
@@ -41,7 +50,7 @@ export function SellerEarningsPage() {
       {summary.isPending ? <Skeleton className="h-28" /> : null}
 
       {s ? (
-        <Card className="gap-2 p-5">
+        <StatsPanel className="gap-2">
           <p className="text-sm text-muted-foreground">{owing ? 'Quán đang nợ bonbon' : 'bonbon đang nợ quán'}</p>
           <p className={cn('text-4xl font-semibold tabular-nums', owing ? 'text-danger-fg' : 'text-success-fg')}>{formatVnd(Math.abs(s.balance ?? 0))}</p>
           <p className="max-w-2xl text-sm">
@@ -55,10 +64,22 @@ export function SellerEarningsPage() {
             {s.lastPayoutAt ? `Lần chuyển gần nhất: ${formatVnd(s.lastPayoutAmount)} lúc ${formatDateTime(s.lastPayoutAt)}.` : 'bonbon chưa chuyển tiền cho quán lần nào.'}
             {(s.heldForCases ?? 0) > 0 ? ` Đang giữ ${formatVnd(s.heldForCases)} vì khiếu nại chưa có quyết định.` : ''}
           </p>
-        </Card>
+        </StatsPanel>
       ) : null}
 
-      <section className="flex flex-col gap-3">
+      <Segmented
+        label="Xem"
+        options={[
+          { id: 'statement', label: 'Sao kê theo kỳ' },
+          { id: 'ledger', label: period?.start ? `Sổ cái: ${periodLabel(period.start, granularity).toLowerCase()}` : 'Sổ cái' },
+        ]}
+        value={view}
+        onChange={setView}
+        className="self-start"
+      />
+
+      {view === 'statement' ? (
+      <section className="flex flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold">Sao kê theo kỳ</h2>
           <div className="flex gap-1">
@@ -79,6 +100,15 @@ export function SellerEarningsPage() {
           </div>
         </div>
         {statement.isError ? <FormError message={problemMessage(statement.error)} /> : null}
+        {statement.data && (statement.data.periods ?? []).length > 0 ? (
+          <ChartPanel
+            title="Tiền theo kỳ"
+            metrics={PERIOD_METRICS}
+            current={[...(statement.data.periods ?? [])].reverse()}
+            label={(p) => periodLabel(p.start ?? '', granularity)}
+            full={(p) => periodLabel(p.start ?? '', granularity)}
+          />
+        ) : null}
         {statement.data && (statement.data.periods ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">Chưa có đơn nào trong 90 ngày gần nhất.</Card> : null}
         <div className="overflow-x-auto rounded-xl bg-beige-50 px-2 py-1 sm:px-3">
           <table className="w-full text-ui">
@@ -115,6 +145,7 @@ export function SellerEarningsPage() {
                       onClick={() => {
                         setPeriod(period?.start === p.start ? null : p)
                         paging.reset()
+                        if (period?.start !== p.start) setView('ledger')
                       }}
                     >
                       {period?.start === p.start ? 'Bỏ lọc' : 'Xem đơn'}
@@ -126,7 +157,7 @@ export function SellerEarningsPage() {
           </table>
         </div>
       </section>
-
+      ) : (
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">
           Sổ cái{period?.start ? `: ${periodLabel(period.start, granularity).toLowerCase()}` : ''}
@@ -159,6 +190,7 @@ export function SellerEarningsPage() {
         </ul>
         <Pagination paging={paging} total={ledger.data?.total ?? 0} />
       </section>
+      )}
     </div>
   )
 }

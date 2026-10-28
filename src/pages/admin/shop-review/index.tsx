@@ -1,16 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { SearchIcon } from 'lucide-react'
 import { useDeferredValue, useState } from 'react'
 import { Link } from 'react-router'
-import { toast } from 'sonner'
 import { useSession } from '@/entities/session'
 import { api, problemMessage } from '@/shared/api'
 import { formatRelative } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
-import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { FormError } from '@/widgets/auth-shell'
@@ -61,7 +58,6 @@ export function ShopReviewQueuePage() {
           <h1 className="text-2xl font-semibold">Duyệt cửa hàng</h1>
           <p className="text-sm text-muted-foreground">Hồ sơ gửi sớm nhất ở trên cùng để không hồ sơ nào bị bỏ quên.</p>
         </div>
-        {session.permissions.has('merchant-approval:write-settings') ? <RadiusCapCard /> : null}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -143,59 +139,5 @@ export function ShopReviewQueuePage() {
         </Table>
       </div>
     </div>
-  )
-}
-
-/** The platform-wide delivery radius cap (set-delivery-radius-cap.md); applies to saves from now on. */
-function RadiusCapCard() {
-  const queryClient = useQueryClient()
-  const cap = useQuery({
-    queryKey: ['admin', 'radius-cap'],
-    queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/settings/delivery-radius-cap')
-      if (error || !data) throw error
-      return data
-    },
-  })
-  const [value, setValue] = useState<string | null>(null)
-  const save = useMutation({
-    mutationFn: async (maxRadiusKm: number) => {
-      const { data, error } = await api.PUT('/api/admin/settings/delivery-radius-cap', { body: { maxRadiusKm } })
-      if (error || !data) throw error
-      return data
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(['admin', 'radius-cap'], data)
-      setValue(null)
-      toast.success('Đã cập nhật bán kính tối đa.')
-    },
-    onError: (e) => toast.error(problemMessage(e)),
-  })
-  const shown = value ?? (cap.data ? String(cap.data.maxRadiusKm) : '')
-
-  return (
-    <Card className="w-full max-w-sm" size="sm">
-      <CardHeader>
-        <CardTitle>Bán kính giao tối đa</CardTitle>
-        <CardDescription>Áp dụng cho lần lưu sau của các quán; quán đã duyệt giữ bán kính hiện tại.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          className="flex items-end gap-2"
-          onSubmit={(e) => {
-            e.preventDefault()
-            save.mutate(Number(shown.replace(',', '.')))
-          }}
-        >
-          <div className="flex flex-1 flex-col gap-2">
-            <Label htmlFor="radius-cap">Km</Label>
-            <Input id="radius-cap" inputMode="decimal" value={shown} onChange={(e) => setValue(e.target.value)} />
-          </div>
-          <Button type="submit" disabled={save.isPending || value === null}>
-            Lưu
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
   )
 }

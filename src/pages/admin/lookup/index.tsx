@@ -14,6 +14,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { consolePath } from '@/shared/config/sites'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 type OrderKind = OrderQuery['kind']
 type CustomerKind = CustomerQuery['kind']
@@ -26,17 +27,20 @@ export function AdminLookupPage() {
   const { session } = useSession()
   const canOrders = !!session?.permissions.has('admin-order:read')
   const canCustomers = !!session?.permissions.has('admin-customer:read')
+  const [tab, setTab] = useState<'orders' | 'customers'>(canOrders ? 'orders' : 'customers')
+  const tabs = [...(canOrders ? [{ id: 'orders', label: 'Tìm đơn' }] : []), ...(canCustomers ? [{ id: 'customers', label: 'Tìm tài khoản' }] : [])]
 
   return (
     <div className="flex max-w-4xl flex-col gap-8">
-      <div>
+      {tabs.length > 1 ? <PageTabs label="Tra cứu" tabs={tabs} value={tab} onValueChange={(id) => setTab(id as 'orders' | 'customers')} /> : null}
+      <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold">Tra cứu đơn và tài khoản</h1>
         <p className="text-sm text-muted-foreground">
           Nhập đúng một mã: không có danh sách người dùng để duyệt. Số điện thoại, email và địa chỉ được che; muốn xem đầy đủ phải chọn lý do và việc đó được ghi nhật ký.
         </p>
       </div>
-      {canOrders ? <OrderSearch /> : null}
-      {canCustomers ? <CustomerSearch /> : null}
+      {canOrders && tab === 'orders' ? <OrderSearch /> : null}
+      {canCustomers && tab === 'customers' ? <CustomerSearch /> : null}
       {!canOrders && !canCustomers ? <p className="text-muted-foreground">Bạn không có quyền tra cứu.</p> : null}
     </div>
   )

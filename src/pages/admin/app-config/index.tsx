@@ -16,6 +16,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { PageTabs } from '@/shared/ui/workspace-slots'
 
 const PLATFORMS: { id: AppPlatform; label: string }[] = [
   { id: 'ANDROID', label: 'Android' },
@@ -52,12 +53,22 @@ export function AdminAppConfigPage() {
   const { session } = useSession()
   const allowed = !!session?.permissions.has('app-config:write')
   const config = useAdminAppConfig(allowed)
+  const [tab, setTab] = useState<'versions' | 'maintenance'>('versions')
 
   if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền sửa cấu hình app.</p>
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
-      <div>
+    <div className="flex max-w-4xl flex-col gap-8">
+      <PageTabs
+        label="Cấu hình app"
+        tabs={[
+          { id: 'versions', label: 'Phiên bản tối thiểu' },
+          { id: 'maintenance', label: 'Bảo trì' },
+        ]}
+        value={tab}
+        onValueChange={(id) => setTab(id as 'versions' | 'maintenance')}
+      />
+      <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold">Cấu hình app</h1>
         <p className="text-sm text-muted-foreground">Chỉ ảnh hưởng ứng dụng điện thoại. Mọi thay đổi cần lý do và bạn đã đăng nhập trong 10 phút gần nhất.</p>
       </div>
@@ -65,12 +76,15 @@ export function AdminAppConfigPage() {
       {config.isPending ? <Skeleton className="h-64" /> : null}
       {config.data ? (
         <>
-          <div className="grid gap-4 lg:grid-cols-2">
-            {PLATFORMS.map((p) => (
-              <VersionCard key={p.id} platform={p.id} label={p.label} policy={config.data.policies?.find((x) => x.platform === p.id)} />
-            ))}
-          </div>
-          <MaintenanceCard current={config.data.maintenance} />
+          {tab === 'versions' ? (
+            <div className="grid gap-4 lg:grid-cols-2">
+              {PLATFORMS.map((p) => (
+                <VersionCard key={p.id} platform={p.id} label={p.label} policy={config.data.policies?.find((x) => x.platform === p.id)} />
+              ))}
+            </div>
+          ) : (
+            <MaintenanceCard current={config.data.maintenance} />
+          )}
         </>
       ) : null}
     </div>

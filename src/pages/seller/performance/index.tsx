@@ -20,6 +20,8 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { OrderCaseTabs } from '@/widgets/seller-tabs'
+import { ChartPanel, type ChartMetric } from '@/widgets/chart-panel'
+import { Segmented, StatsPanel } from '@/shared/ui/section'
 
 /** How the shop is doing on the orders it fails, the points that follow, and what they lead to (view-shop-performance.md). */
 export function SellerPerformancePage() {
@@ -30,6 +32,7 @@ export function SellerPerformancePage() {
   const appeal = useAppealPenalty()
   const [appealing, setAppealing] = useState<ShopPenalty | null>(null)
   const [reason, setReason] = useState('')
+  const [view, setView] = useState<'weeks' | 'penalties'>('weeks')
   const p = performance.data
   const standing = p?.standing
   const consequence = CONSEQUENCE[standing?.consequence ?? 'NONE'] ?? CONSEQUENCE.NONE
@@ -60,7 +63,7 @@ export function SellerPerformancePage() {
       {performance.isPending ? <Skeleton className="h-32" /> : null}
 
       {standing ? (
-        <Card className="gap-2 p-5">
+        <StatsPanel className="gap-2">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-4xl font-semibold tabular-nums">{standing.activePoints ?? 0}</span>
             <span className="text-muted-foreground">điểm phạt còn hiệu lực</span>
@@ -78,11 +81,35 @@ export function SellerPerformancePage() {
           <p className="text-xs text-muted-foreground">
             Mỗi tuần (thứ Hai) hệ thống đánh giá tuần vừa đóng: từ {p?.minOrders} đơn trở lên mà tỷ lệ lỗi vượt {p?.thresholdPercent}% thì bị 1 điểm; điểm hết hạn sau 90 ngày.
           </p>
-        </Card>
+        </StatsPanel>
       ) : null}
 
+      <Segmented
+        label="Xem"
+        options={[
+          { id: 'weeks', label: 'Theo tuần' },
+          { id: 'penalties', label: `Điểm phạt (${(p?.penalties ?? []).length})` },
+        ]}
+        value={view}
+        onChange={setView}
+        className="self-start"
+      />
+
+      {view === 'weeks' && p ? (
+        <ChartPanel
+          title="Tỷ lệ đơn lỗi theo tuần"
+          description={`Vượt ${p.thresholdPercent}% trong tuần có từ ${p.minOrders} đơn thì bị 1 điểm.`}
+          metrics={WEEK_METRICS}
+          current={[...(p.weeks ?? [])].reverse()}
+          label={(w) => formatDay(w.start)}
+          full={(w) => `${formatDay(w.start)} – ${formatDay(w.end)}${w.current ? ' (tạm tính)' : ''}`}
+          initialKind="line"
+        />
+      ) : null}
+
+      {view === 'weeks' ? (
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold">Theo tuần</h2>
+        <h2 className="text-h3 font-medium">Chi tiết từng tuần</h2>
         <div className="overflow-x-auto rounded-xl bg-beige-50 px-2 py-1 sm:px-3">
           <table className="w-full text-ui">
             <thead className="text-small text-muted-foreground">
@@ -136,9 +163,8 @@ export function SellerPerformancePage() {
           </Card>
         ) : null}
       </section>
-
+      ) : (
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold">Điểm phạt</h2>
         {p && (p.penalties ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">Quán chưa có điểm phạt nào.</Card> : null}
         <ul className="flex flex-col gap-3">
           {(p?.penalties ?? []).map((pen) => (
@@ -196,10 +222,18 @@ export function SellerPerformancePage() {
           ))}
         </ul>
       </section>
+      )}
 
     </div>
   )
 }
+
+type Week = NonNullable<NonNullable<ReturnType<typeof useMyPerformance>['data']>['weeks']>[number]
+const WEEK_METRICS: ChartMetric<Week>[] = [
+  { id: 'rate', label: 'Tỷ lệ lỗi', value: (w) => w.ratePercent, format: (n) => `${n.toLocaleString('vi-VN')}%` },
+  { id: 'faults', label: 'Đơn lỗi', value: (w) => w.faultOrders, format: (n) => `${n} đơn` },
+  { id: 'finished', label: 'Đơn kết thúc', value: (w) => w.finishedOrders, format: (n) => `${n} đơn` },
+]
 
 function formatDay(day: string | undefined): string {
   if (!day) return ''
