@@ -133,7 +133,7 @@ export function BrandKitPage() {
           <h1 className="text-h1 font-semibold">Nhận diện thương hiệu</h1>
           <p className="text-lead text-ink">Logo, màu sắc và font chữ của bonbon. Tải về và dùng theo quy tắc bên dưới để mọi nơi nhìn bonbon đều giống nhau.</p>
         </div>
-            <BrandSection id="logo" title="Logo và biểu tượng" intro="Tất cả là SVG, phóng to không vỡ. Chọn bản màu cho nền sáng và bản trắng cho nền tối.">
+            <BrandSection id="logo" title="Logo và biểu tượng" intro={<>Tất cả là SVG, phóng to không vỡ. Chọn bản màu cho nền sáng và bản trắng cho nền tối. Hình con gấu là &quot;Saving Bear Market&quot; trong bộ Streamline Freehand của{" "}<a href="https://www.streamlinehq.com" target="_blank" rel="noreferrer" className="text-link">Streamline</a>, dùng theo giấy phép{" "}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="text-link">CC BY 4.0</a>.</>}>
               <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {LOGOS.map((asset) => (
                   <LogoCard key={asset.file} asset={asset} />
