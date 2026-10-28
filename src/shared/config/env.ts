@@ -6,3 +6,7 @@ export const env = {
   /** Google OAuth web client ID (public); without it the Google button is hidden. */
   googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID ?? '',
 } as const
+
+/** The interactive API reference (Scalar) and the OpenAPI document, served by the backend next to /api. */
+export const API_REFERENCE_URL = `${env.apiUrl}/scalar`
+export const OPENAPI_URL = `${env.apiUrl}/v3/api-docs`

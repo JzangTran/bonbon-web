@@ -86,6 +86,9 @@ export default defineConfig(({ mode }) => ({
     // Same-origin API in development (as behind Caddy in production): no CORS involved.
     proxy: {
       '/api': 'http://localhost:8080',
+      // The API reference and the OpenAPI document, linked from /nha-phat-trien.
+      '/scalar': 'http://localhost:8080',
+      '/v3/api-docs': 'http://localhost:8080',
       // Live order updates (WebSocket) go through the same origin too.
       '/ws': { target: 'ws://localhost:8080', ws: true },
     },

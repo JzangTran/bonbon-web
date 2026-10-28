@@ -9,12 +9,16 @@ import { SITE, siteUrl, type Site, legalUrl } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
+import { ResourcesMenu } from './resources-menu'
+import { RESOURCE_COLUMNS, type ResourceLink } from './resources'
 
 
 type NavLink = { label: string; to: string }
 /** A link to another site of bonbon (the help center). */
 type NavSite = { label: string; site: Site }
-type NavItem = NavLink | NavSite | { label: string; children: NavLink[] }
+/** "Tài nguyên": the large menu of brand, developer, reading and help sources. */
+type NavResources = { label: string; resources: true }
+type NavItem = NavLink | NavSite | NavResources | { label: string; children: NavLink[] }
 
 /** The public site's menu. Hướng dẫn opens a submenu. */
 const NAV: NavItem[] = [
@@ -26,7 +30,7 @@ const NAV: NavItem[] = [
     ],
   },
   { label: 'Blog', to: '/blog' },
-  { label: 'Thư viện bộ nhận diện', to: '/bo-nhan-dien' },
+  { label: 'Tài nguyên', resources: true },
   { label: 'Trung tâm trợ giúp', site: 'help' },
 ]
 
@@ -59,8 +63,8 @@ function isHere(pathname: string, to: string) {
 }
 
 /**
- * The public site's bar (landing, content pages, legal documents): the logo, the menu (Hướng dẫn with a submenu, Blog, Thư viện bộ nhận
- * diện, Trung tâm trợ giúp) and one action. Under 1024 px the menu folds into one button. Sign-in pages have their own slimmer bar, and the
+ * The public site's bar (landing, content pages, legal documents): the logo, the menu (Hướng dẫn with a submenu, Blog, Tài nguyên
+ * with a large menu, Trung tâm trợ giúp) and one action. Under 1024 px the menu folds into one button. Sign-in pages have their own slimmer bar, and the
  * workspace, focus and payment pages show no site bar at all.
  */
 export function SiteHeader() {
@@ -70,7 +74,22 @@ export function SiteHeader() {
     session?.role === 'SELLER' ? { href: siteUrl('merchant'), label: 'Vào trang người bán' }
     : session?.role === 'ADMIN' ? { href: siteUrl('console'), label: 'Vào trang quản trị' }
     : null
-  const current = (item: NavItem) => ('children' in item ? item.children.some((c) => isHere(pathname, c.to)) : target(item).here(pathname))
+  const current = (item: NavItem) =>
+    'resources' in item
+      ? ['/bo-nhan-dien', '/nha-phat-trien'].some((to) => isHere(pathname, to))
+      : 'children' in item
+        ? item.children.some((c) => isHere(pathname, c.to))
+        : target(item).here(pathname)
+  const resourceLink = (l: ResourceLink, className: string, onClick: () => void) =>
+    l.to ? (
+      <PublicLink to={l.to} className={className} onClick={onClick}>
+        {l.label}
+      </PublicLink>
+    ) : (
+      <a href={l.href} className={className} onClick={onClick} {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})}>
+        {l.label}
+      </a>
+    )
 
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75">
@@ -82,7 +101,9 @@ export function SiteHeader() {
 
           <nav aria-label="Menu chính" className="hidden items-center gap-1 lg:flex">
             {NAV.map((item) =>
-              !('children' in item) ? (
+              'resources' in item ? (
+                <ResourcesMenu key={item.label} current={current(item)} renderLink={resourceLink} />
+              ) : !('children' in item) ? (
                 'site' in item ? (
                   <a key={item.label} href={target(item).href} className={cn(linkClass, current(item) && 'font-medium text-primary hover:bg-transparent')}>
                     {item.label}
@@ -132,7 +153,20 @@ export function SiteHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-64 rounded-lg">
                 {NAV.map((item) =>
-                  !('children' in item) ? (
+                  'resources' in item ? (
+                    <div key={item.label}>
+                      {RESOURCE_COLUMNS.map((col) => (
+                        <div key={col.label}>
+                          <DropdownMenuLabel>{col.label}</DropdownMenuLabel>
+                          {col.links.map((l) => (
+                            <DropdownMenuItem key={l.label} asChild className="cursor-pointer pl-7 text-base">
+                              {resourceLink(l, '', () => {})}
+                            </DropdownMenuItem>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : !('children' in item) ? (
                     <DropdownMenuItem key={item.label} asChild className="cursor-pointer text-base">
                       {'site' in item ? <a href={target(item).href}>{item.label}</a> : <PublicLink to={item.to}>{item.label}</PublicLink>}
                     </DropdownMenuItem>
@@ -183,7 +217,7 @@ function footerGroups(): { title: string; columns: FooterColumn[] }[] {
     {
       title: 'Tài nguyên',
       columns: [
-        { label: 'Đọc thêm', links: [{ label: 'Blog', to: '/blog' }, { label: 'Thư viện bộ nhận diện', to: '/bo-nhan-dien' }] },
+        { label: 'Đọc thêm', links: [{ label: 'Blog', to: '/blog' }, { label: 'Thương hiệu', to: '/bo-nhan-dien' }, { label: 'Nhà phát triển', to: '/nha-phat-trien' }] },
         {
           label: 'Hỗ trợ',
           links: [

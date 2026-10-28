@@ -8,7 +8,8 @@ import { PageSeo } from '@/widgets/article/seo'
 const PATH = '/bo-nhan-dien'
 const TRAIL = [
   { name: 'Trang chủ', path: '/' },
-  { name: 'Thư viện bộ nhận diện', path: PATH },
+  { name: 'Tài nguyên', path: PATH },
+  { name: 'Thương hiệu', path: PATH },
 ]
 
 type Asset = { file: string; name: string; tags: string[]; ground: 'light' | 'dark' | 'brand'; note: string }
@@ -124,7 +125,7 @@ export function BrandKitPage() {
   return (
     <ContentPage>
       <PageSeo
-        title="Thư viện bộ nhận diện"
+        title="Thương hiệu"
         description="Logo, biểu tượng, màu sắc và font chữ của bonbon, kèm quy tắc sử dụng, để đối tác và báo chí dùng đúng."
         path={PATH}
         trail={TRAIL}
@@ -133,7 +134,7 @@ export function BrandKitPage() {
         <section className="border-b bg-white">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
             <Breadcrumb trail={TRAIL} />
-            <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Thư viện bộ nhận diện</h1>
+            <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">Thương hiệu bonbon</h1>
             <p className="max-w-2xl text-[1.0625rem] leading-7 text-muted-foreground">
               Logo, màu sắc và font chữ của bonbon. Tải về và dùng theo quy tắc bên dưới để mọi nơi nhìn bonbon đều giống nhau.
             </p>
@@ -157,11 +158,11 @@ export function BrandKitPage() {
               </ul>
             </Section>
 
-            <Section id="chu" title="Font chữ" intro="bonbon dùng Be Vietnam Pro, hỗ trợ đầy đủ tiếng Việt. Font miễn phí, có trên Google Fonts.">
+            <Section id="chu" title="Font chữ" intro="bonbon dùng Inter, hỗ trợ đầy đủ tiếng Việt. Font miễn phí, có trên Google Fonts.">
               <div className="grid gap-4 rounded-lg bg-card p-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:p-8">
                 <div className="flex flex-col gap-2">
                   <p className="text-[4rem] leading-none font-semibold tracking-[-0.03em]">Aa</p>
-                  <p className="text-xl font-semibold">Be Vietnam Pro</p>
+                  <p className="text-xl font-semibold">Inter</p>
                   <a
                     href="https://fonts.google.com/specimen/Be+Vietnam+Pro"
                     target="_blank"

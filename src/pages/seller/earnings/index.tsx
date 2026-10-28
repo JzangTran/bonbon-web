@@ -81,23 +81,17 @@ export function SellerEarningsPage() {
       {view === 'statement' ? (
       <section className="flex flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold">Sao kê theo kỳ</h2>
-          <div className="flex gap-1">
-            {(Object.keys(GRANULARITY_LABEL) as Granularity[]).map((g) => (
-              <Button
-                key={g}
-                size="sm"
-                variant={granularity === g ? 'default' : 'outline'}
-                onClick={() => {
-                  setGranularity(g)
-                  setPeriod(null)
-                  paging.reset()
-                }}
-              >
-                {GRANULARITY_LABEL[g]}
-              </Button>
-            ))}
-          </div>
+          <h2 className="text-h3 font-medium">Sao kê theo kỳ</h2>
+          <Segmented
+            label="Chia theo"
+            options={(Object.keys(GRANULARITY_LABEL) as Granularity[]).map((g) => ({ id: g, label: GRANULARITY_LABEL[g] }))}
+            value={granularity}
+            onChange={(g) => {
+              setGranularity(g)
+              setPeriod(null)
+              paging.reset()
+            }}
+          />
         </div>
         {statement.isError ? <FormError message={problemMessage(statement.error)} /> : null}
         {statement.data && (statement.data.periods ?? []).length > 0 ? (
