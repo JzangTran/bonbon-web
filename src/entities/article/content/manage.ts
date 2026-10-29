@@ -277,23 +277,4 @@ export const MANAGE: Article[] = [
       { t: 'note', text: 'Chỉ muốn nghỉ một thời gian ngắn thì dùng công tắc “Đang nhận đơn”, không cần đóng cửa hàng.' },
     ],
   },
-  {
-    collection: 'manage-your-shop',
-    slug: 'larger-text',
-    title: 'Chỉnh cỡ chữ cho dễ đọc',
-    description: 'Đổi cỡ chữ của trang người bán sang Lớn hoặc Rất lớn chỉ với một lần bấm.',
-    image: '/images/guides/tong-quan.jpg',
-    imageAlt: 'Nút Cỡ chữ ở chân trang người bán',
-    tags: ['Trợ năng', 'Nhanh'],
-    updated: UPDATED,
-    blocks: [
-      { t: 'p', text: 'Nếu chữ nhỏ khó đọc, bạn đổi cỡ chữ ngay trong trang người bán mà không cần chỉnh trình duyệt.' },
-      { t: 'h2', text: 'Cách đổi' },
-      {
-        t: 'ol',
-        items: ['Nhìn xuống chân trang, tìm “Cỡ chữ”.', 'Chọn A nhỏ (chuẩn), A vừa (lớn, 125%) hoặc A to (rất lớn, 150%).', 'Cỡ chữ được nhớ cho lần sau trên thiết bị này.'],
-      },
-      { t: 'note', text: 'Bạn vẫn có thể phóng to thêm bằng trình duyệt (Ctrl và dấu +), trang tự xếp lại cho vừa màn hình.' },
-    ],
-  },
 ]

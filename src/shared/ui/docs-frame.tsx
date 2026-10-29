@@ -5,7 +5,6 @@ import { legalUrl, siteUrl } from '@/shared/config/sites'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { buttonClass } from '@/shared/ui/button'
-import { TextSizeControl } from '@/shared/ui/text-size-control'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { t } from '@/shared/i18n'
 
@@ -92,7 +91,7 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
           </div>
         </div>
         <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6">
-        <nav aria-label={label} className="flex min-w-0 gap-1 overflow-x-auto">
+        <nav aria-label={label} className="flex min-w-0 gap-1 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.map((tItem) => {
             const Icon = tItem.icon
             const on = tItem.key === tab
@@ -139,10 +138,7 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
       <footer className="border-t border-grey-200 bg-beige-50">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4 py-6 text-small text-muted-foreground sm:px-6">
           <span>© {new Date().getFullYear()} bonbon</span>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <LanguageSwitch />
-            <TextSizeControl />
-          </div>
+          <LanguageSwitch />
           <nav aria-label={t('Pháp lý')} className="flex flex-wrap gap-x-5">
             <a href={legalUrl('CUSTOMER_TERMS')} className="hover:text-ink">
               {t('Điều khoản sử dụng')}

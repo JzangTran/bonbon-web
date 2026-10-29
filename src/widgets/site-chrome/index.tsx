@@ -8,7 +8,6 @@ import { siteButton, siteButtonSolid } from './buttons'
 import { SITE, siteUrl, type Site, legalUrl } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
-import { TextSizeControl } from '@/shared/ui/text-size-control'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { MegaMenu, barItemClass } from './resources-menu'
 import { MENUS, type MenuKey, type ResourceLink } from './resources'
@@ -225,7 +224,7 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 
 /**
  * The public footer, after gitbook.com: tall and quiet. Groups with a large name, columns under small orange upper-case labels split
- * by faint lines, two cards on the right, then the logo, the text size, the copyright and the legal links.
+ * by faint lines, two cards on the right, then the logo, the language, the copyright and the legal links.
  */
 export function SiteFooter() {
   return (
@@ -255,7 +254,7 @@ export function SiteFooter() {
           </div>
           <div className="flex flex-col gap-4">
             <a href={siteUrl('merchant', '/register')} className="group relative flex flex-col gap-2 overflow-hidden rounded-2xl bg-primary p-6 text-white">
-              <OrangeRibbon className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
+              <OrangeRibbon variant="arc" className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
               <StoreIcon className="relative size-6" strokeWidth={1.5} aria-hidden="true" />
               <span className="relative mt-2 text-body font-medium">{t('Mở quán trên bonbon')}</span>
               <span className="relative text-small text-white/85">{t('Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.')}</span>
@@ -276,10 +275,7 @@ export function SiteFooter() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <Lockup className="h-7" />
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              <LanguageSwitch />
-              <TextSizeControl />
-            </div>
+            <LanguageSwitch />
           </div>
           <div className="flex flex-col gap-1 text-small text-muted-foreground">
             <span>© {new Date().getFullYear()}{t(' bonbon. Đặt món từ quán trong khu.')}</span>

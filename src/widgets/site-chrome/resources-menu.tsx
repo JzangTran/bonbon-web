@@ -67,7 +67,7 @@ export function MegaMenu({ label, current, columns, feature, renderLink }: {
           onClick={close}
           className="group relative mt-6 flex items-center justify-between gap-4 overflow-hidden rounded-lg bg-primary px-5 py-4 text-white outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <OrangeRibbon className="pointer-events-none absolute -top-40 right-24 w-96 opacity-40 mix-blend-screen" />
+          <OrangeRibbon variant="wave" className="pointer-events-none absolute -top-24 right-16 w-96 opacity-40 mix-blend-screen" />
           <span className="relative flex items-center gap-3">
             <StoreIcon className="size-7 shrink-0" strokeWidth={1.5} aria-hidden="true" />
             <span className="flex flex-col">

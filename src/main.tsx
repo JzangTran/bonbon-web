@@ -4,9 +4,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { App } from '@/app'
 import { SITE } from '@/shared/config/sites'
-import { initTextScale } from '@/shared/lib/text-scale'
 
-initTextScale()
 
 // The merchant, console and ops hosts share the public site's robots.txt, so they ask not to be indexed on the page itself.
 // (The help center is public and sets its own title and description.)

@@ -343,18 +343,6 @@ export const EN_ARTICLES: Record<string, ArticleText> = {
       { t: 'note', text: 'For a short break, use the “Taking orders” switch instead; there is no need to close the shop.' },
     ],
   },
-  'larger-text': {
-    title: 'Make text larger',
-    description: 'Switch the seller site’s text to Large or Extra large with one click.',
-    imageAlt: 'The Text size control in the seller site footer',
-    tags: ['Accessibility', 'Quick'],
-    blocks: [
-      { t: 'p', text: "If small text is hard to read, change the text size right in the seller site, without touching the browser's settings." },
-      { t: 'h2', text: 'How to change it' },
-      { t: 'ol', items: ['Look at the footer for “Text size”.', 'Choose the small A (standard), the medium A (large, 125%) or the big A (extra large, 150%).', 'The size is remembered on this device.'] },
-      { t: 'note', text: 'You can still zoom further with the browser (Ctrl and +); the page rearranges itself to fit.' },
-    ],
-  },
 
   // ---------------------------------------------------------------- blog
   'what-is-in-area-delivery': {

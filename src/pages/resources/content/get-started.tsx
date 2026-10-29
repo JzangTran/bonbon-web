@@ -132,7 +132,7 @@ const design: ResourceDoc = {
             [tx('Màu', 'Colour'), tx('Chỉ dùng token, không mã màu tự đặt.', 'Only tokens, no made-up colour codes.')],
             [tx('Trạng thái', 'States'), tx('Có rê chuột, chọn bằng bàn phím, không dùng được, đang tải, trống, lỗi.', 'Hover, keyboard focus, disabled, loading, empty and error are all drawn.')],
             [tx('Ngôn ngữ', 'Language'), tx('Chữ có cả tiếng Việt và tiếng Anh; bố cục chịu được câu tiếng Anh dài hơn.', 'Text exists in Vietnamese and English; the layout survives longer English sentences.')],
-            [tx('Cỡ chữ', 'Text size'), tx('Không vỡ ở 125 % và 150 %.', 'Nothing breaks at 125% and 150%.')],
+            [tx('Cỡ chữ', 'Text size'), tx('Không vỡ ở cỡ chữ 125 % và 150 % trên điện thoại, và khi trình duyệt phóng to 200 %.', 'Nothing breaks at 125% and 150% text on phones, nor at 200% browser zoom.')],
             [tx('Giao diện tối', 'Dark theme'), tx('Ứng dụng điện thoại có giao diện tối; màu đọc qua token nên tự đổi.', 'The phone app has a dark theme; colours read through tokens switch on their own.')],
           ]}
         />

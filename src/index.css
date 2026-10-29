@@ -5,45 +5,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Breakpoints of the workspace shell that grow with the chosen text size. Media queries measure rem against the browser's own
- * size, not the page's, so larger text would leave the side columns at their wide-screen layout; these two variants move the
- * thresholds with the size instead: wsnav (left menu beside the work area: 768 px at 100 %) and wspanel (right panel: 1280 px).
- */
+/* Breakpoints of the workspace shell: wsnav puts the left menu beside the work area, wspanel shows the right panel. */
 @custom-variant wsnav {
   @media (min-width: 48rem) {
-    :root:not([data-text-scale]) &,
-    :root[data-text-scale="normal"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 60rem) {
-    :root[data-text-scale="large"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 72rem) {
-    :root[data-text-scale="xlarge"] & {
-      @slot;
-    }
+    @slot;
   }
 }
 @custom-variant wspanel {
   @media (min-width: 80rem) {
-    :root:not([data-text-scale]) &,
-    :root[data-text-scale="normal"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 100rem) {
-    :root[data-text-scale="large"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 120rem) {
-    :root[data-text-scale="xlarge"] & {
-      @slot;
-    }
+    @slot;
   }
 }
 

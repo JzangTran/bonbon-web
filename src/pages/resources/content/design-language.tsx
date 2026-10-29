@@ -70,7 +70,7 @@ const principles: ResourceDoc = {
             tx('Chữ nội dung đạt tương phản ít nhất 4,5:1; biểu tượng và viền điều khiển đạt 3:1.', 'Content text reaches at least 4.5:1 contrast; icons and control borders 3:1.'),
             tx('Mọi thứ bấm được cũng dùng được bằng bàn phím, với vòng viền khi chọn luôn hiện.', 'Everything clickable also works with the keyboard, with a focus ring that is always visible.'),
             tx('Không dựa vào màu một mình: trạng thái có chữ, liên kết có gạch chân.', 'Never rely on colour alone: statuses have words, links have underlines.'),
-            tx('Cỡ chữ đổi được 100, 125 và 150 % mà bố cục không vỡ.', 'Text size can change to 100, 125 and 150% without breaking the layout.'),
+            tx('Ứng dụng điện thoại đổi được cỡ chữ 100, 125 và 150 %; trang web chịu được trình duyệt phóng to 200 %, bố cục không vỡ.', 'The phone app offers 100, 125 and 150% text; the web survives 200% browser zoom without breaking the layout.'),
             tx('Tiếng Việt và tiếng Anh đều đầy đủ.', 'Vietnamese and English are both complete.'),
           ]}
         />
@@ -643,11 +643,11 @@ const typography: ResourceDoc = {
               tx('Số trong bảng và ô số liệu dùng chữ số cùng độ rộng (tabular-nums).', 'Numbers in tables and stat tiles use tabular figures (tabular-nums).'),
             ]}
           />
-          <H3>{tx('Cỡ chữ người dùng chọn', 'Text size chosen by the user')}</H3>
+          <H3>{tx('Chữ phóng to', 'Enlarged text')}</H3>
           <P>
             {tx(
-              'Người xem có thể phóng chữ lên 125 % hoặc 150 %. Mọi cỡ trong thang tính bằng rem nên phóng cùng nhau; đừng cố định chiều cao khối chứa chữ.',
-              'People can enlarge text to 125% or 150%. Every size in the scale is in rem so they grow together; never fix the height of a box holding text.',
+              'Trên điện thoại người dùng chọn cỡ chữ 125 % hoặc 150 %; trên web họ phóng to bằng trình duyệt. Mọi cỡ trong thang tính bằng rem nên phóng cùng nhau; đừng cố định chiều cao khối chứa chữ.',
+              'On phones people pick 125% or 150% text; on the web they zoom with the browser. Every size in the scale is in rem so they grow together; never fix the height of a box holding text.',
             )}
           </P>
         </>

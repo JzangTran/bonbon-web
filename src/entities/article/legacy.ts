@@ -15,7 +15,6 @@ export const LEGACY_SLUGS: Record<string, string> = {
   'thu-nhap-va-sao-ke': 'earnings-and-statements',
   'khieu-nai-va-tra-hang': 'complaints-and-returns',
   'dong-cua-hang': 'close-your-shop',
-  'chu-chu-lon-hon': 'larger-text',
   'tao-tai-khoan': 'create-an-account',
   'mo-cua-hang': 'open-your-shop',
   'cho-duyet-nhan-don': 'get-approved-and-take-orders',

@@ -17,7 +17,7 @@ import { siteUrl } from '@/shared/config/sites'
 import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Reveal } from '@/shared/ui/reveal'
 import { BearScene, type BearKind } from './bear-scene'
-import { NeighbourhoodScene } from './neighbourhood-scene'
+import { HeroPoster } from './hero-poster'
 import { t } from '@/shared/i18n'
 
 
@@ -113,10 +113,13 @@ function Hero() {
         </Reveal>
 
         <Reveal delay={120} className="relative mt-14 w-full max-w-5xl">
-          <OrangeRibbon className="absolute -bottom-[12%] -left-[30%] w-[58%]" />
-          <OrangeRibbon className="absolute -right-[28%] -bottom-[18%] w-[54%] -scale-x-100" />
-          <div className="relative rounded-2xl bg-white p-2 text-left shadow-[0_30px_80px_rgb(0_0_0/0.10)]">
-            <NeighbourhoodScene />
+          {/* a different ribbon behind each corner of the picture */}
+          <OrangeRibbon variant="wave" className="absolute -top-[10%] -left-[34%] w-[52%] rotate-[-8deg]" />
+          <OrangeRibbon variant="arc" className="absolute -top-[16%] -right-[22%] w-[34%]" />
+          <OrangeRibbon variant="loop" className="absolute -bottom-[16%] -left-[26%] w-[42%]" />
+          <OrangeRibbon variant="cross" className="absolute -right-[30%] -bottom-[14%] w-[52%]" />
+          <div className="relative rounded-[1.25rem] bg-white p-2 text-left shadow-[0_30px_80px_rgb(0_0_0/0.12)]">
+            <HeroPoster />
           </div>
         </Reveal>
       </Wrap>
@@ -242,7 +245,7 @@ function SellerBand() {
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
           <div className="relative w-full max-w-[460px] overflow-hidden rounded-2xl bg-primary px-8 pt-10">
-            <OrangeRibbon className="absolute -top-1/3 -right-1/3 w-[110%] opacity-40" />
+            <OrangeRibbon variant="knot" className="absolute -top-1/3 -right-1/3 w-[110%] opacity-40" />
             <BearScene kind="shop" className="relative" />
           </div>
         </div>

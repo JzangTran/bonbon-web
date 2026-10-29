@@ -197,8 +197,8 @@ const handoffs: ResourceDoc = {
       body: (
         <P>
           {tx(
-            'Người thiết kế xem lại trên bản chạy thật ở cả hai ngôn ngữ, cỡ chữ 150 % và trên điện thoại thật, trước khi đóng việc.',
-            'The designer reviews the running build in both languages, at 150% text size and on a real phone, before closing the task.',
+            'Người thiết kế xem lại trên bản chạy thật ở cả hai ngôn ngữ, cỡ chữ 150 % trên điện thoại thật, trước khi đóng việc.',
+            'The designer reviews the running build in both languages, at 150% text size on a real phone, before closing the task.',
           )}
         </P>
       ),

@@ -4,7 +4,6 @@ import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { merchantPath } from '@/shared/config/sites'
-import { TextSizeControl } from '@/shared/ui/text-size-control'
 import { t } from '@/shared/i18n'
 
 type Props = {
@@ -42,7 +41,6 @@ export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), 
           <span className="truncate font-semibold">{title}</span>
         </div>
         <div className="flex items-center gap-1">
-        <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline [&_button]:size-7" />
         {exitTo ? (
           <Link to={exitTo} className={barButton}>
             {t('Thoát')}

@@ -46,7 +46,8 @@ function modernPath(path: string): string | null {
     if (!a) return '/guides'
     const collection = OLD_COLLECTIONS[a]
     if (!collection) return '/guides'
-    return b ? `/guides/${collection}/${LEGACY_SLUGS[b] ?? b}` : `/guides/${collection}`
+    // a guide that no longer exists goes to its collection
+    return b && LEGACY_SLUGS[b] ? `/guides/${collection}/${LEGACY_SLUGS[b]}` : `/guides/${collection}`
   }
   if (head === 'blog' && a && LEGACY_SLUGS[a]) return `/blog/${LEGACY_SLUGS[a]}`
   if (head === 'nha-phat-trien') return '/resources/developers'

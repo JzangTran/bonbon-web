@@ -1,8 +1,6 @@
 import { BellIcon, ChevronDownIcon, ChevronRightIcon, MenuIcon, PanelRightIcon } from 'lucide-react'
 import { Fragment, useEffect, useState, type ReactNode } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router'
-import { textScaleFactor, useTextScale } from '@/shared/lib/text-scale'
-import { TextSizeControl } from '@/shared/ui/text-size-control'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { NotificationFeed, useNotifications } from '@/entities/notification'
 import { useSession } from '@/entities/session'
@@ -67,9 +65,8 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
   const notifications = useNotifications()
   const unread = notifications.data?.unread ?? 0
 
-  const factor = textScaleFactor(useTextScale())
-  const wideNav = useMediaQuery(`(min-width: ${768 * factor}px)`)
-  const widePanel = useMediaQuery(`(min-width: ${1280 * factor}px)`)
+  const wideNav = useMediaQuery('(min-width: 768px)')
+  const widePanel = useMediaQuery('(min-width: 1280px)')
   const [navOpen, setNavOpen] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
   const [bellOpen, setBellOpen] = useState(false)
@@ -318,10 +315,7 @@ function ShellFooter({ links, className }: { links: FooterLink[]; className?: st
       <span>
         © {new Date().getFullYear()}{t(' bonbon · phiên bản ')}{__APP_VERSION__}
       </span>
-      <div className="flex flex-wrap items-center gap-x-4">
-        <LanguageSwitch className="[&_button]:h-6 [&_button]:min-w-6" />
-        <TextSizeControl className="[&_button]:size-6" />
-      </div>
+      <LanguageSwitch className="[&_button]:h-6 [&_button]:min-w-6" />
       <nav aria-label={t('Liên kết chân trang')} className="flex flex-wrap gap-x-5">
         {links.map((link) => (
           link.external ? (
