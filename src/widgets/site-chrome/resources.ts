@@ -1,7 +1,7 @@
 import { articlePath, articlesOf, COLLECTION_BASE, type Article } from '@/entities/article'
 import { API_REFERENCE_URL } from '@/shared/config/env'
 import { legalUrl, siteUrl } from '@/shared/config/sites'
-import { t } from '@/shared/i18n'
+import { t, tx } from '@/shared/i18n'
 
 export type ResourceLink = { label: string; to?: string; href?: string; external?: boolean }
 export type ResourceColumn = { label: string; links: ResourceLink[] }
@@ -9,22 +9,22 @@ export type ResourceColumn = { label: string; links: ResourceLink[] }
 /** The sources behind "Tài nguyên": the brand, the API for developers, reading, help and legal. */
 export const RESOURCE_COLUMNS: ResourceColumn[] = [
   {
-    label: 'Design',
+    label: tx('Thiết kế', 'Design'),
     links: [
-      { label: 'Get started', to: '/resources/design/get-started/whats-new' },
+      { label: tx('Bắt đầu', 'Get started'), to: '/resources/design/get-started/whats-new' },
       { label: 'Logo', to: '/resources/design/design-language/logo' },
-      { label: 'Color', to: '/resources/design/design-language/color' },
-      { label: 'Typography', to: '/resources/design/design-language/typography' },
-      { label: 'Components', to: '/resources/design/components' },
+      { label: tx('Màu sắc', 'Color'), to: '/resources/design/design-language/color' },
+      { label: tx('Kiểu chữ', 'Typography'), to: '/resources/design/design-language/typography' },
+      { label: tx('Thành phần', 'Components'), to: '/resources/design/components' },
     ],
   },
   {
-    label: 'Developers',
+    label: tx('Nhà phát triển', 'Developers'),
     links: [
-      { label: 'Overview', to: '/resources/developers/get-started/overview' },
-      { label: 'API reference', href: API_REFERENCE_URL, external: true },
-      { label: 'Authentication', to: '/resources/developers/get-started/authentication' },
-      { label: 'Errors', to: '/resources/developers/api/errors' },
+      { label: tx('Tổng quan API', 'API overview'), to: '/resources/developers/get-started/overview' },
+      { label: tx('Tài liệu API', 'API reference'), href: API_REFERENCE_URL, external: true },
+      { label: tx('Xác thực', 'Authentication'), to: '/resources/developers/get-started/authentication' },
+      { label: tx('Mã lỗi', 'Errors'), to: '/resources/developers/api/errors' },
     ],
   },
   {

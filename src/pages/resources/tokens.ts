@@ -1,4 +1,5 @@
 import tokensCss from '@/shared/ui/tokens.css?raw'
+import { tx } from '@/shared/i18n'
 
 // ---------------------------------------------------------------- read the tokens from the stylesheet itself, so this page cannot drift
 
@@ -29,9 +30,9 @@ export const ROWS: Row[] = [...LIGHT.entries()]
   }))
 
 export const TOKEN_GROUPS: { id: string; title: string; test: (n: string) => boolean }[] = [
-  { id: 'palette', title: 'Palette', test: (n) => /^(orange|grey|amber|beige|ink$|image-slot)/.test(n) },
-  { id: 'surface-and-text', title: 'Surface and text', test: (n) => /^(background|foreground|card|popover|primary|button|secondary|muted|accent|destructive|border|input|ring|headline-soft|pill-pale)/.test(n) },
-  { id: 'states', title: 'States', test: (n) => /^(success|warning|info|danger|highlight)/.test(n) },
-  { id: 'charts', title: 'Charts', test: (n) => n.startsWith('chart-') },
-  { id: 'workspace', title: 'Workspace', test: (n) => n.startsWith('ws-') },
+  { id: 'palette', title: tx('Bảng màu', 'Palette'), test: (n) => /^(orange|grey|amber|beige|ink$|image-slot)/.test(n) },
+  { id: 'surface-and-text', title: tx('Bề mặt và chữ', 'Surface and text'), test: (n) => /^(background|foreground|card|popover|primary|button|secondary|muted|accent|destructive|border|input|ring|headline-soft|pill-pale)/.test(n) },
+  { id: 'states', title: tx('Trạng thái', 'States'), test: (n) => /^(success|warning|info|danger|highlight)/.test(n) },
+  { id: 'charts', title: tx('Biểu đồ', 'Charts'), test: (n) => n.startsWith('chart-') },
+  { id: 'workspace', title: tx('Khu làm việc', 'Workspace'), test: (n) => n.startsWith('ws-') },
 ]

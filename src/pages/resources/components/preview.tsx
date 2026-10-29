@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
+import { tx } from '@/shared/i18n'
 import { Illustration } from '@/shared/ui/illustrations'
 
 /** A still picture of each component for the overview cards: the real component where it is small enough, a sketch of it otherwise. */
@@ -25,20 +26,20 @@ const PREVIEWS: Record<string, ReactNode> = {
   ),
   'text-link': (
     <p className="text-body text-ink">
-      A <span className="text-link">link</span> in a sentence
+      {tx('Một', 'A')} <span className="text-link">{tx('liên kết', 'link')}</span> {tx('trong câu', 'in a sentence')}
     </p>
   ),
   input: (
     <div className="flex w-48 flex-col gap-1.5">
-      <span className="text-ui font-medium">Label</span>
-      <span className="flex h-9 items-center rounded-md border border-input bg-grey-100 px-3 text-ui text-muted-foreground">Placeholder</span>
+      <span className="text-ui font-medium">{tx('Nhãn', 'Label')}</span>
+      <span className="flex h-9 items-center rounded-md border border-input bg-grey-100 px-3 text-ui text-muted-foreground">{tx('Chữ gợi ý', 'Placeholder')}</span>
     </div>
   ),
   segmented: (
     <div className="inline-flex gap-0.5 rounded-full bg-grey-100 p-0.5 text-small">
-      <span className="rounded-full bg-white px-3 py-1 font-medium text-primary shadow-sm">Option 1</span>
-      <span className="rounded-full px-3 py-1 text-muted-foreground">Option 2</span>
-      <span className="rounded-full px-3 py-1 text-muted-foreground">Option 3</span>
+      <span className="rounded-full bg-white px-3 py-1 font-medium text-primary shadow-sm">{tx('Lựa chọn 1', 'Option 1')}</span>
+      <span className="rounded-full px-3 py-1 text-muted-foreground">{tx('Lựa chọn 2', 'Option 2')}</span>
+      <span className="rounded-full px-3 py-1 text-muted-foreground">{tx('Lựa chọn 3', 'Option 3')}</span>
     </div>
   ),
   'page-tabs': (
@@ -82,11 +83,11 @@ const PREVIEWS: Record<string, ReactNode> = {
   'stat-tile': (
     <div className="flex gap-5 rounded-xl bg-beige-50 px-5 py-4">
       <div className="flex flex-col">
-        <span className="text-small text-muted-foreground">Label</span>
+        <span className="text-small text-muted-foreground">{tx('Nhãn', 'Label')}</span>
         <span className="text-h2 font-semibold">1,234</span>
       </div>
       <div className="flex flex-col border-l border-grey-200 pl-5">
-        <span className="text-small text-muted-foreground">Label</span>
+        <span className="text-small text-muted-foreground">{tx('Nhãn', 'Label')}</span>
         <span className="text-h2 font-semibold">56%</span>
       </div>
     </div>
@@ -100,7 +101,7 @@ const PREVIEWS: Record<string, ReactNode> = {
   ),
   card: (
     <div className="flex w-52 flex-col gap-2 rounded-xl bg-white p-4">
-      <span className="text-ui font-semibold">Card title</span>
+      <span className="text-ui font-semibold">{tx('Tiêu đề thẻ', 'Card title')}</span>
       {line('w-full')}
       {line('w-2/3')}
     </div>
@@ -118,7 +119,7 @@ const PREVIEWS: Record<string, ReactNode> = {
   'empty-state': (
     <div className="flex flex-col items-center gap-1">
       <Illustration name="empty" className="w-20" />
-      <span className="text-ui font-semibold">Title</span>
+      <span className="text-ui font-semibold">{tx('Tiêu đề', 'Title')}</span>
     </div>
   ),
 }

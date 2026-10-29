@@ -5,7 +5,6 @@ import { TokenTable } from '../token-table'
 import { ROWS, TOKEN_GROUPS } from '../tokens'
 
 const colorTokens: ResourceDoc = {
-  title: 'Color tokens',
   summary: tx(
     'Mọi token màu của web, đọc trực tiếp từ tokens.css nên luôn khớp với mã. Cột Dark để trống nghĩa là giao diện tối dùng lại giá trị sáng.',
     'Every web colour token, read straight from tokens.css so it always matches the code. An empty Dark column means the dark theme reuses the light value.',

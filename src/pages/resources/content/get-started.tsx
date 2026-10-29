@@ -3,7 +3,6 @@ import { C, Code, DataTable, List, P, Principle } from '../doc'
 import type { ResourceDoc } from '../doc'
 
 const whatsNew: ResourceDoc = {
-  title: "What's new",
   summary: tx(
     'Những thay đổi của hệ thống thiết kế bonbon, mới nhất ở trên. Mỗi mục nói cái gì đổi, vì sao, và bạn cần làm gì với màn hình đang có.',
     'Changes to the bonbon design system, newest first. Each entry says what changed, why, and what you need to do with existing screens.',
@@ -18,7 +17,7 @@ const whatsNew: ResourceDoc = {
             items={[
               tx('Mọi trang web có tiếng Việt và tiếng Anh. Ngôn ngữ mặc định theo trình duyệt, đổi bằng nút VI/EN và được nhớ trên thiết bị.', 'Every web page has Vietnamese and English. The language follows the browser, can be switched with VI/EN and is remembered on the device.'),
               tx('Tên component luôn là tiếng Anh và trùng tên trong mã nguồn (Button, PageTabs, StatTile…), để sau này tách thành thư viện UI riêng.', 'Component names are always English and match the source code (Button, PageTabs, StatTile…), so they can become a separate UI library later.'),
-              tx('Trang thương hiệu được sắp lại theo năm phần: Get started, Design language, UX frameworks and guidelines, Web tokens và Components.', 'The brand site is reorganised into five parts: Get started, Design language, UX frameworks and guidelines, Web tokens and Components.'),
+              tx('Tài nguyên thiết kế được sắp lại theo năm phần: Bắt đầu, Ngôn ngữ thiết kế, Khung và hướng dẫn UX, Token cho web và Thành phần.', 'The brand site is reorganised into five parts: Get started, Design language, UX frameworks and guidelines, Web tokens and Components.'),
             ]}
           />
           <Principle>{tx('Viết chữ mới cho giao diện thì viết cả hai ngôn ngữ cùng lúc.', 'When you write new interface text, write both languages at once.')}</Principle>
@@ -74,7 +73,6 @@ const whatsNew: ResourceDoc = {
 }
 
 const design: ResourceDoc = {
-  title: 'Design',
   summary: tx(
     'Bắt đầu thiết kế một màn hình bonbon: đọc ngôn ngữ thiết kế, dựng bằng component có sẵn, rồi kiểm tra trước khi giao cho người làm.',
     'Start designing a bonbon screen: read the design language, build with existing components, then check before handing off.',
@@ -94,10 +92,10 @@ const design: ResourceDoc = {
           <List
             ordered
             items={[
-              tx('Design principles: năm điều mọi màn hình phải giữ.', 'Design principles: the five things every screen keeps.'),
-              tx('Color và Typography: màu nào cho việc gì, cỡ chữ nào cho tầng nào.', 'Color and Typography: which colour for which job, which size for which level.'),
-              tx('Layout và Shapes: khoảng cách, lưới, bo góc.', 'Layout and Shapes: spacing, grid, corners.'),
-              tx('Content design: cách viết chữ trên giao diện, bằng cả hai ngôn ngữ.', 'Content design: how to write interface text, in both languages.'),
+              tx('Nguyên tắc thiết kế: năm điều mọi màn hình phải giữ.', 'Design principles: the five things every screen keeps.'),
+              tx('Màu sắc và Kiểu chữ: màu nào cho việc gì, cỡ chữ nào cho tầng nào.', 'Color and Typography: which colour for which job, which size for which level.'),
+              tx('Bố cục và Hình dạng: khoảng cách, lưới, bo góc.', 'Layout and Shapes: spacing, grid, corners.'),
+              tx('Thiết kế nội dung: cách viết chữ trên giao diện, bằng cả hai ngôn ngữ.', 'Content design: how to write interface text, in both languages.'),
             ]}
           />
         </>
@@ -148,7 +146,6 @@ const design: ResourceDoc = {
 }
 
 const develop: ResourceDoc = {
-  title: 'Develop',
   summary: tx(
     'Dùng hệ thống thiết kế trong mã: web (React, Tailwind) và ứng dụng điện thoại (React Native) đọc cùng giá trị token và dùng component cùng tên.',
     'Use the design system in code: the web (React, Tailwind) and the phone app (React Native) read the same token values and use components with the same names.',

@@ -6,7 +6,6 @@ import { C, Code, DataTable, H3, List, P, Principle, Rules, Say } from '../doc'
 import type { ResourceDoc } from '../doc'
 
 const contentDesign: ResourceDoc = {
-  title: 'Content design',
   summary: tx(
     'Chữ trên giao diện là một phần của thiết kế. Người dùng bonbon đọc lướt khi đang nấu, đang giao hoặc đang đói; chữ ngắn và rõ giúp họ làm xong việc.',
     'Interface text is part of the design. bonbon users skim while cooking, delivering or hungry; short, clear text gets their job done.',
@@ -85,7 +84,6 @@ const contentDesign: ResourceDoc = {
 }
 
 const designTokens: ResourceDoc = {
-  title: 'Design tokens',
   summary: tx(
     'Token là tên đặt cho một quyết định thiết kế: một màu, một bo góc, một khoảng cách. Màn hình gọi tên token thay vì giá trị, để đổi một quyết định là đổi ở một chỗ.',
     'A token is a name for a design decision: a colour, a radius, a spacing. Screens call the token by name instead of its value, so changing a decision means changing one place.',
@@ -146,7 +144,7 @@ const designTokens: ResourceDoc = {
           items={[
             tx('Đổi giá trị ở cả tokens.css và tokens.ts, giữ hai bên bằng nhau.', 'Change the value in both tokens.css and tokens.ts, keeping them equal.'),
             tx('Kiểm tra lại độ tương phản với các cặp chữ/nền dùng token đó.', 'Recheck contrast for the text/background pairs that use it.'),
-            tx('Ghi vào What\'s new: đổi gì, vì sao, màn hình cũ cần làm gì.', "Record it in What's new: what changed, why, what older screens need."),
+            tx('Ghi vào Có gì mới: đổi gì, vì sao, màn hình cũ cần làm gì.', "Record it in What's new: what changed, why, what older screens need."),
           ]}
         />
       ),
@@ -156,7 +154,6 @@ const designTokens: ResourceDoc = {
 }
 
 const handoffs: ResourceDoc = {
-  title: 'Handoffs',
   summary: tx(
     'Bàn giao là lúc một thiết kế thành mã. Bàn giao tốt nghĩa là người làm không phải đoán: mọi trạng thái, mọi câu chữ và mọi tên đều đã có.',
     'A handoff is when a design becomes code. A good handoff means the developer never has to guess: every state, every piece of text and every name is already there.',
@@ -211,7 +208,6 @@ const handoffs: ResourceDoc = {
 }
 
 const onboarding: ResourceDoc = {
-  title: 'Onboarding',
   summary: tx(
     'Làm quen là những phút đầu tiên của một người với bonbon: mở quán, đặt món đầu tiên. Mục tiêu là đưa họ tới việc có ích đầu tiên nhanh nhất, không phải giải thích mọi thứ.',
     'Onboarding is someone\'s first minutes with bonbon: opening a shop, placing a first order. The goal is to get them to their first useful result fast, not to explain everything.',
@@ -272,7 +268,6 @@ const onboarding: ResourceDoc = {
 }
 
 const waitUx: ResourceDoc = {
-  title: 'Wait UX',
   summary: tx(
     'Chờ là lúc hệ thống đang tải, đang gửi hoặc đang chờ người khác (quán nhận đơn, quản trị viên duyệt). Chờ được thiết kế tốt nói rõ điều gì đang xảy ra và giữ người dùng ở nguyên chỗ.',
     'Waiting is when the system is loading, sending or waiting on someone else (a shop accepting, an administrator reviewing). A well-designed wait says clearly what is happening and keeps people where they are.',

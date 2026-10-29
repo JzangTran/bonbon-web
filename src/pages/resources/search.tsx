@@ -9,7 +9,7 @@ import { TABS, type TabKey } from './site'
 type Scope = TabKey | 'all'
 
 const SCOPES: { id: Scope; label: string; hint?: string }[] = [
-  { id: 'all', label: 'All resources', hint: tx('Mọi phần của tài nguyên', 'Every part of the resources') },
+  { id: 'all', label: tx('Tất cả tài nguyên', 'All resources'), hint: tx('Mọi phần của tài nguyên', 'Every part of the resources') },
   ...TABS.map((x) => ({ id: x.key as Scope, label: x.title })),
 ]
 
@@ -109,7 +109,7 @@ export function ResourceSearch({ tab }: { tab: TabKey }) {
           <ul id={listId} role="listbox" aria-label={tx('Kết quả', 'Results')} className="flex max-h-96 flex-col gap-0.5 overflow-y-auto p-2">
             {results.length ? (
               results.map((r, i) => {
-                const Icon = r.heading ? HashIcon : r.trail.endsWith('Components') ? ComponentIcon : FileTextIcon
+                const Icon = r.heading ? HashIcon : r.path.includes('/components/') ? ComponentIcon : FileTextIcon
                 return (
                   <li
                     key={r.path}
@@ -137,7 +137,7 @@ export function ResourceSearch({ tab }: { tab: TabKey }) {
 
           <div className="relative flex items-center justify-between gap-3 rounded-b-2xl border-t border-grey-200 bg-grey-50 px-4 py-2.5 text-ui text-muted-foreground">
             <span className="flex items-center gap-2">
-              Filter
+              {tx('Lọc', 'Filter')}
               <button
                 type="button"
                 aria-haspopup="listbox"
@@ -162,7 +162,7 @@ export function ResourceSearch({ tab }: { tab: TabKey }) {
             </span>
 
             {scopeOpen ? (
-              <ul role="listbox" aria-label="Filter" className="absolute bottom-12 left-4 flex w-60 flex-col rounded-xl border border-grey-200 bg-popover p-1.5 shadow-float">
+              <ul role="listbox" aria-label={tx('Lọc', 'Filter')} className="absolute bottom-12 left-4 flex w-60 flex-col rounded-xl border border-grey-200 bg-popover p-1.5 shadow-float">
                 {SCOPES.map((s) => (
                   <li key={s.id} role="option" aria-selected={s.id === scope}>
                     <button

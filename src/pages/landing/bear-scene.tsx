@@ -1,165 +1,179 @@
+import type { ReactNode } from 'react'
+import markSvg from '@/shared/assets/brand/bonbon-mark-color.svg?raw'
 import { cn } from '@/shared/lib/utils'
 
 export type BearKind = 'order' | 'cook' | 'deliver' | 'done' | 'shop'
 
 const INK = '#1d1d1d'
 const ORANGE = '#fe551b'
+const DEEP = '#e8420c'
 const PALE = '#ffe3d4'
-const line = { stroke: INK, strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round' } as const
+const BLUSH = '#ffc4a8'
+const line = { stroke: INK, strokeWidth: 3.2, strokeLinecap: 'round', strokeLinejoin: 'round' } as const
 
-/** The bonbon bear, drawn in the line style of the logo: round head, small ears, dot eyes, a snout. `happy` closes the eyes in a smile. */
-function Bear({ happy = false }: { happy?: boolean }) {
+// the bear of the logo itself (Streamline Freehand "Saving Bear Market", CC BY 4.0), read from the logo file so the two never differ
+const BEAR_PATHS = [...(markSvg.match(/<g transform="[^"]*"[^>]*>([\s\S]*?)<\/g>/)?.[1] ?? '').matchAll(/ d="([^"]+)"/g)].map((m) => m[1])
+
+/**
+ * Where the logo bear sits in every scene (scene units, 240 × 200): 7.2 times its 24-unit drawing, so its raised front paw is at about
+ * (188, 83), the top of its head at (131, 22), its snout at (194, 36) and its feet on the line y = 187.
+ */
+const BEAR_AT = 'translate(30 18) scale(7.2)'
+
+/** The torso and head the outline wraps, in the bear's own 24 units: filled in pale orange a little off the line, the freehand way. */
+const BODY = 'M3 22.5 C1 18 0.8 13 3 10 C5 7 9 6.5 11.5 5 C13 4 15 2 18 2.2 C20.5 2.5 21.5 3.5 20.5 5 C19 7 17.5 8 17 10 C16.5 12.5 18.5 14 19 15.5 C17 16 14 15.5 13 18 C12.5 20 12 22.5 11 23 C8 23.5 5 23.5 3 22.5 Z'
+
+function LogoBear({ tilt = 0 }: { tilt?: number }) {
   return (
-    <g>
-      {/* body */}
-      <path d="M78 200 C78 150 96 132 120 132 C144 132 162 150 162 200" fill="#fff" {...line} />
-      {/* ears */}
-      <circle cx="87" cy="56" r="12" fill="#fff" {...line} />
-      <circle cx="153" cy="56" r="12" fill="#fff" {...line} />
-      <circle cx="87" cy="56" r="5" fill={PALE} />
-      <circle cx="153" cy="56" r="5" fill={PALE} />
-      {/* head */}
-      <ellipse cx="120" cy="92" rx="46" ry="42" fill="#fff" {...line} />
-      {/* cheeks */}
-      <circle cx="94" cy="104" r="6" fill={PALE} />
-      <circle cx="146" cy="104" r="6" fill={PALE} />
-      {/* eyes */}
-      {happy ? (
-        <>
-          <path d="M101 88 q5 -6 10 0" fill="none" {...line} />
-          <path d="M129 88 q5 -6 10 0" fill="none" {...line} />
-        </>
-      ) : (
-        <>
-          <circle cx="106" cy="87" r="3.5" fill={INK} />
-          <circle cx="134" cy="87" r="3.5" fill={INK} />
-          <path d="M100 78 q6 -4 12 0" fill="none" {...line} strokeWidth={2.5} />
-          <path d="M128 78 q6 -4 12 0" fill="none" {...line} strokeWidth={2.5} />
-        </>
-      )}
-      {/* snout */}
-      <ellipse cx="120" cy="104" rx="14" ry="10" fill="#fff" {...line} strokeWidth={2.5} />
-      <ellipse cx="120" cy="100" rx="5" ry="3.5" fill={INK} />
-      <path d="M115 108 q2.5 3 5 0 q2.5 3 5 0" fill="none" {...line} strokeWidth={2} />
+    <g transform={tilt ? `rotate(${tilt} 110 187)` : undefined}>
+      <g transform={BEAR_AT}>
+        <path d={BODY} fill={PALE} transform="translate(0.7 0.6)" />
+        {BEAR_PATHS.map((d, i) => (
+          <path key={i} d={d} fill={INK} fillRule="evenodd" clipRule="evenodd" />
+        ))}
+      </g>
     </g>
   )
 }
 
-function Paw({ x, y }: { x: number; y: number }) {
-  return <circle cx={x} cy={y} r="9" fill="#fff" {...line} strokeWidth={2.5} />
+/** Short orange strokes around a figure, the "it is happening" marks of a hand drawing. */
+function Sparks({ at }: { at: [number, number][] }) {
+  return (
+    <g stroke={ORANGE} strokeWidth={3} strokeLinecap="round">
+      {at.map(([x, y], i) => (
+        <path key={i} d={`M${x} ${y} l6 -6 M${x + 10} ${y + 2} l8 0 M${x - 2} ${y + 10} l-6 6`} opacity={0.9} />
+      ))}
+    </g>
+  )
 }
 
-function Props({ kind }: { kind: BearKind }) {
-  switch (kind) {
-    case 'order':
-      return (
-        <g>
-          <g transform="rotate(-10 172 150)">
-            <rect x="152" y="112" width="42" height="72" rx="8" fill="#fff" {...line} />
-            <rect x="158" y="122" width="30" height="10" rx="3" fill={ORANGE} />
-            <rect x="158" y="138" width="30" height="5" rx="2.5" fill={PALE} />
-            <rect x="158" y="148" width="22" height="5" rx="2.5" fill={PALE} />
-            <rect x="158" y="164" width="30" height="10" rx="5" fill={ORANGE} />
-          </g>
-          <Paw x={156} y={168} />
-          <g transform="translate(176 52)">
-            <circle r="16" fill={ORANGE} />
-            <path d="M-7 0 l5 5 l9 -10" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-          </g>
-        </g>
-      )
-    case 'cook':
-      return (
-        <g>
-          {/* chef hat */}
-          <path d="M92 58 C80 52 82 30 100 32 C104 18 136 18 140 32 C158 30 160 52 148 58 Z" fill="#fff" {...line} />
-          <rect x="94" y="54" width="52" height="12" rx="3" fill="#fff" {...line} />
-          {/* steam */}
-          <path d="M104 132 q-6 -8 0 -16 q6 -8 0 -16" fill="none" stroke="#a3a3a3" strokeWidth={2.5} strokeLinecap="round" transform="translate(-34 20)" />
-          <path d="M104 132 q-6 -8 0 -16 q6 -8 0 -16" fill="none" stroke="#a3a3a3" strokeWidth={2.5} strokeLinecap="round" transform="translate(84 16)" />
-          {/* pot */}
-          <path d="M80 160 h80 v22 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 Z" fill={ORANGE} {...line} />
-          <rect x="74" y="152" width="92" height="10" rx="5" fill="#fff" {...line} />
-          <path d="M80 170 h-10 M160 170 h10" {...line} />
-          <Paw x={92} y={150} />
-          <Paw x={148} y={150} />
-        </g>
-      )
-    case 'deliver':
-      return (
-        <g>
-          {/* cap */}
-          <path d="M80 72 C80 40 160 40 160 72 Z" fill={ORANGE} {...line} />
-          <path d="M156 70 h22" {...line} strokeWidth={4} />
-          {/* speed lines */}
-          <path d="M20 120 h34 M30 140 h28 M16 160 h40" stroke={ORANGE} strokeWidth={3} strokeLinecap="round" />
-          {/* bag */}
-          <path d="M140 150 h44 l-4 44 h-36 Z" fill={PALE} {...line} />
-          <path d="M152 150 v-8 a10 10 0 0 1 20 0 v8" fill="none" {...line} />
-          <circle cx="162" cy="172" r="7" fill={ORANGE} />
-          <Paw x={146} y={156} />
-        </g>
-      )
-    case 'done':
-      return (
-        <g>
-          {/* hearts */}
-          <path d="M44 62 c-6 -10 -20 -2 -12 8 l12 12 l12 -12 c8 -10 -6 -18 -12 -8 Z" fill={ORANGE} />
-          <path d="M192 44 c-4 -7 -14 -1 -8 5 l8 8 l8 -8 c6 -6 -4 -12 -8 -5 Z" fill={ORANGE} opacity={0.6} />
-          {/* bowl with noodles and chopsticks */}
-          <path d="M160 128 l26 -34 M168 132 l28 -30" {...line} />
-          <path d="M82 150 h76 a38 32 0 0 1 -76 0 Z" fill={ORANGE} {...line} />
-          <path d="M92 150 q8 -10 16 0 q8 -10 16 0 q8 -10 16 0 q8 -10 16 0" fill="none" stroke="#fff" strokeWidth={2.5} strokeLinecap="round" />
-          <Paw x={84} y={160} />
-          <Paw x={156} y={160} />
-        </g>
-      )
-    case 'shop':
-      return (
-        <g>
-          {/* awning */}
-          <path d="M20 24 h200 v24 h-200 Z" fill="#fff" {...line} />
-          {[0, 1, 2, 3, 4].map((i) => (
-            <path key={i} d={`M${20 + i * 40} 24 h20 v24 h-20 Z`} fill={ORANGE} />
-          ))}
-          <path d="M20 48 q10 12 20 0 q10 12 20 0 q10 12 20 0 q10 12 20 0 q10 12 20 0 q10 12 20 0 q10 12 20 0 q10 12 20 0 q10 12 20 0 q10 12 20 0" fill="#fff" {...line} />
-        </g>
-      )
-  }
+/** What the bear does in each scene: [drawn behind the bear (held things the paw wraps), drawn in front]. */
+const ACTIONS: Record<Exclude<BearKind, 'shop'>, { tilt?: number; behind: ReactNode; front: ReactNode }> = {
+  // ordering: a phone in the raised paw, an order confirmed
+  order: {
+    behind: (
+      <g transform="rotate(14 200 70)">
+        <rect x="184" y="40" width="34" height="58" rx="7" fill="#fff" {...line} />
+        <rect x="190" y="50" width="22" height="8" rx="3" fill={ORANGE} />
+        <rect x="190" y="63" width="22" height="5" rx="2.5" fill={PALE} />
+        <rect x="190" y="72" width="14" height="5" rx="2.5" fill={PALE} />
+      </g>
+    ),
+    front: (
+      <g>
+        <circle cx="222" cy="30" r="13" fill={ORANGE} />
+        <path d="M215 30 l5 5 l9 -10" stroke="#fff" strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      </g>
+    ),
+  },
+  // cooking: a chef's hat, a pan in the paw, steam
+  cook: {
+    behind: (
+      <g>
+        <path d="M184 86 L206 82" fill="none" {...line} />
+        <path d="M202 80 h40 q-2 20 -20 20 q-18 0 -20 -20 Z" fill={ORANGE} {...line} />
+        <circle cx="214" cy="76" r="4" fill={DEEP} />
+        <circle cx="226" cy="74" r="3.5" fill="#fff" stroke={INK} strokeWidth={2} />
+        <path d="M212 62 q-5 -7 0 -13 q5 -6 0 -12 M228 60 q-5 -7 0 -13 q5 -6 0 -12" stroke="#a3a3a3" strokeWidth={2.4} strokeLinecap="round" fill="none" />
+      </g>
+    ),
+    front: (
+      <g transform="rotate(-12 150 14)">
+        <path d="M128 22 q-10 -14 4 -20 q4 -12 18 -8 q12 -8 20 4 q14 2 6 18 Z" fill="#fff" {...line} />
+        <path d="M130 22 h44 v8 h-44 Z" fill="#fff" {...line} />
+      </g>
+    ),
+  },
+  // delivering: leaning into the walk, the order bag swinging from the paw, speed lines behind
+  deliver: {
+    tilt: 6,
+    behind: (
+      <g>
+        <path d="M184 86 q4 -10 14 -8 q8 2 6 12" fill="none" {...line} />
+        <path d="M174 92 h40 l-4 40 h-32 Z" fill={ORANGE} {...line} />
+        <circle cx="194" cy="110" r="6" fill="#fff" />
+      </g>
+    ),
+    front: (
+      <g stroke={ORANGE} strokeWidth={3.4} strokeLinecap="round">
+        <path d="M6 96 h26 M0 112 h22 M10 128 h20" />
+      </g>
+    ),
+  },
+  // done: a warm bowl held close, hearts
+  done: {
+    behind: (
+      <g>
+        <path d="M200 58 L222 90 M210 54 L228 88" fill="none" {...line} strokeWidth={2.6} />
+        <path d="M176 86 q4 -6 0 -12 M190 82 q4 -6 0 -12" stroke="#a3a3a3" strokeWidth={2.4} strokeLinecap="round" fill="none" />
+      </g>
+    ),
+    front: (
+      <g>
+        <path d="M168 92 q24 -18 48 0" fill="#fff" {...line} />
+        <path d="M164 92 h56 q-4 28 -28 28 q-24 0 -28 -28 Z" fill={ORANGE} {...line} />
+        <path d="M214 30 c-6 -8 -18 -2 -10 8 l10 10 l10 -10 c8 -10 -4 -16 -10 -8 Z" fill={ORANGE} />
+        <path d="M60 30 c-4 -5 -12 -1 -7 5 l7 7 l7 -7 c5 -6 -3 -10 -7 -5 Z" fill={BLUSH} />
+      </g>
+    ),
+  },
 }
 
 /**
- * A small scene with the bonbon bear, for the landing page: ordering on the phone, cooking, carrying the order, enjoying the meal,
- * or standing at the shop counter. Line drawing in ink with orange, on a pale orange ground. Decorative.
+ * A scene with the bonbon bear for the landing page: the bear of the logo, in its own freehand line, doing what each step of an order
+ * needs (ordering on the phone, cooking, carrying the order, enjoying it, or serving at the shop counter), on a pale orange ground.
+ * Decorative.
  */
 export function BearScene({ kind, className }: { kind: BearKind; className?: string }) {
+  if (kind === 'shop') return <ShopScene className={className} />
   return (
     <svg aria-hidden="true" viewBox="0 0 240 200" className={cn('block h-auto w-full', className)}>
-      {kind !== 'shop' ? <circle cx="120" cy="112" r="78" fill={PALE} opacity={0.55} /> : null}
-      {kind === 'shop' ? <Props kind="shop" /> : null}
-      <Bear happy={kind === 'done'} />
-      {kind === 'shop' ? (
-        <>
-          <rect x="16" y="160" width="208" height="40" rx="6" fill="#fff" {...line} />
-          <rect x="88" y="172" width="64" height="16" rx="8" fill={ORANGE} />
-          <path d="M40 146 h36 a18 14 0 0 1 -36 0 Z" fill={PALE} {...line} strokeWidth={2.5} />
-          <path d="M50 136 q-4 -6 0 -12 M62 136 q-4 -6 0 -12" fill="none" stroke="#a3a3a3" strokeWidth={2} strokeLinecap="round" />
-          <Paw x={100} y={158} />
-          <Paw x={140} y={158} />
-        </>
-      ) : (
-        <Props kind={kind} />
-      )}
+      <path d="M40 120 C30 70 70 34 122 36 C178 38 214 76 206 128 C200 170 160 192 116 188 C70 184 46 160 40 120 Z" fill={PALE} opacity={0.6} />
+      <ellipse cx="112" cy="190" rx="66" ry="6" fill="#fbcdb5" />
+      {/* a little smaller than the ground, so hats and hearts stay inside the frame */}
+      <g transform="translate(120 192) scale(0.86) translate(-120 -192)">
+        <BearFigure kind={kind} />
+        {kind === 'done' ? <Sparks at={[[30, 70]]} /> : null}
+      </g>
     </svg>
   )
 }
 
-/** The bear and what it holds, without the round ground: for placing inside a larger drawing with a transform. */
+/** The bear and what it holds, without the ground: for placing inside a larger drawing with a transform. */
 export function BearFigure({ kind }: { kind: Exclude<BearKind, 'shop'> }) {
+  const a = ACTIONS[kind]
   return (
     <g>
-      <Bear happy={kind === 'done'} />
-      <Props kind={kind} />
+      {a.tilt ? <g transform={`rotate(${a.tilt} 110 187)`}>{a.behind}</g> : a.behind}
+      <LogoBear tilt={a.tilt} />
+      {a.front}
     </g>
+  )
+}
+
+/** The seller's scene: the bear behind its own counter under a striped awning, holding a bowl out to a neighbour. */
+function ShopScene({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 240 200" className={cn('block h-auto w-full', className)}>
+      {/* awning */}
+      <path d="M14 18 h212 v22 h-212 Z" fill="#fff" {...line} />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <path key={i} d={`M${14 + i * 36} 18 h18 v22 h-18 Z`} fill={ORANGE} />
+      ))}
+      <path d="M14 40 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0 q9 11 18 0" fill="#fff" {...line} />
+      {/* the bear, smaller and lower so it stands under the awning, holding a bowl out over the counter */}
+      <g transform="translate(36 52) scale(6.1)">
+        <path d={BODY} fill={PALE} transform="translate(0.7 0.6)" />
+        {BEAR_PATHS.map((d, i) => (
+          <path key={i} d={d} fill={INK} fillRule="evenodd" clipRule="evenodd" />
+        ))}
+      </g>
+      <path d="M166 104 q24 -18 48 0" fill="#fff" {...line} />
+      <path d="M162 104 h56 q-4 26 -28 26 q-24 0 -28 -26 Z" fill="#fff" {...line} />
+      <path d="M180 92 q4 -6 0 -12 M196 90 q4 -6 0 -12" stroke="#fff" strokeWidth={2.6} strokeLinecap="round" fill="none" />
+      {/* counter */}
+      <rect x="10" y="150" width="220" height="46" rx="8" fill="#fff" {...line} />
+      <rect x="86" y="164" width="68" height="16" rx="8" fill={ORANGE} />
+    </svg>
   )
 }

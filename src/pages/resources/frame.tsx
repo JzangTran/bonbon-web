@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { DocsFrame, type DocsTab } from '@/shared/ui/docs-frame'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
-import { t } from '@/shared/i18n'
+import { t, tx } from '@/shared/i18n'
 import { COMPONENTS } from './components/registry'
 import { ResourceSearch } from './search'
 import { COMPONENTS_PATH, TABS, componentPath, pagePath, tabPath, type TabKey } from './site'
@@ -16,7 +16,7 @@ function treeOf(tab: TabKey): TreeSection[] {
     title: s.title,
     items:
       s.key === 'components'
-        ? [{ label: 'Overview', to: COMPONENTS_PATH }, ...[...COMPONENTS].sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({ label: c.name, to: componentPath(c.slug) }))]
+        ? [{ label: tx('Tổng quan', 'Overview'), to: COMPONENTS_PATH }, ...[...COMPONENTS].sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({ label: c.name, to: componentPath(c.slug) }))]
         : s.pages.map((p) => ({ label: p.title, to: pagePath(tab, s.key, p.slug) })),
   }))
 }

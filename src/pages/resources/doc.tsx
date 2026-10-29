@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/shared/lib/utils'
+import { tx } from '@/shared/i18n'
 import { Rule } from './components/parts'
 
 /**
@@ -7,7 +8,6 @@ import { Rule } from './components/parts'
  * what to do, short paragraphs, lists, comparison tables, do and don't pairs, a one-line rule closing a section, and a key takeaway.
  */
 export type ResourceDoc = {
-  title: string
   /** what it is and why it matters, one or two sentences */
   summary: string
   sections: { id: string; title: string; body: ReactNode }[]
@@ -91,7 +91,7 @@ export function Rules({ items }: { items: { ok: boolean; caption: string; demo: 
 export function Say({ ok, children }: { ok: boolean; children: ReactNode }) {
   return (
     <p className={cn('text-body', ok ? 'text-success-fg' : 'text-danger-fg')}>
-      <span className="font-semibold">{ok ? 'Do: ' : "Don't: "}</span>
+      <span className="font-semibold">{ok ? tx('Nên: ', 'Do: ') : tx('Không nên: ', "Don't: ")}</span>
       <span className="text-ink">{children}</span>
     </p>
   )

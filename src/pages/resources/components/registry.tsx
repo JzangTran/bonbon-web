@@ -138,11 +138,11 @@ export const COMPONENTS: ComponentDoc[] = [
     example: {
       demo: (
         <p className="text-body">
-          A{' '}
+          {tx('Một', 'A')}{' '}
           <a href="#example" className="text-link">
-            link
+            {tx('liên kết', 'link')}
           </a>{' '}
-          in a sentence
+          {tx('trong câu', 'in a sentence')}
         </p>
       ),
       code: `<a href="…" className="text-link">link</a>`,
@@ -194,8 +194,8 @@ export const COMPONENTS: ComponentDoc[] = [
     example: {
       demo: (
         <div className={field}>
-          <Label htmlFor="ex-shop">Label</Label>
-          <Input id="ex-shop" placeholder="Placeholder" />
+          <Label htmlFor="ex-shop">{tx('Nhãn', 'Label')}</Label>
+          <Input id="ex-shop" placeholder={tx('Chữ gợi ý', 'Placeholder')} />
         </div>
       ),
       code: `import { Input } from '@/shared/ui/input'
@@ -210,8 +210,8 @@ import { Label } from '@/shared/ui/label'
         text: t('Cho tên, số, email. Có thể hiện số ký tự đã gõ ở góc phải (showCount).'),
         demo: (
           <div className={field}>
-            <Label htmlFor="ex-1">Label</Label>
-            <Input id="ex-1" showCount maxLength={60} value="Value" readOnly />
+            <Label htmlFor="ex-1">{tx('Nhãn', 'Label')}</Label>
+            <Input id="ex-1" showCount maxLength={60} value={tx('Giá trị', 'Value')} readOnly />
           </div>
         ),
       },
@@ -220,8 +220,8 @@ import { Label } from '@/shared/ui/label'
         text: t('Cho ghi chú, mô tả, nội dung phản hồi.'),
         demo: (
           <div className={field}>
-            <Label htmlFor="ex-2">Label</Label>
-            <Textarea id="ex-2" rows={3} placeholder="Placeholder" />
+            <Label htmlFor="ex-2">{tx('Nhãn', 'Label')}</Label>
+            <Textarea id="ex-2" rows={3} placeholder={tx('Chữ gợi ý', 'Placeholder')} />
           </div>
         ),
       },
@@ -231,7 +231,7 @@ import { Label } from '@/shared/ui/label'
         demo: (
           <div className="relative w-full max-w-sm">
             <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-            <Input className="rounded-full pl-9" placeholder="Search" aria-label="Search" />
+            <Input className="rounded-full pl-9" placeholder={tx('Tìm kiếm', 'Search')} aria-label={tx('Tìm kiếm', 'Search')} />
           </div>
         ),
       },
@@ -242,10 +242,10 @@ import { Label } from '@/shared/ui/label'
         text: t('Kiểm tra khi người dùng rời ô hoặc bấm gửi, không phải khi đang gõ. Lỗi hiện ngay dưới ô, bằng một câu nói cách sửa.'),
         demo: (
           <div className={field}>
-            <Label htmlFor="ex-3">Label</Label>
-            <Input id="ex-3" defaultValue="Value" aria-invalid aria-describedby="ex-3-err" />
+            <Label htmlFor="ex-3">{tx('Nhãn', 'Label')}</Label>
+            <Input id="ex-3" defaultValue={tx('Giá trị', 'Value')} aria-invalid aria-describedby="ex-3-err" />
             <p id="ex-3-err" className="text-small text-destructive">
-              Error message
+              {tx('Câu báo lỗi', 'Error message')}
             </p>
           </div>
         ),
@@ -259,8 +259,8 @@ import { Label } from '@/shared/ui/label'
           caption: t('Đánh dấu ô bắt buộc bằng * đỏ trước nhãn'),
           demo: (
             <div className={field}>
-              <Label htmlFor="ex-4">{star} Label</Label>
-              <Input id="ex-4" placeholder="Placeholder" />
+              <Label htmlFor="ex-4">{star} {tx('Nhãn', 'Label')}</Label>
+              <Input id="ex-4" placeholder={tx('Chữ gợi ý', 'Placeholder')} />
             </div>
           ),
         },
@@ -269,7 +269,7 @@ import { Label } from '@/shared/ui/label'
           caption: t('Không dùng chữ mờ trong ô thay cho nhãn'),
           demo: (
             <div className={field}>
-              <Input placeholder="Label (required)" aria-label="Label" />
+              <Input placeholder={tx('Nhãn (bắt buộc)', 'Label (required)')} aria-label={tx('Nhãn', 'Label')} />
             </div>
           ),
         },
@@ -304,7 +304,7 @@ import { Label } from '@/shared/ui/label'
           caption: t('Không nhồi nhiều lựa chọn dài'),
           demo: (
             <div className="inline-flex flex-wrap gap-0.5 rounded-full bg-grey-100 p-0.5 text-small">
-              {['A long option 1', 'A long option 2', 'A long option 3', 'A long option 4', 'A long option 5', 'A long option 6'].map((tItem) => (
+              {[1, 2, 3, 4, 5, 6].map((n) => tx(`Một lựa chọn dài ${n}`, `A long option ${n}`)).map((tItem) => (
                 <span key={tItem} className="rounded-full px-3 py-1 text-muted-foreground">
                   {tItem}
                 </span>
@@ -339,7 +339,7 @@ import { Label } from '@/shared/ui/label'
           caption: t('Không dùng tab cho từng bước của một quy trình'),
           demo: (
             <div className="flex gap-1 rounded-lg bg-white px-2 text-ui text-muted-foreground">
-              {['Step 1', 'Step 2', 'Step 3'].map((tItem, i) => (
+              {[tx('Bước 1', 'Step 1'), tx('Bước 2', 'Step 2'), tx('Bước 3', 'Step 3')].map((tItem, i) => (
                 <span key={tItem} className={cn('border-b-2 px-4 py-3', i === 0 ? 'border-primary text-primary' : 'border-transparent')}>
                   {tItem}
                 </span>
@@ -446,9 +446,9 @@ import { Label } from '@/shared/ui/label'
       demo: (
         <StatsPanel className="w-full">
           <StatRow>
-            <StatTile label="Label" value="1,234" hint="Hint" />
-            <StatTile label="Label" value="56%" hint="Hint" />
-            <StatTile label="Label" value="7,890" />
+            <StatTile label={tx('Nhãn', 'Label')} value="1,234" hint={tx('Ghi chú', 'Hint')} />
+            <StatTile label={tx('Nhãn', 'Label')} value="56%" hint={tx('Ghi chú', 'Hint')} />
+            <StatTile label={tx('Nhãn', 'Label')} value="7,890" />
           </StatRow>
         </StatsPanel>
       ),
@@ -456,7 +456,7 @@ import { Label } from '@/shared/ui/label'
 
 <StatsPanel>
   <StatRow>
-    <StatTile label="Label" value="1,234" hint="Hint" />
+    <StatTile label={tx('Nhãn', 'Label')} value="1,234" hint={tx('Ghi chú', 'Hint')} />
   </StatRow>
 </StatsPanel>`,
     },
@@ -514,8 +514,8 @@ import { Label } from '@/shared/ui/label'
       demo: (
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle>Card title</CardTitle>
-            <CardDescription>Description</CardDescription>
+            <CardTitle>{tx('Tiêu đề thẻ', 'Card title')}</CardTitle>
+            <CardDescription>{tx('Mô tả', 'Description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button variant="secondary">Button</Button>
@@ -550,11 +550,11 @@ import { Label } from '@/shared/ui/label'
       demo: (
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="secondary">Open sheet</Button>
+            <Button variant="secondary">{tx('Mở Sheet', 'Open sheet')}</Button>
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
-              <SheetTitle>Sheet title</SheetTitle>
+              <SheetTitle>{tx('Tiêu đề Sheet', 'Sheet title')}</SheetTitle>
             </SheetHeader>
           </SheetContent>
         </Sheet>
@@ -600,8 +600,8 @@ import { Label } from '@/shared/ui/label'
     ),
     example: {
       demo: (
-        <EmptyState title="Title" className="w-full max-w-md">
-          Description
+        <EmptyState title={tx('Tiêu đề', 'Title')} className="w-full max-w-md">
+          {tx('Mô tả', 'Description')}
         </EmptyState>
       ),
       code: `import { EmptyState } from '@/shared/ui/empty-state'
@@ -609,8 +609,8 @@ import { Label } from '@/shared/ui/label'
 <EmptyState illustration="empty" title="…">…</EmptyState>`,
     },
     types: [
-      { name: 'empty', text: tx('Chưa có gì, và đó là bình thường.', 'Nothing yet, and that is normal.'), demo: <EmptyState title="Title" className="w-full" /> },
-      { name: 'no-result', text: tx('Có dữ liệu nhưng bộ lọc không khớp.', 'There is data but the filters match none of it.'), demo: <EmptyState illustration="no-result" title="Title" className="w-full" /> },
+      { name: 'empty', text: tx('Chưa có gì, và đó là bình thường.', 'Nothing yet, and that is normal.'), demo: <EmptyState title={tx('Tiêu đề', 'Title')} className="w-full" /> },
+      { name: 'no-result', text: tx('Có dữ liệu nhưng bộ lọc không khớp.', 'There is data but the filters match none of it.'), demo: <EmptyState illustration="no-result" title={tx('Tiêu đề', 'Title')} className="w-full" /> },
     ],
     content: [
       {

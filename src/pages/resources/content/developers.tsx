@@ -16,7 +16,6 @@ const referenceLinks = (
 )
 
 const overview: ResourceDoc = {
-  title: 'Overview',
   summary: tx(
     'bonbon có một API REST duy nhất cho ứng dụng điện thoại, kênh người bán và trang quản trị. Các trang này tóm tắt những gì cần biết trước khi gọi API; từng endpoint, tham số và mã lỗi nằm trong tài liệu API đầy đủ.',
     'bonbon has one REST API for the phone app, the seller channel and the admin site. These pages summarise what to know before calling it; every endpoint, parameter and error code is in the full API reference.',
@@ -45,8 +44,8 @@ const overview: ResourceDoc = {
           <List
             ordered
             items={[
-              tx('Đọc Authentication để lấy access token.', 'Read Authentication to get an access token.'),
-              tx('Đọc Making requests để biết header và định dạng dữ liệu.', 'Read Making requests for headers and data formats.'),
+              tx('Đọc trang Xác thực để lấy access token.', 'Read Authentication to get an access token.'),
+              tx('Đọc trang Gửi yêu cầu để biết header và định dạng dữ liệu.', 'Read Making requests for headers and data formats.'),
               tx('Thử từng endpoint trong tài liệu tương tác, hoặc sinh client từ OpenAPI.', 'Try each endpoint in the interactive reference, or generate a client from OpenAPI.'),
             ]}
           />
@@ -59,7 +58,6 @@ const overview: ResourceDoc = {
 }
 
 const authentication: ResourceDoc = {
-  title: 'Authentication',
   summary: tx(
     'Mọi lời gọi cần đăng nhập mang một access token. Token ngắn hạn, được làm mới bằng refresh token, và mang theo vai trò cùng quyền của người gọi.',
     'Every call that needs a signed-in user carries an access token. Tokens are short-lived, renewed with a refresh token, and carry the caller\'s role and permissions.',
@@ -103,7 +101,6 @@ const authentication: ResourceDoc = {
 }
 
 const makingRequests: ResourceDoc = {
-  title: 'Making requests',
   summary: tx(
     'Cách gửi yêu cầu tới API: định dạng dữ liệu, các header bonbon đọc, cách gửi lại an toàn và cách phân trang.',
     'How to send requests to the API: data formats, the headers bonbon reads, safe retries and paging.',
@@ -172,7 +169,6 @@ const makingRequests: ResourceDoc = {
 }
 
 const errors: ResourceDoc = {
-  title: 'Errors',
   summary: tx(
     'Mọi lỗi theo chuẩn Problem Details (RFC 9457): một mã ổn định cho chương trình và một câu cho người đọc.',
     'Every error follows Problem Details (RFC 9457): a stable code for programs and a sentence for people.',
@@ -205,7 +201,6 @@ const errors: ResourceDoc = {
 }
 
 const rateLimits: ResourceDoc = {
-  title: 'Rate limits',
   summary: tx(
     'Đăng nhập, đăng ký, gửi liên hệ và tải ảnh có giới hạn theo địa chỉ IP hoặc theo tài khoản để chặn lạm dụng.',
     'Sign-in, sign-up, contact forms and image uploads are limited by IP address or account to stop abuse.',
@@ -231,7 +226,6 @@ const rateLimits: ResourceDoc = {
 }
 
 const realtimeOrders: ResourceDoc = {
-  title: 'Realtime orders',
   summary: tx(
     'Kênh WebSocket đẩy thay đổi trạng thái đơn tới khách và quán ngay khi xảy ra, để không phải hỏi lại liên tục.',
     'A WebSocket channel pushes order status changes to customers and shops as they happen, so nobody has to poll.',
@@ -267,7 +261,6 @@ const realtimeOrders: ResourceDoc = {
 }
 
 const apiReference: ResourceDoc = {
-  title: 'API reference',
   summary: tx(
     'Tài liệu đầy đủ của từng endpoint, sinh từ chính mã nguồn backend nên luôn khớp với API đang chạy.',
     'The full reference of every endpoint, generated from the backend source so it always matches the running API.',

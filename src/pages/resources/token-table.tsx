@@ -1,3 +1,4 @@
+import { tx } from '@/shared/i18n'
 import type { Row } from './tokens'
 
 function Chip({ value }: { value?: string }) {
@@ -16,7 +17,7 @@ export function TokenTable({ rows }: { rows: Row[] }) {
       <table className="w-full min-w-[40rem] text-left text-ui">
         <thead className="bg-beige-50">
           <tr>
-            {['Token', 'Light', 'Dark', 'Tailwind'].map((h) => (
+            {['Token', tx('Sáng', 'Light'), tx('Tối', 'Dark'), 'Tailwind'].map((h) => (
               <th key={h} scope="col" className="px-4 py-3 font-medium text-muted-foreground">
                 {h}
               </th>

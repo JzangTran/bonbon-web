@@ -9,7 +9,7 @@ import { NotFoundPage } from '@/pages/not-found'
 import { Code, List, P } from '../doc'
 import { ResourceFrame } from '../frame'
 import { useScrollToHash } from '../use-scroll-to-hash'
-import { COMPONENTS_PATH, RESOURCES_PATH, componentPath, tabPath } from '../site'
+import { COMPONENTS_PATH, RESOURCES_PATH, componentPath, sectionOf, tabOf, tabPath } from '../site'
 import { Example, Point, Rule, Variant } from './parts'
 import { PLATFORMS } from './platforms'
 import { ComponentPreview } from './preview'
@@ -22,6 +22,7 @@ const PLATFORM_TABS = [
 ] as const
 type Platform = (typeof PLATFORM_TABS)[number]['id']
 
+const SECTION = sectionOf('design', 'components')!.title
 const onPhone = (slug: string) => !!PLATFORMS[slug]?.mobile
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
@@ -40,17 +41,17 @@ export function ComponentsIndexPage() {
   const trail = [
     { name: t('Trang chủ'), path: '/' },
     { name: t('Tài nguyên'), path: RESOURCES_PATH },
-    { name: 'Design', path: tabPath('design') },
-    { name: 'Components', path: COMPONENTS_PATH },
+    { name: tabOf('design').title, path: tabPath('design') },
+    { name: SECTION, path: COMPONENTS_PATH },
   ]
   const sorted = [...COMPONENTS].sort((x, y) => x.name.localeCompare(y.name))
   return (
     <ResourceFrame tab="design" current={COMPONENTS_PATH}>
-      <PageSeo title="Components" description={t('Các thành phần giao diện của bonbon, mỗi thành phần có định nghĩa, cách dùng, nên và không nên.')} path={COMPONENTS_PATH} trail={trail} />
+      <PageSeo title={SECTION} description={t('Các thành phần giao diện của bonbon, mỗi thành phần có định nghĩa, cách dùng, nên và không nên.')} path={COMPONENTS_PATH} trail={trail} />
       <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-4">
           <Breadcrumb trail={trail} />
-          <h1 className="text-[3rem] leading-[3.5rem] font-semibold tracking-[-0.03em]">Components</h1>
+          <h1 className="text-[3rem] leading-[3.5rem] font-semibold tracking-[-0.03em]">{SECTION}</h1>
           <p className="text-lead text-ink">{t('Những mảnh ghép dựng nên mọi màn hình của bonbon. Mỗi trang nói thành phần đó là gì, khi nào dùng và khi nào dùng thứ khác, các loại, cách nó phản hồi, nên và không nên, trợ năng và cách viết chữ cho nó.')}</p>
           <p className="text-body text-ink">
             {tx(
@@ -128,8 +129,8 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
   const trail = [
     { name: t('Trang chủ'), path: '/' },
     { name: t('Tài nguyên'), path: RESOURCES_PATH },
-    { name: 'Design', path: tabPath('design') },
-    { name: 'Components', path: COMPONENTS_PATH },
+    { name: tabOf('design').title, path: tabPath('design') },
+    { name: SECTION, path: COMPONENTS_PATH },
     { name: doc.name, path },
   ]
   const sections =

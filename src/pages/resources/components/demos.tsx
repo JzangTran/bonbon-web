@@ -6,7 +6,7 @@ import { Pagination } from '@/shared/ui/pagination'
 import { Segmented, StatsPanel, Toolbar } from '@/shared/ui/section'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { TimeChart, type ChartKind } from '@/shared/ui/time-chart'
-import { intlLocale } from '@/shared/i18n'
+import { intlLocale, tx } from '@/shared/i18n'
 
 /**
  * Live samples of the components pages that keep a little state of their own. Their text is placeholder text (Button, Label, Tab 1),
@@ -19,9 +19,9 @@ export function SegmentedDemo() {
     <Segmented
       label="Segmented"
       options={[
-        { id: '1', label: 'Option 1' },
-        { id: '2', label: 'Option 2' },
-        { id: '3', label: 'Option 3' },
+        { id: '1', label: tx('Lựa chọn 1', 'Option 1') },
+        { id: '2', label: tx('Lựa chọn 2', 'Option 2') },
+        { id: '3', label: tx('Lựa chọn 3', 'Option 3') },
       ]}
       value={v}
       onChange={setV}
@@ -57,7 +57,7 @@ export function TabsDemo({ withCounts = true, labels }: { withCounts?: boolean; 
           </button>
         ))}
       </div>
-      <p className="p-4 text-ui text-muted-foreground">{tabs.find((x) => x.id === tab)?.label} content</p>
+      <p className="p-4 text-ui text-muted-foreground">{tx('Nội dung của {v0}', '{v0} content').replace('{v0}', tabs.find((x) => x.id === tab)?.label ?? '')}</p>
     </div>
   )
 }
@@ -70,7 +70,7 @@ export function PaginationDemo() {
 const POINTS = ['1', '2', '3', '4', '5', '6', '7'].map((d, i) => ({
   key: d,
   label: d,
-  full: `Period ${d}`,
+  full: tx(`Kỳ ${d}`, `Period ${d}`),
   values: { now: [42, 38, 51, 46, 72, 94, 86][i], before: [39, 41, 45, 47, 65, 88, 90][i] },
 }))
 export function ChartDemo({ kind: initial = 'bar', compare = true }: { kind?: ChartKind; compare?: boolean }) {
@@ -78,12 +78,12 @@ export function ChartDemo({ kind: initial = 'bar', compare = true }: { kind?: Ch
   return (
     <StatsPanel className="w-full bg-white">
       <Toolbar className="justify-between">
-        <h3 className="text-h3 font-medium">Title</h3>
+        <h3 className="text-h3 font-medium">{tx('Tiêu đề', 'Title')}</h3>
         <Segmented
-          label="Chart type"
+          label={tx('Kiểu biểu đồ', 'Chart type')}
           options={[
-            { id: 'bar', label: 'Bar' },
-            { id: 'line', label: 'Line' },
+            { id: 'bar', label: tx('Cột', 'Bar') },
+            { id: 'line', label: tx('Đường', 'Line') },
           ]}
           value={kind}
           onChange={setKind}
@@ -93,7 +93,7 @@ export function ChartDemo({ kind: initial = 'bar', compare = true }: { kind?: Ch
         ariaLabel="ChartPanel"
         kind={kind}
         format={(n) => n.toLocaleString(intlLocale)}
-        series={compare ? [{ key: 'now', label: 'Series 1' }, { key: 'before', label: 'Series 2' }] : [{ key: 'now', label: 'Series 1' }]}
+        series={compare ? [{ key: 'now', label: tx('Chuỗi 1', 'Series 1') }, { key: 'before', label: tx('Chuỗi 2', 'Series 2') }] : [{ key: 'now', label: tx('Chuỗi 1', 'Series 1') }]}
         points={POINTS}
       />
     </StatsPanel>
@@ -101,9 +101,9 @@ export function ChartDemo({ kind: initial = 'bar', compare = true }: { kind?: Ch
 }
 
 const ROWS = [
-  { name: 'Item 1', status: 'Badge', amount: 129000 },
-  { name: 'Item 2', status: 'Badge', amount: 71000 },
-  { name: 'Item 3', status: 'Badge', amount: 231000 },
+  { name: tx('Mục 1', 'Item 1'), status: 'Badge', amount: 129000 },
+  { name: tx('Mục 2', 'Item 2'), status: 'Badge', amount: 71000 },
+  { name: tx('Mục 3', 'Item 3'), status: 'Badge', amount: 231000 },
 ]
 export function SampleTable({ messy = false }: { messy?: boolean }) {
   return (
@@ -111,9 +111,9 @@ export function SampleTable({ messy = false }: { messy?: boolean }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className={messy ? '' : 'text-right'}>Amount</TableHead>
+            <TableHead>{tx('Tên', 'Name')}</TableHead>
+            <TableHead>{tx('Trạng thái', 'Status')}</TableHead>
+            <TableHead className={messy ? '' : 'text-right'}>{tx('Số tiền', 'Amount')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

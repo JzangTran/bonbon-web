@@ -13,7 +13,7 @@ import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { MegaMenu, barItemClass } from './resources-menu'
 import { MENUS, type MenuKey, type ResourceLink } from './resources'
 import { articlesOf } from '@/entities/article'
-import { t } from '@/shared/i18n'
+import { t, tx } from '@/shared/i18n'
 
 
 type NavLink = { label: string; to: string }
@@ -175,7 +175,7 @@ function footerGroups(): { title: string; columns: FooterColumn[] }[] {
     {
       title: t('Sản phẩm'),
       columns: [
-        { label: t('Đặt món'), links: [{ label: t('Tải ứng dụng'), href: siteUrl('public') + '#get-app' }, { label: t('Quán trong khu'), href: siteUrl('public') + '#quan' }] },
+        { label: t('Đặt món'), links: [{ label: t('Tải ứng dụng'), href: siteUrl('public') + '#get-app' }, { label: t('Cách đặt món'), href: siteUrl('public') + '#how-it-works' }] },
         {
           label: t('Bán hàng'),
           links: [
@@ -189,7 +189,7 @@ function footerGroups(): { title: string; columns: FooterColumn[] }[] {
     {
       title: t('Tài nguyên'),
       columns: [
-        { label: t('Đọc thêm'), links: [{ label: 'Blog', to: '/blog' }, { label: 'Design', to: '/resources/design' }, { label: 'Developers', to: '/resources/developers' }] },
+        { label: t('Đọc thêm'), links: [{ label: 'Blog', to: '/blog' }, { label: tx('Thiết kế', 'Design'), to: '/resources/design' }, { label: tx('Nhà phát triển', 'Developers'), to: '/resources/developers' }] },
         {
           label: t('Hỗ trợ'),
           links: [

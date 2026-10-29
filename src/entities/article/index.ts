@@ -1,6 +1,8 @@
 import { BLOG } from './content/blog'
 import { MANAGE } from './content/manage'
+import { EN_ARTICLES } from './content/en'
 import { START } from './content/start'
+import { locale } from '@/shared/i18n'
 import type { Article, Collection } from './types'
 
 export { articlePath, COLLECTION_BASE, COLLECTION_TITLE } from './paths'
@@ -8,7 +10,8 @@ export { LEGACY_SLUGS } from './legacy'
 export { blocksFromText, headingId, headingsOf } from './headings'
 export type { Article, Block, Collection, Heading } from './types'
 
-const ALL: Article[] = [...START, ...MANAGE, ...BLOG]
+// the guides and posts in the chosen language: English swaps the words, everything else stays the Vietnamese article's
+const ALL: Article[] = [...START, ...MANAGE, ...BLOG].map((a) => (locale === 'en' && EN_ARTICLES[a.slug] ? { ...a, ...EN_ARTICLES[a.slug] } : a))
 
 export const articlesOf = (collection: Collection): Article[] => ALL.filter((a) => a.collection === collection)
 

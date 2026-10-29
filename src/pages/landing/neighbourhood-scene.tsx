@@ -40,7 +40,8 @@ export function NeighbourhoodScene() {
     <div className="relative overflow-hidden rounded-xl bg-accent" role="img" aria-label={t('Minh hoạ: quán dưới sảnh toà S1, gấu bonbon mang món sang toà S2 trong vài phút')}>
       <svg aria-hidden="true" viewBox="0 0 1000 480" className="block h-auto w-full">
         {/* sun and clouds */}
-        <circle cx="520" cy="96" r="38" fill={PALE} />
+        <circle cx="470" cy="110" r="48" fill={ORANGE} />
+        <circle cx="470" cy="110" r="66" fill="none" stroke={ORANGE} strokeWidth={3} strokeDasharray="2 14" strokeLinecap="round" />
         <path d="M600 120 h70 a18 18 0 0 0 -18 -26 a26 26 0 0 0 -46 6 a16 16 0 0 0 -6 20 Z" fill="#fff" {...line} strokeWidth={2.5} />
         <path d="M330 80 h56 a14 14 0 0 0 -14 -20 a20 20 0 0 0 -36 4 a12 12 0 0 0 -6 16 Z" fill="#fff" {...line} strokeWidth={2.5} />
 
@@ -73,10 +74,10 @@ export function NeighbourhoodScene() {
 
         <Bush x={500} y={404} r={16} />
         <Bush x={520} y={410} r={11} />
-        <Bush x={690} y={404} r={15} />
 
         {/* the bear on its way */}
-        <g transform="translate(548 236) scale(0.82)">
+        <ellipse cx="600" cy="422" rx="78" ry="7" fill="#fbcdb5" />
+        <g transform="translate(465 205) scale(1.15)">
           <BearFigure kind="deliver" />
         </g>
       </svg>

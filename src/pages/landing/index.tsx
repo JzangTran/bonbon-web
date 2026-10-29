@@ -38,7 +38,6 @@ export function LandingPage() {
       <SiteHeader />
       <main>
         <Hero />
-        <NearbyShops />
         <OrderSteps />
         <TrustRow />
         <SellerBand />
@@ -58,12 +57,6 @@ function Soft({ children }: { children: ReactNode }) {
   return <span className="text-headline-soft">{children}</span>
 }
 
-/** Fixed-size image slot. The photos in public/mock are temporary stand-ins (see CREDITS.md there); swap the files or the `src` later. */
-function ImageSlot({ label, className, src }: { label: string; className?: string; src?: string }) {
-  if (src) return <img src={src} alt={label} loading="lazy" decoding="async" className={cn('bg-image-slot object-cover', className)} />
-  return <div role="img" aria-label={label} className={cn('bg-image-slot', className)} />
-}
-
 /** The black round badge that carries an icon next to a short point. */
 function Badge({ children }: { children: ReactNode }) {
   return (
@@ -75,7 +68,7 @@ function Badge({ children }: { children: ReactNode }) {
 
 function Hero() {
   return (
-    <section id="dat-mon" className="relative scroll-mt-20 overflow-hidden">
+    <section id="order" className="relative scroll-mt-20 overflow-hidden">
       <Wrap className="flex flex-col items-center pt-14 pb-24 text-center lg:pt-20 lg:pb-40">
         <Reveal className="flex flex-col items-center gap-6">
           <a
@@ -98,7 +91,7 @@ function Hero() {
                 <SmartphoneIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
                 {t('Tải app đặt món')}
               </span>
-              <a href="#quan" className={btnPale}>
+              <a href="#how-it-works" className={btnPale}>
                 <CompassIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
                 {t('Xem quán trong khu')}
               </a>
@@ -127,45 +120,6 @@ function Hero() {
           </div>
         </Reveal>
       </Wrap>
-    </section>
-  )
-}
-
-const SHOPS = [
-  { name: t('Cơm tấm Cô Ba'), minutes: 12, meta: t('120 m · phí giao 5.000 ₫'), free: true, image: '/mock/com.jpg' },
-  { name: t('Bún chả Hà Thành'), minutes: 20, meta: t('350 m · phí giao 8.000 ₫'), image: '/mock/bun.jpg' },
-  { name: t('Bánh mì Nắng'), minutes: 15, meta: t('210 m · phí giao 3.000 ₫'), image: '/mock/banh-mi.jpg' },
-  { name: t('Trà chanh Góc Sân'), minutes: 10, meta: t('90 m · phí giao 3.000 ₫'), image: '/mock/tra-chanh.jpg' },
-]
-
-function NearbyShops() {
-  return (
-    <section id="quan" className="relative scroll-mt-4 bg-card py-12 lg:py-20">
-      <Reveal>
-      <Wrap className="flex flex-col gap-9">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="max-w-[620px] text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
-            {t('Quán ngay trong khu, ')}<Soft>{t('giao được tới địa chỉ của bạn')}</Soft>
-          </h2>
-          <span className="text-[0.8125rem] text-muted-foreground">{t('Ví dụ minh hoạ')}</span>
-        </div>
-        <ul className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-          {SHOPS.map((shop) => (
-            <li key={shop.name} className="flex flex-col gap-2.5 rounded-card bg-background p-2.5">
-              <div className="relative h-[170px]">
-                <ImageSlot src={shop.image} label={t('Món của {v0} (ảnh minh hoạ)', { v0: shop.name })} className="size-full rounded-media bg-grey-100" />
-                <span className="absolute top-2.5 left-2.5 rounded-sm bg-ink px-2.5 py-1.5 text-xs font-semibold text-white">{shop.minutes}{t(' phút')}</span>
-                {shop.free ? <span className="absolute top-2.5 right-2.5 rounded-sm bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-700">{t('Miễn phí giao')}</span> : null}
-              </div>
-              <div className="px-1.5 pb-1.5">
-                <b className="text-[1.0625rem]">{shop.name}</b>
-                <div className="text-sm text-muted-foreground tabular-nums">{shop.meta}</div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </Wrap>
-      </Reveal>
     </section>
   )
 }
@@ -199,7 +153,7 @@ const STEPS = [
 
 function OrderSteps() {
   return (
-    <div className="relative">
+    <div id="how-it-works" className="relative scroll-mt-20">
     <Wrap className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8 py-12 lg:py-20">
       <h2 className="col-span-full max-w-[640px] text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
         {t('Một đơn hàng, ')}<Soft>{t('bốn bước rõ ràng')}</Soft>
@@ -255,7 +209,7 @@ const SELLER_STEPS = [
 
 function SellerBand() {
   return (
-    <section id="mo-quan" className="relative scroll-mt-20 bg-grey-50 py-20 lg:py-28">
+    <section id="open-a-shop" className="relative scroll-mt-20 bg-grey-50 py-20 lg:py-28">
       <Reveal>
       <Wrap className="flex flex-wrap items-center gap-14">
         <div className="flex min-w-0 flex-[1_1_30rem] flex-col gap-6">
@@ -278,7 +232,7 @@ function SellerBand() {
             <a href={siteUrl('merchant', '/register')} className={btnSolid}>
               {t('Mở quán trên bonbon')}
             </a>
-            <a href="#hoi-dap" className={btnPale}>
+            <a href="#faq" className={btnPale}>
               {t('Hồ sơ cần những gì?')}
             </a>
           </div>
@@ -319,7 +273,7 @@ const FAQ: { group: string; items: { q: string; a: string }[] }[] = [
 
 function Faq() {
   return (
-    <section id="hoi-dap" className="relative scroll-mt-4 bg-background py-12 lg:py-20">
+    <section id="faq" className="relative scroll-mt-4 bg-background py-12 lg:py-20">
       <Reveal>
       <Wrap className="flex flex-col gap-8">
         <h2 className="text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">

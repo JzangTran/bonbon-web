@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-const SCRIPT_SRC = 'https://accounts.google.com/gsi/client'
+const SCRIPT_SRC = `https://accounts.google.com/gsi/client?hl=${locale}`
 let scriptPromise: Promise<void> | null = null
 
 function loadScript(): Promise<void> {

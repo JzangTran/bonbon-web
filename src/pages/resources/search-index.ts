@@ -25,7 +25,7 @@ function build(): SearchEntry[] {
     for (const section of tab.sections) {
       if (section.key === 'components') {
         for (const c of COMPONENTS) {
-          const trail = `${tab.title} › Components`
+          const trail = `${tab.title} › ${section.title}`
           out.push({ tab: tab.key, title: c.name, trail, path: componentPath(c.slug), heading: false, haystack: fold(`${c.name} ${c.summary}`), titleKey: fold(c.name) })
         }
         continue
@@ -35,9 +35,9 @@ function build(): SearchEntry[] {
         if (!doc) continue
         const path = pagePath(tab.key, section.key, page.slug)
         const trail = `${tab.title} › ${section.title}`
-        out.push({ tab: tab.key, title: doc.title, trail, path, heading: false, haystack: fold(`${doc.title} ${doc.summary} ${section.title}`), titleKey: fold(doc.title) })
+        out.push({ tab: tab.key, title: page.title, trail, path, heading: false, haystack: fold(`${page.title} ${doc.summary} ${section.title}`), titleKey: fold(page.title) })
         for (const s of doc.sections) {
-          out.push({ tab: tab.key, title: s.title, trail: `${trail} › ${doc.title}`, path: `${path}#${s.id}`, heading: true, haystack: fold(`${s.title} ${doc.title}`), titleKey: fold(s.title) })
+          out.push({ tab: tab.key, title: s.title, trail: `${trail} › ${page.title}`, path: `${path}#${s.id}`, heading: true, haystack: fold(`${s.title} ${page.title}`), titleKey: fold(s.title) })
         }
       }
     }
@@ -63,6 +63,6 @@ export function searchResources(query: string, scope: TabKey | 'all', limit = 8)
 /** What the box offers before anything is typed. */
 export function suggestedResources(scope: TabKey | 'all'): SearchEntry[] {
   index ??= build()
-  const wanted = ["What's new", 'Color', 'Button', 'Overview', 'Errors']
-  return index.filter((e) => !e.heading && wanted.includes(e.title) && (scope === 'all' || e.tab === scope))
+  const wanted = ['/design/get-started/whats-new', '/design/design-language/color', '/components/button', '/developers/get-started/overview', '/developers/api/errors']
+  return index.filter((e) => !e.heading && wanted.some((w) => e.path.endsWith(w)) && (scope === 'all' || e.tab === scope))
 }

@@ -9,7 +9,6 @@ import { C, DataTable, H3, List, P, Principle, Rules } from '../doc'
 import type { ResourceDoc } from '../doc'
 
 const principles: ResourceDoc = {
-  title: 'Design principles',
   summary: tx(
     'Năm nguyên tắc mọi màn hình bonbon giữ, từ ứng dụng đặt món tới trang quản trị. Khi hai lựa chọn đều hợp lý, chọn cái giữ đúng các nguyên tắc này.',
     'Five principles every bonbon screen keeps, from the ordering app to the admin site. When two choices both seem reasonable, pick the one that keeps these.',
@@ -97,7 +96,6 @@ const principles: ResourceDoc = {
 }
 
 const logo: ResourceDoc = {
-  title: 'Logo',
   summary: tx(
     'Logo bonbon là con gấu cạnh chữ bonbon. Tải bản đúng cho nền bạn dùng và giữ các quy tắc bên dưới để logo luôn rõ.',
     'The bonbon logo is the bear beside the bonbon wordmark. Download the right version for your background and keep the rules below so it always reads clearly.',
@@ -152,7 +150,6 @@ const logo: ResourceDoc = {
 }
 
 const color: ResourceDoc = {
-  title: 'Color',
   summary: tx(
     'Màu giúp người xem biết đâu là nội dung, đâu là thứ đang chọn và đâu là việc cần để ý. bonbon dùng ít màu: trắng, mực, hai sắc xám, cam thương hiệu và bốn màu trạng thái.',
     'Colour tells people what is content, what is selected and what needs attention. bonbon uses few colours: white, ink, two greys, the brand orange and four state colours.',
@@ -211,7 +208,7 @@ const color: ResourceDoc = {
         <P>
           {tx('Mỗi token có giá trị cho giao diện sáng và tối. Màn hình chỉ gọi tên token (', 'Every token has a light and a dark value. Screens only name the token (')}
           <C>bg-primary</C>, <C>theme.text</C>
-          {tx('), nên tự đổi khi giao diện đổi. Bảng đầy đủ ở Web tokens › Color tokens.', '), so they switch with the theme. The full table is in Web tokens › Color tokens.')}
+          {tx('), nên tự đổi khi giao diện đổi. Bảng đầy đủ ở Token cho web › Token màu.', '), so they switch with the theme. The full table is in Web tokens › Color tokens.')}
         </P>
       ),
     },
@@ -223,7 +220,6 @@ const color: ResourceDoc = {
 }
 
 const elevation: ResourceDoc = {
-  title: 'Elevation',
   summary: tx(
     'Độ nổi cho biết một lớp nằm trên trang hay nằm trong trang. bonbon gần như phẳng: chỉ những lớp nổi lên trên nội dung mới có bóng.',
     'Elevation tells whether a layer sits on top of the page or within it. bonbon is almost flat: only layers floating above the content get a shadow.',
@@ -289,7 +285,6 @@ const elevation: ResourceDoc = {
 }
 
 const iconography: ResourceDoc = {
-  title: 'Iconography',
   summary: tx(
     'Biểu tượng giúp nhận ra hành động và loại nội dung nhanh hơn. bonbon dùng bộ Lucide nét mảnh trên cả web và điện thoại.',
     'Icons help people recognise actions and kinds of content faster. bonbon uses the thin-stroke Lucide set on both web and phone.',
@@ -368,7 +363,6 @@ const iconography: ResourceDoc = {
 }
 
 const layout: ResourceDoc = {
-  title: 'Layout',
   summary: tx(
     'Bố cục quyết định người xem đọc theo thứ tự nào. bonbon dùng lưới 4 px, vài khung trang cố định và khoảng trống rộng giữa các nhóm.',
     'Layout decides the order people read in. bonbon uses a 4 px grid, a few fixed page frames and generous space between groups.',
@@ -432,7 +426,6 @@ const layout: ResourceDoc = {
 }
 
 const material: ResourceDoc = {
-  title: 'Material',
   summary: tx(
     'Chất liệu là các bề mặt nội dung nằm lên. bonbon có bốn bề mặt, mỗi cái một vai trò; không dùng kính mờ hay chuyển màu trừ đầu trang dính.',
     'Materials are the surfaces content sits on. bonbon has four surfaces, each with one role; no frosted glass or gradients except the sticky header.',
@@ -488,7 +481,6 @@ const material: ResourceDoc = {
 }
 
 const motion: ResourceDoc = {
-  title: 'Motion',
   summary: tx(
     'Chuyển động cho biết điều gì vừa thay đổi. bonbon dùng chuyển động ngắn và ít; người xem không phải chờ hiệu ứng xong mới làm tiếp.',
     'Motion shows what just changed. bonbon uses short, few movements; people never wait for an effect to finish before they can continue.',
@@ -527,7 +519,6 @@ const motion: ResourceDoc = {
 }
 
 const shapes: ResourceDoc = {
-  title: 'Shapes',
   summary: tx(
     'Hình dạng cho biết một thứ là gì trước khi đọc chữ: viên thuốc là thứ bấm được, góc 8 px là ô để nhập, góc 12 px là bề mặt chứa nội dung.',
     'Shape tells what something is before reading it: a pill is something to press, 8 px corners are a field to type in, 12 px corners are a surface holding content.',
@@ -584,7 +575,6 @@ const shapes: ResourceDoc = {
 }
 
 const typography: ResourceDoc = {
-  title: 'Typography',
   summary: tx(
     'Chữ mang hầu hết thông tin của bonbon. Một font, Inter, với một thang cỡ chữ cố định, để mọi trang có cùng nhịp đọc.',
     'Type carries most of bonbon\'s information. One font, Inter, with a fixed type scale, so every page has the same reading rhythm.',
