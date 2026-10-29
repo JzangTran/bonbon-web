@@ -10,7 +10,7 @@ import { formatDateTime } from '@/shared/lib/format'
 import { Button } from '@/shared/ui/button'
 import { Captcha } from '@/shared/ui/captcha'
 import { Label } from '@/shared/ui/label'
-import { OrangeRings } from '@/shared/ui/orange-rings'
+import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Textarea } from '@/shared/ui/textarea'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -24,7 +24,7 @@ import { intlLocale, t } from '@/shared/i18n'
 const BASE = helpPath()
 const HOME = [{ name: t('Trang chủ'), path: siteUrl('public', '/') }]
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
-const articlePath = (id: string | undefined) => helpPath(`/bai-viet/${id}`)
+const articlePath = (id: string | undefined) => helpPath(`/articles/${id}`)
 
 /** The help articles grouped by who they are for, as the left menu. */
 function useHelpGroups(): HelpNavGroup[] {
@@ -87,7 +87,7 @@ export function HelpCenterPage() {
         {articles.isPending ? <Skeleton className="h-48 rounded-xl" /> : null}
         {articles.data?.items?.length === 0 ? <p className="text-muted-foreground">{t('Không có bài nào phù hợp. Thử từ khoá khác.')}</p> : null}
         <ul className="grid gap-3 sm:grid-cols-2">{articles.data?.items?.map((a) => <HelpRow key={a.id} article={a} />)}</ul>
-        <Link to={helpPath('/lien-he')} className="group flex items-center justify-between gap-4 rounded-xl bg-accent p-5 outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <Link to={helpPath('/contact')} className="group flex items-center justify-between gap-4 rounded-xl bg-accent p-5 outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <span className="flex flex-col gap-1">
             <span className="text-body font-medium">{t('Chưa thấy câu trả lời?')}</span>
             <span className="text-ui text-muted-foreground">{t('Gửi câu hỏi cho đội hỗ trợ bonbon.')}</span>
@@ -171,7 +171,7 @@ function Required() {
  * write, signed in or not; the answer goes to the email they give.
  */
 export function ContactPage() {
-  const path = helpPath('/lien-he')
+  const path = helpPath('/contact')
   const trail = [...HOME, { name: t('Liên hệ hỗ trợ'), path }]
   const [form, setForm] = useState({ fullName: '', email: '', role: '', topic: '', message: '' })
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
@@ -220,8 +220,8 @@ export function ContactPage() {
         </div>
 
         <div className="relative overflow-hidden rounded-2xl bg-grey-100 p-4 sm:p-6">
-          <OrangeRings className="pointer-events-none absolute -top-1/4 -right-1/3 w-[95%]" />
-          <OrangeRings className="pointer-events-none absolute -bottom-1/3 -left-1/2 w-[90%]" />
+          <OrangeRibbon className="pointer-events-none absolute -top-1/4 -right-1/3 w-[95%]" />
+          <OrangeRibbon className="pointer-events-none absolute -bottom-1/3 -left-1/2 w-[90%]" />
           <div className="bb-auth relative rounded-xl bg-beige-50 p-6 sm:p-8">
             {sent ? (
               <div role="status" className="flex flex-col items-start gap-4 py-6">
@@ -322,7 +322,7 @@ export function ContactPage() {
                 </Button>
                 <p className="text-center text-small text-muted-foreground">
                   {t('Khi gửi, bạn đồng ý với')}{' '}
-                  <Link to={helpPath('/phap-ly/PRIVACY_POLICY')} className="text-link hover:text-ink">
+                  <Link to={helpPath('/legal/PRIVACY_POLICY')} className="text-link hover:text-ink">
                     {t('chính sách quyền riêng tư')}
                   </Link>
                   .{SUPPORT_EMAIL ? (
@@ -350,10 +350,10 @@ const LEGAL: { type: DocumentType; label: string }[] = [
   { type: 'SELLER_TERMS', label: t('Điều khoản người bán') },
   { type: 'PRIVACY_POLICY', label: t('Chính sách quyền riêng tư') },
 ]
-const legalPath = (type: string) => helpPath(`/phap-ly/${type}`)
+const legalPath = (type: string) => helpPath(`/legal/${type}`)
 const LEGAL_GROUPS: HelpNavGroup[] = [{ title: t('Văn bản pháp lý'), items: LEGAL.map((d) => ({ label: d.label, to: legalPath(d.type) })) }]
 
-/** /phap-ly opens the first document. */
+/** /legal opens the first document. */
 export function LegalIndexRedirect() {
   return <Navigate to={legalPath(LEGAL[0].type)} replace />
 }
@@ -372,7 +372,7 @@ export function LegalPage() {
     },
   })
   const path = legalPath(type ?? '')
-  const trail = [...HOME, { name: t('Pháp lý'), path: helpPath('/phap-ly') }, { name: known?.label ?? t('Văn bản'), path }]
+  const trail = [...HOME, { name: t('Pháp lý'), path: helpPath('/legal') }, { name: known?.label ?? t('Văn bản'), path }]
   return (
     <HelpFrame tab="legal" sidebar={<HelpSidebar groups={LEGAL_GROUPS} current={path} />}>
       {known ? <PageSeo title={known.label} description={t('{v0} của bonbon, phiên bản đang có hiệu lực.', { v0: known.label })} path={path} trail={trail} site="help" /> : null}

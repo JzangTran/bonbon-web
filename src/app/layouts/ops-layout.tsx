@@ -17,7 +17,7 @@ const NAV: NavParent[] = [
   },
 ]
 
-const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true }]
+const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/legal/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true }]
 
 export function OpsLayout() {
   return <WorkspaceShell area={t('Vận hành')} homePath={opsPath()} spaces={[{ key: 'ops', label: t('Vận hành'), icon: ActivityIcon, nav: NAV }]} footerLinks={FOOTER} loginPath={opsPath('/login')} />

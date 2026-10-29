@@ -6,9 +6,9 @@ import { Stage } from '../components/parts'
 import { LogoGrid, SwatchGrid } from '../assets'
 import { BRAND_COLORS, CHART_COLORS, STATE_COLORS } from '../colors'
 import { C, DataTable, H3, List, P, Principle, Rules } from '../doc'
-import type { BrandDoc } from '../doc'
+import type { ResourceDoc } from '../doc'
 
-const principles: BrandDoc = {
+const principles: ResourceDoc = {
   title: 'Design principles',
   summary: tx(
     'Năm nguyên tắc mọi màn hình bonbon giữ, từ ứng dụng đặt món tới trang quản trị. Khi hai lựa chọn đều hợp lý, chọn cái giữ đúng các nguyên tắc này.',
@@ -96,7 +96,7 @@ const principles: BrandDoc = {
   ),
 }
 
-const logo: BrandDoc = {
+const logo: ResourceDoc = {
   title: 'Logo',
   summary: tx(
     'Logo bonbon là con gấu cạnh chữ bonbon. Tải bản đúng cho nền bạn dùng và giữ các quy tắc bên dưới để logo luôn rõ.',
@@ -151,7 +151,7 @@ const logo: BrandDoc = {
   ],
 }
 
-const color: BrandDoc = {
+const color: ResourceDoc = {
   title: 'Color',
   summary: tx(
     'Màu giúp người xem biết đâu là nội dung, đâu là thứ đang chọn và đâu là việc cần để ý. bonbon dùng ít màu: trắng, mực, hai sắc xám, cam thương hiệu và bốn màu trạng thái.',
@@ -222,7 +222,7 @@ const color: BrandDoc = {
   ),
 }
 
-const elevation: BrandDoc = {
+const elevation: ResourceDoc = {
   title: 'Elevation',
   summary: tx(
     'Độ nổi cho biết một lớp nằm trên trang hay nằm trong trang. bonbon gần như phẳng: chỉ những lớp nổi lên trên nội dung mới có bóng.',
@@ -288,7 +288,7 @@ const elevation: BrandDoc = {
   takeaway: tx('Khoảng trống và nền tách các khối; bóng chỉ dành cho thứ nổi lên trên.', 'Space and backgrounds separate blocks; shadows are only for what floats above.'),
 }
 
-const iconography: BrandDoc = {
+const iconography: ResourceDoc = {
   title: 'Iconography',
   summary: tx(
     'Biểu tượng giúp nhận ra hành động và loại nội dung nhanh hơn. bonbon dùng bộ Lucide nét mảnh trên cả web và điện thoại.',
@@ -367,7 +367,7 @@ const iconography: BrandDoc = {
   takeaway: tx('Lucide, nét mảnh, cùng màu và cùng cỡ với chữ bên cạnh, và luôn có tên cho trình đọc màn hình.', 'Lucide, thin strokes, the same colour and size as the text beside it, and always named for screen readers.'),
 }
 
-const layout: BrandDoc = {
+const layout: ResourceDoc = {
   title: 'Layout',
   summary: tx(
     'Bố cục quyết định người xem đọc theo thứ tự nào. bonbon dùng lưới 4 px, vài khung trang cố định và khoảng trống rộng giữa các nhóm.',
@@ -431,7 +431,7 @@ const layout: BrandDoc = {
   takeaway: tx('Bước 4 px, ba khung trang, nhóm bằng khoảng trống, và vùng chạm 48 trở lên.', '4 px steps, three page frames, grouping by space, and touch targets of 48 or more.'),
 }
 
-const material: BrandDoc = {
+const material: ResourceDoc = {
   title: 'Material',
   summary: tx(
     'Chất liệu là các bề mặt nội dung nằm lên. bonbon có bốn bề mặt, mỗi cái một vai trò; không dùng kính mờ hay chuyển màu trừ đầu trang dính.',
@@ -487,7 +487,7 @@ const material: BrandDoc = {
   ],
 }
 
-const motion: BrandDoc = {
+const motion: ResourceDoc = {
   title: 'Motion',
   summary: tx(
     'Chuyển động cho biết điều gì vừa thay đổi. bonbon dùng chuyển động ngắn và ít; người xem không phải chờ hiệu ứng xong mới làm tiếp.',
@@ -526,7 +526,7 @@ const motion: BrandDoc = {
   ],
 }
 
-const shapes: BrandDoc = {
+const shapes: ResourceDoc = {
   title: 'Shapes',
   summary: tx(
     'Hình dạng cho biết một thứ là gì trước khi đọc chữ: viên thuốc là thứ bấm được, góc 8 px là ô để nhập, góc 12 px là bề mặt chứa nội dung.',
@@ -583,7 +583,7 @@ const shapes: BrandDoc = {
   ],
 }
 
-const typography: BrandDoc = {
+const typography: ResourceDoc = {
   title: 'Typography',
   summary: tx(
     'Chữ mang hầu hết thông tin của bonbon. Một font, Inter, với một thang cỡ chữ cố định, để mọi trang có cùng nhịp đọc.',
@@ -667,7 +667,7 @@ const typography: BrandDoc = {
   takeaway: tx('Inter, chín cỡ cố định, tầng bằng cỡ và màu, và mọi khối chịu được chữ phóng 150 %.', 'Inter, nine fixed sizes, hierarchy through size and colour, and every block survives 150% text.'),
 }
 
-export const DESIGN_LANGUAGE: Record<string, BrandDoc> = {
+export const DESIGN_LANGUAGE: Record<string, ResourceDoc> = {
   'design-principles': principles,
   logo,
   color,

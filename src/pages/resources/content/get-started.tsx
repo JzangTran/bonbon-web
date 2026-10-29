@@ -1,8 +1,8 @@
 import { tx } from '@/shared/i18n'
 import { C, Code, DataTable, List, P, Principle } from '../doc'
-import type { BrandDoc } from '../doc'
+import type { ResourceDoc } from '../doc'
 
-const whatsNew: BrandDoc = {
+const whatsNew: ResourceDoc = {
   title: "What's new",
   summary: tx(
     'Những thay đổi của hệ thống thiết kế bonbon, mới nhất ở trên. Mỗi mục nói cái gì đổi, vì sao, và bạn cần làm gì với màn hình đang có.',
@@ -73,7 +73,7 @@ const whatsNew: BrandDoc = {
   ],
 }
 
-const design: BrandDoc = {
+const design: ResourceDoc = {
   title: 'Design',
   summary: tx(
     'Bắt đầu thiết kế một màn hình bonbon: đọc ngôn ngữ thiết kế, dựng bằng component có sẵn, rồi kiểm tra trước khi giao cho người làm.',
@@ -147,7 +147,7 @@ const design: BrandDoc = {
   ),
 }
 
-const develop: BrandDoc = {
+const develop: ResourceDoc = {
   title: 'Develop',
   summary: tx(
     'Dùng hệ thống thiết kế trong mã: web (React, Tailwind) và ứng dụng điện thoại (React Native) đọc cùng giá trị token và dùng component cùng tên.',
@@ -231,5 +231,5 @@ const theme = useTheme()
   ),
 }
 
-export const GET_STARTED: Record<string, BrandDoc> = { 'whats-new': whatsNew, design, develop }
+export const GET_STARTED: Record<string, ResourceDoc> = { 'whats-new': whatsNew, design, develop }
 

@@ -4,6 +4,7 @@ import { START } from './content/start'
 import type { Article, Collection } from './types'
 
 export { articlePath, COLLECTION_BASE, COLLECTION_TITLE } from './paths'
+export { LEGACY_SLUGS } from './legacy'
 export { blocksFromText, headingId, headingsOf } from './headings'
 export type { Article, Block, Collection, Heading } from './types'
 

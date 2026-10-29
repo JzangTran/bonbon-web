@@ -52,7 +52,7 @@ export const helpPath = (rest = ''): string => prefixed('help', rest)
  * else the full address on the other host. Use it with an <a href>, because it can leave the app.
  */
 /** A legal document on the help site, from any site: legalUrl('SELLER_TERMS'). */
-export const legalUrl = (type: string): string => siteUrl('help', `/phap-ly/${type}`)
+export const legalUrl = (type: string): string => siteUrl('help', `/legal/${type}`)
 
 export function siteUrl(site: Site, rest = ''): string {
   const path = rest === '' ? '/' : rest

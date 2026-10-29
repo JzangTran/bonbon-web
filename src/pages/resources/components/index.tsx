@@ -7,11 +7,13 @@ import { Breadcrumb } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 import { NotFoundPage } from '@/pages/not-found'
 import { Code, List, P } from '../doc'
-import { BrandFrame } from '../frame'
-import { COMPONENTS_PATH, componentPath, groupPath } from '../site'
+import { ResourceFrame } from '../frame'
+import { useScrollToHash } from '../use-scroll-to-hash'
+import { COMPONENTS_PATH, RESOURCES_PATH, componentPath, tabPath } from '../site'
 import { Example, Point, Rule, Variant } from './parts'
 import { PLATFORMS } from './platforms'
-import { COMPONENT_GROUPS, COMPONENTS, type ComponentDoc } from './registry'
+import { ComponentPreview } from './preview'
+import { COMPONENTS, type ComponentDoc } from './registry'
 
 const PLATFORM_TABS = [
   { id: 'web', label: 'Web' },
@@ -33,17 +35,19 @@ function Section({ id, title, children }: { id: string; title: string; children:
   )
 }
 
-/** /bo-nhan-dien/components: every component as a card, by group, with the platforms it exists on. */
+/** /resources/design/components: every component as a picture of itself, by name, with the platforms it exists on. */
 export function ComponentsIndexPage() {
   const trail = [
     { name: t('Trang chủ'), path: '/' },
-    { name: t('Thương hiệu'), path: groupPath('get-started') },
+    { name: t('Tài nguyên'), path: RESOURCES_PATH },
+    { name: 'Design', path: tabPath('design') },
     { name: 'Components', path: COMPONENTS_PATH },
   ]
+  const sorted = [...COMPONENTS].sort((x, y) => x.name.localeCompare(y.name))
   return (
-    <BrandFrame group="components" current={COMPONENTS_PATH}>
+    <ResourceFrame tab="design" current={COMPONENTS_PATH}>
       <PageSeo title="Components" description={t('Các thành phần giao diện của bonbon, mỗi thành phần có định nghĩa, cách dùng, nên và không nên.')} path={COMPONENTS_PATH} trail={trail} />
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-4">
           <Breadcrumb trail={trail} />
           <h1 className="text-[3rem] leading-[3.5rem] font-semibold tracking-[-0.03em]">Components</h1>
@@ -55,36 +59,33 @@ export function ComponentsIndexPage() {
             )}
           </p>
         </div>
-        {COMPONENT_GROUPS.map((g) => (
-          <section key={g} aria-labelledby={`g-${g}`} className="flex flex-col gap-4">
-            <h2 id={`g-${g}`} className="text-h2 font-semibold">
-              {g}
-            </h2>
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {COMPONENTS.filter((c) => c.group === g).map((c) => (
-                <li key={c.slug}>
-                  <Link
-                    to={componentPath(c.slug)}
-                    className="group flex h-full flex-col gap-2 rounded-xl border border-grey-200 p-5 outline-none transition-colors hover:bg-grey-100 focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <span className="flex items-center justify-between font-mono text-body font-medium text-ink">
-                      {c.name}
-                      <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden="true" />
-                    </span>
-                    <span className="text-ui text-muted-foreground">{c.summary}</span>
-                    <span className="text-caption text-muted-foreground">{onPhone(c.slug) ? 'Web · Android · iOS' : 'Web'}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {sorted.map((c) => (
+            <li key={c.slug}>
+              <Link
+                to={componentPath(c.slug)}
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-grey-200 outline-none transition-colors hover:border-grey-300 focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span className="flex h-40 items-center justify-center bg-grey-100 p-4 transition-colors group-hover:bg-grey-200/70">
+                  <ComponentPreview slug={c.slug} />
+                </span>
+                <span className="flex flex-col gap-1 p-4">
+                  <span className="flex items-center justify-between font-mono text-body font-medium text-ink">
+                    {c.name}
+                    <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden="true" />
+                  </span>
+                  <span className="text-caption text-muted-foreground">{onPhone(c.slug) ? 'Web · Android · iOS' : 'Web'}</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
-    </BrandFrame>
+    </ResourceFrame>
   )
 }
 
-/** /bo-nhan-dien/components/:slug: one component, laid out like the Fluent 2 usage pages, per platform. */
+/** /resources/design/components/:slug: one component, laid out like the Fluent 2 usage pages, per platform. */
 export function ComponentPage() {
   const { slug } = useParams()
   const doc = COMPONENTS.find((c) => c.slug === slug)
@@ -118,6 +119,7 @@ function PlatformTabs({ value, onChange }: { value: Platform; onChange: (p: Plat
 }
 
 function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
+  useScrollToHash()
   const path = componentPath(doc.slug)
   const [params, setParams] = useSearchParams()
   const platform: Platform = params.get('platform') === 'android' ? 'android' : params.get('platform') === 'ios' ? 'ios' : 'web'
@@ -125,6 +127,8 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
   const info = PLATFORMS[doc.slug]
   const trail = [
     { name: t('Trang chủ'), path: '/' },
+    { name: t('Tài nguyên'), path: RESOURCES_PATH },
+    { name: 'Design', path: tabPath('design') },
     { name: 'Components', path: COMPONENTS_PATH },
     { name: doc.name, path },
   ]
@@ -132,11 +136,11 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
     platform === 'web'
       ? [
           { id: 'source', text: tx('Mã nguồn', 'Source') },
-          doc.types?.length ? { id: 'cac-loai', text: t('Các loại') } : null,
-          doc.behavior?.length ? { id: 'hanh-vi', text: t('Hành vi') } : null,
-          doc.layout ? { id: 'bo-cuc', text: t('Bố cục') } : null,
-          doc.accessibility?.length ? { id: 'tro-nang', text: t('Trợ năng') } : null,
-          doc.content?.length ? { id: 'noi-dung', text: t('Nội dung') } : null,
+          doc.types?.length ? { id: 'types', text: t('Các loại') } : null,
+          doc.behavior?.length ? { id: 'behavior', text: t('Hành vi') } : null,
+          doc.layout ? { id: 'layout', text: t('Bố cục') } : null,
+          doc.accessibility?.length ? { id: 'accessibility', text: t('Trợ năng') } : null,
+          doc.content?.length ? { id: 'content', text: t('Nội dung') } : null,
         ].filter((x): x is { id: string; text: string } => !!x)
       : info?.mobile
         ? [
@@ -146,7 +150,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
         : []
 
   return (
-    <BrandFrame group="components" current={path} aside={sections.length ? <Toc headings={sections.map((s) => ({ ...s, level: 2 as const }))} /> : undefined}>
+    <ResourceFrame tab="design" current={path} aside={sections.length ? <Toc headings={sections.map((s) => ({ ...s, level: 2 as const }))} /> : undefined}>
       <PageSeo title={doc.name} description={doc.summary} path={path} trail={trail} />
       <article className="flex flex-col gap-12">
         <div className="flex flex-col gap-6">
@@ -189,7 +193,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
             ) : null}
 
             {doc.types?.length ? (
-              <Section id="cac-loai" title={t('Các loại')}>
+              <Section id="types" title={t('Các loại')}>
                 <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
                   {doc.types.map((v) => (
                     <Variant key={v.name} name={v.name} demo={v.demo}>
@@ -201,7 +205,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
             ) : null}
 
             {doc.behavior?.length ? (
-              <Section id="hanh-vi" title={t('Hành vi')}>
+              <Section id="behavior" title={t('Hành vi')}>
                 {doc.behavior.map((b) => (
                   <div key={b.title} className="flex flex-col gap-4">
                     {b.demo ? <Variant name={b.title} demo={b.demo}>{b.text}</Variant> : <Point title={b.title}>{b.text}</Point>}
@@ -211,7 +215,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
             ) : null}
 
             {doc.layout ? (
-              <Section id="bo-cuc" title={t('Bố cục')}>
+              <Section id="layout" title={t('Bố cục')}>
                 <Point>
                   {doc.layout.text.map((x, i) => (
                     <p key={i}>{x}</p>
@@ -230,7 +234,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
             ) : null}
 
             {doc.accessibility?.length ? (
-              <Section id="tro-nang" title={t('Trợ năng')}>
+              <Section id="accessibility" title={t('Trợ năng')}>
                 {doc.accessibility.map((a) => (
                   <Point key={a.title} title={a.title}>
                     <p>{a.text}</p>
@@ -240,7 +244,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
             ) : null}
 
             {doc.content?.length ? (
-              <Section id="noi-dung" title={t('Nội dung')}>
+              <Section id="content" title={t('Nội dung')}>
                 {doc.content.map((c) => (
                   <Point key={c.title} title={c.title}>
                     <p>{c.text}</p>
@@ -251,6 +255,6 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
           </>
         )}
       </article>
-    </BrandFrame>
+    </ResourceFrame>
   )
 }

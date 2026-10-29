@@ -96,13 +96,13 @@ const SPACES: Space[] = [
 const ACCOUNT: AccountLink[] = [
   { to: merchantPath('/shop'), label: t('Cài đặt') },
   { to: siteUrl('help'), label: t('Trung tâm trợ giúp'), external: true },
-  { to: siteUrl('help', '/lien-he'), label: t('Liên hệ hỗ trợ'), external: true },
+  { to: siteUrl('help', '/contact'), label: t('Liên hệ hỗ trợ'), external: true },
 ]
 
 const FOOTER: FooterLink[] = [
   { to: siteUrl('help'), label: t('Trợ giúp'), external: true },
-  { to: siteUrl('help', '/phap-ly/SELLER_TERMS'), label: t('Điều khoản người bán'), external: true },
-  { to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true },
+  { to: siteUrl('help', '/legal/SELLER_TERMS'), label: t('Điều khoản người bán'), external: true },
+  { to: siteUrl('help', '/legal/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true },
 ]
 
 /** While the shop is not approved or is closing, the menu is a short list of single pages. */

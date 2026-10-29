@@ -3,9 +3,9 @@ import { t, tx } from '@/shared/i18n'
 import { Button } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { C, Code, DataTable, H3, List, P, Principle, Rules, Say } from '../doc'
-import type { BrandDoc } from '../doc'
+import type { ResourceDoc } from '../doc'
 
-const contentDesign: BrandDoc = {
+const contentDesign: ResourceDoc = {
   title: 'Content design',
   summary: tx(
     'Chữ trên giao diện là một phần của thiết kế. Người dùng bonbon đọc lướt khi đang nấu, đang giao hoặc đang đói; chữ ngắn và rõ giúp họ làm xong việc.',
@@ -84,7 +84,7 @@ const contentDesign: BrandDoc = {
   ),
 }
 
-const designTokens: BrandDoc = {
+const designTokens: ResourceDoc = {
   title: 'Design tokens',
   summary: tx(
     'Token là tên đặt cho một quyết định thiết kế: một màu, một bo góc, một khoảng cách. Màn hình gọi tên token thay vì giá trị, để đổi một quyết định là đổi ở một chỗ.',
@@ -155,7 +155,7 @@ const designTokens: BrandDoc = {
   takeaway: tx('Gọi token bằng vai trò, giữ web và điện thoại cùng giá trị, và để tầng bảng màu cho riêng tầng ngữ nghĩa.', 'Call tokens by role, keep web and phone values equal, and leave the palette to the semantic layer.'),
 }
 
-const handoffs: BrandDoc = {
+const handoffs: ResourceDoc = {
   title: 'Handoffs',
   summary: tx(
     'Bàn giao là lúc một thiết kế thành mã. Bàn giao tốt nghĩa là người làm không phải đoán: mọi trạng thái, mọi câu chữ và mọi tên đều đã có.',
@@ -210,7 +210,7 @@ const handoffs: BrandDoc = {
   takeaway: tx('Bàn giao gồm tên, token, mọi trạng thái, chữ hai ngôn ngữ và trợ năng, rồi duyệt trên bản thật.', 'A handoff carries names, tokens, every state, text in two languages and accessibility, then a review on the real build.'),
 }
 
-const onboarding: BrandDoc = {
+const onboarding: ResourceDoc = {
   title: 'Onboarding',
   summary: tx(
     'Làm quen là những phút đầu tiên của một người với bonbon: mở quán, đặt món đầu tiên. Mục tiêu là đưa họ tới việc có ích đầu tiên nhanh nhất, không phải giải thích mọi thứ.',
@@ -271,7 +271,7 @@ const onboarding: BrandDoc = {
   takeaway: tx('Không tham quan; mỗi màn hình tự giải thích, biểu mẫu dài chia bước và lưu nháp, và luôn nói việc tiếp theo.', 'No tours; every screen explains itself, long forms are stepped with drafts, and the next step is always stated.'),
 }
 
-const waitUx: BrandDoc = {
+const waitUx: ResourceDoc = {
   title: 'Wait UX',
   summary: tx(
     'Chờ là lúc hệ thống đang tải, đang gửi hoặc đang chờ người khác (quán nhận đơn, quản trị viên duyệt). Chờ được thiết kế tốt nói rõ điều gì đang xảy ra và giữ người dùng ở nguyên chỗ.',
@@ -362,4 +362,4 @@ const waitUx: BrandDoc = {
   takeaway: tx('Không hiện gì dưới 1 giây, khoá nút khi gửi, Skeleton khi tải, và nói rõ ai đang làm gì khi chờ người khác.', 'Show nothing under 1 second, lock buttons while sending, Skeleton while loading, and say who is doing what when waiting on people.'),
 }
 
-export const UX: Record<string, BrandDoc> = { 'content-design': contentDesign, 'design-tokens': designTokens, handoffs, onboarding, 'wait-ux': waitUx }
+export const UX: Record<string, ResourceDoc> = { 'content-design': contentDesign, 'design-tokens': designTokens, handoffs, onboarding, 'wait-ux': waitUx }

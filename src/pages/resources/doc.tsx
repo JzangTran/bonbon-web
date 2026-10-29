@@ -1,63 +1,17 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/shared/lib/utils'
-import { t } from '@/shared/i18n'
-import { Toc } from '@/widgets/article/article-view'
-import { Breadcrumb } from '@/widgets/article/parts'
-import { PageSeo } from '@/widgets/article/seo'
 import { Rule } from './components/parts'
-import { BrandFrame } from './frame'
-import { BRAND_GROUPS, groupPath, pagePath, type BrandGroupKey } from './site'
 
 /**
  * One page of the guidelines, written the way the Fluent 2 docs are: a definition and why it matters, then sections whose headings say
  * what to do, short paragraphs, lists, comparison tables, do and don't pairs, a one-line rule closing a section, and a key takeaway.
  */
-export type BrandDoc = {
+export type ResourceDoc = {
   title: string
   /** what it is and why it matters, one or two sentences */
   summary: string
   sections: { id: string; title: string; body: ReactNode }[]
   takeaway?: string
-}
-
-export function BrandDocPage({ group, slug, doc }: { group: BrandGroupKey; slug: string; doc: BrandDoc }) {
-  const path = pagePath(group, slug)
-  const groupTitle = BRAND_GROUPS.find((g) => g.key === group)!.title
-  const trail = [
-    { name: t('Trang chủ'), path: '/' },
-    { name: t('Thương hiệu'), path: groupPath('get-started') },
-    { name: groupTitle, path: groupPath(group) },
-    { name: doc.title, path },
-  ]
-  const headings = [...doc.sections.map((s) => ({ id: s.id, text: s.title, level: 2 as const })), ...(doc.takeaway ? [{ id: 'key-takeaway', text: 'Key takeaway', level: 2 as const }] : [])]
-  return (
-    <BrandFrame group={group} current={path} aside={<Toc headings={headings} />}>
-      <PageSeo title={doc.title} description={doc.summary} path={path} trail={trail} />
-      <article className="flex flex-col gap-14">
-        <header className="flex flex-col gap-4">
-          <Breadcrumb trail={trail} />
-          <h1 className="text-[3rem] leading-[3.5rem] font-semibold tracking-[-0.03em]">{doc.title}</h1>
-          <p className="text-lead text-ink">{doc.summary}</p>
-        </header>
-        {doc.sections.map((s) => (
-          <section key={s.id} aria-labelledby={s.id} className="flex scroll-mt-36 flex-col gap-5">
-            <h2 id={s.id} className="text-h2 font-semibold">
-              {s.title}
-            </h2>
-            {s.body}
-          </section>
-        ))}
-        {doc.takeaway ? (
-          <section aria-labelledby="key-takeaway" className="flex scroll-mt-36 flex-col gap-3 rounded-xl bg-beige-50 p-6">
-            <h2 id="key-takeaway" className="text-h3 font-semibold">
-              Key takeaway
-            </h2>
-            <p className="text-body text-ink">{doc.takeaway}</p>
-          </section>
-        ) : null}
-      </article>
-    </BrandFrame>
-  )
 }
 
 // ---------------------------------------------------------------- the blocks a page is written with

@@ -1,10 +1,10 @@
 import { tx } from '@/shared/i18n'
 import { C, P, Principle } from '../doc'
-import type { BrandDoc } from '../doc'
+import type { ResourceDoc } from '../doc'
 import { TokenTable } from '../token-table'
 import { ROWS, TOKEN_GROUPS } from '../tokens'
 
-const colorTokens: BrandDoc = {
+const colorTokens: ResourceDoc = {
   title: 'Color tokens',
   summary: tx(
     'Mọi token màu của web, đọc trực tiếp từ tokens.css nên luôn khớp với mã. Cột Dark để trống nghĩa là giao diện tối dùng lại giá trị sáng.',
@@ -31,4 +31,4 @@ const colorTokens: BrandDoc = {
   ],
 }
 
-export const WEB_TOKENS: Record<string, BrandDoc> = { 'color-tokens': colorTokens }
+export const WEB_TOKENS: Record<string, ResourceDoc> = { 'color-tokens': colorTokens }

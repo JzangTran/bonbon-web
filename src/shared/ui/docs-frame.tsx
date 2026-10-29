@@ -51,7 +51,7 @@ export function DocsRail({ groups, current, label = t('Mục lục') }: { groups
  * A documentation site of bonbon (the help center, the brand), after the GitBook docs: a header with the logo and the site's name,
  * tabs for its parts, the part's menu on the left, the page in the middle and its headings on the right, a beige footer.
  */
-export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, children }: {
+export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, search, tabsEnd, decoration, children }: {
   /** the site's name beside the logo (Trợ giúp, Thương hiệu) */
   label: string
   tabs: DocsTab[]
@@ -60,31 +60,39 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, chil
   aside?: ReactNode
   /** the page uses the whole width, with no reading column */
   wide?: boolean
+  /** a search box in the middle of the header */
+  search?: ReactNode
+  /** at the right end of the tab row (the language) */
+  tabsEnd?: ReactNode
+  /** a decorative picture at the top right: above the headings list when there is one, behind the page otherwise */
+  decoration?: ReactNode
   children: ReactNode
 }) {
   return (
-    <div className="flex min-h-svh flex-col bg-background text-ink">
+    <div className="relative flex min-h-svh flex-col overflow-x-clip bg-background text-ink">
       <a href="#main" className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-ui font-medium text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
         {t('Bỏ qua đến nội dung chính')}
       </a>
       <header className="sticky top-0 z-30 border-b border-grey-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6">
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <a href={siteUrl('public')} aria-label={t('bonbon, trang chủ')} className="flex items-center">
               <Lockup className="h-7" />
             </a>
             <span className="text-ui text-muted-foreground">{label}</span>
           </div>
-          <div className="flex items-center gap-2">
+          {search ? <div className="flex min-w-0 flex-1 justify-center">{search}</div> : null}
+          <div className="flex shrink-0 items-center gap-2">
             <a href={siteUrl('public')} className="hidden rounded-md px-2.5 py-1.5 text-ui text-muted-foreground transition-colors hover:bg-grey-100 hover:text-ink sm:inline">
               {t('Về bonbon')}
             </a>
-            <a href={siteUrl('public') + '#tai-app'} className={buttonClass()}>
+            <a href={siteUrl('public') + '#get-app'} className={buttonClass()}>
               {t('Tải app')}
             </a>
           </div>
         </div>
-        <nav aria-label={label} className="mx-auto flex w-full max-w-[1440px] gap-1 overflow-x-auto px-4 sm:px-6">
+        <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6">
+        <nav aria-label={label} className="flex min-w-0 gap-1 overflow-x-auto">
           {tabs.map((tItem) => {
             const Icon = tItem.icon
             const on = tItem.key === tab
@@ -104,13 +112,29 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, chil
             )
           })}
         </nav>
+        {tabsEnd ? <div className="hidden shrink-0 sm:block">{tabsEnd}</div> : null}
+        </div>
       </header>
-      <div className={cn('mx-auto grid w-full max-w-[1440px] flex-1 gap-10 px-4 py-8 sm:px-6 lg:py-10', sidebar ? 'lg:grid-cols-[16rem_minmax(0,1fr)]' : '', sidebar && aside ? 'xl:grid-cols-[16rem_minmax(0,1fr)_15rem]' : '')}>
+      {decoration && !aside ? (
+        <div aria-hidden="true" className="pointer-events-none absolute top-28 right-0 -z-0 hidden w-[34rem] translate-x-[30%] xl:block">
+          {decoration}
+        </div>
+      ) : null}
+      <div className={cn('relative z-10 mx-auto grid w-full max-w-[1440px] flex-1 gap-10 px-4 py-8 sm:px-6 lg:py-10', sidebar ? 'lg:grid-cols-[16rem_minmax(0,1fr)]' : '', sidebar && aside ? 'xl:grid-cols-[16rem_minmax(0,1fr)_15rem]' : '')}>
         {sidebar ? <aside className="hidden lg:block lg:sticky lg:top-36 lg:max-h-[calc(100svh-10rem)] lg:self-start lg:overflow-y-auto">{sidebar}</aside> : null}
-        <main id="main" className={cn('min-w-0', !wide && 'max-w-3xl')}>
+        <main id="main" className={cn('relative min-w-0', !wide && 'max-w-3xl')}>
           {children}
         </main>
-        {aside ? <aside className="hidden xl:block xl:sticky xl:top-36 xl:self-start">{aside}</aside> : null}
+        {aside ? (
+          <aside className="hidden xl:block xl:sticky xl:top-36 xl:self-start">
+            {decoration ? (
+              <div aria-hidden="true" className="pointer-events-none mb-6 -mr-[clamp(1rem,4vw,6rem)]">
+                {decoration}
+              </div>
+            ) : null}
+            {aside}
+          </aside>
+        ) : null}
       </div>
       <footer className="border-t border-grey-200 bg-beige-50">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4 py-6 text-small text-muted-foreground sm:px-6">

@@ -14,7 +14,7 @@ import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { siteButton, siteButtonSolid } from '@/widgets/site-chrome/buttons'
 import { siteUrl } from '@/shared/config/sites'
-import { OrangeRings } from '@/shared/ui/orange-rings'
+import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Reveal } from '@/shared/ui/reveal'
 import { BearScene, type BearKind } from './bear-scene'
 import { NeighbourhoodScene } from './neighbourhood-scene'
@@ -92,7 +92,7 @@ function Hero() {
           <p className="max-w-2xl text-lg leading-[1.75rem] text-muted-foreground">
             {t('Các quán ăn trong chung cư và khu công nghiệp của bạn, trong một ứng dụng. Quán tự mang món tới, phí giao thấp, theo dõi từng bước.')}
           </p>
-          <div id="tai-app" className="flex scroll-mt-24 flex-col items-center gap-3">
+          <div id="get-app" className="flex scroll-mt-24 flex-col items-center gap-3">
             <div className="flex flex-wrap justify-center gap-3">
               <span aria-disabled="true" className={cn(btnSolid, 'cursor-default')}>
                 <SmartphoneIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
@@ -120,8 +120,8 @@ function Hero() {
         </Reveal>
 
         <Reveal delay={120} className="relative mt-14 w-full max-w-5xl">
-          <OrangeRings className="absolute -bottom-[12%] -left-[30%] w-[58%]" />
-          <OrangeRings className="absolute -right-[28%] -bottom-[18%] w-[54%]" />
+          <OrangeRibbon className="absolute -bottom-[12%] -left-[30%] w-[58%]" />
+          <OrangeRibbon className="absolute -right-[28%] -bottom-[18%] w-[54%] -scale-x-100" />
           <div className="relative rounded-2xl bg-white p-2 text-left shadow-[0_30px_80px_rgb(0_0_0/0.10)]">
             <NeighbourhoodScene />
           </div>
@@ -288,7 +288,7 @@ function SellerBand() {
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
           <div className="relative w-full max-w-[460px] overflow-hidden rounded-2xl bg-primary px-8 pt-10">
-            <OrangeRings className="absolute -top-1/3 -right-1/3 w-[110%] opacity-40" />
+            <OrangeRibbon className="absolute -top-1/3 -right-1/3 w-[110%] opacity-40" />
             <BearScene kind="shop" className="relative" />
           </div>
         </div>

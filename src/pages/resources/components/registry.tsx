@@ -8,7 +8,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { ActionGroup, StatRow, StatsPanel, StatTile } from '@/shared/ui/section'
 import { Textarea } from '@/shared/ui/textarea'
-import { ChartDemo, OrdersTable, PaginationDemo, SegmentedDemo, TabsDemo } from './demos'
+import { ChartDemo, PaginationDemo, SampleTable, SegmentedDemo, TabsDemo } from './demos'
 import { t, tx } from '@/shared/i18n'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { EmptyState } from '@/shared/ui/empty-state'
@@ -17,7 +17,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/sh
 export type ComponentDoc = {
   slug: string
   name: string
-  group: string
   /** one sentence: what it is */
   summary: string
   /** when to use it, and what to use instead */
@@ -43,33 +42,34 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'button',
     name: 'Button',
-    group: t('Thao tác'),
     summary: t('Nút thực hiện một hành động.'),
     when: (
       <>
         {t('Dùng nút cho việc làm thay đổi một thứ gì đó: nhận đơn, lưu, gửi, chuyển sang bước sau. Muốn đưa người xem sang trang khác thì dùng')}{' '}
-        <a href="/bo-nhan-dien/components/text-link" className="text-link">
+        <a href="/resources/design/components/text-link" className="text-link">
           {t('liên kết')}
         </a>
         .
       </>
     ),
     example: {
-      demo: <Button>{t('Nhận đơn')}</Button>,
-      code: t('import { Button } from \'@/shared/ui/button\'\n\n<Button onClick={confirm}>Nhận đơn</Button>'),
+      demo: <Button>Button</Button>,
+      code: `import { Button } from '@/shared/ui/button'
+
+<Button onClick={…}>Button</Button>`,
     },
     types: [
-      { name: t('Nút chính'), text: t('Nền màu mực. Dành cho hành động quan trọng nhất của một vùng; mỗi vùng chỉ có một.'), demo: <Button>{t('Lưu')}</Button> },
-      { name: t('Nút phụ'), text: t('Nền xám nhạt. Cho hành động đi kèm nút chính hoặc nhiều hành động ngang hàng.'), demo: <Button variant="secondary">{t('Lưu nháp')}</Button> },
-      { name: t('Nút chữ'), text: t('Không nền, chữ xám. Cho hành động ít quan trọng hoặc lặp lại nhiều lần trong danh sách, như Huỷ hay Bỏ qua.'), demo: <Button variant="ghost">{t('Bỏ qua')}</Button> },
-      { name: t('Nút nguy hiểm'), text: t('Nền đỏ. Chỉ cho hành động không hoàn tác được, như từ chối đơn hay xoá tài khoản; thường đi qua một bước xác nhận.'), demo: <Button variant="destructive">{t('Từ chối đơn')}</Button> },
+      { name: t('Nút chính'), text: t('Nền màu mực. Dành cho hành động quan trọng nhất của một vùng; mỗi vùng chỉ có một.'), demo: <Button>Button</Button> },
+      { name: t('Nút phụ'), text: t('Nền xám nhạt. Cho hành động đi kèm nút chính hoặc nhiều hành động ngang hàng.'), demo: <Button variant="secondary">Button</Button> },
+      { name: t('Nút chữ'), text: t('Không nền, chữ xám. Cho hành động ít quan trọng hoặc lặp lại nhiều lần trong danh sách, như Huỷ hay Bỏ qua.'), demo: <Button variant="ghost">Button</Button> },
+      { name: t('Nút nguy hiểm'), text: t('Nền đỏ. Chỉ cho hành động không hoàn tác được, như từ chối đơn hay xoá tài khoản; thường đi qua một bước xác nhận.'), demo: <Button variant="destructive">Button</Button> },
       {
         name: t('Nút có biểu tượng'),
         text: t('Biểu tượng đứng trước chữ, giúp nhận ra hành động nhanh hơn. Biểu tượng không thay được chữ, trừ nút rất quen như đóng.'),
         demo: (
           <Button>
             <PlusIcon />
-            {t('Thêm món')}
+            Button
           </Button>
         ),
       },
@@ -80,15 +80,15 @@ export const COMPONENTS: ComponentDoc[] = [
         text: t('Nút chính đậm hơn một chút khi rê chuột. Nút phụ, nút chữ, tab và mục menu có nền xám nhẹ và chữ đen khi rê chuột, dù đang được chọn hay không.'),
         demo: (
           <>
-            <Button variant="secondary">{t('Lưu nháp')}</Button>
-            <Button variant="ghost">{t('Bỏ qua')}</Button>
+            <Button variant="secondary">Button</Button>
+            <Button variant="ghost">Button</Button>
           </>
         ),
       },
       {
         title: t('Đang xử lý và không dùng được'),
         text: t('Khi đang gửi, nút mờ đi, đổi chữ (Đang gửi…) và không bấm được lần nữa, để không tạo hai đơn. Nút không dùng được cũng mờ; hãy nói lý do ngay cạnh nó.'),
-        demo: <Button disabled>{t('Đang gửi…')}</Button>,
+        demo: <Button disabled>Button</Button>,
       },
     ],
     layout: {
@@ -102,8 +102,8 @@ export const COMPONENTS: ComponentDoc[] = [
           caption: t('Làm nổi nút chính'),
           demo: (
             <ActionGroup>
-              <Button>{t('Lưu')}</Button>
-              <Button variant="ghost">{t('Huỷ')}</Button>
+              <Button>Button</Button>
+              <Button variant="ghost">Button</Button>
             </ActionGroup>
           ),
         },
@@ -112,8 +112,8 @@ export const COMPONENTS: ComponentDoc[] = [
           caption: t('Không để hành động phụ nặng ngang nút chính'),
           demo: (
             <ActionGroup>
-              <Button>{t('Lưu')}</Button>
-              <Button>{t('Huỷ')}</Button>
+              <Button>Button</Button>
+              <Button>Button</Button>
             </ActionGroup>
           ),
         },
@@ -133,20 +133,19 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'text-link',
     name: 'TextLink',
-    group: t('Thao tác'),
     summary: t('Liên kết đưa người xem tới một trang hoặc một phần khác.'),
     when: t('Dùng liên kết trong câu chữ để dẫn sang nơi khác. Muốn làm một việc (lưu, gửi, xoá) thì dùng nút.'),
     example: {
       demo: (
         <p className="text-body">
-          {t('Đọc')}{' '}
-          <a href="/bo-nhan-dien/design-language/logo" className="text-link">
-            {t('quy tắc sử dụng logo')}
+          A{' '}
+          <a href="#example" className="text-link">
+            link
           </a>{' '}
-          {t('trước khi in logo lên bao bì.')}
+          in a sentence
         </p>
       ),
-      code: t('<a href="/bo-nhan-dien/design-language/logo" className="text-link">quy tắc sử dụng logo</a>'),
+      code: `<a href="…" className="text-link">link</a>`,
     },
     behavior: [
       { title: t('Rê chuột'), text: t('Gạch chân cam dày lên. Chữ không đổi màu và không xê dịch, vì độ dày tăng xuống phía dưới từ một khoảng cách cố định.') },
@@ -161,7 +160,7 @@ export const COMPONENTS: ComponentDoc[] = [
           demo: (
             <p className="text-ui">
               {t('Xem')}{' '}
-              <a href="/huong-dan" className="text-link">
+              <a href="/guides" className="text-link">
                 {t('hướng dẫn mở quán')}
               </a>
             </p>
@@ -173,7 +172,7 @@ export const COMPONENTS: ComponentDoc[] = [
           demo: (
             <p className="text-ui">
               {t('Hướng dẫn mở quán:')}{' '}
-              <a href="/huong-dan" className="text-link">
+              <a href="/guides" className="text-link">
                 {t('bấm vào đây')}
               </a>
             </p>
@@ -190,17 +189,20 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'input',
     name: 'Input',
-    group: t('Nhập liệu'),
     summary: t('Ô nhập cho người dùng gõ một đoạn chữ hoặc số.'),
     when: t('Dùng cho thông tin người dùng tự gõ: tên quán, số điện thoại, ghi chú. Khi chỉ có vài lựa chọn biết trước, dùng lựa chọn nhanh hoặc ô chọn.'),
     example: {
       demo: (
         <div className={field}>
-          <Label htmlFor="ex-shop">{star}{t(' Tên quán')}</Label>
-          <Input id="ex-shop" placeholder={t('Ví dụ: Mì Cay Cay')} />
+          <Label htmlFor="ex-shop">Label</Label>
+          <Input id="ex-shop" placeholder="Placeholder" />
         </div>
       ),
-      code: t('<Label htmlFor="shop">Tên quán</Label>\n<Input id="shop" maxLength={100} showCount value={name} onChange={...} />'),
+      code: `import { Input } from '@/shared/ui/input'
+import { Label } from '@/shared/ui/label'
+
+<Label htmlFor="name">Label</Label>
+<Input id="name" maxLength={100} showCount value={value} onChange={…} />`,
     },
     types: [
       {
@@ -208,8 +210,8 @@ export const COMPONENTS: ComponentDoc[] = [
         text: t('Cho tên, số, email. Có thể hiện số ký tự đã gõ ở góc phải (showCount).'),
         demo: (
           <div className={field}>
-            <Label htmlFor="ex-1">{t('Tên món')}</Label>
-            <Input id="ex-1" showCount maxLength={60} value="Mì cay hải sản" readOnly />
+            <Label htmlFor="ex-1">Label</Label>
+            <Input id="ex-1" showCount maxLength={60} value="Value" readOnly />
           </div>
         ),
       },
@@ -218,8 +220,8 @@ export const COMPONENTS: ComponentDoc[] = [
         text: t('Cho ghi chú, mô tả, nội dung phản hồi.'),
         demo: (
           <div className={field}>
-            <Label htmlFor="ex-2">{t('Ghi chú cho quán')}</Label>
-            <Textarea id="ex-2" rows={3} placeholder={t('Ví dụ: gọi điện khi tới sảnh')} />
+            <Label htmlFor="ex-2">Label</Label>
+            <Textarea id="ex-2" rows={3} placeholder="Placeholder" />
           </div>
         ),
       },
@@ -229,7 +231,7 @@ export const COMPONENTS: ComponentDoc[] = [
         demo: (
           <div className="relative w-full max-w-sm">
             <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-            <Input className="rounded-full pl-9" placeholder={t('Tìm đơn')} aria-label={t('Tìm đơn')} />
+            <Input className="rounded-full pl-9" placeholder="Search" aria-label="Search" />
           </div>
         ),
       },
@@ -240,10 +242,10 @@ export const COMPONENTS: ComponentDoc[] = [
         text: t('Kiểm tra khi người dùng rời ô hoặc bấm gửi, không phải khi đang gõ. Lỗi hiện ngay dưới ô, bằng một câu nói cách sửa.'),
         demo: (
           <div className={field}>
-            <Label htmlFor="ex-3">{t('Số điện thoại')}</Label>
-            <Input id="ex-3" defaultValue="0912" aria-invalid aria-describedby="ex-3-err" />
+            <Label htmlFor="ex-3">Label</Label>
+            <Input id="ex-3" defaultValue="Value" aria-invalid aria-describedby="ex-3-err" />
             <p id="ex-3-err" className="text-small text-destructive">
-              {t('Số điện thoại cần 10 chữ số, bắt đầu bằng 0.')}
+              Error message
             </p>
           </div>
         ),
@@ -257,8 +259,8 @@ export const COMPONENTS: ComponentDoc[] = [
           caption: t('Đánh dấu ô bắt buộc bằng * đỏ trước nhãn'),
           demo: (
             <div className={field}>
-              <Label htmlFor="ex-4">{star}{t(' Email nhận trả lời')}</Label>
-              <Input id="ex-4" placeholder="ban@email.com" />
+              <Label htmlFor="ex-4">{star} Label</Label>
+              <Input id="ex-4" placeholder="Placeholder" />
             </div>
           ),
         },
@@ -267,7 +269,7 @@ export const COMPONENTS: ComponentDoc[] = [
           caption: t('Không dùng chữ mờ trong ô thay cho nhãn'),
           demo: (
             <div className={field}>
-              <Input placeholder={t('Email nhận trả lời (bắt buộc)')} aria-label="Email" />
+              <Input placeholder="Label (required)" aria-label="Label" />
             </div>
           ),
         },
@@ -285,10 +287,11 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'segmented',
     name: 'Segmented',
-    group: t('Nhập liệu'),
     summary: t('Một viên xám chứa vài lựa chọn loại trừ nhau; chọn một là đổi ngay.'),
     when: t('Dùng cho 2–5 lựa chọn ngắn đổi cách xem dữ liệu: kỳ thống kê, kiểu biểu đồ, cách sắp xếp. Nhiều lựa chọn hơn thì dùng ô chọn; bật/tắt một thứ thì dùng hộp kiểm.'),
-    example: { demo: <SegmentedDemo />, code: t('import { Segmented } from \'@/shared/ui/section\'\n\n<Segmented label="Chia theo" options={[{ id: \'day\', label: \'Ngày\' }, ...]} value={step} onChange={setStep} />') },
+    example: { demo: <SegmentedDemo />, code: `import { Segmented } from '@/shared/ui/section'
+
+<Segmented label="Segmented" options={[{ id: '1', label: 'Option 1' }, …]} value={value} onChange={setValue} />` },
     behavior: [
       { title: t('Chọn'), text: t('Mục đang chọn có nền trắng và chữ cam. Các mục khác chữ xám; rê chuột thì nền xám đậm hơn một chút và chữ đen. Dữ liệu bên dưới đổi ngay, không cần nút Áp dụng.') },
     ],
@@ -301,7 +304,7 @@ export const COMPONENTS: ComponentDoc[] = [
           caption: t('Không nhồi nhiều lựa chọn dài'),
           demo: (
             <div className="inline-flex flex-wrap gap-0.5 rounded-full bg-grey-100 p-0.5 text-small">
-              {[t('Hôm nay'), t('7 ngày gần nhất'), t('30 ngày gần nhất'), t('Quý này'), t('Năm nay'), t('Tuỳ chọn khoảng')].map((tItem) => (
+              {['A long option 1', 'A long option 2', 'A long option 3', 'A long option 4', 'A long option 5', 'A long option 6'].map((tItem) => (
                 <span key={tItem} className="rounded-full px-3 py-1 text-muted-foreground">
                   {tItem}
                 </span>
@@ -317,10 +320,11 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'page-tabs',
     name: 'PageTabs',
-    group: t('Điều hướng'),
     summary: t('Tab chia một trang thành các phần khác nhau, xem từng phần một.'),
     when: t('Dùng khi một trang có hai việc hoặc hai nhóm nội dung khác nhau, như "Sao kê" và "Sổ cái". Hai thứ cần nhìn cùng lúc thì đừng tách tab.'),
-    example: { demo: <TabsDemo />, code: t('<PageTabs label="Đơn hàng" tabs={[{ id: \'new\', label: \'Mới\', count: 2 }, ...]} value={tab} onValueChange={setTab} />') },
+    example: { demo: <TabsDemo />, code: `import { PageTabs } from '@/shared/ui/workspace-slots'
+
+<PageTabs label="PageTabs" tabs={[{ id: '1', label: 'Tab 1', count: 2 }, …]} value={tab} onValueChange={setTab} />` },
     types: [
       { name: t('Tab có số đếm'), text: t('Số đếm cạnh tên cho biết có bao nhiêu việc đang chờ; ẩn khi bằng 0.'), demo: <TabsDemo /> },
       { name: t('Tab thường'), text: t('Khi các phần không có gì để đếm.'), demo: <TabsDemo withCounts={false} /> },
@@ -335,7 +339,7 @@ export const COMPONENTS: ComponentDoc[] = [
           caption: t('Không dùng tab cho từng bước của một quy trình'),
           demo: (
             <div className="flex gap-1 rounded-lg bg-white px-2 text-ui text-muted-foreground">
-              {[t('Bước 1'), t('Bước 2'), t('Bước 3')].map((tItem, i) => (
+              {['Step 1', 'Step 2', 'Step 3'].map((tItem, i) => (
                 <span key={tItem} className={cn('border-b-2 px-4 py-3', i === 0 ? 'border-primary text-primary' : 'border-transparent')}>
                   {tItem}
                 </span>
@@ -351,10 +355,11 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'pagination',
     name: 'Pagination',
-    group: t('Điều hướng'),
     summary: t('Phân trang chia một danh sách dài thành nhiều trang và cho chọn số dòng mỗi trang.'),
     when: t('Dùng dưới mọi bảng và danh sách có thể dài hơn một trang. Danh sách luôn ngắn (dưới 25 dòng) thì không cần.'),
-    example: { demo: <PaginationDemo />, code: t('const paging = usePaging()\n// gửi paging.page, paging.size khi tải dữ liệu\n<Pagination paging={paging} total={data.total} />') },
+    example: { demo: <PaginationDemo />, code: `const paging = usePaging()
+// send paging.page and paging.size when loading data
+<Pagination paging={paging} total={data.total} />` },
     behavior: [
       { title: t('Số dòng mỗi trang'), text: t('Mặc định 25 dòng; người xem chọn được 50 hoặc 75. Đổi số dòng thì quay về trang đầu.') },
       { title: t('Đổi bộ lọc'), text: t('Khi bộ lọc hoặc ô tìm kiếm đổi, danh sách quay về trang đầu (paging.reset()).') },
@@ -365,10 +370,21 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'badge',
     name: 'Badge',
-    group: t('Hiển thị'),
     summary: t('Nhãn nhỏ cho biết một thứ đang ở trạng thái nào.'),
     when: t('Dùng cho trạng thái của đơn, phiếu hỗ trợ, khu vực. Không dùng làm nút hay để trang trí.'),
-    example: { demo: <OrderStatusBadge status="PREPARING" />, code: `<OrderStatusBadge status={order.status} />` },
+    example: {
+      demo: (
+        <>
+          <Badge>Badge</Badge>
+          <Badge variant="secondary">Badge</Badge>
+          <Badge variant="outline">Badge</Badge>
+          <Badge variant="destructive">Badge</Badge>
+        </>
+      ),
+      code: `import { Badge } from '@/shared/ui/badge'
+
+<Badge variant="secondary">Badge</Badge>`,
+    },
     types: [
       {
         name: t('Trạng thái đơn'),
@@ -386,8 +402,8 @@ export const COMPONENTS: ComponentDoc[] = [
         text: t('Cho trạng thái không cần màu: nháp, đã tắt.'),
         demo: (
           <>
-            <Badge variant="secondary">{t('Nháp')}</Badge>
-            <Badge variant="outline">{t('Đã tắt')}</Badge>
+            <Badge variant="secondary">Badge</Badge>
+            <Badge variant="outline">Badge</Badge>
           </>
         ),
       },
@@ -395,8 +411,8 @@ export const COMPONENTS: ComponentDoc[] = [
     layout: {
       text: [t('Đặt cạnh tên của thứ nó mô tả, hoặc trong cột Trạng thái của bảng.')],
       rules: [
-        { ok: true, caption: t('Màu đi kèm chữ'), demo: <OrderStatusBadge status="DELIVERED" /> },
-        { ok: false, caption: t('Không chỉ dùng màu'), demo: <span className="size-3 rounded-full bg-success" aria-label={t('Đã giao')} /> },
+        { ok: true, caption: t('Màu đi kèm chữ'), demo: <Badge>Badge</Badge> },
+        { ok: false, caption: t('Không chỉ dùng màu'), demo: <span className="size-3 rounded-full bg-success" aria-label="Badge" /> },
       ],
     },
     accessibility: [{ title: t('Không dựa vào màu'), text: t('Chữ trong nhãn tự nói trạng thái; màu chỉ giúp nhìn nhanh.') }],
@@ -405,18 +421,17 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'table',
     name: 'Table',
-    group: t('Hiển thị'),
     summary: t('Bảng xếp nhiều dòng cùng loại thành cột để so sánh.'),
     when: t('Dùng khi người xem cần so sánh nhiều thứ theo cùng các thuộc tính: đơn, quán, khoản tiền. Ít cột và mỗi dòng nhiều chữ thì dùng danh sách thẻ.'),
-    example: { demo: <OrdersTable />, code: `<Table>\n  <TableHeader>...</TableHeader>\n  <TableBody>{rows.map(...)}</TableBody>\n</Table>\n<Pagination paging={paging} total={total} />` },
+    example: { demo: <SampleTable />, code: `<Table>\n  <TableHeader>...</TableHeader>\n  <TableBody>{rows.map(...)}</TableBody>\n</Table>\n<Pagination paging={paging} total={total} />` },
     layout: {
       text: [
         t('Bảng không có khung riêng; trang đặt một viền mảnh quanh bảng danh sách, hoặc nền be quanh bảng số liệu. Dòng cách nhau bằng đường kẻ mảnh.'),
         t('Số tiền và số đếm căn phải, chữ số cùng độ rộng; chữ căn trái. Dưới bảng luôn có phân trang.'),
       ],
       rules: [
-        { ok: true, caption: t('Số căn phải, trạng thái dùng nhãn'), demo: <OrdersTable /> },
-        { ok: false, caption: t('Không để số lệch và mã trạng thái thô'), demo: <OrdersTable messy /> },
+        { ok: true, caption: t('Số căn phải, trạng thái dùng nhãn'), demo: <SampleTable /> },
+        { ok: false, caption: t('Không để số lệch và mã trạng thái thô'), demo: <SampleTable messy /> },
       ],
     },
     accessibility: [{ title: t('Tiêu đề cột thật'), text: t('Dùng thead và th để trình đọc màn hình đọc tên cột cùng giá trị.') }],
@@ -425,20 +440,25 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'stat-tile',
     name: 'StatTile',
-    group: t('Hiển thị'),
     summary: t('Ô số liệu đưa một con số quan trọng lên đầu, kèm so sánh.'),
     when: t('Dùng ở đầu trang thống kê cho vài con số chính. Nhiều con số cần so với nhau theo thời gian thì dùng biểu đồ.'),
     example: {
       demo: (
         <StatsPanel className="w-full">
           <StatRow>
-            <StatTile label={t('Đơn đã giao')} value="47" hint={t('+12% so với kỳ trước')} />
-            <StatTile label={t('Doanh thu')} value="6.631.000 ₫" hint={t('+8% so với kỳ trước')} />
-            <StatTile label={t('Giá trị đơn trung bình')} value="141.085 ₫" />
+            <StatTile label="Label" value="1,234" hint="Hint" />
+            <StatTile label="Label" value="56%" hint="Hint" />
+            <StatTile label="Label" value="7,890" />
           </StatRow>
         </StatsPanel>
       ),
-      code: t('<StatsPanel>\n  <StatRow>\n    <StatTile label="Đơn đã giao" value="47" hint="+12% so với kỳ trước" />\n  </StatRow>\n</StatsPanel>'),
+      code: `import { StatRow, StatsPanel, StatTile } from '@/shared/ui/section'
+
+<StatsPanel>
+  <StatRow>
+    <StatTile label="Label" value="1,234" hint="Hint" />
+  </StatRow>
+</StatsPanel>`,
     },
     layout: {
       text: [t('Ô số liệu luôn nằm trên nền be để tách khỏi biểu mẫu và danh sách. Tối đa 3–4 ô một hàng, ngăn bằng đường kẻ mảnh.')],
@@ -452,10 +472,12 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'chart-panel',
     name: 'ChartPanel',
-    group: t('Hiển thị'),
     summary: t('Biểu đồ cho thấy một con số thay đổi thế nào theo thời gian.'),
     when: t('Dùng khi xu hướng quan trọng hơn từng con số: doanh thu theo ngày, tỷ lệ đơn lỗi theo tuần. Chỉ một con số thì dùng ô số liệu.'),
-    example: { demo: <ChartDemo />, code: t('<ChartPanel title="Theo ngày" metrics={METRICS} current={buckets} previous={compare ? before : undefined}\n  label={(b) => shortLabel(b.start)} full={(b) => periodLabel(b.start)} />') },
+    example: { demo: <ChartDemo />, code: `import { ChartPanel } from '@/widgets/chart-panel'
+
+<ChartPanel title="Title" metrics={METRICS} current={buckets} previous={compare ? before : undefined}
+  label={(b) => shortLabel(b.start)} full={(b) => periodLabel(b.start)} />` },
     types: [
       { name: t('Cột'), text: t('So sánh độ lớn giữa các kỳ. Mặc định cho doanh thu, số đơn.'), demo: <ChartDemo kind="bar" compare={false} /> },
       { name: t('Đường'), text: t('Nhấn vào xu hướng, hợp với tỷ lệ hoặc nhiều kỳ.'), demo: <ChartDemo kind="line" compare={false} /> },
@@ -483,7 +505,6 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'card',
     name: 'Card',
-    group: tx('Bề mặt', 'Surfaces'),
     summary: tx('Card gom một mục nội dung và các hành động của nó trên một bề mặt.', 'A Card groups one item of content and its actions on one surface.'),
     when: tx(
       'Dùng cho một mục đứng riêng: một đơn, một cài đặt, một biểu mẫu nhỏ. Nhiều mục cùng loại cần so sánh thì dùng Table; một con số quan trọng thì dùng StatTile.',
@@ -493,11 +514,11 @@ export const COMPONENTS: ComponentDoc[] = [
       demo: (
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle>{t('Ngôn ngữ')}</CardTitle>
-            <CardDescription>{t('Tiếng Việt hoặc tiếng Anh, ghi nhớ trên thiết bị này.')}</CardDescription>
+            <CardTitle>Card title</CardTitle>
+            <CardDescription>Description</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="secondary">English</Button>
+            <Button variant="secondary">Button</Button>
           </CardContent>
         </Card>
       ),
@@ -520,7 +541,6 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'sheet',
     name: 'Sheet',
-    group: tx('Bề mặt', 'Surfaces'),
     summary: tx('Sheet là một lớp trượt ra từ cạnh màn hình để xem hoặc sửa một mục mà không rời trang.', 'A Sheet is a layer that slides in from the edge to view or edit one item without leaving the page.'),
     when: tx(
       'Dùng để mở chi tiết một đơn hay sửa một món ngay trên danh sách. Câu hỏi xác nhận ngắn dùng Dialog; việc nhiều bước dùng một trang riêng.',
@@ -530,11 +550,11 @@ export const COMPONENTS: ComponentDoc[] = [
       demo: (
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="secondary">{t('Sửa món')}</Button>
+            <Button variant="secondary">Open sheet</Button>
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
-              <SheetTitle>{t('Sửa món')}</SheetTitle>
+              <SheetTitle>Sheet title</SheetTitle>
             </SheetHeader>
           </SheetContent>
         </Sheet>
@@ -570,7 +590,6 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'empty-state',
     name: 'EmptyState',
-    group: t('Hiển thị'),
     summary: tx(
       'EmptyState là thứ một danh sách hiện khi chưa có gì: một hình, một câu nói vì sao, và việc nên làm tiếp.',
       'An EmptyState is what a list shows when it has nothing: a picture, a sentence saying why, and what to do next.',
@@ -581,8 +600,8 @@ export const COMPONENTS: ComponentDoc[] = [
     ),
     example: {
       demo: (
-        <EmptyState title={t('Thực đơn đang trống')} className="w-full max-w-md">
-          {t('Bắt đầu bằng một mục như “Cơm”, “Nước uống”, rồi thêm món vào đó.')}
+        <EmptyState title="Title" className="w-full max-w-md">
+          Description
         </EmptyState>
       ),
       code: `import { EmptyState } from '@/shared/ui/empty-state'
@@ -590,8 +609,8 @@ export const COMPONENTS: ComponentDoc[] = [
 <EmptyState illustration="empty" title="…">…</EmptyState>`,
     },
     types: [
-      { name: 'empty', text: tx('Chưa có gì, và đó là bình thường.', 'Nothing yet, and that is normal.'), demo: <EmptyState title={t('Chưa có đơn nào.')} className="w-full" /> },
-      { name: 'no-result', text: tx('Có dữ liệu nhưng bộ lọc không khớp.', 'There is data but the filters match none of it.'), demo: <EmptyState illustration="no-result" title={t('Không có kết quả.')} className="w-full" /> },
+      { name: 'empty', text: tx('Chưa có gì, và đó là bình thường.', 'Nothing yet, and that is normal.'), demo: <EmptyState title="Title" className="w-full" /> },
+      { name: 'no-result', text: tx('Có dữ liệu nhưng bộ lọc không khớp.', 'There is data but the filters match none of it.'), demo: <EmptyState illustration="no-result" title="Title" className="w-full" /> },
     ],
     content: [
       {
@@ -602,4 +621,3 @@ export const COMPONENTS: ComponentDoc[] = [
   },
 ]
 
-export const COMPONENT_GROUPS = [t('Thao tác'), t('Nhập liệu'), t('Điều hướng'), t('Hiển thị'), tx('Bề mặt', 'Surfaces')]

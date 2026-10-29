@@ -6,7 +6,7 @@ export type Block =
   | { t: 'img'; src: string; alt: string; caption?: string }
   | { t: 'note'; text: string }
 
-export type Collection = 'bat-dau' | 'quan-ly-cua-hang' | 'blog'
+export type Collection = 'getting-started' | 'manage-your-shop' | 'blog'
 
 export type Article = {
   collection: Collection

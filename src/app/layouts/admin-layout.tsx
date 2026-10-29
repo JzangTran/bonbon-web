@@ -95,7 +95,7 @@ const SPACES: Space[] = [
   { key: 'settings', label: t('Cài đặt'), icon: SettingsIcon, nav: SETTINGS },
 ]
 
-const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true }]
+const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/legal/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true }]
 
 export function AdminLayout() {
   return <WorkspaceShell area={t('Quản trị')} homePath={consolePath()} spaces={SPACES} footerLinks={FOOTER} loginPath={consolePath('/login')} />

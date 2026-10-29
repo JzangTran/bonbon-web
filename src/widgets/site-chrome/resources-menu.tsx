@@ -4,7 +4,7 @@ import { articlePath, type Article } from '@/entities/article'
 import { siteUrl } from '@/shared/config/sites'
 import { formatDate } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
-import { OrangeRings } from '@/shared/ui/orange-rings'
+import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import type { ResourceColumn, ResourceLink } from './resources'
 import { t } from '@/shared/i18n'
@@ -67,7 +67,7 @@ export function MegaMenu({ label, current, columns, feature, renderLink }: {
           onClick={close}
           className="group relative mt-6 flex items-center justify-between gap-4 overflow-hidden rounded-lg bg-primary px-5 py-4 text-white outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <OrangeRings className="pointer-events-none absolute -top-40 right-24 w-96 opacity-40 mix-blend-screen" />
+          <OrangeRibbon className="pointer-events-none absolute -top-40 right-24 w-96 opacity-40 mix-blend-screen" />
           <span className="relative flex items-center gap-3">
             <StoreIcon className="size-7 shrink-0" strokeWidth={1.5} aria-hidden="true" />
             <span className="flex flex-col">

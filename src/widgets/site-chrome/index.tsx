@@ -7,7 +7,7 @@ import { Lockup } from '@/shared/ui/brand'
 import { siteButton, siteButtonSolid } from './buttons'
 import { SITE, siteUrl, type Site, legalUrl } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
-import { OrangeRings } from '@/shared/ui/orange-rings'
+import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { MegaMenu, barItemClass } from './resources-menu'
@@ -72,7 +72,7 @@ export function SiteHeader() {
     : session?.role === 'ADMIN' ? { href: siteUrl('console'), label: t('Vào trang quản trị') }
     : null
   const current = (item: NavItem) => ('menu' in item ? MENUS[item.menu].here.some((to) => isHere(pathname, to)) : target(item).here(pathname))
-  const firstStep = articlesOf('bat-dau')[0]
+  const firstStep = articlesOf('getting-started')[0]
   const latestPost = [...articlesOf('blog')].sort((a, b) => b.updated.localeCompare(a.updated))[0]
   const feature = (menu: MenuKey) =>
     menu === 'guides' ? (firstStep ? { article: firstStep, kicker: t('Bắt đầu tại đây'), action: t('Đọc bước 1') } : undefined) : latestPost ? { article: latestPost, action: t('Đọc bài') } : undefined
@@ -122,7 +122,7 @@ export function SiteHeader() {
               <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'hidden min-h-9 bg-muted px-4 text-sm text-ink hover:bg-border md:inline-flex')}>
                 {t('Mở quán')}
               </a>
-              <a href={siteUrl('public') + '#tai-app'} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
+              <a href={siteUrl('public') + '#get-app'} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
                 <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
                 {t('Tải app')}
               </a>
@@ -155,7 +155,7 @@ export function SiteHeader() {
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="cursor-pointer text-base font-semibold text-primary">
-                  <a href={area ? area.href : siteUrl('public') + '#tai-app'}>{area ? area.label : t('Tải app')}</a>
+                  <a href={area ? area.href : siteUrl('public') + '#get-app'}>{area ? area.label : t('Tải app')}</a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -175,7 +175,7 @@ function footerGroups(): { title: string; columns: FooterColumn[] }[] {
     {
       title: t('Sản phẩm'),
       columns: [
-        { label: t('Đặt món'), links: [{ label: t('Tải ứng dụng'), href: siteUrl('public') + '#tai-app' }, { label: t('Quán trong khu'), href: siteUrl('public') + '#quan' }] },
+        { label: t('Đặt món'), links: [{ label: t('Tải ứng dụng'), href: siteUrl('public') + '#get-app' }, { label: t('Quán trong khu'), href: siteUrl('public') + '#quan' }] },
         {
           label: t('Bán hàng'),
           links: [
@@ -183,18 +183,18 @@ function footerGroups(): { title: string; columns: FooterColumn[] }[] {
             { label: t('Đăng nhập kênh người bán'), href: siteUrl('merchant', '/login') },
           ],
         },
-        { label: t('Hướng dẫn'), links: [{ label: t('Bắt đầu'), to: '/huong-dan/bat-dau' }, { label: t('Quản lý cửa hàng'), to: '/huong-dan/quan-ly-cua-hang' }] },
+        { label: t('Hướng dẫn'), links: [{ label: t('Bắt đầu'), to: '/guides/getting-started' }, { label: t('Quản lý cửa hàng'), to: '/guides/manage-your-shop' }] },
       ],
     },
     {
       title: t('Tài nguyên'),
       columns: [
-        { label: t('Đọc thêm'), links: [{ label: 'Blog', to: '/blog' }, { label: t('Thương hiệu'), to: '/bo-nhan-dien' }, { label: t('Nhà phát triển'), to: '/nha-phat-trien' }] },
+        { label: t('Đọc thêm'), links: [{ label: 'Blog', to: '/blog' }, { label: 'Design', to: '/resources/design' }, { label: 'Developers', to: '/resources/developers' }] },
         {
           label: t('Hỗ trợ'),
           links: [
             { label: t('Trung tâm trợ giúp'), href: siteUrl('help') },
-            { label: t('Liên hệ hỗ trợ'), href: siteUrl('help', '/lien-he') },
+            { label: t('Liên hệ hỗ trợ'), href: siteUrl('help', '/contact') },
           ],
         },
         {
@@ -255,7 +255,7 @@ export function SiteFooter() {
           </div>
           <div className="flex flex-col gap-4">
             <a href={siteUrl('merchant', '/register')} className="group relative flex flex-col gap-2 overflow-hidden rounded-2xl bg-primary p-6 text-white">
-              <OrangeRings className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
+              <OrangeRibbon className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
               <StoreIcon className="relative size-6" strokeWidth={1.5} aria-hidden="true" />
               <span className="relative mt-2 text-body font-medium">{t('Mở quán trên bonbon')}</span>
               <span className="relative text-small text-white/85">{t('Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.')}</span>
@@ -264,7 +264,7 @@ export function SiteFooter() {
                 <ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </span>
             </a>
-            <PublicLink to="/huong-dan/bat-dau" className="group flex flex-col gap-2 rounded-2xl bg-accent p-6">
+            <PublicLink to="/guides/getting-started" className="group flex flex-col gap-2 rounded-2xl bg-accent p-6">
               <BookOpenIcon className="size-6 text-primary" strokeWidth={1.5} aria-hidden="true" />
               <span className="mt-2 text-body font-medium text-ink">{t('Hướng dẫn mở quán')}</span>
               <span className="text-small text-muted-foreground">{t('Ba bước từ tạo tài khoản tới đơn hàng đầu tiên.')}</span>

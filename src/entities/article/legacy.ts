@@ -1,0 +1,22 @@
+/** The Vietnamese slugs guides and posts had before addresses went English, mapped to the new ones (old links still work). */
+export const LEGACY_SLUGS: Record<string, string> = {
+  'giao-hang-noi-khu-la-gi': 'what-is-in-area-delivery',
+  'chup-anh-mon-an-bang-dien-thoai': 'food-photos-with-your-phone',
+  'dat-gia-va-phi-giao-hop-ly': 'pricing-and-delivery-fees',
+  'giu-khach-quen-bang-phan-hoi-tot': 'keep-regulars-with-good-replies',
+  'thiet-lap-ho-so': 'set-up-your-profile',
+  'gio-mo-cua-va-giao-hang': 'opening-hours-and-delivery',
+  'them-mon-an': 'add-dishes',
+  'nhom-lua-chon': 'option-groups',
+  'bat-tat-nhan-don': 'pause-and-resume-orders',
+  'nhan-va-xu-ly-don': 'accept-and-handle-orders',
+  'tra-loi-danh-gia': 'reply-to-reviews',
+  'xem-doanh-thu': 'view-revenue',
+  'thu-nhap-va-sao-ke': 'earnings-and-statements',
+  'khieu-nai-va-tra-hang': 'complaints-and-returns',
+  'dong-cua-hang': 'close-your-shop',
+  'chu-chu-lon-hon': 'larger-text',
+  'tao-tai-khoan': 'create-an-account',
+  'mo-cua-hang': 'open-your-shop',
+  'cho-duyet-nhan-don': 'get-approved-and-take-orders',
+}

@@ -10,15 +10,16 @@ const PUBLIC_PATHS = [
   '/legal/CUSTOMER_TERMS',
   '/legal/SELLER_TERMS',
   '/legal/PRIVACY_POLICY',
-  '/huong-dan/quan-ly-cua-hang',
+  '/guides/manage-your-shop',
   '/blog',
-  '/bo-nhan-dien',
+  '/resources/design/get-started/whats-new',
+  '/resources/developers/get-started/overview',
   ...articlePaths(),
 ]
 
 /** The address of every guide and blog post, read from the slugs written in src/entities/article/content. */
 function articlePaths(): string[] {
-  const bases: Record<string, string> = { start: '/huong-dan/bat-dau', manage: '/huong-dan/quan-ly-cua-hang', blog: '/blog' }
+  const bases: Record<string, string> = { start: '/guides/getting-started', manage: '/guides/manage-your-shop', blog: '/blog' }
   return Object.entries(bases).flatMap(([file, base]) => {
     const text = readFileSync(new URL('./src/entities/article/content/' + file + '.ts', import.meta.url), 'utf8')
     return [...text.matchAll(/^\s*slug: '([a-z0-9-]+)'/gm)].map((m) => base + '/' + m[1])
@@ -86,7 +87,7 @@ export default defineConfig(({ mode }) => ({
     // Same-origin API in development (as behind Caddy in production): no CORS involved.
     proxy: {
       '/api': 'http://localhost:8080',
-      // The API reference and the OpenAPI document, linked from /nha-phat-trien.
+      // The API reference and the OpenAPI document, linked from /resources/developers.
       '/scalar': 'http://localhost:8080',
       '/v3/api-docs': 'http://localhost:8080',
       // Live order updates (WebSocket) go through the same origin too.

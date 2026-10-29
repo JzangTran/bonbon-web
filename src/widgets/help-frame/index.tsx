@@ -9,8 +9,8 @@ export type HelpNavGroup = DocsNavGroup
 
 const TABS: DocsTab[] = [
   { key: 'help', label: t('Trung tâm trợ giúp'), icon: BookOpenIcon, to: helpPath() },
-  { key: 'contact', label: t('Liên hệ hỗ trợ'), icon: LifeBuoyIcon, to: helpPath('/lien-he') },
-  { key: 'legal', label: t('Pháp lý'), icon: ScaleIcon, to: helpPath('/phap-ly') },
+  { key: 'contact', label: t('Liên hệ hỗ trợ'), icon: LifeBuoyIcon, to: helpPath('/contact') },
+  { key: 'legal', label: t('Pháp lý'), icon: ScaleIcon, to: helpPath('/legal') },
 ]
 
 export function HelpSidebar({ groups, current }: { groups: HelpNavGroup[]; current?: string }) {

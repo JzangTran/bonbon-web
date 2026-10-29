@@ -2,7 +2,7 @@ import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { siteUrl } from '@/shared/config/sites'
 import { Lockup, Mark } from '@/shared/ui/brand'
-import { OrangeRings } from '@/shared/ui/orange-rings'
+import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
@@ -12,10 +12,10 @@ const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
 /** Pictures of the seller site, stacked and tilted on the orange rings: the right half of the sign-in pages. */
 function AuthArt() {
-  const shots = ['/guides/tong-quan.jpg', '/guides/thuc-don.jpg', '/guides/don-hang.jpg']
+  const shots = ['/images/guides/tong-quan.jpg', '/images/guides/thuc-don.jpg', '/images/guides/don-hang.jpg']
   return (
     <div aria-hidden="true" className="relative hidden overflow-hidden lg:block">
-      <OrangeRings className="absolute top-1/2 -left-[22%] h-[130%] w-auto -translate-y-1/2" />
+      <OrangeRibbon className="absolute top-1/2 -left-[35%] w-[150%] -translate-y-1/2 rotate-[-12deg]" />
       <div className="absolute top-1/2 left-[18%] w-[78%] -translate-y-1/2 [perspective:1600px]">
         <div className="flex flex-col gap-6 [transform:rotateX(28deg)_rotateZ(-18deg)] [transform-style:preserve-3d]">
           {shots.map((src, i) => (

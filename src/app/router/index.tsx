@@ -24,26 +24,31 @@ const router = createBrowserRouter([
   ] : []),
   // Guides, blog and brand kit: pages of the public site only.
   ...(showLanding ? [
-    { path: '/huong-dan', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
-    { path: '/huong-dan/bat-dau', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
-    { path: '/huong-dan/bat-dau/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="bat-dau" /> })) },
-    { path: '/huong-dan/quan-ly-cua-hang', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.ManageHubPage })) },
-    { path: '/huong-dan/quan-ly-cua-hang/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="quan-ly-cua-hang" /> })) },
+    { path: '/guides', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
+    { path: '/guides/getting-started', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.GuideStartRedirect })) },
+    { path: '/guides/getting-started/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="getting-started" /> })) },
+    { path: '/guides/manage-your-shop', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.ManageHubPage })) },
+    { path: '/guides/manage-your-shop/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="manage-your-shop" /> })) },
     { path: '/blog', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: m.BlogHubPage })) },
-    { path: '/nha-phat-trien', lazy: () => import('@/pages/content/developers').then((m) => ({ Component: m.DevelopersPage })) },
     { path: '/blog/:slug', lazy: () => import('@/pages/content/pages').then((m) => ({ Component: () => <m.ArticlePage collection="blog" /> })) },
-    { path: '/bo-nhan-dien', lazy: () => import('@/pages/brand-kit').then((m) => ({ Component: m.BrandHomePage })) },
-    { path: '/bo-nhan-dien/:group/:page', lazy: () => import('@/pages/brand-kit').then((m) => ({ Component: m.BrandPage })) },
-    { path: '/bo-nhan-dien/components', lazy: () => import('@/pages/brand-kit/components').then((m) => ({ Component: m.ComponentsIndexPage })) },
-    { path: '/bo-nhan-dien/components/:slug', lazy: () => import('@/pages/brand-kit/components').then((m) => ({ Component: m.ComponentPage })) },
+    // Resources: the design system and the developer docs, as two tabs of one site.
+    { path: '/resources', lazy: () => import('@/pages/resources').then((m) => ({ Component: m.ResourceIndexRedirect })) },
+    { path: '/resources/:tab', lazy: () => import('@/pages/resources').then((m) => ({ Component: m.ResourceIndexRedirect })) },
+    { path: '/resources/design/components', lazy: () => import('@/pages/resources/components').then((m) => ({ Component: m.ComponentsIndexPage })) },
+    { path: '/resources/design/components/:slug', lazy: () => import('@/pages/resources/components').then((m) => ({ Component: m.ComponentPage })) },
+    { path: '/resources/:tab/:section', lazy: () => import('@/pages/resources').then((m) => ({ Component: m.ResourceIndexRedirect })) },
+    { path: '/resources/:tab/:section/:page', lazy: () => import('@/pages/resources').then((m) => ({ Component: m.ResourcePage })) },
+    // the old Vietnamese addresses
+    ...['/huong-dan/*', '/nha-phat-trien', '/bo-nhan-dien/*'].map((path) => ({ path, lazy: () => import('@/pages/content/redirects').then((m) => ({ Component: () => <m.LegacyRedirect /> })) })),
   ] : []),
   // The help center: its own host, /help in development.
   ...(showHelp ? [
     { path: helpPath(), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpCenterPage })) },
-    { path: helpPath('/bai-viet/:id'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpArticlePage })) },
-    { path: helpPath('/lien-he'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.ContactPage })) },
-    { path: helpPath('/phap-ly'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.LegalIndexRedirect })) },
-    { path: helpPath('/phap-ly/:type'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.LegalPage })) },
+    { path: helpPath('/articles/:id'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.HelpArticlePage })) },
+    { path: helpPath('/contact'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.ContactPage })) },
+    { path: helpPath('/legal'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.LegalIndexRedirect })) },
+    { path: helpPath('/legal/:type'), lazy: () => import('@/pages/content/help-center').then((m) => ({ Component: m.LegalPage })) },
+    ...['/bai-viet/:id', '/lien-he', '/phap-ly/*'].map((p) => ({ path: helpPath(p), lazy: () => import('@/pages/content/redirects').then((m) => ({ Component: () => <m.LegacyRedirect prefix={helpPath()} /> })) })),
   ] : []),
   ...(showMerchant ? [
   {
@@ -93,11 +98,13 @@ const router = createBrowserRouter([
     path: '/captcha-bridge',
     lazy: () => import('@/pages/captcha-bridge').then((m) => ({ Component: m.CaptchaBridgePage })),
   },
+  // Old address of the legal documents (the phone app still links it): they live on the help site now, where this path is the page itself.
+  ...(SITE !== 'help' ? [
   {
-    // Old address of the legal documents: they live on the help site now.
     path: '/legal/:type',
     lazy: () => import('@/pages/content/redirects').then((m) => ({ Component: m.LegacyLegalRedirect })),
   },
+  ] : []),
   ...(showMerchant ? [
   {
     // Tasks that need the person's whole attention: a page of their own, no workspace around them.

@@ -5,6 +5,7 @@ import {
   COLLECTION_BASE,
   COLLECTION_TITLE,
   findArticle,
+  LEGACY_SLUGS,
   resolveArticles,
   type Article,
   type Collection,
@@ -24,26 +25,28 @@ const HOME: Trail = [{ name: t('Trang chủ'), path: '/' }]
 function trailFor(collection: Collection, current?: string): Trail {
   const own = { name: COLLECTION_TITLE[collection], path: COLLECTION_BASE[collection] }
   const base: Trail =
-    collection === 'blog' ? [...HOME, own] : [...HOME, { name: t('Hướng dẫn'), path: COLLECTION_BASE['bat-dau'] }, own]
+    collection === 'blog' ? [...HOME, own] : [...HOME, { name: t('Hướng dẫn'), path: COLLECTION_BASE['getting-started'] }, own]
   return current ? [...base, { name: current, path: '' }] : base
 }
 
 /** The guides menu: every step of Bắt đầu, then every guide of Quản lý cửa hàng. */
-const GUIDE_GROUPS = (['bat-dau', 'quan-ly-cua-hang'] as const).map((c) => ({
+const GUIDE_GROUPS = (['getting-started', 'manage-your-shop'] as const).map((c) => ({
   title: COLLECTION_TITLE[c],
   items: articlesOf(c).map((a) => ({ label: a.title.replace(/^Bước \d+: /, ''), to: articlePath(c, a.slug) })),
 }))
 
-/** /huong-dan goes to the first step of "Bắt đầu"; so does /huong-dan/bat-dau. */
+/** /huong-dan goes to the first step of "Bắt đầu"; so does /guides/bat-dau. */
 export function GuideStartRedirect() {
-  const first = articlesOf('bat-dau')[0]
-  return <Navigate to={articlePath('bat-dau', first.slug)} replace />
+  const first = articlesOf('getting-started')[0]
+  return <Navigate to={articlePath('getting-started', first.slug)} replace />
 }
 
 /** One article of a collection, in the shared page format. */
 export function ArticlePage({ collection }: { collection: Collection }) {
   const { slug } = useParams()
   const article = findArticle(collection, slug)
+  // an old Vietnamese slug: send it to the English one
+  if (!article && slug && LEGACY_SLUGS[slug]) return <Navigate to={articlePath(collection, LEGACY_SLUGS[slug])} replace />
   if (!article) return <NotFoundPage />
   const path = articlePath(collection, article.slug)
   const trail = trailFor(collection, article.title)
@@ -147,7 +150,7 @@ export function HubPage({ collection, title, intro }: { collection: Collection; 
 
 export const ManageHubPage = () => (
   <HubPage
-    collection="quan-ly-cua-hang"
+    collection="manage-your-shop"
     title={t('Quản lý cửa hàng')}
     intro={t('Mỗi hướng dẫn là một việc bạn làm hằng ngày trên trang người bán, gói gọn trong vài thao tác.')}
   />

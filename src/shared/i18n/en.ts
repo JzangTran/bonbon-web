@@ -196,7 +196,6 @@ export const EN: Record<string, string> = {
   "<Label htmlFor=\"shop\">Tên quán</Label>\n<Input id=\"shop\" maxLength={100} showCount value={name} onChange={...} />": "<Label htmlFor=\"shop\">Shop name</Label>\n<Input id=\"shop\" maxLength={100} showCount value={name} onChange={...} />",
   "<PageTabs label=\"Đơn hàng\" tabs={[{ id: 'new', label: 'Mới', count: 2 }, ...]} value={tab} onValueChange={setTab} />": "<PageTabs label=\"Orders\" tabs={[{ id: 'new', label: 'New', count: 2 }, ...]} value={tab} onValueChange={setTab} />",
   "<StatsPanel>\n  <StatRow>\n    <StatTile label=\"Đơn đã giao\" value=\"47\" hint=\"+12% so với kỳ trước\" />\n  </StatRow>\n</StatsPanel>": "<StatsPanel>\n  <StatRow>\n    <StatTile label=\"Orders delivered\" value=\"47\" hint=\"+12% vs previous period\" />\n  </StatRow>\n</StatsPanel>",
-  "<a href=\"/bo-nhan-dien/design-language/logo\" className=\"text-link\">quy tắc sử dụng logo</a>": "<a href=\"/bo-nhan-dien/design-language/logo\" className=\"text-link\">logo usage rules</a>",
   "API REST của bonbon": "bonbon REST API",
   "An toàn": "Safe",
   "Ba bước từ tạo tài khoản tới đơn hàng đầu tiên.": "Three steps from creating an account to your first order.",
