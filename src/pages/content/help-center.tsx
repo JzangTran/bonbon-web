@@ -220,8 +220,8 @@ export function ContactPage() {
         </div>
 
         <div className="relative overflow-hidden rounded-2xl bg-grey-100 p-4 sm:p-6">
-          <OrangeRibbon variant="knot" className="pointer-events-none absolute -top-1/4 -right-1/3 w-[95%]" />
-          <OrangeRibbon variant="wave" className="pointer-events-none absolute -bottom-1/4 -left-1/2 w-[90%]" />
+          <OrangeRibbon variant="sweep" className="pointer-events-none absolute -top-1/4 -right-1/4 w-[70%]" />
+          <OrangeRibbon variant="curl" className="pointer-events-none absolute -bottom-1/4 -left-1/4 w-[65%]" />
           <div className="bb-auth relative rounded-xl bg-beige-50 p-6 sm:p-8">
             {sent ? (
               <div role="status" className="flex flex-col items-start gap-4 py-6">

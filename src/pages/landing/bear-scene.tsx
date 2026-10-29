@@ -1,5 +1,6 @@
 import { cn } from '@/shared/lib/utils'
-import { PolarBear, type BearFace, type BearPose } from './polar-bear'
+import { Mascot } from './mascot'
+import type { BearFace, BearPose } from './polar-bear'
 
 export type BearKind = 'order' | 'cook' | 'deliver' | 'done' | 'shop'
 
@@ -27,7 +28,7 @@ export function BearScene({ kind, className }: { kind: BearKind; className?: str
           <path key={i} d={`M${x} ${y - 7} L${x + 2} ${y - 2} L${x + 7} ${y} L${x + 2} ${y + 2} L${x} ${y + 7} L${x - 2} ${y + 2} L${x - 7} ${y} L${x - 2} ${y - 2} Z`} fill={i % 2 ? '#fe551b' : '#ffb59a'} />
         ))}
       </svg>
-      <PolarBear pose={s.pose} face={s.face} className="relative mx-auto w-[78%]" />
+      <Mascot pose={s.pose} face={s.face} className="relative mx-auto w-[78%]" />
     </div>
   )
 }

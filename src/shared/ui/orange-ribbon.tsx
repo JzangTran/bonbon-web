@@ -1,89 +1,99 @@
 import { useId } from 'react'
 import { cn } from '@/shared/lib/utils'
 
-export type RibbonShape = 'knot' | 'wave' | 'loop' | 'cross' | 'arc'
+export type RibbonShape = 'sweep' | 'hook' | 'curl' | 'fold' | 'wave'
 
 /**
- * A thick orange ribbon with grooves along it, after the 3D ribbons of gitbook.com (drawn here, not their image), in several shapes so
- * that each corner of a page gets a different one: a loose knot, a wave, a single loop, two ribbons crossing, a wide arc.
- * The grooves are the same path stroked several times, each narrower and lighter, so they stay parallel round every bend. Each shape is
- * pieces drawn back first, front last, so the ribbon passes over and under itself. Decorative; position it with `className`.
+ * A wide orange ribbon made of round tubes lying side by side, after the corner ribbons of gitbook.com (drawn here, not their image).
+ * Corner shapes (sweep, hook, curl, fold) run in from outside their box, so placed at a page corner they bleed off the edges the way
+ * GitBook's does; `wave` is a long one for the middle of a page. Each corner of a page should get a different shape.
+ *
+ * Every tube is the same path stroked several times, from its outer edge to its middle, dark to light, so each tube reads as round and
+ * all of them stay parallel round every bend. Shapes with several pieces are drawn back first, front last, so the ribbon passes over
+ * and under itself. Decorative; position and size it with `className`.
  */
-export function OrangeRibbon({ className, variant = 'knot' }: { className?: string; variant?: RibbonShape }) {
+export function OrangeRibbon({ className, variant = 'sweep', fade = false }: { className?: string; variant?: RibbonShape; fade?: boolean }) {
   const id = useId().replace(/:/g, '')
   const shape = SHAPES[variant]
   return (
     <svg aria-hidden="true" viewBox={shape.box} fill="none" className={cn('pointer-events-none', className)}>
       <defs>
-        <linearGradient id={`${id}-light`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ff9a66" />
-          <stop offset="0.5" stopColor="#fe6a2e" />
-          <stop offset="1" stopColor="#f2400a" />
-        </linearGradient>
-        <filter id={`${id}-shade`} x="-10%" y="-10%" width="120%" height="140%">
-          <feDropShadow dx="0" dy="14" stdDeviation="14" floodColor="#b83200" floodOpacity="0.22" />
+        <filter id={`${id}-shade`} x="-20%" y="-20%" width="140%" height="150%">
+          <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#a52a00" floodOpacity="0.25" />
         </filter>
-        {/* the ends dissolve before the edge of the drawing, so a ribbon never shows a cut end wherever it is placed */}
-        <radialGradient id={`${id}-fade`} cx="50%" cy="50%" r="50%">
-          <stop offset="0.62" stopColor="#fff" />
-          <stop offset="1" stopColor="#000" />
-        </radialGradient>
-        <mask id={`${id}-mask`} maskContentUnits="objectBoundingBox">
-          <rect width="1" height="1" fill={`url(#${id}-fade)`} />
-        </mask>
+        {fade ? (
+          <>
+            <radialGradient id={`${id}-fade`} cx="50%" cy="50%" r="50%">
+              <stop offset="0.62" stopColor="#fff" />
+              <stop offset="1" stopColor="#000" />
+            </radialGradient>
+            <mask id={`${id}-mask`} maskContentUnits="objectBoundingBox">
+              <rect width="1" height="1" fill={`url(#${id}-fade)`} />
+            </mask>
+          </>
+        ) : null}
       </defs>
-      <g mask={`url(#${id}-mask)`}>
-      {shape.pieces.map((d, i) => (
-        <g key={i} filter={`url(#${id}-shade)`} strokeLinecap={shape.round ? 'round' : 'butt'} strokeLinejoin="round">
-          {GROOVES.map(([w, color], j) => (
-            <path key={j} d={d} stroke={color === 'light' ? `url(#${id}-light)` : color} strokeWidth={w} />
-          ))}
-        </g>
-      ))}
+      <g mask={fade ? `url(#${id}-mask)` : undefined}>
+        {shape.pieces.map((d, i) => (
+          <g key={i} filter={`url(#${id}-shade)`} strokeLinecap="round" strokeLinejoin="round">
+            {LAYERS.map(([w, color], j) => (
+              <path key={j} d={d} stroke={color} strokeWidth={w} />
+            ))}
+          </g>
+        ))}
       </g>
     </svg>
   )
 }
 
-/** [stroke width, colour], widest first: a dark edge, then light faces split by thin darker grooves (1.5 px each side). */
-const GROOVES: [number, string][] = [
-  [92, '#e8420c'],
-  [89, 'light'],
-  [66, '#f2511a'],
-  [63, 'light'],
-  [40, '#f2511a'],
-  [37, 'light'],
-  [14, '#f5581f'],
-  [11, 'light'],
-]
+/**
+ * The tubes across the ribbon: seven round tubes 18 wide, side by side. Strokes paint inwards (each narrower stroke covers the middle
+ * of the one before), so walking from the ribbon's edge to its centre line, each step coloured by how close it is to the centre of its
+ * tube, lights every tube along its middle and darkens the creases between them. [stroke width, colour], widest first.
+ */
+const TUBES = 7
+const TUBE = 18
+const RAMP = ['#c4380a', '#e84a10', '#ff6224', '#ff8040', '#ffa066']
+const LAYERS: [number, string][] = (() => {
+  const half = (TUBES * TUBE) / 2
+  const out: [number, string][] = []
+  for (let x = half; x > 0; x -= 1.5) {
+    // distance from the centre line to the nearest tube centre (tubes are centred at 0, 18, 36, …)
+    const d = Math.abs(x - Math.round(x / TUBE) * TUBE)
+    const light = 1 - d / (TUBE / 2)
+    out.push([2 * x, RAMP[Math.min(RAMP.length - 1, Math.floor(light * RAMP.length))]])
+  }
+  return out
+})()
 
-// each: the view box, and the pieces back first; `round` caps hide the seam where two pieces of one ribbon meet
-const SHAPES: Record<RibbonShape, { box: string; pieces: string[]; round?: boolean }> = {
-  knot: {
-    box: '0 0 1000 460',
+// each: the view box and the pieces, back first; corner shapes enter and leave beyond their box so the page edge cuts them
+const SHAPES: Record<RibbonShape, { box: string; pieces: string[] }> = {
+  // top right, like gitbook.com: in from the top edge, a long swoop down and out through the right edge
+  sweep: {
+    box: '0 0 600 560',
+    pieces: ['M 60 -120 C 80 120, 220 260, 420 300 C 560 328, 640 260, 700 180'],
+  },
+  // top left: down from the top, a tight hook that curls back up and leaves through the left edge
+  hook: {
+    box: '0 0 600 560',
+    pieces: ['M 420 -120 C 460 120, 420 330, 250 360 C 110 385, 60 260, 150 200 C 230 150, 160 60, -120 110'],
+  },
+  // bottom left: up from the bottom edge into a full loop, then out through the left edge (over itself)
+  curl: {
+    box: '0 0 600 560',
     pieces: [
-      'M 470 330 C 380 410, 210 400, 195 310 C 182 225, 320 175, 480 165 C 650 155, 820 205, 1040 110',
-      'M -40 120 C 190 95, 300 200, 420 300 C 520 382, 705 385, 768 262 C 830 130, 705 40, 618 82 C 540 120, 565 262, 470 330',
+      'M 380 680 C 360 470, 260 330, 150 330 C 60 330, 40 430, 120 470',
+      'M 120 470 C 230 520, 340 400, 300 300 C 260 190, 80 200, -120 260',
     ],
   },
+  // bottom right: in from the right edge, folding over itself, and down through the bottom edge
+  fold: {
+    box: '0 0 600 560',
+    pieces: ['M 720 160 C 480 140, 300 220, 330 340', 'M 330 340 C 360 460, 520 420, 480 330 C 440 240, 200 330, 160 680'],
+  },
+  // the middle: a long, low wave across a whole width
   wave: {
-    box: '0 0 1000 320',
-    pieces: ['M -40 230 C 120 110, 260 60, 400 140 C 540 220, 660 280, 800 190 C 900 126, 960 80, 1040 70'],
-  },
-  loop: {
-    box: '0 0 700 520',
-    round: true,
-    pieces: [
-      'M -40 420 C 130 420, 270 340, 320 230 C 360 130, 270 60, 200 110',
-      'M 200 110 C 120 170, 180 300, 330 310 C 480 320, 600 230, 740 110',
-    ],
-  },
-  cross: {
-    box: '0 0 1000 420',
-    pieces: ['M -40 330 C 280 340, 560 70, 1040 90', 'M -40 90 C 300 70, 600 340, 1040 320'],
-  },
-  arc: {
-    box: '0 0 800 800',
-    pieces: ['M 840 -40 C 480 40, 160 240, 180 500 C 196 720, 520 820, 860 720'],
+    box: '0 0 1200 360',
+    pieces: ['M -120 250 C 140 90, 360 60, 560 170 C 760 280, 940 300, 1320 110'],
   },
 }

@@ -1,5 +1,5 @@
 import { t } from '@/shared/i18n'
-import { PolarBear } from './polar-bear'
+import { Mascot } from './mascot'
 
 /** Bits of confetti and sparkle scattered over the poster: [x %, y %, kind, rotation]. */
 const BITS: [number, number, 'spark' | 'chip' | 'dot' | 'grain', number][] = [
@@ -60,7 +60,7 @@ export function HeroPoster() {
           <Bit kind={kind} rotate={r} />
         </div>
       ))}
-      <PolarBear pose="serve" face="excited" className="absolute bottom-[-2%] left-1/2 w-[42%] -translate-x-1/2 sm:w-[34%]" />
+      <Mascot pose="serve" face="excited" className="absolute bottom-[-2%] left-1/2 w-[42%] -translate-x-1/2 sm:w-[34%]" />
       <Tag kicker={t('Quán dưới sảnh')} value={t('S1 · 120 m')} className="top-[10%] left-[5%] -rotate-3" />
       <Tag kicker={t('Giao tới')} value={t('Toà S2 · căn 1508')} className="top-[12%] right-[5%] rotate-2" />
       <Tag kicker={t('Món còn nóng')} value={t('12 phút')} className="bottom-[10%] left-[6%] rotate-2" />

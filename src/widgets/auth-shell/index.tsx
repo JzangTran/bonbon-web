@@ -14,7 +14,7 @@ function AuthArt() {
   const shots = ['/images/guides/tong-quan.jpg', '/images/guides/thuc-don.jpg', '/images/guides/don-hang.jpg']
   return (
     <div aria-hidden="true" className="relative hidden overflow-hidden lg:block">
-      <OrangeRibbon variant="cross" className="absolute top-1/2 -left-[30%] w-[150%] -translate-y-1/2 rotate-[-12deg]" />
+      <OrangeRibbon variant="wave" fade className="absolute top-1/2 -left-[20%] w-[140%] -translate-y-1/2 rotate-[-12deg]" />
       <div className="absolute top-1/2 left-[18%] w-[78%] -translate-y-1/2 [perspective:1600px]">
         <div className="flex flex-col gap-6 [transform:rotateX(28deg)_rotateZ(-18deg)] [transform-style:preserve-3d]">
           {shots.map((src, i) => (

@@ -254,7 +254,7 @@ export function SiteFooter() {
           </div>
           <div className="flex flex-col gap-4">
             <a href={siteUrl('merchant', '/register')} className="group relative flex flex-col gap-2 overflow-hidden rounded-2xl bg-primary p-6 text-white">
-              <OrangeRibbon variant="arc" className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
+              <OrangeRibbon variant="hook" className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
               <StoreIcon className="relative size-6" strokeWidth={1.5} aria-hidden="true" />
               <span className="relative mt-2 text-body font-medium">{t('Mở quán trên bonbon')}</span>
               <span className="relative text-small text-white/85">{t('Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.')}</span>

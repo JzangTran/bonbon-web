@@ -30,7 +30,7 @@ export function ResourceFrame({ tab, current, aside, children }: { tab: TabKey; 
       tab={tab}
       search={<ResourceSearch tab={tab} />}
       tabsEnd={<LanguageSwitch compact />}
-      decoration={<OrangeRibbon variant="knot" />}
+      decoration={<OrangeRibbon variant="sweep" />}
       sidebar={<ResourceTree key={tab} sections={treeOf(tab)} current={current} label={TABS.find((x) => x.key === tab)!.title} />}
       aside={aside}
     >

@@ -63,7 +63,7 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
   search?: ReactNode
   /** at the right end of the tab row (the language) */
   tabsEnd?: ReactNode
-  /** a decorative picture at the top right: above the headings list when there is one, behind the page otherwise */
+  /** a decorative picture cut by the top right corner of the page, behind it; the headings list starts below it */
   decoration?: ReactNode
   children: ReactNode
 }) {
@@ -114,9 +114,10 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
         {tabsEnd ? <div className="hidden shrink-0 sm:block">{tabsEnd}</div> : null}
         </div>
       </header>
-      {decoration && !aside ? (
-        <div aria-hidden="true" className="pointer-events-none absolute top-28 right-0 -z-0 hidden w-[34rem] translate-x-[30%] xl:block">
-          {decoration}
+      {decoration ? (
+        // cut by the line under the tabs and by the right edge of the page, so it seems to come in from outside, as on gitbook.com
+        <div aria-hidden="true" className="pointer-events-none absolute top-[6.9rem] right-0 -z-0 hidden h-[26rem] w-[22rem] overflow-hidden xl:block">
+          <div className="absolute -top-[7rem] -right-[9rem] w-[34rem]">{decoration}</div>
         </div>
       ) : null}
       <div className={cn('relative z-10 mx-auto grid w-full max-w-[1440px] flex-1 gap-10 px-4 py-8 sm:px-6 lg:py-10', sidebar ? 'lg:grid-cols-[16rem_minmax(0,1fr)]' : '', sidebar && aside ? 'xl:grid-cols-[16rem_minmax(0,1fr)_15rem]' : '')}>
@@ -125,14 +126,7 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
           {children}
         </main>
         {aside ? (
-          <aside className="hidden xl:block xl:sticky xl:top-36 xl:self-start">
-            {decoration ? (
-              <div aria-hidden="true" className="pointer-events-none mb-6 -mr-[clamp(1rem,4vw,6rem)]">
-                {decoration}
-              </div>
-            ) : null}
-            {aside}
-          </aside>
+          <aside className={cn('hidden xl:block xl:sticky xl:top-36 xl:self-start', decoration && 'xl:mt-72')}>{aside}</aside>
         ) : null}
       </div>
       <footer className="border-t border-grey-200 bg-beige-50">

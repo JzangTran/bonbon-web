@@ -69,6 +69,11 @@ function Badge({ children }: { children: ReactNode }) {
 function Hero() {
   return (
     <section id="order" className="relative scroll-mt-20 overflow-hidden">
+      {/* ribbons cut by the page corners, after gitbook.com: a different shape in each corner */}
+      <OrangeRibbon variant="hook" className="absolute top-0 left-0 hidden w-[24rem] -translate-x-[42%] -translate-y-[22%] md:block" />
+      <OrangeRibbon variant="sweep" className="absolute top-0 right-0 hidden w-[26rem] translate-x-[30%] -translate-y-[18%] md:block" />
+      <OrangeRibbon variant="curl" className="absolute bottom-0 left-0 hidden w-[24rem] -translate-x-[30%] translate-y-[22%] md:block" />
+      <OrangeRibbon variant="fold" className="absolute right-0 bottom-0 hidden w-[24rem] translate-x-[26%] translate-y-[24%] md:block" />
       <Wrap className="flex flex-col items-center pt-14 pb-24 text-center lg:pt-20 lg:pb-40">
         <Reveal className="flex flex-col items-center gap-6">
           <a
@@ -113,11 +118,8 @@ function Hero() {
         </Reveal>
 
         <Reveal delay={120} className="relative mt-14 w-full max-w-5xl">
-          {/* a different ribbon behind each corner of the picture */}
-          <OrangeRibbon variant="wave" className="absolute -top-[10%] -left-[34%] w-[52%] rotate-[-8deg]" />
-          <OrangeRibbon variant="arc" className="absolute -top-[16%] -right-[22%] w-[34%]" />
-          <OrangeRibbon variant="loop" className="absolute -bottom-[16%] -left-[26%] w-[42%]" />
-          <OrangeRibbon variant="cross" className="absolute -right-[30%] -bottom-[14%] w-[52%]" />
+          {/* the middle: a long wave of its own behind the picture */}
+          <OrangeRibbon variant="wave" fade className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-[40%]" />
           <div className="relative rounded-[1.25rem] bg-white p-2 text-left shadow-[0_30px_80px_rgb(0_0_0/0.12)]">
             <HeroPoster />
           </div>
@@ -245,7 +247,7 @@ function SellerBand() {
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
           <div className="relative w-full max-w-[460px] overflow-hidden rounded-2xl bg-primary px-8 pt-10">
-            <OrangeRibbon variant="knot" className="absolute -top-1/3 -right-1/3 w-[110%] opacity-40" />
+            <OrangeRibbon variant="sweep" className="absolute -top-1/4 -right-1/4 w-[90%] opacity-40" />
             <BearScene kind="shop" className="relative" />
           </div>
         </div>
