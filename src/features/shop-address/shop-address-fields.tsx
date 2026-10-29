@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { CheckIcon, MapPinIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useProvinces, useWards } from '@/entities/geo'
@@ -43,7 +44,7 @@ export function ShopAddressFields({
 
   return (
     <>
-      <FormRow label="Tỉnh/Thành phố, Phường/Xã" required htmlFor="shop-units" error={unitsError}>
+      <FormRow label={t('Tỉnh/Thành phố, Phường/Xã')} required htmlFor="shop-units" error={unitsError}>
         <UnitPicker
           id="shop-units"
           provinceCode={value.provinceCode}
@@ -53,28 +54,28 @@ export function ShopAddressFields({
           onChange={(provinceCode, wardCode) => onChange({ ...value, provinceCode, wardCode, lat: undefined, lng: undefined })}
         />
       </FormRow>
-      <FormRow label="Địa chỉ chi tiết" required htmlFor="shop-detail" error={errors.addressDetail}>
+      <FormRow label={t('Địa chỉ chi tiết')} required htmlFor="shop-detail" error={errors.addressDetail}>
         <Textarea
           id="shop-detail"
           rows={2}
           maxLength={200}
-          placeholder="Số nhà, tên đường, ..."
+          placeholder={t('Số nhà, tên đường, ...')}
           value={value.detail}
           onChange={(e) => onChange({ ...value, detail: e.target.value })}
         />
       </FormRow>
-      <FormRow label="Vị trí trên bản đồ" required error={errors.location}>
+      <FormRow label={t('Vị trí trên bản đồ')} required error={errors.location}>
         <div className="flex flex-wrap items-center gap-3">
           <Button type="button" variant="outline" onClick={() => setMapOpen(true)}>
-            <MapPinIcon /> Định vị
+            <MapPinIcon />{t(' Định vị')}
           </Button>
           {located ? (
             <span className="flex items-center gap-1.5 text-sm text-success-fg">
               <CheckIcon className="size-4" aria-hidden="true" />
-              Đã định vị ({value.lat!.toFixed(5)}, {value.lng!.toFixed(5)})
+              {t('Đã định vị (')}{value.lat!.toFixed(5)}, {value.lng!.toFixed(5)})
             </span>
           ) : (
-            <span className="text-sm text-muted-foreground">Chưa định vị</span>
+            <span className="text-sm text-muted-foreground">{t('Chưa định vị')}</span>
           )}
         </div>
       </FormRow>

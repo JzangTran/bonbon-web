@@ -12,20 +12,21 @@ import { periodLabel } from '@/shared/lib/ledger'
 import { useNow } from '@/shared/lib/use-now'
 import { PageStack, Section, StatsPanel } from '@/shared/ui/section'
 import { ChartPanel, type ChartMetric } from '@/widgets/chart-panel'
+import { intlLocale, t } from '@/shared/i18n'
 
 type Todo = { label: string; statuses: OrderStatus[] }
 
 const TODOS: Todo[] = [
-  { label: 'Chờ xác nhận', statuses: ['PLACED'] },
-  { label: 'Đang chuẩn bị', statuses: ['CONFIRMED', 'PREPARING'] },
-  { label: 'Đang giao', statuses: ['OUT_FOR_DELIVERY'] },
-  { label: 'Đã giao', statuses: ['DELIVERED'] },
-  { label: 'Đã huỷ hoặc từ chối', statuses: ['CANCELLED', 'REJECTED', 'NOT_DELIVERED'] },
+  { label: t('Chờ xác nhận'), statuses: ['PLACED'] },
+  { label: t('Đang chuẩn bị'), statuses: ['CONFIRMED', 'PREPARING'] },
+  { label: t('Đang giao'), statuses: ['OUT_FOR_DELIVERY'] },
+  { label: t('Đã giao'), statuses: ['DELIVERED'] },
+  { label: t('Đã huỷ hoặc từ chối'), statuses: ['CANCELLED', 'REJECTED', 'NOT_DELIVERED'] },
 ]
 
 const METRICS: ChartMetric<RevenueBucket>[] = [
-  { id: 'revenue', label: 'Doanh thu', value: (b) => b.revenue, format: formatVnd },
-  { id: 'orders', label: 'Đơn đã giao', value: (b) => b.orders, format: (n) => `${n.toLocaleString('vi-VN')} đơn` },
+  { id: 'revenue', label: t('Doanh thu'), value: (b) => b.revenue, format: formatVnd },
+  { id: 'orders', label: t('Đơn đã giao'), value: (b) => b.orders, format: (n) => t('{v0} đơn', { v0: n.toLocaleString(intlLocale) }) },
 ]
 
 /** What needs the shop right now (orders by stage, cases and reviews waiting), then how the last seven days went. */
@@ -39,28 +40,28 @@ export function SellerDashboardPage() {
   return (
     <PageStack>
       <div className="flex flex-col gap-2">
-        <h1>Tổng quan cửa hàng</h1>
+        <h1>{t('Tổng quan cửa hàng')}</h1>
         <p className="text-ui text-muted-foreground">{shop.data?.shop?.name}</p>
       </div>
 
-      <Section title="Cần làm ngay" description="Bấm vào một ô để mở danh sách tương ứng.">
+      <Section title={t('Cần làm ngay')} description={t('Bấm vào một ô để mở danh sách tương ứng.')}>
         <StatsPanel className="p-2 sm:p-3">
           <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">
             {TODOS.map((todo) => (
               <TodoCount key={todo.label} todo={todo} />
             ))}
-            <Count to={merchantPath('/order-cases')} value={waitingCases.data?.total} label="Khiếu nại chờ trả lời" />
-            <Count to={merchantPath('/reviews')} value={unreplied.data?.total} label="Đánh giá chưa phản hồi" />
+            <Count to={merchantPath('/order-cases')} value={waitingCases.data?.total} label={t('Khiếu nại chờ trả lời')} />
+            <Count to={merchantPath('/reviews')} value={unreplied.data?.total} label={t('Đánh giá chưa phản hồi')} />
           </ul>
         </StatsPanel>
       </Section>
 
       {revenue.data ? (
         <ChartPanel
-          title="7 ngày qua"
+          title={t('7 ngày qua')}
           description={
             <Link to={merchantPath('/statistics')} className="text-link inline-flex items-center gap-1 text-ink">
-              Xem đầy đủ trong Doanh thu <ArrowRightIcon className="size-3.5" aria-hidden="true" />
+              {t('Xem đầy đủ trong Doanh thu ')}<ArrowRightIcon className="size-3.5" aria-hidden="true" />
             </Link>
           }
           metrics={METRICS}

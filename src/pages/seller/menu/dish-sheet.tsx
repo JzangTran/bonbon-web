@@ -17,6 +17,7 @@ import { Label } from '@/shared/ui/label'
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { t } from '@/shared/i18n'
 
 const NATIVE_SELECT =
   'h-10 w-full rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
@@ -66,10 +67,10 @@ export function DishSheet({
 
   async function save() {
     const priceValue = parseInteger(price)
-    if (priceValue === undefined) return setError('Giá món phải là số nguyên, ví dụ 45000.')
+    if (priceValue === undefined) return setError(t('Giá món phải là số nguyên, ví dụ 45000.'))
     const stockValue = parseInteger(stock)
-    if (stock.trim() !== '' && stockValue === undefined) return setError('Số phần còn lại phải là số nguyên.')
-    if (!categoryId) return setError('Hãy chọn ngành hàng cho món.')
+    if (stock.trim() !== '' && stockValue === undefined) return setError(t('Số phần còn lại phải là số nguyên.'))
+    if (!categoryId) return setError(t('Hãy chọn ngành hàng cho món.'))
 
     setPending(true)
     setError(null)
@@ -126,7 +127,7 @@ export function DishSheet({
         const { error: problem } = await api.DELETE('/api/merchant/menu-items/{id}/photo', { params: { path: { id } } })
         if (problem) throw problem
       }
-      toast.success(item ? 'Đã lưu món.' : 'Đã thêm món.')
+      toast.success(item ? t('Đã lưu món.') : t('Đã thêm món.'))
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: MENU_QUERY_KEY }),
         queryClient.invalidateQueries({ queryKey: OPTIONS_QUERY_KEY }),
@@ -146,8 +147,8 @@ export function DishSheet({
     <Sheet open onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle>{item ? 'Sửa món' : 'Thêm món'}</SheetTitle>
-          <SheetDescription>Khách thấy tên, mô tả, giá và ảnh. Ngành hàng quyết định tỷ lệ hoa hồng của món.</SheetDescription>
+          <SheetTitle>{item ? t('Sửa món') : t('Thêm món')}</SheetTitle>
+          <SheetDescription>{t('Khách thấy tên, mô tả, giá và ảnh. Ngành hàng quyết định tỷ lệ hoa hồng của món.')}</SheetDescription>
         </SheetHeader>
         <form
           className="flex flex-1 flex-col gap-4 px-4"
@@ -158,33 +159,33 @@ export function DishSheet({
           }}
         >
           <div className="flex flex-col gap-2">
-            <Label htmlFor="dish-name">Tên món</Label>
+            <Label htmlFor="dish-name">{t('Tên món')}</Label>
             <Input id="dish-name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} aria-invalid={Boolean(fieldErrors.name)} />
             {fieldErrors.name ? <p role="alert" className="text-sm text-destructive">{fieldErrors.name}</p> : null}
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="dish-desc">Mô tả (không bắt buộc)</Label>
+            <Label htmlFor="dish-desc">{t('Mô tả (không bắt buộc)')}</Label>
             <Textarea id="dish-desc" maxLength={500} rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="dish-price">Giá (₫)</Label>
+              <Label htmlFor="dish-price">{t('Giá (₫)')}</Label>
               <Input id="dish-price" required inputMode="numeric" className="tabular-nums" value={price} onChange={(e) => setPrice(e.target.value)} />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="dish-stock">Số phần còn lại</Label>
+              <Label htmlFor="dish-stock">{t('Số phần còn lại')}</Label>
               <Input
                 id="dish-stock"
                 inputMode="numeric"
                 className="tabular-nums"
-                placeholder="Không giới hạn"
+                placeholder={t('Không giới hạn')}
                 value={stock}
                 onChange={(e) => setStock(e.target.value)}
               />
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="dish-section">Mục thực đơn</Label>
+            <Label htmlFor="dish-section">{t('Mục thực đơn')}</Label>
             <select id="dish-section" className={NATIVE_SELECT} value={section} onChange={(e) => setSection(e.target.value)}>
               {sections.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -194,7 +195,7 @@ export function DishSheet({
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="dish-category">Ngành hàng</Label>
+            <Label htmlFor="dish-category">{t('Ngành hàng')}</Label>
             <select
               id="dish-category"
               required
@@ -204,7 +205,7 @@ export function DishSheet({
               disabled={leaves.isPending}
             >
               <option value="" disabled>
-                Chọn ngành hàng…
+                {t('Chọn ngành hàng…')}
               </option>
               {[...byParent.entries()].map(([parent, list]) => (
                 <optgroup key={parent} label={parent}>
@@ -216,12 +217,12 @@ export function DishSheet({
                 </optgroup>
               ))}
             </select>
-            <p className="text-xs text-muted-foreground">Chọn sai ngành có thể làm món bị ẩn khỏi tìm kiếm.</p>
+            <p className="text-xs text-muted-foreground">{t('Chọn sai ngành có thể làm món bị ẩn khỏi tìm kiếm.')}</p>
           </div>
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-1 text-sm font-medium">Nhóm lựa chọn của món</legend>
+            <legend className="mb-1 text-sm font-medium">{t('Nhóm lựa chọn của món')}</legend>
             {groupList.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Chưa có nhóm lựa chọn. Tạo ở tab “Nhóm lựa chọn”.</p>
+              <p className="text-sm text-muted-foreground">{t('Chưa có nhóm lựa chọn. Tạo ở tab “Nhóm lựa chọn”.')}</p>
             ) : (
               groupList.map((g) => (
                 <label key={g.id} className="flex min-h-10 items-center gap-3 rounded-sm border px-3 text-sm">
@@ -233,19 +234,19 @@ export function DishSheet({
                   />
                   <span className="flex-1">{g.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {g.min === 0 ? 'tuỳ chọn' : 'bắt buộc'}, chọn {g.min === g.max ? g.max : `${g.min}–${g.max}`}
+                    {g.min === 0 ? t('tuỳ chọn') : t('bắt buộc')}{t(', chọn ')}{g.min === g.max ? g.max : `${g.min}–${g.max}`}
                   </span>
                 </label>
               ))
             )}
           </fieldset>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="dish-photo">Ảnh món</Label>
+            <Label htmlFor="dish-photo">{t('Ảnh món')}</Label>
             {item?.photoUrl && !removePhoto && !photo ? (
               <div className="flex items-center gap-3">
                 <img src={item.photoUrl} alt="" className="size-16 object-cover" />
                 <Button type="button" variant="outline" size="sm" onClick={() => setRemovePhoto(true)}>
-                  Gỡ ảnh
+                  {t('Gỡ ảnh')}
                 </Button>
               </div>
             ) : null}
@@ -262,16 +263,16 @@ export function DishSheet({
                 if (ok) setRemovePhoto(false)
               }}
             />
-            <p className="text-xs text-muted-foreground">JPG, PNG hoặc WebP, tối đa 5 MB.</p>
+            <p className="text-xs text-muted-foreground">{t('JPG, PNG hoặc WebP, tối đa 5 MB.')}</p>
           </div>
           <FormError message={error} />
         </form>
         <SheetFooter className="flex-row justify-end gap-2 border-t px-4 py-3">
           <Button type="button" variant="ghost" onClick={onClose}>
-            Huỷ
+            {t('Huỷ')}
           </Button>
           <Button type="submit" form="dish-form" disabled={pending}>
-            {item ? 'Lưu món' : 'Thêm món'}
+            {item ? t('Lưu món') : t('Thêm món')}
           </Button>
         </SheetFooter>
       </SheetContent>

@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { Link } from 'react-router'
 import { AuthShell, SuccessMark } from '@/widgets/auth-shell'
 
@@ -7,10 +8,10 @@ import { AuthShell, SuccessMark } from '@/widgets/auth-shell'
  */
 export function PaymentReturnPage() {
   return (
-    <AuthShell bare title="Đã nhận kết quả từ MoMo" description="Quay lại ứng dụng bonbon để xem đơn của bạn. Trạng thái đơn sẽ tự cập nhật trong ít giây.">
+    <AuthShell bare title={t('Đã nhận kết quả từ MoMo')} description={t('Quay lại ứng dụng bonbon để xem đơn của bạn. Trạng thái đơn sẽ tự cập nhật trong ít giây.')}>
       <SuccessMark />
       <Link to="/" className="text-link text-center text-sm">
-        Về trang chủ bonbon
+        {t('Về trang chủ bonbon')}
       </Link>
     </AuthShell>
   )

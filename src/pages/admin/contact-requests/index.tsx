@@ -17,21 +17,22 @@ import { PageTabs } from '@/shared/ui/workspace-slots'
 import { FormError } from '@/widgets/auth-shell'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { t } from '@/shared/i18n'
 
 type Status = 'OPEN' | 'ANSWERED' | 'CLOSED'
 const KEY = ['contact-requests'] as const
 const TABS: { id: Status; label: string }[] = [
-  { id: 'OPEN', label: 'Chờ trả lời' },
-  { id: 'ANSWERED', label: 'Đã trả lời' },
-  { id: 'CLOSED', label: 'Đã đóng' },
+  { id: 'OPEN', label: t('Chờ trả lời') },
+  { id: 'ANSWERED', label: t('Đã trả lời') },
+  { id: 'CLOSED', label: t('Đã đóng') },
 ]
 const STATUS: Record<string, { label: string; className: string }> = {
-  OPEN: { label: 'Chờ trả lời', className: 'bg-warning-subtle text-warning-fg' },
-  ANSWERED: { label: 'Đã trả lời', className: 'bg-success-subtle text-success-fg' },
-  CLOSED: { label: 'Đã đóng', className: 'bg-muted text-muted-foreground' },
+  OPEN: { label: t('Chờ trả lời'), className: 'bg-warning-subtle text-warning-fg' },
+  ANSWERED: { label: t('Đã trả lời'), className: 'bg-success-subtle text-success-fg' },
+  CLOSED: { label: t('Đã đóng'), className: 'bg-muted text-muted-foreground' },
 }
-const ROLE: Record<string, string> = { CUSTOMER: 'Khách đặt món', SELLER: 'Người bán', OTHER: 'Khác' }
-const TOPIC: Record<string, string> = { ORDER: 'Đơn hàng', ACCOUNT: 'Tài khoản', SHOP: 'Mở quán, cửa hàng', PAYMENT: 'Thanh toán', OTHER: 'Khác' }
+const ROLE: Record<string, string> = { CUSTOMER: t('Khách đặt món'), SELLER: t('Người bán'), OTHER: t('Khác') }
+const TOPIC: Record<string, string> = { ORDER: t('Đơn hàng'), ACCOUNT: t('Tài khoản'), SHOP: t('Mở quán, cửa hàng'), PAYMENT: t('Thanh toán'), OTHER: t('Khác') }
 
 /** What people wrote on the public contact form of the help site; the one that has waited longest is on top. */
 export function AdminContactRequestsPage() {
@@ -52,12 +53,12 @@ export function AdminContactRequestsPage() {
   const items = inbox.data?.items ?? []
   const total = inbox.data?.total ?? 0
 
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem yêu cầu liên hệ.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền xem yêu cầu liên hệ.')}</p>
 
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <PageTabs
-        label="Yêu cầu liên hệ"
+        label={t('Yêu cầu liên hệ')}
         tabs={TABS}
         value={tab}
         onValueChange={(id) => {
@@ -66,12 +67,12 @@ export function AdminContactRequestsPage() {
         }}
       />
       <div>
-        <h1>Yêu cầu liên hệ</h1>
-        <p className="text-sm text-muted-foreground">Gửi từ trang Liên hệ hỗ trợ, có thể từ người chưa có tài khoản. Câu trả lời đi tới email họ để lại.</p>
+        <h1>{t('Yêu cầu liên hệ')}</h1>
+        <p className="text-sm text-muted-foreground">{t('Gửi từ trang Liên hệ hỗ trợ, có thể từ người chưa có tài khoản. Câu trả lời đi tới email họ để lại.')}</p>
       </div>
       {inbox.isError ? <FormError message={problemMessage(inbox.error)} /> : null}
       {inbox.isPending ? <Skeleton className="h-32" /> : null}
-      {inbox.data && items.length === 0 ? <EmptyState title="Không có yêu cầu nào ở mục này." /> : null}
+      {inbox.data && items.length === 0 ? <EmptyState title={t('Không có yêu cầu nào ở mục này.')} /> : null}
       <ul className="flex flex-col divide-y divide-grey-200 rounded-xl border border-grey-200">
         {items.map((r) => (
           <li key={r.id}>
@@ -124,7 +125,7 @@ export function AdminContactRequestPage() {
     },
     onSuccess: () => {
       setBody('')
-      done('Đã gửi câu trả lời qua email.')()
+      done(t('Đã gửi câu trả lời qua email.'))()
     },
   })
   const close = useMutation({
@@ -133,13 +134,13 @@ export function AdminContactRequestPage() {
       if (error || !data) throw error
       return data
     },
-    onSuccess: done('Đã đóng yêu cầu.'),
+    onSuccess: done(t('Đã đóng yêu cầu.')),
   })
   const r = request.data
   const status = STATUS[r?.status ?? ''] ?? { label: r?.status ?? '', className: '' }
 
   return (
-    <SubPage back={{ to: consolePath('/contact-requests'), label: 'Yêu cầu liên hệ' }} title={r ? `${r.fullName} · ${TOPIC[r.topic ?? ''] ?? r.topic}` : 'Yêu cầu liên hệ'}>
+    <SubPage back={{ to: consolePath('/contact-requests'), label: t('Yêu cầu liên hệ') }} title={r ? `${r.fullName} · ${TOPIC[r.topic ?? ''] ?? r.topic}` : t('Yêu cầu liên hệ')}>
       {request.isPending ? <Skeleton className="h-64" /> : null}
       {request.isError ? <FormError message={problemMessage(request.error)} /> : null}
       {r ? (
@@ -152,7 +153,7 @@ export function AdminContactRequestPage() {
           <p className="rounded-xl bg-grey-50 p-4 whitespace-pre-wrap">{r.message}</p>
           {(r.answers ?? []).length > 0 ? (
             <section className="flex flex-col gap-3">
-              <h2 className="text-h3 font-medium">Đã trả lời</h2>
+              <h2 className="text-h3 font-medium">{t('Đã trả lời')}</h2>
               {(r.answers ?? []).map((a) => (
                 <div key={a.id} className="flex flex-col gap-1 border-l border-primary pl-4">
                   <span className="text-xs text-muted-foreground">
@@ -171,16 +172,16 @@ export function AdminContactRequestPage() {
                 if (body.trim()) answer.mutate()
               }}
             >
-              <Label htmlFor="answer">Trả lời qua email tới {r.email}</Label>
+              <Label htmlFor="answer">{t('Trả lời qua email tới ')}{r.email}</Label>
               <Textarea id="answer" rows={6} maxLength={2000} showCount value={body} onChange={(e) => setBody(e.target.value)} />
               {answer.isError ? <FormError message={problemMessage(answer.error)} /> : null}
               {close.isError ? <FormError message={problemMessage(close.error)} /> : null}
               <div className="flex flex-wrap gap-2">
                 <Button type="submit" disabled={!body.trim() || answer.isPending}>
-                  Gửi trả lời
+                  {t('Gửi trả lời')}
                 </Button>
                 <Button type="button" variant="outline" disabled={close.isPending} onClick={() => close.mutate()}>
-                  Đóng yêu cầu
+                  {t('Đóng yêu cầu')}
                 </Button>
               </div>
             </form>

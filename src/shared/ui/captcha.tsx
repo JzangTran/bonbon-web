@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useEffect, useRef } from 'react'
 import { env } from '@/shared/config/env'
 
@@ -49,7 +50,7 @@ export function Captcha({ onToken }: { onToken: (token: string | null) => void }
     return (
       <label className="flex items-center gap-2 rounded-md border border-dashed border-input p-3 text-sm">
         <input type="checkbox" onChange={(e) => onToken(e.target.checked ? 'dev-captcha' : null)} />
-        Tôi không phải robot <span className="text-muted-foreground">(bản dev, chưa cấu hình reCAPTCHA)</span>
+        {t('Tôi không phải robot ')}<span className="text-muted-foreground">{t('(bản dev, chưa cấu hình reCAPTCHA)')}</span>
       </label>
     )
   }

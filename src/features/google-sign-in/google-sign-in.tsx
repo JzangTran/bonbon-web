@@ -12,6 +12,7 @@ import { OrDivider } from '@/shared/ui/or-divider'
 import { FormError } from '@/widgets/auth-shell'
 import { GoogleButton } from './google-button'
 import { merchantPath, legalUrl } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 type LoginResponse = components['schemas']['LoginResponse']
 type Extras = { acceptedDocumentIds?: string[]; marketingConsent?: boolean; password?: string; captchaToken?: string }
@@ -115,32 +116,32 @@ export function GoogleSignIn() {
       {step.kind === 'consent' && idToken ? (
         <div className="flex flex-col gap-3 rounded-lg border p-4">
           <p className="text-sm font-medium">
-            {step.email ? `Mở tài khoản bán hàng cho ${step.email}` : 'Thêm vai trò người bán vào tài khoản Google này'}
+            {step.email ? t('Mở tài khoản bán hàng cho {v0}', { v0: step.email }) : t('Thêm vai trò người bán vào tài khoản Google này')}
           </p>
           <label className="flex items-start gap-3 text-sm">
             <input type="checkbox" className="mt-0.5 size-4" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
             <span>
-              Tôi đồng ý với{' '}
+              {t('Tôi đồng ý với')}{' '}
               <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
-                {terms.data?.title ?? 'Điều khoản dành cho người bán'}
+                {terms.data?.title ?? t('Điều khoản dành cho người bán')}
               </a>{' '}
-              và đã đọc{' '}
+              {t('và đã đọc')}{' '}
               <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-link">
-                {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
+                {privacy.data?.title ?? t('Chính sách quyền riêng tư')}
               </a>
               .
             </span>
           </label>
           <label className="flex items-start gap-3 text-sm text-muted-foreground">
             <input type="checkbox" className="mt-0.5 size-4" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} />
-            Nhận tin khuyến mãi qua email (không bắt buộc).
+            {t('Nhận tin khuyến mãi qua email (không bắt buộc).')}
           </label>
           <Button
             type="button"
             disabled={!acceptTerms || busy || !terms.data?.id || !privacy.data?.id}
             onClick={() => submit(idToken, { acceptedDocumentIds: [terms.data!.id!, privacy.data!.id!], marketingConsent: marketing })}
           >
-            Tiếp tục với Google
+            {t('Tiếp tục với Google')}
           </Button>
         </div>
       ) : null}
@@ -153,14 +154,14 @@ export function GoogleSignIn() {
             void submit(idToken, { password, captchaToken: captchaToken ?? undefined })
           }}
         >
-          <p className="text-sm">Email này đã có tài khoản bonbon. Nhập mật khẩu của tài khoản đó để liên kết với Google.</p>
+          <p className="text-sm">{t('Email này đã có tài khoản bonbon. Nhập mật khẩu của tài khoản đó để liên kết với Google.')}</p>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="link-password">Mật khẩu bonbon</Label>
+            <Label htmlFor="link-password">{t('Mật khẩu bonbon')}</Label>
             <Input id="link-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           {step.captcha ? <Captcha onToken={setCaptchaToken} /> : null}
           <Button type="submit" disabled={!password || busy}>
-            Liên kết và đăng nhập
+            {t('Liên kết và đăng nhập')}
           </Button>
         </form>
       ) : null}

@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type RefundRow = components['schemas']['RefundRow']
 export type RefundPage = components['schemas']['RefundPage']
@@ -34,7 +35,7 @@ export function useCompleteRefund() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã ghi nhận chuyển khoản. Khách được báo đã hoàn tiền.')
+      toast.success(t('Đã ghi nhận chuyển khoản. Khách được báo đã hoàn tiền.'))
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
     onError: (error) => {
@@ -54,7 +55,7 @@ export function useFailRefund() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã báo chuyển khoản thất bại. Khách sẽ nhập tài khoản khác.')
+      toast.success(t('Đã báo chuyển khoản thất bại. Khách sẽ nhập tài khoản khác.'))
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
     onError: (error) => {

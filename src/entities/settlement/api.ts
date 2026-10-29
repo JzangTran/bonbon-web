@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type CommissionRates = components['schemas']['CommissionRates']
 export type CategoryCommissionRate = components['schemas']['CategoryCommissionRate']
@@ -52,7 +53,7 @@ export function useSetCommissionRate() {
       return result.data
     },
     onSuccess: () => {
-      toast.success('Đã lưu tỷ lệ hoa hồng. Đơn đặt từ bây giờ dùng tỷ lệ mới.')
+      toast.success(t('Đã lưu tỷ lệ hoa hồng. Đơn đặt từ bây giờ dùng tỷ lệ mới.'))
       void queryClient.invalidateQueries({ queryKey: COMMISSION_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),
@@ -132,7 +133,7 @@ export function useRecordEntry(vendorId: string) {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã ghi vào sổ.')
+      toast.success(t('Đã ghi vào sổ.'))
       void queryClient.invalidateQueries({ queryKey: SETTLEMENT_KEY })
     },
     onError: (error) => {

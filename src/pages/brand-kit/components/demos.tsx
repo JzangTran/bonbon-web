@@ -6,6 +6,7 @@ import { Pagination } from '@/shared/ui/pagination'
 import { Segmented, StatsPanel, Toolbar } from '@/shared/ui/section'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { TimeChart, type ChartKind } from '@/shared/ui/time-chart'
+import { intlLocale, t } from '@/shared/i18n'
 
 /** Live samples of the components pages that keep a little state of their own. */
 
@@ -13,11 +14,11 @@ export function SegmentedDemo() {
   const [v, setV] = useState<'day' | 'week' | 'month'>('week')
   return (
     <Segmented
-      label="Chia theo"
+      label={t('Chia theo')}
       options={[
-        { id: 'day', label: 'Ngày' },
-        { id: 'week', label: 'Tuần' },
-        { id: 'month', label: 'Tháng' },
+        { id: 'day', label: t('Ngày') },
+        { id: 'week', label: t('Tuần') },
+        { id: 'month', label: t('Tháng') },
       ]}
       value={v}
       onChange={setV}
@@ -26,33 +27,33 @@ export function SegmentedDemo() {
 }
 
 const TABS = [
-  { id: 'new', label: 'Mới', count: 2 },
-  { id: 'doing', label: 'Đang làm', count: 3 },
-  { id: 'history', label: 'Lịch sử', count: 0 },
+  { id: 'new', label: t('Mới'), count: 2 },
+  { id: 'doing', label: t('Đang làm'), count: 3 },
+  { id: 'history', label: t('Lịch sử'), count: 0 },
 ]
 export function TabsDemo({ withCounts = true }: { withCounts?: boolean }) {
   const [tab, setTab] = useState('new')
   return (
     <div className="w-full max-w-md rounded-lg bg-white">
-      <div role="tablist" aria-label="Đơn hàng" className="flex gap-1 border-b border-grey-200 px-2">
-        {TABS.map((t) => (
+      <div role="tablist" aria-label={t('Đơn hàng')} className="flex gap-1 border-b border-grey-200 px-2">
+        {TABS.map((tItem) => (
           <button
-            key={t.id}
+            key={tItem.id}
             type="button"
             role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
+            aria-selected={tab === tItem.id}
+            onClick={() => setTab(tItem.id)}
             className={cn(
               '-mb-px flex h-11 items-center gap-2 rounded-t-md border-b-2 px-4 text-ui outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring',
-              tab === t.id ? 'border-primary font-medium text-primary' : 'border-transparent text-muted-foreground',
+              tab === tItem.id ? 'border-primary font-medium text-primary' : 'border-transparent text-muted-foreground',
             )}
           >
-            {t.label}
-            {withCounts && t.count > 0 ? <span className="rounded-full bg-grey-100 px-1.5 text-caption text-ink tabular-nums">{t.count}</span> : null}
+            {tItem.label}
+            {withCounts && tItem.count > 0 ? <span className="rounded-full bg-grey-100 px-1.5 text-caption text-ink tabular-nums">{tItem.count}</span> : null}
           </button>
         ))}
       </div>
-      <p className="p-4 text-ui text-muted-foreground">Nội dung của tab {TABS.find((t) => t.id === tab)?.label}.</p>
+      <p className="p-4 text-ui text-muted-foreground">{t('Nội dung của tab ')}{TABS.find((tItem) => tItem.id === tab)?.label}.</p>
     </div>
   )
 }
@@ -65,31 +66,31 @@ export function PaginationDemo() {
 const WEEK = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map((d, i) => ({
   key: d,
   label: d,
-  full: i === 6 ? 'Chủ nhật' : `Thứ ${i + 2}`,
+  full: i === 6 ? t('Chủ nhật') : t('Thứ {v0}', { v0: i + 2 }),
   values: { now: [420, 380, 510, 460, 720, 940, 860][i] * 1000, before: [390, 410, 450, 470, 650, 880, 900][i] * 1000 },
 }))
-const vnd = (n: number) => `${n.toLocaleString('vi-VN')} ₫`
+const vnd = (n: number) => `${n.toLocaleString(intlLocale)} ₫`
 export function ChartDemo({ kind: initial = 'bar', compare = true }: { kind?: ChartKind; compare?: boolean }) {
   const [kind, setKind] = useState<ChartKind>(initial)
   return (
     <StatsPanel className="w-full bg-white">
       <Toolbar className="justify-between">
-        <h3 className="text-h3 font-medium">Doanh thu 7 ngày</h3>
+        <h3 className="text-h3 font-medium">{t('Doanh thu 7 ngày')}</h3>
         <Segmented
-          label="Kiểu biểu đồ"
+          label={t('Kiểu biểu đồ')}
           options={[
-            { id: 'bar', label: 'Cột' },
-            { id: 'line', label: 'Đường' },
+            { id: 'bar', label: t('Cột') },
+            { id: 'line', label: t('Đường') },
           ]}
           value={kind}
           onChange={setKind}
         />
       </Toolbar>
       <TimeChart
-        ariaLabel="Doanh thu 7 ngày"
+        ariaLabel={t('Doanh thu 7 ngày')}
         kind={kind}
         format={vnd}
-        series={compare ? [{ key: 'now', label: 'Tuần này' }, { key: 'before', label: 'Tuần trước' }] : [{ key: 'now', label: 'Doanh thu' }]}
+        series={compare ? [{ key: 'now', label: t('Tuần này') }, { key: 'before', label: t('Tuần trước') }] : [{ key: 'now', label: t('Doanh thu') }]}
         points={WEEK}
       />
     </StatsPanel>
@@ -97,9 +98,9 @@ export function ChartDemo({ kind: initial = 'bar', compare = true }: { kind?: Ch
 }
 
 const ORDERS = [
-  { code: '#116', customer: 'Hoàng Minh Anh', total: 129000, status: 'PLACED' as const },
-  { code: '#115', customer: 'Bùi Quang Huy', total: 71000, status: 'PREPARING' as const },
-  { code: '#114', customer: 'Đặng Thu Hà', total: 231000, status: 'DELIVERED' as const },
+  { code: '#116', customer: t('Hoàng Minh Anh'), total: 129000, status: 'PLACED' as const },
+  { code: '#115', customer: t('Bùi Quang Huy'), total: 71000, status: 'PREPARING' as const },
+  { code: '#114', customer: t('Đặng Thu Hà'), total: 231000, status: 'DELIVERED' as const },
 ]
 export function OrdersTable({ messy = false }: { messy?: boolean }) {
   return (
@@ -107,10 +108,10 @@ export function OrdersTable({ messy = false }: { messy?: boolean }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Đơn</TableHead>
-            <TableHead>Khách</TableHead>
-            <TableHead>Trạng thái</TableHead>
-            <TableHead className={messy ? '' : 'text-right'}>Tổng</TableHead>
+            <TableHead>{t('Đơn')}</TableHead>
+            <TableHead>{t('Khách')}</TableHead>
+            <TableHead>{t('Trạng thái')}</TableHead>
+            <TableHead className={messy ? '' : 'text-right'}>{t('Tổng')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -119,7 +120,7 @@ export function OrdersTable({ messy = false }: { messy?: boolean }) {
               <TableCell className="font-medium">{o.code}</TableCell>
               <TableCell>{o.customer}</TableCell>
               <TableCell>{messy ? <span className="text-primary">{o.status}</span> : <OrderStatusBadge status={o.status} />}</TableCell>
-              <TableCell className={messy ? '' : 'text-right tabular-nums'}>{messy ? `${o.total}đ` : vnd(o.total)}</TableCell>
+              <TableCell className={messy ? '' : 'text-right tabular-nums'}>{messy ? t('{v0}đ', { v0: o.total }) : vnd(o.total)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

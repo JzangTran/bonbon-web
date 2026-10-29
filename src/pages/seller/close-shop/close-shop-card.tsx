@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
@@ -36,7 +37,7 @@ export function CloseShopCard() {
         { reason, reasonText: text.trim() || undefined },
         {
           onSuccess: () => {
-            toast.success('Cửa hàng đang đóng. Bạn vẫn hoàn tất các đơn đang làm.')
+            toast.success(t('Cửa hàng đang đóng. Bạn vẫn hoàn tất các đơn đang làm.'))
             navigate(merchantPath('/closing'), { replace: true })
           },
           onError: (e) => {
@@ -50,19 +51,19 @@ export function CloseShopCard() {
   return (
     <Card className="border-destructive/40">
       <CardHeader>
-        <CardTitle>Đóng cửa hàng</CardTitle>
-        <CardDescription>Đóng hẳn cửa hàng, không mở lại được. Muốn bán lại phải mở một cửa hàng mới.</CardDescription>
+        <CardTitle>{t('Đóng cửa hàng')}</CardTitle>
+        <CardDescription>{t('Đóng hẳn cửa hàng, không mở lại được. Muốn bán lại phải mở một cửa hàng mới.')}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-          <li>Cửa hàng biến mất khỏi danh sách và không nhận đơn mới ngay khi bạn xác nhận.</li>
-          <li>Các đơn đang làm vẫn làm tiếp; khiếu nại và kháng nghị đang mở vẫn xử lý; bạn vẫn xem được thu nhập.</li>
-          <li>Cửa hàng chỉ đóng hẳn khi không còn đơn đang làm, khiếu nại hay kháng nghị, không còn tiền bị giữ và số dư sổ cái về 0: số dương được chi trả cho bạn, số âm bạn cần thanh toán hoặc được quản trị viên xử lý.</li>
-          <li>Thực đơn và lịch sử đơn hàng được giữ lại để đối chiếu.</li>
+          <li>{t('Cửa hàng biến mất khỏi danh sách và không nhận đơn mới ngay khi bạn xác nhận.')}</li>
+          <li>{t('Các đơn đang làm vẫn làm tiếp; khiếu nại và kháng nghị đang mở vẫn xử lý; bạn vẫn xem được thu nhập.')}</li>
+          <li>{t('Cửa hàng chỉ đóng hẳn khi không còn đơn đang làm, khiếu nại hay kháng nghị, không còn tiền bị giữ và số dư sổ cái về 0: số dương được chi trả cho bạn, số âm bạn cần thanh toán hoặc được quản trị viên xử lý.')}</li>
+          <li>{t('Thực đơn và lịch sử đơn hàng được giữ lại để đối chiếu.')}</li>
         </ul>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-sm font-medium">Lý do</legend>
-          <div role="radiogroup" aria-label="Lý do đóng cửa hàng" className="grid gap-2 sm:grid-cols-2">
+          <legend className="mb-1 text-sm font-medium">{t('Lý do')}</legend>
+          <div role="radiogroup" aria-label={t('Lý do đóng cửa hàng')} className="grid gap-2 sm:grid-cols-2">
             {REASONS.map((r) => (
               <button
                 key={r}
@@ -78,31 +79,31 @@ export function CloseShopCard() {
           </div>
         </fieldset>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="close-text">{needsText ? 'Ghi rõ lý do' : 'Ghi chú thêm (không bắt buộc)'}</Label>
+          <Label htmlFor="close-text">{needsText ? t('Ghi rõ lý do') : t('Ghi chú thêm (không bắt buộc)')}</Label>
           <Textarea id="close-text" rows={2} maxLength={500} value={text} onChange={(e) => setText(e.target.value)} />
         </div>
         <label className="flex items-start gap-2 text-sm">
           <input type="checkbox" className="mt-1" checked={understood} onChange={(e) => setUnderstood(e.target.checked)} />
-          <span>Tôi hiểu rằng đóng cửa hàng là vĩnh viễn và không hoàn tác được.</span>
+          <span>{t('Tôi hiểu rằng đóng cửa hàng là vĩnh viễn và không hoàn tác được.')}</span>
         </label>
         <FormError message={error} />
         <div>
           <Button variant="destructive" disabled={!valid || close.isPending} onClick={() => setConfirm(true)}>
-            Đóng cửa hàng
+            {t('Đóng cửa hàng')}
           </Button>
         </div>
       </CardContent>
       <Dialog open={confirm} onOpenChange={setConfirm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Đóng cửa hàng ngay bây giờ?</DialogTitle>
+            <DialogTitle>{t('Đóng cửa hàng ngay bây giờ?')}</DialogTitle>
             <DialogDescription>
-              Cửa hàng sẽ ngừng nhận đơn mới ngay. Bạn có thể được yêu cầu nhập lại mật khẩu để xác nhận.
+              {t('Cửa hàng sẽ ngừng nhận đơn mới ngay. Bạn có thể được yêu cầu nhập lại mật khẩu để xác nhận.')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Để sau</Button>
+              <Button variant="outline">{t('Để sau')}</Button>
             </DialogClose>
             <Button
               variant="destructive"
@@ -111,7 +112,7 @@ export function CloseShopCard() {
                 submit()
               }}
             >
-              Đóng cửa hàng
+              {t('Đóng cửa hàng')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,5 +1,6 @@
 import { useId, useMemo, useState, type PointerEvent } from 'react'
 import { cn } from '@/shared/lib/utils'
+import { intlLocale, locale, t } from '@/shared/i18n'
 
 export type ChartSeries = { key: string; label: string }
 /** One position on the x axis: a short label under the axis, a full one for the tooltip and the table, a value per series. */
@@ -28,10 +29,10 @@ function ticks(max: number): number[] {
 /** 1 234 567 → 1,2 tr; 12 500 → 12,5 N: short enough for an axis. */
 export function compactNumber(n: number): string {
   const abs = Math.abs(n)
-  if (abs >= 1e9) return `${(n / 1e9).toLocaleString('vi-VN', { maximumFractionDigits: 1 })} tỷ`
-  if (abs >= 1e6) return `${(n / 1e6).toLocaleString('vi-VN', { maximumFractionDigits: 1 })} tr`
-  if (abs >= 1e3) return `${(n / 1e3).toLocaleString('vi-VN', { maximumFractionDigits: 1 })} N`
-  return n.toLocaleString('vi-VN')
+  if (abs >= 1e9) return t('{v0} tỷ', { v0: (n / 1e9).toLocaleString(intlLocale, { maximumFractionDigits: 1 }) })
+  if (abs >= 1e6) return `${(n / 1e6).toLocaleString(intlLocale, { maximumFractionDigits: 1 })}${locale === 'vi' ? ' tr' : 'M'}`
+  if (abs >= 1e3) return `${(n / 1e3).toLocaleString(intlLocale, { maximumFractionDigits: 1 })}${locale === 'vi' ? ' N' : 'K'}`
+  return n.toLocaleString(intlLocale)
 }
 
 /**
@@ -44,7 +45,7 @@ export function TimeChart({
   series,
   kind = 'bar',
   view = 'chart',
-  format = (n) => n.toLocaleString('vi-VN'),
+  format = (n) => n.toLocaleString(intlLocale),
   ariaLabel,
   className,
 }: {
@@ -76,7 +77,7 @@ export function TimeChart({
         <table className="w-full text-ui">
           <thead className="sticky top-0 bg-beige-50 text-small text-muted-foreground">
             <tr className="border-b border-grey-200">
-              <th className="py-2 pr-3 text-left font-normal">Kỳ</th>
+              <th className="py-2 pr-3 text-left font-normal">{t('Kỳ')}</th>
               {series.map((s) => (
                 <th key={s.key} className="px-3 py-2 text-right font-normal">
                   {s.label}
@@ -113,7 +114,7 @@ export function TimeChart({
   return (
     <div className={cn('relative flex flex-col gap-3', className)}>
       {series.length > 1 ? (
-        <ul className="flex flex-wrap gap-x-5 gap-y-1 text-small text-muted-foreground" aria-label="Chú thích">
+        <ul className="flex flex-wrap gap-x-5 gap-y-1 text-small text-muted-foreground" aria-label={t('Chú thích')}>
           {series.map((s, i) => (
             <li key={s.key} className="flex items-center gap-2">
               {kind === 'line' ? (
@@ -142,11 +143,11 @@ export function TimeChart({
           onBlur={() => setHover(null)}
         >
           <title id={`${id}-t`}>{ariaLabel}</title>
-          {yTicks.map((t) => (
-            <g key={t}>
-              <line x1={PAD.left} x2={W - PAD.right} y1={y(t)} y2={y(t)} stroke={t === 0 ? 'var(--chart-axis)' : 'var(--chart-grid)'} strokeWidth={1} />
-              <text x={PAD.left - 8} y={y(t)} dy="0.32em" textAnchor="end" className="fill-muted-foreground text-[11px] tabular-nums">
-                {compactNumber(t)}
+          {yTicks.map((tItem) => (
+            <g key={tItem}>
+              <line x1={PAD.left} x2={W - PAD.right} y1={y(tItem)} y2={y(tItem)} stroke={tItem === 0 ? 'var(--chart-axis)' : 'var(--chart-grid)'} strokeWidth={1} />
+              <text x={PAD.left - 8} y={y(tItem)} dy="0.32em" textAnchor="end" className="fill-muted-foreground text-[11px] tabular-nums">
+                {compactNumber(tItem)}
               </text>
             </g>
           ))}

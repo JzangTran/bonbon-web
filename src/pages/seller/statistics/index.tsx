@@ -11,11 +11,12 @@ import { FormError } from '@/widgets/auth-shell'
 import { ChartPanel, type ChartMetric } from '@/widgets/chart-panel'
 import { RangePicker, granularityLabel, useStatsRange } from '@/widgets/range-picker'
 import { FinanceTabs } from '@/widgets/seller-tabs'
+import { intlLocale, t } from '@/shared/i18n'
 
 const METRICS: ChartMetric<RevenueBucket>[] = [
-  { id: 'revenue', label: 'Doanh thu', value: (b) => b.revenue, format: formatVnd },
-  { id: 'orders', label: 'Đơn đã giao', value: (b) => b.orders, format: (n) => `${n.toLocaleString('vi-VN')} đơn` },
-  { id: 'aov', label: 'Giá trị TB', value: (b) => b.averageOrderValue, format: formatVnd },
+  { id: 'revenue', label: t('Doanh thu'), value: (b) => b.revenue, format: formatVnd },
+  { id: 'orders', label: t('Đơn đã giao'), value: (b) => b.orders, format: (n) => t('{v0} đơn', { v0: n.toLocaleString(intlLocale) }) },
+  { id: 'aov', label: t('Giá trị TB'), value: (b) => b.averageOrderValue, format: formatVnd },
 ]
 
 /** How the shop is selling (view-revenue-statistics.md, view-best-selling-dishes.md): figures, revenue over time, the dishes that carry it. */
@@ -36,9 +37,9 @@ export function SellerStatisticsPage() {
       <div className="flex flex-col gap-6">
         <FinanceTabs />
         <div className="flex flex-col gap-2">
-          <h1>Doanh thu</h1>
+          <h1>{t('Doanh thu')}</h1>
           <p className="max-w-3xl text-ui text-muted-foreground">
-            Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam): tiền khách đã trả, gồm phí giao và chưa trừ hoa hồng. Phần quán nhận được nằm ở Thu nhập và sao kê.
+            {t('Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam): tiền khách đã trả, gồm phí giao và chưa trừ hoa hồng. Phần quán nhận được nằm ở Thu nhập và sao kê.')}
           </p>
         </div>
         <RangePicker state={state} />
@@ -50,41 +51,41 @@ export function SellerStatisticsPage() {
       {totals ? (
         <StatsPanel className={revenue.isFetching ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
           <StatRow>
-            <StatTile label="Đơn đã giao" value={(totals.orders ?? 0).toLocaleString('vi-VN')} hint={deltaText(totals.orders, prev?.orders)} />
-            <StatTile label="Doanh thu" value={formatVnd(totals.revenue)} hint={deltaText(totals.revenue, prev?.revenue)} />
-            <StatTile label="Giá trị đơn trung bình" value={formatVnd(totals.averageOrderValue)} hint={deltaText(totals.averageOrderValue, prev?.averageOrderValue)} />
+            <StatTile label={t('Đơn đã giao')} value={(totals.orders ?? 0).toLocaleString(intlLocale)} hint={deltaText(totals.orders, prev?.orders)} />
+            <StatTile label={t('Doanh thu')} value={formatVnd(totals.revenue)} hint={deltaText(totals.revenue, prev?.revenue)} />
+            <StatTile label={t('Giá trị đơn trung bình')} value={formatVnd(totals.averageOrderValue)} hint={deltaText(totals.averageOrderValue, prev?.averageOrderValue)} />
           </StatRow>
         </StatsPanel>
       ) : null}
 
       {revenue.data ? (
         <ChartPanel
-          title={`Theo ${granularityLabel(granularity).toLowerCase()}`}
-          description="Di chuột hoặc dùng phím mũi tên trên biểu đồ để xem từng kỳ."
+          title={t('Theo {v0}', { v0: granularityLabel(granularity).toLowerCase() })}
+          description={t('Di chuột hoặc dùng phím mũi tên trên biểu đồ để xem từng kỳ.')}
           metrics={METRICS}
           current={buckets}
           previous={compare ? before.data?.buckets : undefined}
           label={(b) => shortLabel(b.start ?? '', granularity)}
           full={(b) => periodLabel(b.start ?? '', granularity)}
-          empty={<p className="py-10 text-center text-muted-foreground">Chưa có đơn nào được giao trong khoảng này.</p>}
+          empty={<p className="py-10 text-center text-muted-foreground">{t('Chưa có đơn nào được giao trong khoảng này.')}</p>}
         />
       ) : null}
 
-      <Section title="Món bán chạy" description="Mười món bán nhiều phần nhất trong khoảng đã chọn.">
+      <Section title={t('Món bán chạy')} description={t('Mười món bán nhiều phần nhất trong khoảng đã chọn.')}>
         {dishes.isError ? <FormError message={problemMessage(dishes.error)} /> : null}
         {dishes.isPending ? <Skeleton className="h-28 rounded-xl" /> : null}
         {dishes.data ? (
           <StatsPanel className="p-2 sm:p-3">
             {dishItems.length === 0 ? (
-              <p className="py-8 text-center text-muted-foreground">Chưa có món nào được bán trong khoảng này.</p>
+              <p className="py-8 text-center text-muted-foreground">{t('Chưa có món nào được bán trong khoảng này.')}</p>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-10">#</TableHead>
-                    <TableHead>Món</TableHead>
-                    <TableHead className="w-1/3">Số phần</TableHead>
-                    <TableHead className="text-right">Doanh thu</TableHead>
+                    <TableHead>{t('Món')}</TableHead>
+                    <TableHead className="w-1/3">{t('Số phần')}</TableHead>
+                    <TableHead className="text-right">{t('Doanh thu')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

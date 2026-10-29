@@ -6,6 +6,7 @@ import { formatDate } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { Breadcrumb, TagList } from './parts'
+import { t } from '@/shared/i18n'
 
 /** Bold text written as **like this**. */
 function Inline({ text }: { text: string }) {
@@ -136,13 +137,13 @@ export function Toc({ headings }: { headings: Heading[] }) {
   return (
     <>
       <details className="rounded-lg bg-card lg:hidden">
-        <summary className="cursor-pointer list-none px-4 py-3 text-[0.9375rem] font-semibold marker:hidden">Trong bài này</summary>
-        <nav aria-label="Trong bài này" className="px-2 pb-3">
+        <summary className="cursor-pointer list-none px-4 py-3 text-[0.9375rem] font-semibold marker:hidden">{t('Trong bài này')}</summary>
+        <nav aria-label={t('Trong bài này')} className="px-2 pb-3">
           {list}
         </nav>
       </details>
-      <nav aria-label="Trong bài này" className="sticky top-6 hidden max-h-[calc(100svh-3rem)] overflow-y-auto lg:block">
-        <p className="mb-2 pl-3 text-sm font-semibold text-foreground">Trong bài này</p>
+      <nav aria-label={t('Trong bài này')} className="sticky top-6 hidden max-h-[calc(100svh-3rem)] overflow-y-auto lg:block">
+        <p className="mb-2 pl-3 text-sm font-semibold text-foreground">{t('Trong bài này')}</p>
         {list}
       </nav>
     </>
@@ -155,7 +156,7 @@ export function Toc({ headings }: { headings: Heading[] }) {
  */
 export function DocsSidebar({ groups, current }: { groups: { title: string; items: { label: string; to: string }[] }[]; current: string }) {
   return (
-    <nav aria-label="Mục lục hướng dẫn" className="sticky top-24 flex max-h-[calc(100svh-7rem)] flex-col gap-6 overflow-y-auto pr-2">
+    <nav aria-label={t('Mục lục hướng dẫn')} className="sticky top-24 flex max-h-[calc(100svh-7rem)] flex-col gap-6 overflow-y-auto pr-2">
       {groups.map((g) => (
         <div key={g.title} className="flex flex-col gap-0.5">
           <p className="mb-1 px-3 text-caption font-medium tracking-wide text-muted-foreground uppercase">{g.title}</p>
@@ -252,17 +253,17 @@ function ShareRow({ title, url }: { title: string; url: string }) {
   const round = 'flex size-10 items-center justify-center rounded-full border border-grey-300 text-ink outline-none transition-colors hover:bg-grey-50 focus-visible:ring-2 focus-visible:ring-ring'
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-h3 font-medium">Chia sẻ</p>
+      <p className="text-h3 font-medium">{t('Chia sẻ')}</p>
       <div className="flex gap-2">
-        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label="Chia sẻ lên Facebook" className={round}>
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label={t('Chia sẻ lên Facebook')} className={round}>
           <FacebookGlyph />
         </a>
-        <a href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`} aria-label="Gửi qua email" className={round}>
+        <a href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`} aria-label={t('Gửi qua email')} className={round}>
           <MailIcon className="size-4" aria-hidden="true" />
         </a>
         <button
           type="button"
-          aria-label={copied ? 'Đã chép đường dẫn' : 'Chép đường dẫn'}
+          aria-label={copied ? t('Đã chép đường dẫn') : t('Chép đường dẫn')}
           onClick={() => {
             void navigator.clipboard?.writeText(url).then(() => {
               setCopied(true)
@@ -323,7 +324,7 @@ export function BlogPostView({
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">Blog</span>
               <Link to={allPath} className="text-link text-ui text-ink">
-                Xem tất cả bài viết
+                {t('Xem tất cả bài viết')}
               </Link>
             </div>
             <h1 className="mt-5 text-[2rem] leading-[2.5rem] font-medium tracking-[-0.02em] sm:text-[2.375rem] sm:leading-[2.875rem]">{title}</h1>
@@ -341,8 +342,8 @@ export function BlogPostView({
           <aside className="flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
             <div className="flex flex-col items-center gap-1 rounded-xl border border-grey-200 bg-grey-50 p-6 text-center">
               <img src="/brand/bonbon-mark-color.svg" alt="" className="mb-3 size-16 rounded-full bg-white p-2" />
-              <p className="text-body font-medium">Đội ngũ bonbon</p>
-              <p className="text-ui text-muted-foreground">Cập nhật ngày {formatDate(updated)}</p>
+              <p className="text-body font-medium">{t('Đội ngũ bonbon')}</p>
+              <p className="text-ui text-muted-foreground">{t('Cập nhật ngày ')}{formatDate(updated)}</p>
             </div>
             {headings.length > 0 ? (
               <div className="rounded-xl border border-grey-200 p-5">

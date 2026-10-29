@@ -3,12 +3,13 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { articlePath, type Article } from '@/entities/article'
 import { cn } from '@/shared/lib/utils'
+import { t } from '@/shared/i18n'
 
 /** The trail above a page: Trang chủ / Hướng dẫn / … The last item is the page itself. */
 export function Breadcrumb({ trail }: { trail: { name: string; path: string }[] }) {
   const away = (path: string) => /^https?:/.test(path)
   return (
-    <nav aria-label="Đường dẫn" className="text-sm text-muted-foreground">
+    <nav aria-label={t('Đường dẫn')} className="text-sm text-muted-foreground">
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
         {trail.map((item, i) => {
           const last = i === trail.length - 1
@@ -41,7 +42,7 @@ export function Breadcrumb({ trail }: { trail: { name: string; path: string }[] 
 /** Tags on one line (a card) or wrapping (the end of a page). */
 export function TagList({ tags, oneLine, className }: { tags: string[]; oneLine?: boolean; className?: string }) {
   return (
-    <ul aria-label="Thẻ" className={cn('flex gap-1.5', oneLine ? 'flex-nowrap overflow-hidden' : 'flex-wrap', className)}>
+    <ul aria-label={t('Thẻ')} className={cn('flex gap-1.5', oneLine ? 'flex-nowrap overflow-hidden' : 'flex-wrap', className)}>
       {tags.map((tag) => (
         <li key={tag} className="shrink-0 rounded-full bg-grey-100 px-2.5 py-0.5 text-caption whitespace-nowrap text-grey-600">
           {tag}
@@ -92,7 +93,7 @@ export function CardGrid({ articles, initial = 6, step = 6 }: { articles: Articl
           onClick={() => setShown((n) => n + step)}
           className="min-h-12 w-full rounded-full bg-grey-100 px-6 text-ui font-medium text-ink outline-none hover:bg-grey-200 focus-visible:ring-3 focus-visible:ring-ring/50"
         >
-          Xem thêm ({articles.length - shown})
+          {t('Xem thêm (')}{articles.length - shown})
         </button>
       ) : null}
     </div>

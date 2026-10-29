@@ -4,6 +4,7 @@ import { useSession } from '@/entities/session'
 import { api, useGateState } from '@/shared/api'
 import { formatDateTime } from '@/shared/lib/format'
 import { Button } from '@/shared/ui/button'
+import { t } from '@/shared/i18n'
 
 const STARTUP_CHECK_MS = 5 * 60_000
 const RECOVERY_CHECK_MS = 15_000
@@ -36,12 +37,12 @@ export function MaintenanceGate() {
     return (
       <div role="alert" className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-background px-6 text-center">
         <Illustration name="maintenance" className="w-44" />
-        <h1 className="text-2xl font-semibold">Bonbon đang bảo trì</h1>
-        <p className="max-w-md text-muted-foreground">{m?.message || 'Hệ thống đang được bảo trì. Bạn vui lòng quay lại sau ít phút.'}</p>
-        {m?.endsAt ? <p className="text-sm">Dự kiến xong lúc {formatDateTime(m.endsAt)}.</p> : null}
-        <p className="text-xs text-muted-foreground">Trang tự kiểm tra lại và mở khi bảo trì xong.</p>
+        <h1 className="text-2xl font-semibold">{t('Bonbon đang bảo trì')}</h1>
+        <p className="max-w-md text-muted-foreground">{m?.message || t('Hệ thống đang được bảo trì. Bạn vui lòng quay lại sau ít phút.')}</p>
+        {m?.endsAt ? <p className="text-sm">{t('Dự kiến xong lúc ')}{formatDateTime(m.endsAt)}.</p> : null}
+        <p className="text-xs text-muted-foreground">{t('Trang tự kiểm tra lại và mở khi bảo trì xong.')}</p>
         <Button variant="outline" disabled={config.isFetching} onClick={() => void config.refetch()}>
-          Thử lại ngay
+          {t('Thử lại ngay')}
         </Button>
       </div>
     )
@@ -49,9 +50,9 @@ export function MaintenanceGate() {
   if (m?.active) {
     return (
       <div role="status" className="sticky top-0 z-50 border-b bg-warning-subtle px-4 py-2 text-center text-sm text-warning-fg">
-        {full ? 'Hệ thống đang bảo trì (quản trị viên vẫn dùng được). ' : 'Hệ thống đang bảo trì: chỉ xem được, các thao tác ghi sẽ bị từ chối. '}
+        {full ? t('Hệ thống đang bảo trì (quản trị viên vẫn dùng được). ') : t('Hệ thống đang bảo trì: chỉ xem được, các thao tác ghi sẽ bị từ chối. ')}
         {m.message}
-        {m.endsAt ? ` Dự kiến xong lúc ${formatDateTime(m.endsAt)}.` : ''}
+        {m.endsAt ? t(' Dự kiến xong lúc {v0}.', { v0: formatDateTime(m.endsAt) }) : ''}
       </div>
     )
   }

@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import type { Collection } from './types'
 
 /** Plain data, no imports from the app: vite.config.ts reads it to write sitemap.xml. */
@@ -8,8 +9,8 @@ export const COLLECTION_BASE: Record<Collection, string> = {
 }
 
 export const COLLECTION_TITLE: Record<Collection, string> = {
-  'bat-dau': 'Bắt đầu',
-  'quan-ly-cua-hang': 'Quản lý cửa hàng',
+  'bat-dau': t('Bắt đầu'),
+  'quan-ly-cua-hang': t('Quản lý cửa hàng'),
   blog: 'Blog',
 }
 

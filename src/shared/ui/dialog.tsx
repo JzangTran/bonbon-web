@@ -3,6 +3,7 @@ import { XIcon } from 'lucide-react'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import { cn } from '@/shared/lib/utils'
 import { Button } from './button'
+import { t } from '@/shared/i18n'
 
 /**
  * bonbon's dialog. Radix only supplies the behaviour (focus trap, Escape, aria); the look is ours: white panel, soft wide shadow,
@@ -37,7 +38,7 @@ export function DialogContent({
         {children}
         {showCloseButton ? (
           <DialogPrimitive.Close asChild>
-            <Button variant="ghost" size="icon-sm" className="absolute top-3 right-3" aria-label="Đóng">
+            <Button variant="ghost" size="icon-sm" className="absolute top-3 right-3" aria-label={t('Đóng')}>
               <XIcon />
             </Button>
           </DialogPrimitive.Close>

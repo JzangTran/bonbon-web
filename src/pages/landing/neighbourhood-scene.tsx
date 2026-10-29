@@ -1,4 +1,5 @@
 import { BearFigure } from './bear-scene'
+import { t } from '@/shared/i18n'
 
 const INK = '#1d1d1d'
 const ORANGE = '#fe551b'
@@ -36,7 +37,7 @@ function Bush({ x, y, r }: { x: number; y: number; r: number }) {
  */
 export function NeighbourhoodScene() {
   return (
-    <div className="relative overflow-hidden rounded-xl bg-accent" role="img" aria-label="Minh hoạ: quán dưới sảnh toà S1, gấu bonbon mang món sang toà S2 trong vài phút">
+    <div className="relative overflow-hidden rounded-xl bg-accent" role="img" aria-label={t('Minh hoạ: quán dưới sảnh toà S1, gấu bonbon mang món sang toà S2 trong vài phút')}>
       <svg aria-hidden="true" viewBox="0 0 1000 480" className="block h-auto w-full">
         {/* sun and clouds */}
         <circle cx="520" cy="96" r="38" fill={PALE} />
@@ -81,13 +82,13 @@ export function NeighbourhoodScene() {
       </svg>
 
       <span className="absolute top-[46%] left-[30%] hidden rounded-full bg-white px-3 py-1.5 text-small font-medium text-ink shadow-float sm:block">
-        Quán dưới sảnh S1 · 120 m
+        {t('Quán dưới sảnh S1 · 120 m')}
       </span>
       <span className="absolute top-[8%] right-[3%] hidden rounded-full bg-white px-3 py-1.5 text-small font-medium text-ink shadow-float sm:block">
-        Giao tới Toà S2 · căn 1508
+        {t('Giao tới Toà S2 · căn 1508')}
       </span>
       <span className="absolute bottom-[6%] left-1/2 -translate-x-1/2 rounded-full bg-ink px-3 py-1.5 text-[0.75rem] font-medium text-white sm:text-small">
-        12 phút, món còn nóng
+        {t('12 phút, món còn nóng')}
       </span>
     </div>
   )

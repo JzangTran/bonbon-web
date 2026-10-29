@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { useSession } from '@/entities/session'
 import { Button } from '@/shared/ui/button'
@@ -47,27 +48,27 @@ export function ReauthDialog({ open, onOpenChange, onDone }: { open: boolean; on
       <DialogContent>
         <form onSubmit={submit} className="flex flex-col gap-4">
           <DialogHeader>
-            <DialogTitle>Nhập lại mật khẩu</DialogTitle>
-            <DialogDescription>Việc này cần bạn đăng nhập trong 10 phút gần nhất. Nhập lại mật khẩu của {session?.email} để tiếp tục.</DialogDescription>
+            <DialogTitle>{t('Nhập lại mật khẩu')}</DialogTitle>
+            <DialogDescription>{t('Việc này cần bạn đăng nhập trong 10 phút gần nhất. Nhập lại mật khẩu của ')}{session?.email}{t(' để tiếp tục.')}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="reauth-password">Mật khẩu</Label>
+            <Label htmlFor="reauth-password">{t('Mật khẩu')}</Label>
             <PasswordInput id="reauth-password" autoComplete="current-password" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <FormError message={error} />
           <p className="text-xs text-muted-foreground">
-            Đăng nhập bằng Google, không có mật khẩu?{' '}
+            {t('Đăng nhập bằng Google, không có mật khẩu?')}{' '}
             <button type="button" className="text-link" onClick={() => void signOut()}>
-              Đăng xuất
+              {t('Đăng xuất')}
             </button>{' '}
-            rồi đăng nhập lại.
+            {t('rồi đăng nhập lại.')}
           </p>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Huỷ
+              {t('Huỷ')}
             </Button>
             <Button type="submit" disabled={busy || password.length === 0}>
-              {busy ? 'Đang xác nhận…' : 'Xác nhận'}
+              {busy ? t('Đang xác nhận…') : t('Xác nhận')}
             </Button>
           </DialogFooter>
         </form>

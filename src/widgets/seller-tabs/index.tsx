@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useLocation } from 'react-router'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { merchantPath } from '@/shared/config/sites'
@@ -6,10 +7,10 @@ import { merchantPath } from '@/shared/config/sites'
 export function OrderCaseTabs() {
   return (
     <PageTabs
-      label="Trả hàng và hoàn tiền"
+      label={t('Trả hàng và hoàn tiền')}
       tabs={[
-        { id: 'cases', label: 'Khiếu nại của khách', to: merchantPath('/order-cases') },
-        { id: 'performance', label: 'Hiệu suất và điểm phạt', to: merchantPath('/performance') },
+        { id: 'cases', label: t('Khiếu nại của khách'), to: merchantPath('/order-cases') },
+        { id: 'performance', label: t('Hiệu suất và điểm phạt'), to: merchantPath('/performance') },
       ]}
     />
   )
@@ -20,11 +21,11 @@ export function MenuTabs() {
   const { pathname } = useLocation()
   return (
     <PageTabs
-      label="Thực đơn"
+      label={t('Thực đơn')}
       tabs={[
-        { id: 'dishes', label: 'Món ăn', to: merchantPath('/menu'), active: pathname === merchantPath('/menu') || pathname === merchantPath('/menu/new') },
-        { id: 'options', label: 'Nhóm lựa chọn', to: merchantPath('/menu/options') },
-        { id: 'category-cases', label: 'Món sai ngành', to: merchantPath('/category-cases') },
+        { id: 'dishes', label: t('Món ăn'), to: merchantPath('/menu'), active: pathname === merchantPath('/menu') || pathname === merchantPath('/menu/new') },
+        { id: 'options', label: t('Nhóm lựa chọn'), to: merchantPath('/menu/options') },
+        { id: 'category-cases', label: t('Món sai ngành'), to: merchantPath('/category-cases') },
       ]}
     />
   )
@@ -34,10 +35,10 @@ export function MenuTabs() {
 export function FinanceTabs() {
   return (
     <PageTabs
-      label="Doanh thu"
+      label={t('Doanh thu')}
       tabs={[
-        { id: 'statistics', label: 'Thống kê', to: merchantPath('/statistics') },
-        { id: 'earnings', label: 'Thu nhập và sao kê', to: merchantPath('/earnings') },
+        { id: 'statistics', label: t('Thống kê'), to: merchantPath('/statistics') },
+        { id: 'earnings', label: t('Thu nhập và sao kê'), to: merchantPath('/earnings') },
       ]}
     />
   )

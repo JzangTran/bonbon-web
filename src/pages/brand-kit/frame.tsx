@@ -1,18 +1,19 @@
 import { ComponentIcon, PaletteIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { DocsFrame, type DocsTab } from '@/shared/ui/docs-frame'
+import { t } from '@/shared/i18n'
 
 export const BRAND_PATH = '/bo-nhan-dien'
 export const COMPONENTS_PATH = '/bo-nhan-dien/components'
 
 const TABS: DocsTab[] = [
-  { key: 'identity', label: 'Nhận diện', icon: PaletteIcon, to: BRAND_PATH },
+  { key: 'identity', label: t('Nhận diện'), icon: PaletteIcon, to: BRAND_PATH },
   { key: 'components', label: 'Components', icon: ComponentIcon, to: COMPONENTS_PATH },
 ]
 
 /** The brand site, laid out like the help center: the identity (logo, colours, type, rules) and the components, as tabs. */
 export function BrandFrame({ tab, ...rest }: { tab: 'identity' | 'components'; sidebar?: ReactNode; aside?: ReactNode; children: ReactNode }) {
-  return <DocsFrame label="Thương hiệu" tabs={TABS} tab={tab} {...rest} />
+  return <DocsFrame label={t('Thương hiệu')} tabs={TABS} tab={tab} {...rest} />
 }
 
 /** A section of a brand page: a heading the side menu and the headings list jump to, a line under it, then the samples. */

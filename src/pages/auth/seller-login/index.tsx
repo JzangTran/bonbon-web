@@ -16,10 +16,11 @@ import { AuthHero, FormError, FormSuccess } from '@/widgets/auth-shell'
 import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
 import { merchantPath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 const schema = z.object({
-  email: z.email('Email không hợp lệ'),
-  password: z.string().min(1, 'Vui lòng nhập mật khẩu').max(100, 'Mật khẩu tối đa 100 ký tự'),
+  email: z.email(t('Email không hợp lệ')),
+  password: z.string().min(1, t('Vui lòng nhập mật khẩu')).max(100, t('Mật khẩu tối đa 100 ký tự')),
 })
 type Values = z.infer<typeof schema>
 type LoginResponse = components['schemas']['LoginResponse']
@@ -37,7 +38,7 @@ export function SellerLoginPage() {
 
   const finish = (data: LoginResponse) => {
     if (data.deletionCancelled) {
-      toast.success('Việc xoá tài khoản đã được huỷ vì bạn đăng nhập lại.', { description: 'Tài khoản của bạn vẫn như cũ.', duration: 12_000 })
+      toast.success(t('Việc xoá tài khoản đã được huỷ vì bạn đăng nhập lại.'), { description: t('Tài khoản của bạn vẫn như cũ.'), duration: 12_000 })
     }
     const { tokens, user } = data
     if (!tokens?.accessToken || !tokens.refreshToken || !user?.id) return
@@ -68,7 +69,7 @@ export function SellerLoginPage() {
     }
     const roles = (data.availableRoles ?? data.user?.availableRoles ?? []) as Role[]
     if (!roles.includes('SELLER')) {
-      setError('Tài khoản này là tài khoản khách hàng. Hãy dùng ứng dụng bonbon trên điện thoại để đặt món.')
+      setError(t('Tài khoản này là tài khoản khách hàng. Hãy dùng ứng dụng bonbon trên điện thoại để đặt món.'))
       return
     }
     if (data.needsRoleSelection && data.roleToken) {
@@ -94,17 +95,17 @@ export function SellerLoginPage() {
 
   return (
     <AuthHero
-      heading="Đăng nhập"
-      eyebrow="bonbon dành cho người bán"
-      headline="Bán hàng"
-      headlineSoft="ngay trong khu của bạn"
+      heading={t('Đăng nhập')}
+      eyebrow={t('bonbon dành cho người bán')}
+      headline={t('Bán hàng')}
+      headlineSoft={t('ngay trong khu của bạn')}
       points={SELLER_POINTS}
-      cardTitle="Đăng nhập"
+      cardTitle={t('Đăng nhập')}
       footer={
         <>
-          Bạn mới biết đến bonbon?{' '}
+          {t('Bạn mới biết đến bonbon?')}{' '}
           <Link to={merchantPath('/register')} className="text-link font-medium">
-            Đăng ký
+            {t('Đăng ký')}
           </Link>
         </>
       }
@@ -127,12 +128,12 @@ export function SellerLoginPage() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="password" className="sr-only">
-            Mật khẩu
+            {t('Mật khẩu')}
           </Label>
           <PasswordInput
             id="password"
             autoComplete="current-password"
-            placeholder="Mật khẩu"
+            placeholder={t('Mật khẩu')}
             className="h-11"
             aria-invalid={!!form.formState.errors.password}
             {...form.register('password')}
@@ -143,19 +144,19 @@ export function SellerLoginPage() {
         <FormError message={error} />
         {unverifiedEmail && !resent ? (
           <Button type="button" variant="outline" onClick={resend}>
-            Gửi lại email xác thực
+            {t('Gửi lại email xác thực')}
           </Button>
         ) : null}
-        {resent ? <FormSuccess message="Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết. Hãy kiểm tra hộp thư." /> : null}
+        {resent ? <FormSuccess message={t('Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết. Hãy kiểm tra hộp thư.')} /> : null}
         <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
+          {form.formState.isSubmitting ? t('Đang đăng nhập…') : t('Đăng nhập')}
         </Button>
         <Link to="/forgot-password" className="text-link -mt-2 self-start text-xs">
-          Quên mật khẩu
+          {t('Quên mật khẩu')}
         </Link>
       </form>
       <GoogleSignIn />
-      <LegalNote action="đăng nhập" />
+      <LegalNote action={t('đăng nhập')} />
     </AuthHero>
   )
 }

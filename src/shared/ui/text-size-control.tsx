@@ -1,12 +1,13 @@
 import { TEXT_SCALES, setTextScale, useTextScale } from '@/shared/lib/text-scale'
 import { cn } from '@/shared/lib/utils'
+import { t } from '@/shared/i18n'
 
 /** "Cỡ chữ": three sizes (100, 125 and 150 %), saved on this device. */
 export function TextSizeControl({ className, tone = 'default' }: { className?: string; tone?: 'default' | 'light' }) {
   const scale = useTextScale()
   return (
-    <div role="group" aria-label="Cỡ chữ" className={cn('flex items-center gap-2', className)}>
-      <span className={cn('text-sm', tone === 'light' ? 'text-white/70' : 'text-muted-foreground')}>Cỡ chữ</span>
+    <div role="group" aria-label={t('Cỡ chữ')} className={cn('flex items-center gap-2', className)}>
+      <span className={cn('text-sm', tone === 'light' ? 'text-white/70' : 'text-muted-foreground')}>{t('Cỡ chữ')}</span>
       <div className="flex gap-0.5">
         {TEXT_SCALES.map((s, i) => {
           const selected = scale === s.id
@@ -15,7 +16,7 @@ export function TextSizeControl({ className, tone = 'default' }: { className?: s
               key={s.id}
               type="button"
               aria-pressed={selected}
-              aria-label={`Cỡ chữ ${s.label.toLowerCase()} (${s.percent}%)`}
+              aria-label={t('Cỡ chữ {v0} ({v1}%)', { v0: s.label.toLowerCase(), v1: s.percent })}
               title={`${s.label} (${s.percent}%)`}
               onClick={() => setTextScale(s.id)}
               className={cn(

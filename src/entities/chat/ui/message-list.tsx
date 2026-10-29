@@ -1,9 +1,10 @@
+import { t } from '@/shared/i18n'
 import { CornerUpLeftIcon } from 'lucide-react'
 import { formatDateTime } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import type { ChatMessage } from '../api'
 
-const SIDE_LABEL: Record<string, string> = { CUSTOMER: 'Khách', SHOP: 'Cửa hàng' }
+const SIDE_LABEL: Record<string, string> = { CUSTOMER: t('Khách'), SHOP: t('Cửa hàng') }
 
 /**
  * One conversation, oldest at the top. {@code messages} arrive newest first as the API returns them. In the shop's own
@@ -19,12 +20,12 @@ export function MessageList({ messages, onReply, showSide = false }: { messages:
             {showSide ? <p className="mb-1 text-xs font-semibold opacity-80">{SIDE_LABEL[m.sender ?? ''] ?? m.sender}</p> : null}
             {m.replyTo ? (
               <p className={cn('mb-1 border-l-2 pl-2 text-xs opacity-80', m.mine ? 'border-primary-foreground/60' : 'border-foreground/30')}>
-                {m.replyTo.text ? m.replyTo.text : m.replyTo.hasImage ? 'Ảnh' : ''}
+                {m.replyTo.text ? m.replyTo.text : m.replyTo.hasImage ? t('Ảnh') : ''}
               </p>
             ) : null}
             {m.imageUrl ? (
               <a href={m.imageUrl} target="_blank" rel="noreferrer">
-                <img src={m.imageUrl} alt="Ảnh đính kèm" className="mb-1 max-h-60 rounded-sm" />
+                <img src={m.imageUrl} alt={t('Ảnh đính kèm')} className="mb-1 max-h-60 rounded-sm" />
               </a>
             ) : null}
             {m.text ? <p className="break-words whitespace-pre-wrap">{m.text}</p> : null}
@@ -32,8 +33,8 @@ export function MessageList({ messages, onReply, showSide = false }: { messages:
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span>{formatDateTime(m.createdAt)}</span>
             {onReply ? (
-              <button type="button" onClick={() => onReply(m)} className="inline-flex items-center gap-1 hover:text-foreground" aria-label="Trả lời tin này">
-                <CornerUpLeftIcon className="size-3" /> Trả lời
+              <button type="button" onClick={() => onReply(m)} className="inline-flex items-center gap-1 hover:text-foreground" aria-label={t('Trả lời tin này')}>
+                <CornerUpLeftIcon className="size-3" />{t(' Trả lời')}
               </button>
             ) : null}
           </div>

@@ -7,6 +7,7 @@ import { cn } from '@/shared/lib/utils'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import type { ResourceColumn, ResourceLink } from './resources'
+import { t } from '@/shared/i18n'
 
 type RenderLink = (link: ResourceLink, className: string, onClick: () => void) => ReactNode
 
@@ -70,12 +71,12 @@ export function MegaMenu({ label, current, columns, feature, renderLink }: {
           <span className="relative flex items-center gap-3">
             <StoreIcon className="size-7 shrink-0" strokeWidth={1.5} aria-hidden="true" />
             <span className="flex flex-col">
-              <span className="text-body font-medium">Mở quán trên bonbon</span>
-              <span className="text-small text-white/85">Bán cho cư dân trong toà và trong khu, hoa hồng thấp, tự giao.</span>
+              <span className="text-body font-medium">{t('Mở quán trên bonbon')}</span>
+              <span className="text-small text-white/85">{t('Bán cho cư dân trong toà và trong khu, hoa hồng thấp, tự giao.')}</span>
             </span>
           </span>
           <span className="relative hidden shrink-0 items-center gap-1.5 rounded-full bg-white px-4 py-2 text-ui font-medium text-ink sm:inline-flex">
-            Bắt đầu
+            {t('Bắt đầu')}
             <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </span>
         </a>

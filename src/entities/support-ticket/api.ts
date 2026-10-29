@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type TicketSummary = components['schemas']['SupportTicketSummary']
 export type TicketDetail = components['schemas']['SupportTicketDetail']
@@ -11,9 +12,9 @@ export type TicketStatus = 'OPEN' | 'ANSWERED' | 'CLOSED'
 export const TICKETS_KEY = ['support-tickets'] as const
 
 export const TICKET_STATUS: Record<string, { label: string; className: string }> = {
-  OPEN: { label: 'Chờ hỗ trợ', className: 'bg-warning-subtle text-warning-fg' },
-  ANSWERED: { label: 'Đã trả lời', className: 'bg-success-subtle text-success-fg' },
-  CLOSED: { label: 'Đã đóng', className: 'bg-muted text-muted-foreground' },
+  OPEN: { label: t('Chờ hỗ trợ'), className: 'bg-warning-subtle text-warning-fg' },
+  ANSWERED: { label: t('Đã trả lời'), className: 'bg-success-subtle text-success-fg' },
+  CLOSED: { label: t('Đã đóng'), className: 'bg-muted text-muted-foreground' },
 }
 
 // --- the person asking for help
@@ -65,7 +66,7 @@ export function useOpenTicket() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã gửi phiếu. Chúng tôi sẽ trả lời sớm.')
+      toast.success(t('Đã gửi phiếu. Chúng tôi sẽ trả lời sớm.'))
       void queryClient.invalidateQueries({ queryKey: TICKETS_KEY })
     },
   })
@@ -94,7 +95,7 @@ export function useCloseTicket(id: string) {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã đóng phiếu.')
+      toast.success(t('Đã đóng phiếu.'))
       void queryClient.invalidateQueries({ queryKey: TICKETS_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),
@@ -138,7 +139,7 @@ export function useAnswerTicket(id: string) {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã trả lời. Người dùng được báo.')
+      toast.success(t('Đã trả lời. Người dùng được báo.'))
       void queryClient.invalidateQueries({ queryKey: TICKETS_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),

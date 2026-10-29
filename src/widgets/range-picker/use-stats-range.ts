@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { presetRange, previousRange, vietnamToday, type RangePreset } from '@/shared/lib/date-range'
 import { useNow } from '@/shared/lib/use-now'
+import { t } from '@/shared/i18n'
 
 export type Granularity = 'day' | 'week' | 'month'
-export const GRANULARITY_LABEL: Record<Granularity, string> = { day: 'Ngày', week: 'Tuần', month: 'Tháng' }
+export const GRANULARITY_LABEL: Record<Granularity, string> = { day: t('Ngày'), week: t('Tuần'), month: t('Tháng') }
 export const granularityLabel = (g: Granularity) => GRANULARITY_LABEL[g]
 
 export type StatsRange = ReturnType<typeof useStatsRange>

@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -5,37 +6,37 @@ import { SHOP_QUERY_KEY, type ShopApplication } from '@/entities/shop'
 import { problemFieldErrors } from '@/shared/api'
 import type { Errors } from '@/shared/lib/validate'
 
-export const STEPS = ['Thông tin quán', 'Giao hàng và thời gian', 'Thuế & nhận tiền', 'Định danh', 'Xác nhận'] as const
+export const STEPS = [t('Thông tin quán'), t('Giao hàng và thời gian'), t('Thuế & nhận tiền'), t('Định danh'), t('Xác nhận')] as const
 
 export const FIELD_LABEL: Record<string, string> = {
-  name: 'Tên cửa hàng',
-  phone: 'Số điện thoại',
+  name: t('Tên cửa hàng'),
+  phone: t('Số điện thoại'),
   email: 'Email',
-  province: 'Tỉnh/Thành phố',
-  ward: 'Phường/Xã',
-  addressDetail: 'Địa chỉ chi tiết',
-  location: 'Vị trí trên bản đồ',
-  serviceArea: 'Khu vực phục vụ',
-  openingHours: 'Giờ mở cửa',
-  deliveryRadiusKm: 'Bán kính giao',
-  deliveryFee: 'Phí giao hàng',
-  businessType: 'Loại hình kinh doanh',
-  businessAddress: 'Địa chỉ kinh doanh',
-  taxCode: 'Mã số thuế',
-  invoiceEmails: 'Email nhận hoá đơn',
-  businessName: 'Tên hộ kinh doanh',
-  businessLicense: 'Giấy phép kinh doanh',
-  bankName: 'Ngân hàng',
-  accountNumber: 'Số tài khoản',
-  accountHolderName: 'Chủ tài khoản',
-  docType: 'Loại giấy tờ',
-  docNumber: 'Số giấy tờ',
-  fullName: 'Họ tên trên giấy tờ',
-  frontPhoto: 'Ảnh mặt trước',
-  selfiePhoto: 'Ảnh cầm giấy tờ',
-  accuracyConfirmed: 'Cam kết thông tin chính xác',
-  sellerTerms: 'Điều khoản người bán',
-  identityConsent: 'Đồng ý xử lý dữ liệu định danh',
+  province: t('Tỉnh/Thành phố'),
+  ward: t('Phường/Xã'),
+  addressDetail: t('Địa chỉ chi tiết'),
+  location: t('Vị trí trên bản đồ'),
+  serviceArea: t('Khu vực phục vụ'),
+  openingHours: t('Giờ mở cửa'),
+  deliveryRadiusKm: t('Bán kính giao'),
+  deliveryFee: t('Phí giao hàng'),
+  businessType: t('Loại hình kinh doanh'),
+  businessAddress: t('Địa chỉ kinh doanh'),
+  taxCode: t('Mã số thuế'),
+  invoiceEmails: t('Email nhận hoá đơn'),
+  businessName: t('Tên hộ kinh doanh'),
+  businessLicense: t('Giấy phép kinh doanh'),
+  bankName: t('Ngân hàng'),
+  accountNumber: t('Số tài khoản'),
+  accountHolderName: t('Chủ tài khoản'),
+  docType: t('Loại giấy tờ'),
+  docNumber: t('Số giấy tờ'),
+  fullName: t('Họ tên trên giấy tờ'),
+  frontPhoto: t('Ảnh mặt trước'),
+  selfiePhoto: t('Ảnh cầm giấy tờ'),
+  accuracyConfirmed: t('Cam kết thông tin chính xác'),
+  sellerTerms: t('Điều khoản người bán'),
+  identityConsent: t('Đồng ý xử lý dữ liệu định danh'),
 }
 
 /**
@@ -64,7 +65,7 @@ export function useStep<T>(save: (body: T) => Promise<{ data?: ShopApplication; 
     setClientErrors(found)
     setServerErrors({})
     const ok = Object.keys(found).length === 0
-    if (!ok) toast.error('Vui lòng kiểm tra các trường được đánh dấu.')
+    if (!ok) toast.error(t('Vui lòng kiểm tra các trường được đánh dấu.'))
     return ok
   }
   return { ...mutation, errors: { ...serverErrors, ...clientErrors } as Errors, check }

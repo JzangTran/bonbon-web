@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api, type components } from '@/shared/api'
 import { SHOP_QUERY_KEY } from './api'
@@ -39,8 +40,8 @@ export function useCloseShop() {
 }
 
 export const CLOSE_REASON_LABEL: Record<string, string> = {
-  STOP_SELLING: 'Không bán nữa',
-  RELOCATING: 'Chuyển đi nơi khác',
-  TOO_FEW_ORDERS: 'Ít đơn',
-  OTHER: 'Lý do khác',
+  STOP_SELLING: t('Không bán nữa'),
+  RELOCATING: t('Chuyển đi nơi khác'),
+  TOO_FEW_ORDERS: t('Ít đơn'),
+  OTHER: t('Lý do khác'),
 }

@@ -5,6 +5,8 @@ import { Lockup, Mark } from '@/shared/ui/brand'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
+import { LanguageSwitch } from '@/shared/ui/language-switch'
+import { t } from '@/shared/i18n'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
@@ -41,17 +43,20 @@ function AuthFrame({ children, footer }: { children: ReactNode; footer?: ReactNo
     <div className="bb-auth grid min-h-svh bg-white lg:grid-cols-2">
       <div className="flex min-h-svh flex-col px-6 sm:px-12 xl:pl-[8.5rem]">
         <header className="flex h-20 items-center justify-between gap-4">
-          <a href={siteUrl('public')} aria-label="bonbon, trang chủ" className="flex items-center">
+          <a href={siteUrl('public')} aria-label={t('bonbon, trang chủ')} className="flex items-center">
             <Lockup className="h-7" />
           </a>
-          <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline" />
+          <div className="flex items-center gap-3">
+            <LanguageSwitch compact />
+            <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline" />
+          </div>
         </header>
         <main className="flex w-full max-w-[30rem] flex-1 flex-col justify-center gap-6 py-10">{children}</main>
         <footer className="flex flex-wrap items-center gap-x-5 gap-y-1 pb-8 text-small text-muted-foreground">
           {footer}
           {SUPPORT_EMAIL ? (
             <a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-ink">
-              Bạn cần giúp đỡ?
+              {t('Bạn cần giúp đỡ?')}
             </a>
           ) : null}
         </footer>
@@ -157,7 +162,7 @@ export function AuthStepPage({ steps, current, title, description, onBack, child
           <button
             type="button"
             onClick={onBack}
-            aria-label="Quay lại"
+            aria-label={t('Quay lại')}
             className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-grey-100 hover:text-ink"
           >
             <ArrowLeftIcon className="size-5" />

@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type OrderCase = components['schemas']['OrderCase']
 export type OrderCaseLine = components['schemas']['OrderCaseLine']
@@ -58,7 +59,7 @@ export function useDecideCase() {
       return data
     },
     onSuccess: (_, input) => {
-      toast.success(input.outcome === 'UPHELD' ? 'Đã chấp nhận khiếu nại. Khách sẽ được hoàn tiền.' : 'Đã bác bỏ khiếu nại.')
+      toast.success(input.outcome === 'UPHELD' ? t('Đã chấp nhận khiếu nại. Khách sẽ được hoàn tiền.') : t('Đã bác bỏ khiếu nại.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {
@@ -77,7 +78,7 @@ export function useReopenCase() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã mở lại khiếu nại.')
+      toast.success(t('Đã mở lại khiếu nại.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),
@@ -119,7 +120,7 @@ export function useAcceptCase() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã chấp nhận khiếu nại. Khách được hoàn tiền.')
+      toast.success(t('Đã chấp nhận khiếu nại. Khách được hoàn tiền.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {
@@ -138,7 +139,7 @@ export function useDisputeCase() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã chuyển cho quản trị viên quyết định.')
+      toast.success(t('Đã chuyển cho quản trị viên quyết định.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {

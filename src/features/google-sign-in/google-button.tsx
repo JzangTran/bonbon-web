@@ -1,3 +1,4 @@
+import { locale, t } from '@/shared/i18n'
 import { useEffect, useRef } from 'react'
 import { env } from '@/shared/config/env'
 
@@ -65,11 +66,11 @@ export function GoogleButton({ onCredential }: { onCredential: (idToken: string)
           text: 'continue_with',
           shape: 'rectangular',
           width: Math.min(400, target.clientWidth || 320),
-          locale: 'vi',
+          locale,
         })
       })
       .catch(() => {
-        target.textContent = 'Không tải được nút đăng nhập Google.'
+        target.textContent = t('Không tải được nút đăng nhập Google.')
       })
     return () => {
       cancelled = true

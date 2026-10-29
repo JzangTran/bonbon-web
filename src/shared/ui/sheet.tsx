@@ -3,6 +3,7 @@ import { XIcon } from 'lucide-react'
 import { Dialog as SheetPrimitive } from 'radix-ui'
 import { cn } from '@/shared/lib/utils'
 import { Button } from './button'
+import { t } from '@/shared/i18n'
 
 /** A panel that slides in from an edge (Radix dialog behaviour, bonbon look). The motion classes are in index.css. */
 export const Sheet = SheetPrimitive.Root
@@ -40,7 +41,7 @@ export function SheetContent({
         {children}
         {showCloseButton ? (
           <SheetPrimitive.Close asChild>
-            <Button variant="ghost" size="icon-sm" className="absolute top-3 right-3" aria-label="Đóng">
+            <Button variant="ghost" size="icon-sm" className="absolute top-3 right-3" aria-label={t('Đóng')}>
               <XIcon />
             </Button>
           </SheetPrimitive.Close>

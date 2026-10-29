@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useSyncExternalStore } from 'react'
 
 /**
@@ -6,9 +7,9 @@ import { useSyncExternalStore } from 'react'
  * are met by the layout reflowing at these sizes; the three levels here are shortcuts for people who do not know the browser setting.
  */
 export const TEXT_SCALES = [
-  { id: 'normal', label: 'Chuẩn', percent: 100 },
-  { id: 'large', label: 'Lớn', percent: 125 },
-  { id: 'xlarge', label: 'Rất lớn', percent: 150 },
+  { id: 'normal', label: t('Chuẩn'), percent: 100 },
+  { id: 'large', label: t('Lớn'), percent: 125 },
+  { id: 'xlarge', label: t('Rất lớn'), percent: 150 },
 ] as const
 export type TextScaleId = (typeof TEXT_SCALES)[number]['id']
 

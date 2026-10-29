@@ -10,6 +10,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { merchantPath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 /** One ticket with the whole conversation; the shop can write again or close it. */
 export function SellerSupportTicketDetailPage() {
@@ -19,33 +20,33 @@ export function SellerSupportTicketDetailPage() {
   const close = useCloseTicket(id)
   const [body, setBody] = useState('')
   const [images, setImages] = useState<File[]>([])
-  const t = ticket.data
-  const status = TICKET_STATUS[t?.status ?? ''] ?? { label: t?.status ?? '', className: '' }
+  const tItem = ticket.data
+  const status = TICKET_STATUS[tItem?.status ?? ''] ?? { label: tItem?.status ?? '', className: '' }
 
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <Link to={merchantPath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" /> Phiếu hỗ trợ
+        <ArrowLeftIcon className="size-4" />{t(' Phiếu hỗ trợ')}
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}
       {ticket.isPending ? <Skeleton className="h-48" /> : null}
-      {t ? (
+      {tItem ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold">{t.subject}</h1>
+            <h1 className="text-2xl font-semibold">{tItem.subject}</h1>
             <Badge className={status.className}>{status.label}</Badge>
           </div>
-          {t.orderNumber ? <p className="text-sm text-muted-foreground">Về đơn #{t.orderNumber}</p> : null}
-          {t.closedBy === 'SYSTEM' ? <p className="text-sm text-muted-foreground">Phiếu tự đóng vì không có tin nhắn mới sau khi được trả lời.</p> : null}
+          {tItem.orderNumber ? <p className="text-sm text-muted-foreground">{t('Về đơn #')}{tItem.orderNumber}</p> : null}
+          {tItem.closedBy === 'SYSTEM' ? <p className="text-sm text-muted-foreground">{t('Phiếu tự đóng vì không có tin nhắn mới sau khi được trả lời.')}</p> : null}
 
           <Card className="p-4">
-            <TicketThread messages={t.messages ?? []} supportOnRight={false} />
+            <TicketThread messages={tItem.messages ?? []} supportOnRight={false} />
           </Card>
 
-          {t.status !== 'CLOSED' ? (
+          {tItem.status !== 'CLOSED' ? (
             <Card className="gap-3 p-4">
-              <h2 className="font-semibold">Nhắn thêm</h2>
-              <Textarea rows={4} value={body} maxLength={2000} onChange={(e) => setBody(e.target.value)} aria-label="Nội dung nhắn thêm" />
+              <h2 className="font-semibold">{t('Nhắn thêm')}</h2>
+              <Textarea rows={4} value={body} maxLength={2000} onChange={(e) => setBody(e.target.value)} aria-label={t('Nội dung nhắn thêm')} />
               <ImagePicker files={images} onChange={setImages} />
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -62,15 +63,15 @@ export function SellerSupportTicketDetailPage() {
                     )
                   }
                 >
-                  Gửi
+                  {t('Gửi')}
                 </Button>
                 <Button variant="outline" disabled={close.isPending} onClick={() => close.mutate()}>
-                  Đóng phiếu
+                  {t('Đóng phiếu')}
                 </Button>
               </div>
             </Card>
           ) : (
-            <Card className="p-4 text-sm text-muted-foreground">Phiếu đã đóng. Cần hỗ trợ thêm thì gửi phiếu mới.</Card>
+            <Card className="p-4 text-sm text-muted-foreground">{t('Phiếu đã đóng. Cần hỗ trợ thêm thì gửi phiếu mới.')}</Card>
           )}
         </>
       ) : null}

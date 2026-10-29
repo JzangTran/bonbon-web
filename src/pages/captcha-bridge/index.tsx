@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useCallback, useState } from 'react'
 import { Captcha } from '@/shared/ui/captcha'
 
@@ -25,9 +26,9 @@ export function CaptchaBridgePage() {
 
   return (
     <main className="flex min-h-svh flex-col items-center justify-center gap-4 p-4 text-center">
-      <p className="text-sm text-muted-foreground">Đánh dấu ô bên dưới để xác minh bạn không phải robot.</p>
+      <p className="text-sm text-muted-foreground">{t('Đánh dấu ô bên dưới để xác minh bạn không phải robot.')}</p>
       <Captcha onToken={onToken} />
-      {solved ? <p className="text-sm text-success-fg">Đã xác minh, đang quay lại ứng dụng…</p> : null}
+      {solved ? <p className="text-sm text-success-fg">{t('Đã xác minh, đang quay lại ứng dụng…')}</p> : null}
     </main>
   )
 }

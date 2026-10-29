@@ -7,12 +7,13 @@ import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { t } from '@/shared/i18n'
 
 function uptime(seconds: number): string {
   const d = Math.floor(seconds / 86400)
   const h = Math.floor((seconds % 86400) / 3600)
   const m = Math.floor((seconds % 3600) / 60)
-  return [d ? `${d} ngày` : '', h ? `${h} giờ` : '', `${m} phút`].filter(Boolean).join(' ')
+  return [d ? t('{v0} ngày', { v0: d }) : '', h ? t('{v0} giờ', { v0: h }) : '', t('{v0} phút', { v0: m })].filter(Boolean).join(' ')
 }
 
 function CheckRow({ check }: { check: OpsCheck }) {
@@ -29,7 +30,7 @@ function CheckRow({ check }: { check: OpsCheck }) {
       <span className="flex items-center gap-3 text-sm text-muted-foreground tabular-nums">
         <span>{check.detail}</span>
         <span>{check.latencyMs} ms</span>
-        <span className="sr-only">{check.ok ? 'Đạt' : 'Không đạt'}</span>
+        <span className="sr-only">{check.ok ? t('Đạt') : t('Không đạt')}</span>
       </span>
     </li>
   )
@@ -41,7 +42,7 @@ export function OpsStatusPage() {
   const status = useOpsStatus()
 
   if (!session?.permissions.has('ops:read')) {
-    return <p className="text-muted-foreground">Bạn không có quyền xem tình trạng hệ thống.</p>
+    return <p className="text-muted-foreground">{t('Bạn không có quyền xem tình trạng hệ thống.')}</p>
   }
   const data = status.data
 
@@ -49,12 +50,12 @@ export function OpsStatusPage() {
     <div className="flex flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Tình trạng hệ thống</h1>
-          <p className="text-sm text-muted-foreground">Kiểm tra các thành phần hệ thống dựa vào, cập nhật mỗi 15 giây.</p>
+          <h1 className="text-2xl font-semibold">{t('Tình trạng hệ thống')}</h1>
+          <p className="text-sm text-muted-foreground">{t('Kiểm tra các thành phần hệ thống dựa vào, cập nhật mỗi 15 giây.')}</p>
         </div>
         {data ? (
           <Badge className={data.status === 'UP' ? 'bg-success-subtle text-success-fg' : 'bg-danger-subtle text-danger-fg'}>
-            {data.status === 'UP' ? 'Mọi thành phần hoạt động' : 'Có thành phần không đạt'}
+            {data.status === 'UP' ? t('Mọi thành phần hoạt động') : t('Có thành phần không đạt')}
           </Badge>
         ) : null}
       </div>
@@ -66,7 +67,7 @@ export function OpsStatusPage() {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Thành phần</CardTitle>
+              <CardTitle>{t('Thành phần')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="divide-y">
@@ -77,26 +78,26 @@ export function OpsStatusPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Phiên bản đang chạy</CardTitle>
+              <CardTitle>{t('Phiên bản đang chạy')}</CardTitle>
             </CardHeader>
             <CardContent>
               <dl className="grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2">
                 <div className="flex justify-between gap-4 border-b pb-2">
-                  <dt className="text-muted-foreground">Chạy được</dt>
+                  <dt className="text-muted-foreground">{t('Chạy được')}</dt>
                   <dd className="tabular-nums">{uptime(data.uptimeSeconds ?? 0)}</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b pb-2">
-                  <dt className="text-muted-foreground">Khởi động lúc</dt>
+                  <dt className="text-muted-foreground">{t('Khởi động lúc')}</dt>
                   <dd className="tabular-nums">{formatDateTime(data.startedAt)}</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b pb-2">
-                  <dt className="text-muted-foreground">Bộ nhớ heap</dt>
+                  <dt className="text-muted-foreground">{t('Bộ nhớ heap')}</dt>
                   <dd className="tabular-nums">
                     {data.heapUsedMb} / {data.heapMaxMb} MB
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b pb-2">
-                  <dt className="text-muted-foreground">Số lõi CPU</dt>
+                  <dt className="text-muted-foreground">{t('Số lõi CPU')}</dt>
                   <dd className="tabular-nums">{data.processors}</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b pb-2">
@@ -104,11 +105,11 @@ export function OpsStatusPage() {
                   <dd>{data.javaVersion}</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b pb-2">
-                  <dt className="text-muted-foreground">Hồ sơ cấu hình</dt>
-                  <dd>{data.profiles?.length ? data.profiles.join(', ') : 'mặc định'}</dd>
+                  <dt className="text-muted-foreground">{t('Hồ sơ cấu hình')}</dt>
+                  <dd>{data.profiles?.length ? data.profiles.join(', ') : t('mặc định')}</dd>
                 </div>
               </dl>
-              <p className="mt-4 text-xs text-muted-foreground">Kiểm tra lúc {formatDateTime(data.checkedAt)}.</p>
+              <p className="mt-4 text-xs text-muted-foreground">{t('Kiểm tra lúc ')}{formatDateTime(data.checkedAt)}.</p>
             </CardContent>
           </Card>
         </>

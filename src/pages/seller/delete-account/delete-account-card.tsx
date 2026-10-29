@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { toast } from 'sonner'
@@ -46,8 +47,8 @@ export function DeleteAccountCard() {
             setOpen(false)
             await signOut().catch(() => undefined)
             navigate(merchantPath('/login'), { replace: true })
-            toast.success(`Tài khoản sẽ được xoá vào ${formatDateTime(scheduled.executesAt)}.`, {
-              description: 'Đăng nhập lại trước thời điểm đó sẽ huỷ việc xoá.',
+            toast.success(t('Tài khoản sẽ được xoá vào {v0}.', { v0: formatDateTime(scheduled.executesAt) }), {
+              description: t('Đăng nhập lại trước thời điểm đó sẽ huỷ việc xoá.'),
               duration: 20_000,
             })
           },
@@ -62,32 +63,32 @@ export function DeleteAccountCard() {
   return (
     <Card className="border-destructive/40">
       <CardHeader>
-        <CardTitle>Xoá tài khoản</CardTitle>
-        <CardDescription>Xoá toàn bộ tài khoản, gồm cả vai trò khách và người bán nếu bạn có cả hai.</CardDescription>
+        <CardTitle>{t('Xoá tài khoản')}</CardTitle>
+        <CardDescription>{t('Xoá toàn bộ tài khoản, gồm cả vai trò khách và người bán nếu bạn có cả hai.')}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="grid gap-3 text-sm sm:grid-cols-2">
           <div>
-            <p className="font-medium">Sẽ bị xoá</p>
-            <p className="text-muted-foreground">Tên, email, số điện thoại, ảnh, mật khẩu, địa chỉ giao hàng, cách đăng nhập và tuỳ chọn thông báo. Mọi phiên đăng nhập kết thúc ngay.</p>
+            <p className="font-medium">{t('Sẽ bị xoá')}</p>
+            <p className="text-muted-foreground">{t('Tên, email, số điện thoại, ảnh, mật khẩu, địa chỉ giao hàng, cách đăng nhập và tuỳ chọn thông báo. Mọi phiên đăng nhập kết thúc ngay.')}</p>
           </div>
           <div>
-            <p className="font-medium">Được giữ lại</p>
-            <p className="text-muted-foreground">Đơn hàng, thanh toán, sổ cái, đánh giá và tin nhắn, dưới tên “Người dùng đã xóa”, vì cần cho đối soát và pháp lý.</p>
+            <p className="font-medium">{t('Được giữ lại')}</p>
+            <p className="text-muted-foreground">{t('Đơn hàng, thanh toán, sổ cái, đánh giá và tin nhắn, dưới tên “Người dùng đã xóa”, vì cần cho đối soát và pháp lý.')}</p>
           </div>
         </div>
         {check.isPending ? <Skeleton className="h-16" /> : null}
         {check.isError ? <FormError message={problemMessage(check.error)} /> : null}
         {data && !data.allowed ? (
           <div className="flex flex-col gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
-            <p className="font-medium">Chưa xoá được vì còn việc chưa xong:</p>
+            <p className="font-medium">{t('Chưa xoá được vì còn việc chưa xong:')}</p>
             <ul className="flex flex-col gap-1">
               {(data.blockers ?? []).map((b) => (
                 <li key={b.code}>
                   {b.message}{' '}
                   {b.link && BLOCKER_LINK[b.link] ? (
                     <Link className="text-link font-medium" to={BLOCKER_LINK[b.link]}>
-                      Xử lý
+                      {t('Xử lý')}
                     </Link>
                   ) : null}
                 </li>
@@ -97,13 +98,13 @@ export function DeleteAccountCard() {
         ) : null}
         {data ? (
           <p className="text-sm text-muted-foreground">
-            Sau khi xác nhận, tài khoản chờ {data.graceDays} ngày rồi mới bị xoá thật. Trong thời gian đó, <b>đăng nhập lại sẽ huỷ việc xoá</b>.
+            {t('Sau khi xác nhận, tài khoản chờ ')}{data.graceDays}{t(' ngày rồi mới bị xoá thật. Trong thời gian đó, ')}<b>{t('đăng nhập lại sẽ huỷ việc xoá')}</b>.
           </p>
         ) : null}
         <FormError message={error} />
         <div>
           <Button variant="destructive" disabled={!data?.allowed} onClick={() => setOpen(true)}>
-            Xoá tài khoản
+            {t('Xoá tài khoản')}
           </Button>
         </div>
       </CardContent>
@@ -117,18 +118,18 @@ export function DeleteAccountCard() {
             }}
           >
             <DialogHeader>
-              <DialogTitle>Xoá tài khoản?</DialogTitle>
+              <DialogTitle>{t('Xoá tài khoản?')}</DialogTitle>
               <DialogDescription>
-                Gõ <b>DELETE</b> hoặc email <b>{session?.email}</b> để xác nhận{data?.needsPassword ? ' và nhập mật khẩu' : ''}. Bạn có {data?.graceDays} ngày để đổi ý bằng cách đăng nhập lại.
+                {t('Gõ ')}<b>DELETE</b>{t(' hoặc email ')}<b>{session?.email}</b>{t(' để xác nhận')}{data?.needsPassword ? t(' và nhập mật khẩu') : ''}{t('. Bạn có ')}{data?.graceDays}{t(' ngày để đổi ý bằng cách đăng nhập lại.')}
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="delete-confirmation">Xác nhận</Label>
+              <Label htmlFor="delete-confirmation">{t('Xác nhận')}</Label>
               <Input id="delete-confirmation" autoComplete="off" value={confirmation} onChange={(e) => setConfirmation(e.target.value)} />
             </div>
             {data?.needsPassword ? (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="delete-password">Mật khẩu</Label>
+                <Label htmlFor="delete-password">{t('Mật khẩu')}</Label>
                 <PasswordInput id="delete-password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
             ) : null}
@@ -136,11 +137,11 @@ export function DeleteAccountCard() {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">
-                  Huỷ
+                  {t('Huỷ')}
                 </Button>
               </DialogClose>
               <Button type="submit" variant="destructive" disabled={confirmation.trim() === '' || (data?.needsPassword && password === '') || remove.isPending}>
-                Xoá tài khoản
+                {t('Xoá tài khoản')}
               </Button>
             </DialogFooter>
           </form>

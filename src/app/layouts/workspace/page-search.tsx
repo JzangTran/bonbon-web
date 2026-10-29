@@ -3,6 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { cn } from '@/shared/lib/utils'
 import type { ExtraPage, NavParent } from './types'
+import { t } from '@/shared/i18n'
 
 type Hit = { to: string; label: string; group?: string }
 
@@ -65,12 +66,12 @@ export function PageSearch({ nav, extras, className }: { nav: NavParent[]; extra
         <input
           ref={input}
           role="combobox"
-          aria-label="Tìm trang"
+          aria-label={t('Tìm trang')}
           aria-expanded={shown}
           aria-controls={listId}
           aria-activedescendant={shown ? `${listId}-${active}` : undefined}
           value={query}
-          placeholder="Tìm trang..."
+          placeholder={t('Tìm trang...')}
           onChange={(e) => {
             setQuery(e.target.value)
             setActive(0)
@@ -98,7 +99,7 @@ export function PageSearch({ nav, extras, className }: { nav: NavParent[]; extra
         <kbd className="hidden rounded border border-grey-300 px-1.5 font-mono text-[0.6875rem] leading-4 text-muted-foreground lg:inline">Ctrl K</kbd>
       </div>
       {shown ? (
-        <ul id={listId} role="listbox" aria-label="Trang" className="bb-pop-menu absolute inset-x-0 top-12 z-50 max-h-80 overflow-y-auto rounded-xl bg-popover p-1.5 shadow-float">
+        <ul id={listId} role="listbox" aria-label={t('Trang')} className="bb-pop-menu absolute inset-x-0 top-12 z-50 max-h-80 overflow-y-auto rounded-xl bg-popover p-1.5 shadow-float">
           {hits.map((hit, i) => (
             <li
               key={hit.to}

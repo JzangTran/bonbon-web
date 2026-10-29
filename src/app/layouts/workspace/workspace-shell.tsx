@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState, type ReactNode } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { textScaleFactor, useTextScale } from '@/shared/lib/text-scale'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
+import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { NotificationFeed, useNotifications } from '@/entities/notification'
 import { useSession } from '@/entities/session'
 import { useMediaQuery } from '@/shared/lib/use-media-query'
@@ -23,6 +24,7 @@ import { locate } from './locate'
 import { NavTree } from './nav-tree'
 import { PageSearch } from './page-search'
 import type { AccountLink, FooterLink, Space } from './types'
+import { t } from '@/shared/i18n'
 
 export type WorkspaceProps = {
   /** "Kênh người bán" / "Quản trị": shown next to the logo */
@@ -97,7 +99,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
         href="#main"
         className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
       >
-        Bỏ qua đến nội dung chính
+        {t('Bỏ qua đến nội dung chính')}
       </a>
 
       <header className="relative z-20 flex h-16 shrink-0 items-center gap-4 border-b border-grey-200 bg-ws-header px-4 text-ink sm:px-5">
@@ -105,7 +107,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           {!wideNav ? (
             <button
               type="button"
-              aria-label="Mở menu"
+              aria-label={t('Mở menu')}
               aria-expanded={navOpen}
               onClick={() => setNavOpen((o) => !o)}
               className="flex size-9 items-center justify-center rounded-full hover:bg-muted"
@@ -125,7 +127,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           {headerExtra}
           <button
             type="button"
-            aria-label={unread > 0 ? `Thông báo, ${unread} chưa đọc` : 'Thông báo'}
+            aria-label={unread > 0 ? t('Thông báo, {v0} chưa đọc', { v0: unread }) : t('Thông báo')}
             onClick={() => setBellOpen(true)}
             className="relative flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-ink"
           >
@@ -139,7 +141,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           {!widePanel ? (
             <button
               type="button"
-              aria-label="Thông tin bổ sung"
+              aria-label={t('Thông tin bổ sung')}
               aria-expanded={panelOpen}
               onClick={() => setPanelOpen((o) => !o)}
               className="flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-ink"
@@ -163,7 +165,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
                 </DropdownMenuItem>
               ))}
               {account.length > 0 ? <DropdownMenuSeparator /> : null}
-              <DropdownMenuItem onSelect={logout}>Đăng xuất</DropdownMenuItem>
+              <DropdownMenuItem onSelect={logout}>{t('Đăng xuất')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -178,7 +180,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
         {(navOpen && !wideNav) || (panelOpen && !widePanel) ? (
           <button
             type="button"
-            aria-label="Đóng"
+            aria-label={t('Đóng')}
             tabIndex={-1}
             onClick={() => {
               setNavOpen(false)
@@ -204,14 +206,14 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
 
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground outline-none">
           <div key={pathname} className="ws-content bb-page-in px-4 py-6 sm:px-8 sm:py-8">
-            <nav aria-label="Đường dẫn" className="mb-4">
+            <nav aria-label={t('Đường dẫn')} className="mb-4">
               <ol className="flex flex-wrap items-center gap-1.5 text-caption text-muted-foreground">
                 <li>
                   {atHome ? (
-                    <span aria-current="page">Trang chủ</span>
+                    <span aria-current="page">{t('Trang chủ')}</span>
                   ) : (
                     <Link to={homePath} className="hover:text-ink">
-                      Trang chủ
+                      {t('Trang chủ')}
                     </Link>
                   )}
                 </li>
@@ -242,7 +244,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
         </main>
 
         <aside
-          aria-label="Thông tin bổ sung"
+          aria-label={t('Thông tin bổ sung')}
           inert={!widePanel && !panelOpen}
           className={cn(
             'absolute inset-y-0 right-0 z-40 w-80 shrink-0 overflow-y-auto bg-card p-6 shadow-float transition-transform wspanel:static wspanel:z-auto wspanel:w-72 wspanel:translate-x-0 wspanel:py-8 wspanel:pr-8 wspanel:pl-0 wspanel:shadow-none wspanel:transition-none',
@@ -261,8 +263,8 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
       <Sheet open={bellOpen} onOpenChange={setBellOpen}>
         <SheetContent side="right" className="gap-0 p-0">
           <SheetHeader className="px-6 pt-6">
-            <SheetTitle>Thông báo</SheetTitle>
-            <SheetDescription className="sr-only">Thông báo mới nhất của bạn</SheetDescription>
+            <SheetTitle>{t('Thông báo')}</SheetTitle>
+            <SheetDescription className="sr-only">{t('Thông báo mới nhất của bạn')}</SheetDescription>
           </SheetHeader>
           <div className="overflow-y-auto px-6 py-4">
             <NotificationFeed orderPath={orderPath} />
@@ -282,7 +284,7 @@ const firstPage = (s: Space) => s.nav[0]?.to ?? s.nav[0]?.children?.[0]?.to ?? '
  */
 function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: Space[]; current: string; vertical?: boolean; onNavigate?: () => void }) {
   return (
-    <nav aria-label="Khu vực làm việc" className={cn(vertical ? 'mb-6 flex flex-col gap-1' : '-mb-px flex gap-2 overflow-x-auto')}>
+    <nav aria-label={t('Khu vực làm việc')} className={cn(vertical ? 'mb-6 flex flex-col gap-1' : '-mb-px flex gap-2 overflow-x-auto')}>
       {spaces.map((s) => {
         const Icon = s.icon
         const on = s.key === current
@@ -314,10 +316,13 @@ function ShellFooter({ links, className }: { links: FooterLink[]; className?: st
   return (
     <footer className={cn('flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-ws-hairline bg-card px-4 py-1.5 text-[0.6875rem] text-muted-foreground sm:px-5', className)}>
       <span>
-        © {new Date().getFullYear()} bonbon · phiên bản {__APP_VERSION__}
+        © {new Date().getFullYear()}{t(' bonbon · phiên bản ')}{__APP_VERSION__}
       </span>
-      <TextSizeControl className="[&_button]:size-6" />
-      <nav aria-label="Liên kết chân trang" className="flex flex-wrap gap-x-5">
+      <div className="flex flex-wrap items-center gap-x-4">
+        <LanguageSwitch className="[&_button]:h-6 [&_button]:min-w-6" />
+        <TextSizeControl className="[&_button]:size-6" />
+      </div>
+      <nav aria-label={t('Liên kết chân trang')} className="flex flex-wrap gap-x-5">
         {links.map((link) => (
           link.external ? (
             <a key={link.to} href={link.to} className="hover:text-foreground">

@@ -1,3 +1,4 @@
+import { locale, t } from '@/shared/i18n'
 import createClient, { type Middleware } from 'openapi-fetch'
 import { env } from '@/shared/config/env'
 import { reportLegalRequired, reportMaintenance } from './gate'
@@ -52,6 +53,7 @@ async function isTokenRejection(response: Response): Promise<boolean> {
 const authMiddleware: Middleware = {
   onRequest({ request, id }) {
     request.headers.set('X-Client-Channel', 'WEB')
+    request.headers.set('Accept-Language', locale)
     // The refresh call must not carry the (possibly expired) access token: the resource server rejects
     // any invalid bearer token, even on public endpoints.
     const token = isRefreshRequest(request) ? null : auth.getAccessToken()
@@ -107,7 +109,7 @@ export function problemCode(error: unknown): string | undefined {
 }
 
 /** The backend's Vietnamese message for a problem, or a generic one. */
-export function problemMessage(error: unknown, fallback = 'Có lỗi xảy ra, vui lòng thử lại.'): string {
+export function problemMessage(error: unknown, fallback = t('Có lỗi xảy ra, vui lòng thử lại.')): string {
   return isApiProblem(error) && error.detail ? error.detail : fallback
 }
 

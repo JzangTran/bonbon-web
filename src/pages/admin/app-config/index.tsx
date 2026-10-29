@@ -17,15 +17,16 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { t } from '@/shared/i18n'
 
 const PLATFORMS: { id: AppPlatform; label: string }[] = [
   { id: 'ANDROID', label: 'Android' },
   { id: 'IOS', label: 'iOS' },
 ]
 const LEVELS: { id: MaintenanceLevel; label: string; hint: string }[] = [
-  { id: 'NONE', label: 'Tắt', hint: 'Hệ thống hoạt động bình thường.' },
-  { id: 'READ_ONLY', label: 'Chỉ xem', hint: 'Xem được, mọi thao tác ghi (đặt món, cập nhật...) bị từ chối.' },
-  { id: 'FULL', label: 'Dừng hoàn toàn', hint: 'Chỉ còn cấu hình, kiểm tra sức khoẻ, đăng nhập quản trị và webhook thanh toán.' },
+  { id: 'NONE', label: t('Tắt'), hint: t('Hệ thống hoạt động bình thường.') },
+  { id: 'READ_ONLY', label: t('Chỉ xem'), hint: t('Xem được, mọi thao tác ghi (đặt món, cập nhật...) bị từ chối.') },
+  { id: 'FULL', label: t('Dừng hoàn toàn'), hint: t('Chỉ còn cấu hình, kiểm tra sức khoẻ, đăng nhập quản trị và webhook thanh toán.') },
 ]
 const VERSION = /^[0-9]+(\.[0-9]+){0,3}$/
 
@@ -55,22 +56,22 @@ export function AdminAppConfigPage() {
   const config = useAdminAppConfig(allowed)
   const [tab, setTab] = useState<'versions' | 'maintenance'>('versions')
 
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền sửa cấu hình app.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền sửa cấu hình app.')}</p>
 
   return (
     <div className="flex max-w-4xl flex-col gap-8">
       <PageTabs
-        label="Cấu hình app"
+        label={t('Cấu hình app')}
         tabs={[
-          { id: 'versions', label: 'Phiên bản tối thiểu' },
-          { id: 'maintenance', label: 'Bảo trì' },
+          { id: 'versions', label: t('Phiên bản tối thiểu') },
+          { id: 'maintenance', label: t('Bảo trì') },
         ]}
         value={tab}
         onValueChange={(id) => setTab(id as 'versions' | 'maintenance')}
       />
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold">Cấu hình app</h1>
-        <p className="text-sm text-muted-foreground">Chỉ ảnh hưởng ứng dụng điện thoại. Mọi thay đổi cần lý do và bạn đã đăng nhập trong 10 phút gần nhất.</p>
+        <h1 className="text-2xl font-semibold">{t('Cấu hình app')}</h1>
+        <p className="text-sm text-muted-foreground">{t('Chỉ ảnh hưởng ứng dụng điện thoại. Mọi thay đổi cần lý do và bạn đã đăng nhập trong 10 phút gần nhất.')}</p>
       </div>
       {config.isError ? <FormError message={problemMessage(config.error)} /> : null}
       {config.isPending ? <Skeleton className="h-64" /> : null}
@@ -113,7 +114,7 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
     const attempt = () =>
       save.mutate(body, {
         onSuccess: () => {
-          toast.success(`Đã lưu cấu hình ${label}.`)
+          toast.success(t('Đã lưu cấu hình {v0}.', { v0: label }))
           setReason('')
         },
         onError: (e) => {
@@ -131,30 +132,30 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
       <CardContent className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor={`${platform}-min`}>Bản tối thiểu</Label>
+            <Label htmlFor={`${platform}-min`}>{t('Bản tối thiểu')}</Label>
             <Input id={`${platform}-min`} inputMode="decimal" placeholder="1.0.0" value={min} onChange={(e) => setMin(e.target.value.trim())} aria-invalid={min !== '' && !VERSION.test(min)} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor={`${platform}-latest`}>Bản mới nhất</Label>
+            <Label htmlFor={`${platform}-latest`}>{t('Bản mới nhất')}</Label>
             <Input id={`${platform}-latest`} inputMode="decimal" placeholder="1.0.0" value={latest} onChange={(e) => setLatest(e.target.value.trim())} aria-invalid={latest !== '' && !VERSION.test(latest)} />
           </div>
         </div>
-        {belowMin ? <p className="text-sm text-danger-fg">Bản mới nhất không được thấp hơn bản tối thiểu.</p> : null}
+        {belowMin ? <p className="text-sm text-danger-fg">{t('Bản mới nhất không được thấp hơn bản tối thiểu.')}</p> : null}
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor={`${platform}-store`}>Liên kết cửa hàng ứng dụng</Label>
+          <Label htmlFor={`${platform}-store`}>{t('Liên kết cửa hàng ứng dụng')}</Label>
           <Input id={`${platform}-store`} type="url" maxLength={500} placeholder="https://" value={storeUrl} onChange={(e) => setStoreUrl(e.target.value)} />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor={`${platform}-message`}>Lời nhắn khi bắt cập nhật</Label>
+          <Label htmlFor={`${platform}-message`}>{t('Lời nhắn khi bắt cập nhật')}</Label>
           <Textarea id={`${platform}-message`} rows={2} maxLength={500} value={message} onChange={(e) => setMessage(e.target.value)} />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor={`${platform}-reason`}>Lý do thay đổi (được ghi lại)</Label>
+          <Label htmlFor={`${platform}-reason`}>{t('Lý do thay đổi (được ghi lại)')}</Label>
           <Input id={`${platform}-reason`} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
         </div>
         <FormError message={error} />
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">{policy?.updatedAt ? `Cập nhật ${formatDateTime(policy.updatedAt)}` : 'Chưa cấu hình'}</p>
+          <p className="text-xs text-muted-foreground">{policy?.updatedAt ? t('Cập nhật {v0}', { v0: formatDateTime(policy.updatedAt) }) : t('Chưa cấu hình')}</p>
           <Button
             disabled={!valid || belowMin || !changed || reason.trim() === '' || save.isPending}
             onClick={() => {
@@ -162,21 +163,21 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
               else submit()
             }}
           >
-            Lưu
+            {t('Lưu')}
           </Button>
         </div>
       </CardContent>
       <Dialog open={confirm} onOpenChange={setConfirm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Nâng bản tối thiểu của {label} lên {min}?</DialogTitle>
+            <DialogTitle>{t('Nâng bản tối thiểu của ')}{label}{t(' lên ')}{min}?</DialogTitle>
             <DialogDescription>
-              Mọi người đang dùng bản thấp hơn {min} sẽ bị chặn ngay ở mọi thao tác và chỉ thấy màn hình bắt cập nhật. Chỉ nâng sau khi bản {min} đã có trên cửa hàng ứng dụng.
+              {t('Mọi người đang dùng bản thấp hơn ')}{min}{t(' sẽ bị chặn ngay ở mọi thao tác và chỉ thấy màn hình bắt cập nhật. Chỉ nâng sau khi bản ')}{min}{t(' đã có trên cửa hàng ứng dụng.')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
+              <Button variant="outline">{t('Huỷ')}</Button>
             </DialogClose>
             <Button
               variant="destructive"
@@ -185,7 +186,7 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
                 submit()
               }}
             >
-              Nâng bản tối thiểu
+              {t('Nâng bản tối thiểu')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -219,7 +220,7 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
     const attempt = () =>
       save.mutate(body, {
         onSuccess: () => {
-          toast.success(level === 'NONE' ? 'Đã tắt chế độ bảo trì.' : 'Đã đặt chế độ bảo trì.')
+          toast.success(level === 'NONE' ? t('Đã tắt chế độ bảo trì.') : t('Đã đặt chế độ bảo trì.'))
           setReason('')
         },
         onError: (e) => {
@@ -233,13 +234,13 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
     <Card size="sm">
       <CardHeader>
         <CardTitle className="flex flex-wrap items-center gap-2">
-          Bảo trì
-          {current?.active ? <Badge className="bg-danger-subtle text-danger-fg">Đang bật: {current.level === 'FULL' ? 'dừng hoàn toàn' : 'chỉ xem'}</Badge> : null}
-          {!current?.active && current?.level && current.level !== 'NONE' ? <Badge className="bg-warning-subtle text-warning-fg">Đã hẹn giờ</Badge> : null}
+          {t('Bảo trì')}
+          {current?.active ? <Badge className="bg-danger-subtle text-danger-fg">{t('Đang bật: ')}{current.level === 'FULL' ? t('dừng hoàn toàn') : t('chỉ xem')}</Badge> : null}
+          {!current?.active && current?.level && current.level !== 'NONE' ? <Badge className="bg-warning-subtle text-warning-fg">{t('Đã hẹn giờ')}</Badge> : null}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <div role="radiogroup" aria-label="Mức bảo trì" className="grid gap-2 sm:grid-cols-3">
+        <div role="radiogroup" aria-label={t('Mức bảo trì')} className="grid gap-2 sm:grid-cols-3">
           {LEVELS.map((l) => (
             <button
               key={l.id}
@@ -258,29 +259,29 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
           <>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="maint-start">Bắt đầu (bỏ trống là ngay)</Label>
+                <Label htmlFor="maint-start">{t('Bắt đầu (bỏ trống là ngay)')}</Label>
                 <Input id="maint-start" type="datetime-local" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="maint-end">Kết thúc dự kiến (bỏ trống là chưa biết)</Label>
+                <Label htmlFor="maint-end">{t('Kết thúc dự kiến (bỏ trống là chưa biết)')}</Label>
                 <Input id="maint-end" type="datetime-local" value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
               </div>
             </div>
-            {windowInvalid ? <p className="text-sm text-danger-fg">Giờ kết thúc phải sau giờ bắt đầu.</p> : null}
+            {windowInvalid ? <p className="text-sm text-danger-fg">{t('Giờ kết thúc phải sau giờ bắt đầu.')}</p> : null}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="maint-message">Lời nhắn hiện cho người dùng</Label>
+              <Label htmlFor="maint-message">{t('Lời nhắn hiện cho người dùng')}</Label>
               <Textarea id="maint-message" rows={2} maxLength={500} value={message} onChange={(e) => setMessage(e.target.value)} />
             </div>
           </>
         ) : null}
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="maint-reason">Lý do thay đổi (được ghi lại)</Label>
+          <Label htmlFor="maint-reason">{t('Lý do thay đổi (được ghi lại)')}</Label>
           <Input id="maint-reason" maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
         </div>
         {level === 'FULL' ? (
           <p className="flex items-center gap-2 rounded-md bg-warning-subtle px-3 py-2 text-sm text-warning-fg">
             <TriangleAlertIcon className="size-4 shrink-0" />
-            Dừng hoàn toàn chặn cả khách và người bán. Quản trị viên vẫn vào được để tắt.
+            {t('Dừng hoàn toàn chặn cả khách và người bán. Quản trị viên vẫn vào được để tắt.')}
           </p>
         ) : null}
         <FormError message={error} />
@@ -293,21 +294,21 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
               else submit()
             }}
           >
-            {level === 'NONE' ? 'Tắt bảo trì' : 'Bật bảo trì'}
+            {level === 'NONE' ? t('Tắt bảo trì') : t('Bật bảo trì')}
           </Button>
         </div>
       </CardContent>
       <Dialog open={confirm} onOpenChange={setConfirm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Dừng hoàn toàn hệ thống?</DialogTitle>
+            <DialogTitle>{t('Dừng hoàn toàn hệ thống?')}</DialogTitle>
             <DialogDescription>
-              {startsAt ? `Từ ${formatDateTime(new Date(startsAt).toISOString())}` : 'Ngay bây giờ'}, mọi thao tác của khách và người bán đều bị từ chối{endsAt ? ` đến ${formatDateTime(new Date(endsAt).toISOString())}` : ''}.
+              {startsAt ? t('Từ {v0}', { v0: formatDateTime(new Date(startsAt).toISOString()) }) : t('Ngay bây giờ')}{t(', mọi thao tác của khách và người bán đều bị từ chối')}{endsAt ? t(' đến {v0}', { v0: formatDateTime(new Date(endsAt).toISOString()) }) : ''}.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
+              <Button variant="outline">{t('Huỷ')}</Button>
             </DialogClose>
             <Button
               variant="destructive"
@@ -316,7 +317,7 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
                 submit()
               }}
             >
-              Bật bảo trì
+              {t('Bật bảo trì')}
             </Button>
           </DialogFooter>
         </DialogContent>

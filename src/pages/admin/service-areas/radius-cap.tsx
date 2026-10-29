@@ -6,6 +6,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { ActionGroup } from '@/shared/ui/section'
+import { t } from '@/shared/i18n'
 
 /** The platform-wide delivery radius cap (set-delivery-radius-cap.md); applies to saves from now on. */
 export function RadiusCapForm() {
@@ -28,7 +29,7 @@ export function RadiusCapForm() {
     onSuccess: (data) => {
       queryClient.setQueryData(['admin', 'radius-cap'], data)
       setValue(null)
-      toast.success('Đã cập nhật bán kính tối đa.')
+      toast.success(t('Đã cập nhật bán kính tối đa.'))
     },
     onError: (e) => toast.error(problemMessage(e)),
   })
@@ -43,14 +44,14 @@ export function RadiusCapForm() {
       }}
     >
       <div className="flex flex-col gap-1">
-        <h2 className="text-h3 font-medium">Bán kính giao tối đa của mọi quán</h2>
-        <p className="text-ui text-muted-foreground">Áp dụng cho lần lưu sau của các quán; quán đã duyệt giữ bán kính hiện tại. Mỗi khu vực có thể đặt mức thấp hơn.</p>
+        <h2 className="text-h3 font-medium">{t('Bán kính giao tối đa của mọi quán')}</h2>
+        <p className="text-ui text-muted-foreground">{t('Áp dụng cho lần lưu sau của các quán; quán đã duyệt giữ bán kính hiện tại. Mỗi khu vực có thể đặt mức thấp hơn.')}</p>
       </div>
       <Label htmlFor="radius-cap">Km</Label>
       <ActionGroup>
         <Input id="radius-cap" inputMode="decimal" className="w-32" value={shown} onChange={(e) => setValue(e.target.value)} />
         <Button type="submit" disabled={save.isPending || value === null}>
-          Lưu
+          {t('Lưu')}
         </Button>
       </ActionGroup>
     </form>

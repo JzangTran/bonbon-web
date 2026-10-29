@@ -9,6 +9,7 @@ import { MenuTabs } from '@/widgets/seller-tabs'
 import { MenuTab } from './menu-tab'
 import { OptionsTab } from './options-tab'
 import { merchantPath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 /** The seller's menu (manage-menu.md, manage-menu-options.md): sections and dishes, and the option groups dishes offer. */
 export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { startNewDish?: boolean; tab?: 'dishes' | 'options' }) {
@@ -20,17 +21,17 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
     <div className="flex max-w-5xl flex-col gap-10">
       <MenuTabs />
       <div>
-        <h1 className="text-2xl font-semibold">Thực đơn</h1>
+        <h1 className="text-2xl font-semibold">{t('Thực đơn')}</h1>
         <p className="text-sm text-muted-foreground">
-          Mục thực đơn là cách bạn nhóm món cho khách xem. Nhóm lựa chọn (cỡ ly, topping…) dùng lại được cho nhiều món.
+          {t('Mục thực đơn là cách bạn nhóm món cho khách xem. Nhóm lựa chọn (cỡ ly, topping…) dùng lại được cho nhiều món.')}
         </p>
       </div>
       {openCases > 0 ? (
         <p className="flex flex-wrap items-center gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
           <TriangleAlertIcon className="size-4 shrink-0" />
-          Có {openCases} món bị đánh dấu sai ngành hàng.
+          {t('Có ')}{openCases}{t(' món bị đánh dấu sai ngành hàng.')}
           <Link to={merchantPath('/category-cases')} className="text-link font-medium">
-            Xem và sửa
+            {t('Xem và sửa')}
           </Link>
         </p>
       ) : null}

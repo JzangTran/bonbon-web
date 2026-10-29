@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { legalUrl } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 const TYPE_ROUTE: Record<string, string> = { CUSTOMER_TERMS: 'CUSTOMER_TERMS', SELLER_TERMS: 'SELLER_TERMS', PRIVACY_POLICY: 'PRIVACY_POLICY' }
 
@@ -41,7 +42,7 @@ export function LegalGate() {
     onSuccess: async () => {
       clearLegalRequired()
       setAgreed(false)
-      toast.success('Cảm ơn bạn đã đồng ý.')
+      toast.success(t('Cảm ơn bạn đã đồng ý.'))
       await queryClient.invalidateQueries()
     },
     onError: (e) => setError(problemMessage(e)),
@@ -60,8 +61,8 @@ export function LegalGate() {
     <Dialog open={open} onOpenChange={() => undefined}>
       <DialogContent showCloseButton={false} onEscapeKeyDown={(e) => e.preventDefault()} onPointerDownOutside={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Điều khoản đã được cập nhật</DialogTitle>
-          <DialogDescription>Hãy đọc những thay đổi dưới đây và đồng ý để tiếp tục dùng bonbon.</DialogDescription>
+          <DialogTitle>{t('Điều khoản đã được cập nhật')}</DialogTitle>
+          <DialogDescription>{t('Hãy đọc những thay đổi dưới đây và đồng ý để tiếp tục dùng bonbon.')}</DialogDescription>
         </DialogHeader>
         {pending.isPending ? <Skeleton className="h-24" /> : null}
         {pending.isError ? <FormError message={problemMessage(pending.error)} /> : null}
@@ -69,24 +70,24 @@ export function LegalGate() {
           {items.map((d) => (
             <li key={d.id} className="flex flex-col gap-1 rounded-sm border p-3 text-sm">
               <p className="font-semibold">
-                {d.title} <span className="font-normal text-muted-foreground">· phiên bản {d.version}</span>
+                {d.title} <span className="font-normal text-muted-foreground">{t('· phiên bản ')}{d.version}</span>
               </p>
-              <p className="text-xs text-muted-foreground">Có hiệu lực từ {formatDateTime(d.effectiveAt)}</p>
-              {d.summary ? <p className="whitespace-pre-line">{d.summary}</p> : <p className="text-muted-foreground">Không có tóm tắt thay đổi.</p>}
+              <p className="text-xs text-muted-foreground">{t('Có hiệu lực từ ')}{formatDateTime(d.effectiveAt)}</p>
+              {d.summary ? <p className="whitespace-pre-line">{d.summary}</p> : <p className="text-muted-foreground">{t('Không có tóm tắt thay đổi.')}</p>}
               <a className="text-link" href={legalUrl(TYPE_ROUTE[d.type ?? ''] ?? d.type ?? '')} target="_blank" rel="noreferrer">
-                Đọc toàn văn
+                {t('Đọc toàn văn')}
               </a>
             </li>
           ))}
         </ul>
         <label className="flex items-start gap-2 text-sm">
           <input type="checkbox" className="mt-1" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
-          <span>Tôi đã đọc và đồng ý với {items.length > 1 ? 'các văn bản' : 'văn bản'} trên.</span>
+          <span>{t('Tôi đã đọc và đồng ý với ')}{items.length > 1 ? t('các văn bản') : t('văn bản')}{t(' trên.')}</span>
         </label>
         <FormError message={error} />
         <DialogFooter>
           <Button variant="outline" onClick={() => void signOut()}>
-            Đăng xuất
+            {t('Đăng xuất')}
           </Button>
           <Button
             disabled={!agreed || items.length === 0 || accept.isPending}
@@ -95,7 +96,7 @@ export function LegalGate() {
               accept.mutate(items.map((d) => d.id ?? ''))
             }}
           >
-            Đồng ý và tiếp tục
+            {t('Đồng ý và tiếp tục')}
           </Button>
         </DialogFooter>
       </DialogContent>

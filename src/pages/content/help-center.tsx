@@ -19,9 +19,10 @@ import { Breadcrumb, TagList } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 import { FormError } from '@/widgets/auth-shell'
 import { HelpFrame, HelpSidebar, type HelpNavGroup } from '@/widgets/help-frame'
+import { intlLocale, t } from '@/shared/i18n'
 
 const BASE = helpPath()
-const HOME = [{ name: 'Trang chủ', path: siteUrl('public', '/') }]
+const HOME = [{ name: t('Trang chủ'), path: siteUrl('public', '/') }]
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 const articlePath = (id: string | undefined) => helpPath(`/bai-viet/${id}`)
 
@@ -50,7 +51,7 @@ function HelpRow({ article }: { article: HelpArticle }) {
   return (
     <li>
       <Link to={articlePath(article.id)} className="group flex flex-col gap-2 rounded-xl border border-grey-200 p-5 outline-none transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring">
-        <span className="text-caption font-medium tracking-wide text-primary uppercase">{AUDIENCE_LABEL[article.audience ?? 'ALL'] ?? 'Mọi người'}</span>
+        <span className="text-caption font-medium tracking-wide text-primary uppercase">{AUDIENCE_LABEL[article.audience ?? 'ALL'] ?? t('Mọi người')}</span>
         <span className="text-body font-medium text-ink">{article.title}</span>
         {article.keywords?.length ? <TagList tags={article.keywords} oneLine /> : null}
       </Link>
@@ -64,18 +65,18 @@ export function HelpCenterPage() {
   const deferred = useDeferredValue(q)
   const articles = useHelpArticles(deferred)
   const groups = useHelpGroups()
-  const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }]
+  const trail = [...HOME, { name: t('Trung tâm trợ giúp'), path: BASE }]
   return (
     <HelpFrame tab="help" sidebar={<HelpSidebar groups={groups} />}>
-      <PageSeo title="Trung tâm trợ giúp" description="Câu trả lời cho các thắc mắc thường gặp khi đặt món và bán hàng trên bonbon." path={BASE} trail={trail} site="help" />
+      <PageSeo title={t('Trung tâm trợ giúp')} description={t('Câu trả lời cho các thắc mắc thường gặp khi đặt món và bán hàng trên bonbon.')} path={BASE} trail={trail} site="help" />
       <div className="flex flex-col gap-8">
-        <PageTitle title="Trung tâm trợ giúp" lead="Tìm câu trả lời nhanh, hoặc đọc các bài hướng dẫn do đội ngũ bonbon viết." />
+        <PageTitle title={t('Trung tâm trợ giúp')} lead={t('Tìm câu trả lời nhanh, hoặc đọc các bài hướng dẫn do đội ngũ bonbon viết.')} />
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
           <Input
             type="search"
-            aria-label="Tìm trong trung tâm trợ giúp"
-            placeholder="Tìm theo tiêu đề, nội dung hoặc từ khoá"
+            aria-label={t('Tìm trong trung tâm trợ giúp')}
+            placeholder={t('Tìm theo tiêu đề, nội dung hoặc từ khoá')}
             maxLength={100}
             className="h-11 rounded-full pl-10"
             value={q}
@@ -84,12 +85,12 @@ export function HelpCenterPage() {
         </div>
         {articles.isError ? <FormError message={problemMessage(articles.error)} /> : null}
         {articles.isPending ? <Skeleton className="h-48 rounded-xl" /> : null}
-        {articles.data?.items?.length === 0 ? <p className="text-muted-foreground">Không có bài nào phù hợp. Thử từ khoá khác.</p> : null}
+        {articles.data?.items?.length === 0 ? <p className="text-muted-foreground">{t('Không có bài nào phù hợp. Thử từ khoá khác.')}</p> : null}
         <ul className="grid gap-3 sm:grid-cols-2">{articles.data?.items?.map((a) => <HelpRow key={a.id} article={a} />)}</ul>
         <Link to={helpPath('/lien-he')} className="group flex items-center justify-between gap-4 rounded-xl bg-accent p-5 outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <span className="flex flex-col gap-1">
-            <span className="text-body font-medium">Chưa thấy câu trả lời?</span>
-            <span className="text-ui text-muted-foreground">Gửi câu hỏi cho đội hỗ trợ bonbon.</span>
+            <span className="text-body font-medium">{t('Chưa thấy câu trả lời?')}</span>
+            <span className="text-ui text-muted-foreground">{t('Gửi câu hỏi cho đội hỗ trợ bonbon.')}</span>
           </span>
           <ArrowRightIcon className="size-5 text-primary transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </Link>
@@ -104,23 +105,23 @@ export function HelpArticlePage() {
   const article = useHelpArticle(id)
   const groups = useHelpGroups()
   const data = article.data
-  const trail = [...HOME, { name: 'Trung tâm trợ giúp', path: BASE }, { name: data?.title ?? '…', path: articlePath(id) }]
+  const trail = [...HOME, { name: t('Trung tâm trợ giúp'), path: BASE }, { name: data?.title ?? '…', path: articlePath(id) }]
   const blocks = blocksFromText(data?.body ?? '')
   return (
     <HelpFrame tab="help" sidebar={<HelpSidebar groups={groups} current={articlePath(id)} />} aside={data ? <Toc headings={headingsOf(blocks)} /> : null}>
       {article.isPending ? <Skeleton className="h-96 rounded-xl" /> : null}
       {article.isError || (!article.isPending && !data) ? (
         <div className="flex flex-col gap-4">
-          <FormError message={article.isError ? problemMessage(article.error) : 'Không tìm thấy bài.'} />
+          <FormError message={article.isError ? problemMessage(article.error) : t('Không tìm thấy bài.')} />
           <Link to={BASE} className="text-link">
-            Về trung tâm trợ giúp
+            {t('Về trung tâm trợ giúp')}
           </Link>
         </div>
       ) : null}
       {data ? (
         <>
           <PageSeo
-            title={data.title ?? 'Bài trợ giúp'}
+            title={data.title ?? t('Bài trợ giúp')}
             description={(data.body ?? '').replace(/[#*-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 155)}
             path={articlePath(id)}
             trail={trail}
@@ -129,9 +130,9 @@ export function HelpArticlePage() {
           <article className="flex flex-col gap-6">
             <Breadcrumb trail={trail.slice(1)} />
             <PageTitle title={data.title ?? ''} />
-            <p className="-mt-3 text-small text-muted-foreground">Cập nhật {formatDateTime(data.updatedAt)}</p>
+            <p className="-mt-3 text-small text-muted-foreground">{t('Cập nhật ')}{formatDateTime(data.updatedAt)}</p>
             <ArticleBody blocks={blocks} />
-            <TagList tags={[AUDIENCE_LABEL[data.audience ?? 'ALL'] ?? 'Mọi người', ...(data.keywords ?? [])]} className="mt-6" />
+            <TagList tags={[AUDIENCE_LABEL[data.audience ?? 'ALL'] ?? t('Mọi người'), ...(data.keywords ?? [])]} className="mt-6" />
           </article>
         </>
       ) : null}
@@ -140,16 +141,16 @@ export function HelpArticlePage() {
 }
 
 const ROLES = [
-  { id: 'CUSTOMER', label: 'Khách đặt món' },
-  { id: 'SELLER', label: 'Người bán' },
-  { id: 'OTHER', label: 'Khác' },
+  { id: 'CUSTOMER', label: t('Khách đặt món') },
+  { id: 'SELLER', label: t('Người bán') },
+  { id: 'OTHER', label: t('Khác') },
 ]
 const TOPICS = [
-  { id: 'ORDER', label: 'Đơn hàng' },
-  { id: 'ACCOUNT', label: 'Tài khoản và đăng nhập' },
-  { id: 'SHOP', label: 'Mở quán, cửa hàng' },
-  { id: 'PAYMENT', label: 'Thanh toán, hoàn tiền' },
-  { id: 'OTHER', label: 'Khác' },
+  { id: 'ORDER', label: t('Đơn hàng') },
+  { id: 'ACCOUNT', label: t('Tài khoản và đăng nhập') },
+  { id: 'SHOP', label: t('Mở quán, cửa hàng') },
+  { id: 'PAYMENT', label: t('Thanh toán, hoàn tiền') },
+  { id: 'OTHER', label: t('Khác') },
 ]
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -171,7 +172,7 @@ function Required() {
  */
 export function ContactPage() {
   const path = helpPath('/lien-he')
-  const trail = [...HOME, { name: 'Liên hệ hỗ trợ', path }]
+  const trail = [...HOME, { name: t('Liên hệ hỗ trợ'), path }]
   const [form, setForm] = useState({ fullName: '', email: '', role: '', topic: '', message: '' })
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -189,32 +190,32 @@ export function ContactPage() {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     const next: Record<string, string> = {}
-    if (!form.fullName.trim()) next.fullName = 'Hãy nhập họ tên.'
-    if (!EMAIL_RE.test(form.email.trim())) next.email = 'Hãy nhập email để nhận câu trả lời.'
-    if (!form.role) next.role = 'Hãy chọn bạn là ai.'
-    if (!form.topic) next.topic = 'Hãy chọn chủ đề.'
-    if (!form.message.trim()) next.message = 'Hãy viết điều bạn cần hỏi.'
-    if (!captchaToken) next.captcha = 'Hãy xác nhận bạn không phải robot.'
+    if (!form.fullName.trim()) next.fullName = t('Hãy nhập họ tên.')
+    if (!EMAIL_RE.test(form.email.trim())) next.email = t('Hãy nhập email để nhận câu trả lời.')
+    if (!form.role) next.role = t('Hãy chọn bạn là ai.')
+    if (!form.topic) next.topic = t('Hãy chọn chủ đề.')
+    if (!form.message.trim()) next.message = t('Hãy viết điều bạn cần hỏi.')
+    if (!captchaToken) next.captcha = t('Hãy xác nhận bạn không phải robot.')
     setErrors(next)
     if (Object.keys(next).length === 0) submit.mutate()
   }
 
   return (
     <HelpFrame tab="contact" wide>
-      <PageSeo title="Liên hệ hỗ trợ" description="Gửi câu hỏi cho đội ngũ bonbon; câu trả lời đến email của bạn." path={path} trail={trail} site="help" />
+      <PageSeo title={t('Liên hệ hỗ trợ')} description={t('Gửi câu hỏi cho đội ngũ bonbon; câu trả lời đến email của bạn.')} path={path} trail={trail} site="help" />
       <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:gap-16">
         <div className="flex flex-col gap-5 lg:pt-6">
-          <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">Liên hệ hỗ trợ</span>
-          <h1 className="text-[2.25rem] leading-[2.75rem] font-medium tracking-[-0.025em] sm:text-[3rem] sm:leading-[3.375rem]">Đội ngũ bonbon luôn sẵn sàng giúp bạn</h1>
+          <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">{t('Liên hệ hỗ trợ')}</span>
+          <h1 className="text-[2.25rem] leading-[2.75rem] font-medium tracking-[-0.025em] sm:text-[3rem] sm:leading-[3.375rem]">{t('Đội ngũ bonbon luôn sẵn sàng giúp bạn')}</h1>
           <p className="text-lead text-muted-foreground">
-            Khách đặt món, chủ quán hay bất kỳ ai cũng gửi được, không cần đăng nhập. Chúng tôi trả lời qua email bạn để lại, thường trong một ngày làm việc.
+            {t('Khách đặt món, chủ quán hay bất kỳ ai cũng gửi được, không cần đăng nhập. Chúng tôi trả lời qua email bạn để lại, thường trong một ngày làm việc.')}
           </p>
           <p className="text-ui text-muted-foreground">
-            Câu hỏi thường gặp đã có trong{' '}
+            {t('Câu hỏi thường gặp đã có trong')}{' '}
             <Link to={BASE} className="text-link text-ink">
-              trung tâm trợ giúp
+              {t('trung tâm trợ giúp')}
             </Link>
-            . Vấn đề về một đơn cụ thể, mở đơn trong ứng dụng và chọn Báo vấn đề để quán và bonbon thấy ngay đơn nào.
+            {t('. Vấn đề về một đơn cụ thể, mở đơn trong ứng dụng và chọn Báo vấn đề để quán và bonbon thấy ngay đơn nào.')}
           </p>
         </div>
 
@@ -227,9 +228,9 @@ export function ContactPage() {
                 <span className="flex size-12 items-center justify-center rounded-full bg-accent text-primary">
                   <CheckIcon className="size-6" aria-hidden="true" />
                 </span>
-                <h2 className="text-h2 font-medium">Đã gửi yêu cầu</h2>
+                <h2 className="text-h2 font-medium">{t('Đã gửi yêu cầu')}</h2>
                 <p className="text-body text-muted-foreground">
-                  Chúng tôi sẽ trả lời qua <b className="font-medium text-ink">{sent}</b>. Hãy xem cả hộp thư rác nếu chưa thấy.
+                  {t('Chúng tôi sẽ trả lời qua ')}<b className="font-medium text-ink">{sent}</b>{t('. Hãy xem cả hộp thư rác nếu chưa thấy.')}
                 </p>
                 <button
                   type="button"
@@ -240,22 +241,22 @@ export function ContactPage() {
                     setSent(null)
                   }}
                 >
-                  Gửi yêu cầu khác
+                  {t('Gửi yêu cầu khác')}
                 </button>
               </div>
             ) : (
               <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
-                <h2 className="text-[1.875rem] leading-9 font-medium tracking-[-0.015em]">Gửi yêu cầu</h2>
+                <h2 className="text-[1.875rem] leading-9 font-medium tracking-[-0.015em]">{t('Gửi yêu cầu')}</h2>
                 <div className={field}>
                   <Label htmlFor="c-name">
-                    Họ tên <Required />
+                    {t('Họ tên ')}<Required />
                   </Label>
-                  <Input id="c-name" autoComplete="name" placeholder="Họ tên" maxLength={100} value={form.fullName} onChange={set('fullName')} aria-invalid={!!errors.fullName} />
+                  <Input id="c-name" autoComplete="name" placeholder={t('Họ tên')} maxLength={100} value={form.fullName} onChange={set('fullName')} aria-invalid={!!errors.fullName} />
                   {errors.fullName ? <p className="text-small text-destructive">{errors.fullName}</p> : null}
                 </div>
                 <div className={field}>
                   <Label htmlFor="c-email">
-                    Email nhận trả lời <Required />
+                    {t('Email nhận trả lời ')}<Required />
                   </Label>
                   <Input id="c-email" type="email" autoComplete="email" placeholder="ban@email.com" maxLength={255} value={form.email} onChange={set('email')} aria-invalid={!!errors.email} />
                   {errors.email ? <p className="text-small text-destructive">{errors.email}</p> : null}
@@ -263,11 +264,11 @@ export function ContactPage() {
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className={field}>
                     <Label htmlFor="c-role">
-                      Bạn là <Required />
+                      {t('Bạn là ')}<Required />
                     </Label>
                     <select id="c-role" required className={selectClass} value={form.role} onChange={set('role')} aria-invalid={!!errors.role}>
                       <option value="" disabled>
-                        Chọn...
+                        {t('Chọn...')}
                       </option>
                       {ROLES.map((r) => (
                         <option key={r.id} value={r.id}>
@@ -279,15 +280,15 @@ export function ContactPage() {
                   </div>
                   <div className={field}>
                     <Label htmlFor="c-topic">
-                      Chủ đề <Required />
+                      {t('Chủ đề ')}<Required />
                     </Label>
                     <select id="c-topic" required className={selectClass} value={form.topic} onChange={set('topic')} aria-invalid={!!errors.topic}>
                       <option value="" disabled>
-                        Chọn...
+                        {t('Chọn...')}
                       </option>
-                      {TOPICS.map((t) => (
-                        <option key={t.id} value={t.id}>
-                          {t.label}
+                      {TOPICS.map((tItem) => (
+                        <option key={tItem.id} value={tItem.id}>
+                          {tItem.label}
                         </option>
                       ))}
                     </select>
@@ -296,14 +297,14 @@ export function ContactPage() {
                 </div>
                 <div className={field}>
                   <Label htmlFor="c-message">
-                    Chúng tôi giúp gì được cho bạn? <Required />
+                    {t('Chúng tôi giúp gì được cho bạn? ')}<Required />
                   </Label>
                   <Textarea
                     id="c-message"
                     rows={5}
                     maxLength={2000}
                     showCount
-                    placeholder="Tôi có câu hỏi về..."
+                    placeholder={t('Tôi có câu hỏi về...')}
                     value={form.message}
                     onChange={set('message')}
                     aria-invalid={!!errors.message}
@@ -317,16 +318,16 @@ export function ContactPage() {
                 </div>
                 {submit.isError ? <FormError message={problemMessage(submit.error)} /> : null}
                 <Button type="submit" disabled={submit.isPending} className="w-full">
-                  {submit.isPending ? 'Đang gửi...' : 'Gửi yêu cầu'}
+                  {submit.isPending ? t('Đang gửi...') : t('Gửi yêu cầu')}
                 </Button>
                 <p className="text-center text-small text-muted-foreground">
-                  Khi gửi, bạn đồng ý với{' '}
+                  {t('Khi gửi, bạn đồng ý với')}{' '}
                   <Link to={helpPath('/phap-ly/PRIVACY_POLICY')} className="text-link hover:text-ink">
-                    chính sách quyền riêng tư
+                    {t('chính sách quyền riêng tư')}
                   </Link>
                   .{SUPPORT_EMAIL ? (
                     <>
-                      {' '}Bạn cũng có thể viết cho{' '}
+                      {' '}{t('Bạn cũng có thể viết cho')}{' '}
                       <a href={`mailto:${SUPPORT_EMAIL}`} className="text-link hover:text-ink">
                         {SUPPORT_EMAIL}
                       </a>
@@ -345,12 +346,12 @@ export function ContactPage() {
 
 type DocumentType = 'CUSTOMER_TERMS' | 'SELLER_TERMS' | 'PRIVACY_POLICY'
 const LEGAL: { type: DocumentType; label: string }[] = [
-  { type: 'CUSTOMER_TERMS', label: 'Điều khoản sử dụng' },
-  { type: 'SELLER_TERMS', label: 'Điều khoản người bán' },
-  { type: 'PRIVACY_POLICY', label: 'Chính sách quyền riêng tư' },
+  { type: 'CUSTOMER_TERMS', label: t('Điều khoản sử dụng') },
+  { type: 'SELLER_TERMS', label: t('Điều khoản người bán') },
+  { type: 'PRIVACY_POLICY', label: t('Chính sách quyền riêng tư') },
 ]
 const legalPath = (type: string) => helpPath(`/phap-ly/${type}`)
-const LEGAL_GROUPS: HelpNavGroup[] = [{ title: 'Văn bản pháp lý', items: LEGAL.map((d) => ({ label: d.label, to: legalPath(d.type) })) }]
+const LEGAL_GROUPS: HelpNavGroup[] = [{ title: t('Văn bản pháp lý'), items: LEGAL.map((d) => ({ label: d.label, to: legalPath(d.type) })) }]
 
 /** /phap-ly opens the first document. */
 export function LegalIndexRedirect() {
@@ -371,21 +372,21 @@ export function LegalPage() {
     },
   })
   const path = legalPath(type ?? '')
-  const trail = [...HOME, { name: 'Pháp lý', path: helpPath('/phap-ly') }, { name: known?.label ?? 'Văn bản', path }]
+  const trail = [...HOME, { name: t('Pháp lý'), path: helpPath('/phap-ly') }, { name: known?.label ?? t('Văn bản'), path }]
   return (
     <HelpFrame tab="legal" sidebar={<HelpSidebar groups={LEGAL_GROUPS} current={path} />}>
-      {known ? <PageSeo title={known.label} description={`${known.label} của bonbon, phiên bản đang có hiệu lực.`} path={path} trail={trail} site="help" /> : null}
+      {known ? <PageSeo title={known.label} description={t('{v0} của bonbon, phiên bản đang có hiệu lực.', { v0: known.label })} path={path} trail={trail} site="help" /> : null}
       <div className="flex flex-col gap-6">
         <Breadcrumb trail={trail.slice(1)} />
-        {!known ? <p>Không tìm thấy văn bản.</p> : null}
+        {!known ? <p>{t('Không tìm thấy văn bản.')}</p> : null}
         {doc.isPending && known ? <Skeleton className="h-96 rounded-xl" /> : null}
         {doc.isError ? <FormError message={problemMessage(doc.error)} /> : null}
         {doc.data ? (
           <>
             <PageTitle title={doc.data.title ?? known?.label ?? ''} />
             <p className="-mt-3 text-small text-muted-foreground">
-              Phiên bản {doc.data.version}
-              {doc.data.effectiveAt ? ` · hiệu lực từ ${new Date(doc.data.effectiveAt).toLocaleDateString('vi-VN')}` : ''}
+              {t('Phiên bản ')}{doc.data.version}
+              {doc.data.effectiveAt ? t(' · hiệu lực từ {v0}', { v0: new Date(doc.data.effectiveAt).toLocaleDateString(intlLocale) }) : ''}
             </p>
             <article className="text-body leading-7 whitespace-pre-line text-ink">{doc.data.content}</article>
           </>

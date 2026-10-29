@@ -1,6 +1,7 @@
 import { CheckIcon, CodeIcon, XIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { cn } from '@/shared/lib/utils'
+import { t } from '@/shared/i18n'
 
 /** The grey stage a live sample sits on, centred, like the Fluent 2 docs. */
 export function Stage({ children, className }: { children: ReactNode; className?: string }) {
@@ -21,7 +22,7 @@ export function Example({ children, code }: { children: ReactNode; code: string 
           className="flex w-full items-center gap-2 px-4 py-3 text-ui outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
         >
           <CodeIcon className="size-4" aria-hidden="true" />
-          {open ? 'Ẩn mã' : 'Xem mã'}
+          {open ? t('Ẩn mã') : t('Xem mã')}
         </button>
         {open ? (
           <pre className="overflow-x-auto border-t border-white/10 px-4 py-4 font-mono text-small leading-6 text-white/90">
@@ -58,7 +59,7 @@ export function Rule({ ok, caption, children }: { ok: boolean; caption: string; 
         <Stage>{children}</Stage>
       </div>
       <figcaption className={cn('text-ui font-medium', ok ? 'text-success-fg' : 'text-danger-fg')}>
-        <span className="sr-only">{ok ? 'Nên: ' : 'Không nên: '}</span>
+        <span className="sr-only">{ok ? t('Nên: ') : t('Không nên: ')}</span>
         {caption}
       </figcaption>
     </figure>

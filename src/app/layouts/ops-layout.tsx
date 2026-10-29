@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { ActivityIcon } from 'lucide-react'
 import { WorkspaceShell, type FooterLink, type NavParent } from './workspace'
 import { opsPath, siteUrl } from '@/shared/config/sites'
@@ -6,18 +7,18 @@ import { opsPath, siteUrl } from '@/shared/config/sites'
 const NAV: NavParent[] = [
   {
     key: 'system',
-    label: 'Hệ thống',
+    label: t('Hệ thống'),
     icon: ActivityIcon,
     defaultOpen: true,
     children: [
-      { to: opsPath(), label: 'Tình trạng hệ thống' },
-      { to: opsPath('/app-config'), label: 'Cấu hình app' },
+      { to: opsPath(), label: t('Tình trạng hệ thống') },
+      { to: opsPath('/app-config'), label: t('Cấu hình app') },
     ],
   },
 ]
 
-const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: 'Chính sách riêng tư', external: true }]
+const FOOTER: FooterLink[] = [{ to: siteUrl('help', '/phap-ly/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true }]
 
 export function OpsLayout() {
-  return <WorkspaceShell area="Vận hành" homePath={opsPath()} spaces={[{ key: 'ops', label: 'Vận hành', icon: ActivityIcon, nav: NAV }]} footerLinks={FOOTER} loginPath={opsPath('/login')} />
+  return <WorkspaceShell area={t('Vận hành')} homePath={opsPath()} spaces={[{ key: 'ops', label: t('Vận hành'), icon: ActivityIcon, nav: NAV }]} footerLinks={FOOTER} loginPath={opsPath('/login')} />
 }

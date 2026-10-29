@@ -15,15 +15,16 @@ import { siteUrl } from '@/shared/config/sites'
 import { ArticleCard, Breadcrumb, CardGrid } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 import { NotFoundPage } from '@/pages/not-found'
+import { t } from '@/shared/i18n'
 
 type Trail = { name: string; path: string }[]
 
-const HOME: Trail = [{ name: 'Trang chủ', path: '/' }]
+const HOME: Trail = [{ name: t('Trang chủ'), path: '/' }]
 
 function trailFor(collection: Collection, current?: string): Trail {
   const own = { name: COLLECTION_TITLE[collection], path: COLLECTION_BASE[collection] }
   const base: Trail =
-    collection === 'blog' ? [...HOME, own] : [...HOME, { name: 'Hướng dẫn', path: COLLECTION_BASE['bat-dau'] }, own]
+    collection === 'blog' ? [...HOME, own] : [...HOME, { name: t('Hướng dẫn'), path: COLLECTION_BASE['bat-dau'] }, own]
   return current ? [...base, { name: current, path: '' }] : base
 }
 
@@ -77,7 +78,7 @@ export function ArticlePage({ collection }: { collection: Collection }) {
             others.length > 0 ? (
               <section aria-labelledby="bai-khac" className="mt-24">
                 <h2 id="bai-khac" className="mb-6 text-h2 font-medium">
-                  Đọc thêm bài viết
+                  {t('Đọc thêm bài viết')}
                 </h2>
                 <CardGrid articles={others} initial={3} step={3} />
               </section>
@@ -93,7 +94,7 @@ export function ArticlePage({ collection }: { collection: Collection }) {
       <ArticleView
         trail={trail}
         title={article.title}
-        meta={`Cập nhật ngày ${formatDate(article.updated)}`}
+        meta={t('Cập nhật ngày {v0}', { v0: formatDate(article.updated) })}
         blocks={article.blocks}
         tags={article.tags}
         after={next.length > 0 ? <NextSteps articles={next} /> : null}
@@ -108,7 +109,7 @@ function NextSteps({ articles }: { articles: Article[] }) {
   return (
     <section aria-labelledby="buoc-tiep-theo" className="mt-12">
       <h2 id="buoc-tiep-theo" className="mb-4 text-[1.5rem] leading-9 font-semibold">
-        Bước tiếp theo
+        {t('Bước tiếp theo')}
       </h2>
       <ul className="grid gap-4 sm:grid-cols-2">
         {articles.map((a) => (
@@ -147,11 +148,11 @@ export function HubPage({ collection, title, intro }: { collection: Collection; 
 export const ManageHubPage = () => (
   <HubPage
     collection="quan-ly-cua-hang"
-    title="Quản lý cửa hàng"
-    intro="Mỗi hướng dẫn là một việc bạn làm hằng ngày trên trang người bán, gói gọn trong vài thao tác."
+    title={t('Quản lý cửa hàng')}
+    intro={t('Mỗi hướng dẫn là một việc bạn làm hằng ngày trên trang người bán, gói gọn trong vài thao tác.')}
   />
 )
 
 export const BlogHubPage = () => (
-  <HubPage collection="blog" title="Blog" intro="Kiến thức và mẹo nhỏ cho chủ quán bán hàng trong khu: giao hàng, thực đơn, giá bán và chăm sóc khách." />
+  <HubPage collection="blog" title="Blog" intro={t('Kiến thức và mẹo nhỏ cho chủ quán bán hàng trong khu: giao hàng, thực đơn, giá bán và chăm sóc khách.')} />
 )

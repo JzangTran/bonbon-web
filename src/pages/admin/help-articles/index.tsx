@@ -20,11 +20,12 @@ import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { t } from '@/shared/i18n'
 
 const FILTERS: { id: HelpStatus | 'ALL_STATUSES'; label: string }[] = [
-  { id: 'ALL_STATUSES', label: 'Tất cả' },
-  { id: 'PUBLISHED', label: 'Đã đăng' },
-  { id: 'DRAFT', label: 'Nháp' },
+  { id: 'ALL_STATUSES', label: t('Tất cả') },
+  { id: 'PUBLISHED', label: t('Đã đăng') },
+  { id: 'DRAFT', label: t('Nháp') },
 ]
 
 const EMPTY: HelpDraft = { title: '', body: '', audience: 'ALL', keywords: [], status: 'DRAFT' }
@@ -41,25 +42,25 @@ export function AdminHelpArticlesPage() {
   const remove = useDeleteHelpArticle()
   const total = articles.data?.total ?? 0
 
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền soạn bài trợ giúp.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền soạn bài trợ giúp.')}</p>
 
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Bài trợ giúp</h1>
-          <p className="text-sm text-muted-foreground">Khách và người bán đọc các bài này không cần đăng nhập. Bài nháp chỉ quản trị viên thấy.</p>
+          <h1 className="text-2xl font-semibold">{t('Bài trợ giúp')}</h1>
+          <p className="text-sm text-muted-foreground">{t('Khách và người bán đọc các bài này không cần đăng nhập. Bài nháp chỉ quản trị viên thấy.')}</p>
         </div>
         <Button asChild>
           <Link to={consolePath('/help-articles/new')}>
-            <PlusIcon /> Bài mới
+            <PlusIcon />{t(' Bài mới')}
           </Link>
         </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <PageTabs
-          label="Bài trợ giúp"
+          label={t('Bài trợ giúp')}
           tabs={FILTERS}
           value={filter}
           onValueChange={(id) => {
@@ -75,14 +76,14 @@ export function AdminHelpArticlesPage() {
             setQ(e.target.value)
             paging.reset()
           }}
-          placeholder="Tìm bài"
-          aria-label="Tìm bài"
+          placeholder={t('Tìm bài')}
+          aria-label={t('Tìm bài')}
         />
       </div>
 
       {articles.isError ? <FormError message={problemMessage(articles.error)} /> : null}
       {articles.isPending ? <Skeleton className="h-32" /> : null}
-      {articles.data && articles.data.items?.length === 0 ? <Card className="p-6 text-muted-foreground">Chưa có bài nào.</Card> : null}
+      {articles.data && articles.data.items?.length === 0 ? <Card className="p-6 text-muted-foreground">{t('Chưa có bài nào.')}</Card> : null}
 
       <ul className="flex flex-col gap-3">
         {(articles.data?.items ?? []).map((a) => (
@@ -92,18 +93,18 @@ export function AdminHelpArticlesPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold">{a.title}</span>
                   <Badge variant="outline">{AUDIENCE_LABEL[a.audience ?? ''] ?? a.audience}</Badge>
-                  <Badge className={a.status === 'PUBLISHED' ? 'bg-success-subtle text-success-fg' : 'bg-warning-subtle text-warning-fg'}>{a.status === 'PUBLISHED' ? 'Đã đăng' : 'Nháp'}</Badge>
+                  <Badge className={a.status === 'PUBLISHED' ? 'bg-success-subtle text-success-fg' : 'bg-warning-subtle text-warning-fg'}>{a.status === 'PUBLISHED' ? t('Đã đăng') : t('Nháp')}</Badge>
                 </div>
-                <span className="text-xs text-muted-foreground">Sửa {formatRelative(a.updatedAt)}</span>
+                <span className="text-xs text-muted-foreground">{t('Sửa ')}{formatRelative(a.updatedAt)}</span>
               </div>
               <p className="line-clamp-2 text-sm text-muted-foreground">{a.body}</p>
-              {(a.keywords ?? []).length > 0 ? <p className="text-xs text-muted-foreground">Từ khoá: {a.keywords?.join(', ')}</p> : null}
+              {(a.keywords ?? []).length > 0 ? <p className="text-xs text-muted-foreground">{t('Từ khoá: ')}{a.keywords?.join(', ')}</p> : null}
               <div className="flex flex-wrap gap-2">
                 <Button asChild size="sm" variant="outline">
-                  <Link to={consolePath(`/help-articles/${a.id}`)}>Sửa</Link>
+                  <Link to={consolePath(`/help-articles/${a.id}`)}>{t('Sửa')}</Link>
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => setDeleting(a)}>
-                  Xoá
+                  {t('Xoá')}
                 </Button>
               </div>
             </Card>
@@ -116,18 +117,18 @@ export function AdminHelpArticlesPage() {
       <Dialog open={!!deleting} onOpenChange={(open) => !open && setDeleting(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Xoá bài này?</DialogTitle>
-            <DialogDescription>&quot;{deleting?.title}&quot; sẽ bị xoá hẳn, không hoàn tác được. Muốn tạm ẩn thì chuyển bài về nháp.</DialogDescription>
+            <DialogTitle>{t('Xoá bài này?')}</DialogTitle>
+            <DialogDescription>&quot;{deleting?.title}{t('" sẽ bị xoá hẳn, không hoàn tác được. Muốn tạm ẩn thì chuyển bài về nháp.')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Giữ lại</Button>
+              <Button variant="outline">{t('Giữ lại')}</Button>
             </DialogClose>
             <Button
               disabled={remove.isPending}
               onClick={() => deleting?.id && remove.mutate(deleting.id, { onSuccess: () => setDeleting(null) })}
             >
-              Xoá bài
+              {t('Xoá bài')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -157,9 +158,9 @@ export function AdminHelpArticleEditPage() {
       return data
     },
   })
-  if (!session?.permissions.has('help-center:write')) return <p className="text-muted-foreground">Bạn không có quyền soạn bài trợ giúp.</p>
+  if (!session?.permissions.has('help-center:write')) return <p className="text-muted-foreground">{t('Bạn không có quyền soạn bài trợ giúp.')}</p>
   if (id && article.isPending) return <Skeleton className="h-96 max-w-3xl" />
-  if (id && !article.data) return <FormError message={article.isError ? problemMessage(article.error) : 'Không tìm thấy bài.'} />
+  if (id && !article.data) return <FormError message={article.isError ? problemMessage(article.error) : t('Không tìm thấy bài.')} />
   return <ArticleEditor key={id ?? 'new'} initial={{ id: id ?? null, draft: id && article.data ? draftOf(article.data) : EMPTY }} />
 }
 
@@ -178,22 +179,22 @@ function ArticleEditor({ initial }: { initial: { id: string | null; draft: HelpD
 
   return (
     <SubPage
-      back={{ to: consolePath('/help-articles'), label: 'Bài trợ giúp' }}
-      title={initial.id ? 'Sửa bài' : 'Bài mới'}
-      description="Viết như đang trả lời một người đang cần giúp. Từ khoá giúp tìm bài; không cần dấu hay chữ hoa."
+      back={{ to: consolePath('/help-articles'), label: t('Bài trợ giúp') }}
+      title={initial.id ? t('Sửa bài') : t('Bài mới')}
+      description={t('Viết như đang trả lời một người đang cần giúp. Từ khoá giúp tìm bài; không cần dấu hay chữ hoa.')}
     >
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="help-title">Tiêu đề hoặc câu hỏi</Label>
+            <Label htmlFor="help-title">{t('Tiêu đề hoặc câu hỏi')}</Label>
             <Input id="help-title" value={draft.title} maxLength={200} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="help-body">Nội dung trả lời</Label>
+            <Label htmlFor="help-body">{t('Nội dung trả lời')}</Label>
             <Textarea id="help-body" rows={14} value={draft.body} maxLength={10000} onChange={(e) => setDraft({ ...draft, body: e.target.value })} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label>Dành cho</Label>
-            <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Dành cho">
+            <Label>{t('Dành cho')}</Label>
+            <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={t('Dành cho')}>
               {(['ALL', 'CUSTOMER', 'SELLER'] as const).map((a) => (
                 <Button key={a} type="button" role="radio" aria-checked={draft.audience === a} size="sm" variant={draft.audience === a ? 'default' : 'outline'} onClick={() => setDraft({ ...draft, audience: a })}>
                   {AUDIENCE_LABEL[a]}
@@ -202,20 +203,20 @@ function ArticleEditor({ initial }: { initial: { id: string | null; draft: HelpD
             </div>
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="help-keywords">Từ khoá (cách nhau bằng dấu phẩy, tối đa 20)</Label>
-            <Input id="help-keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="hoàn tiền, khiếu nại" />
+            <Label htmlFor="help-keywords">{t('Từ khoá (cách nhau bằng dấu phẩy, tối đa 20)')}</Label>
+            <Input id="help-keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder={t('hoàn tiền, khiếu nại')} />
           </div>
           {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
         </div>
         <SubPageActions>
           <Button disabled={!valid || save.isPending} onClick={() => submit('PUBLISHED')}>
-            Đăng bài
+            {t('Đăng bài')}
           </Button>
           <Button variant="outline" disabled={!valid || save.isPending} onClick={() => submit('DRAFT')}>
-            Lưu nháp
+            {t('Lưu nháp')}
           </Button>
           <Button variant="ghost" onClick={onClose}>
-            Huỷ
+            {t('Huỷ')}
           </Button>
         </SubPageActions>
     </SubPage>

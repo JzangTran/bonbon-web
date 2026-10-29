@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 /**
  * The same rules the backend applies to a form's fields (the request records), so a mistake is shown at the field before
  * anything is sent. The backend checks again; these only save a round trip and say it in the person's words.
@@ -20,7 +21,7 @@ export type Errors = Record<string, string>
 /** A required text of at most `max` characters; the message names the field. */
 export function requiredText(errors: Errors, field: string, value: string, label: string, max: number, min = 1) {
   const v = value.trim()
-  if (v === '') errors[field] = `Hãy nhập ${label}.`
-  else if (v.length < min) errors[field] = `${label[0].toUpperCase()}${label.slice(1)} tối thiểu ${min} ký tự.`
-  else if (v.length > max) errors[field] = `${label[0].toUpperCase()}${label.slice(1)} tối đa ${max} ký tự.`
+  if (v === '') errors[field] = t('Hãy nhập {v0}.', { v0: label })
+  else if (v.length < min) errors[field] = t('{v0}{v1} tối thiểu {v2} ký tự.', { v0: label[0].toUpperCase(), v1: label.slice(1), v2: min })
+  else if (v.length > max) errors[field] = t('{v0}{v1} tối đa {v2} ký tự.', { v0: label[0].toUpperCase(), v1: label.slice(1), v2: max })
 }

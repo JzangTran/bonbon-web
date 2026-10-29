@@ -17,25 +17,26 @@ import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { t } from '@/shared/i18n'
 
 const TABS = [
-  { id: 'OPEN', label: 'Cần xử lý' },
-  { id: 'COMPLETED', label: 'Đã xong' },
-  { id: 'ALL', label: 'Tất cả (đối soát)' },
+  { id: 'OPEN', label: t('Cần xử lý') },
+  { id: 'COMPLETED', label: t('Đã xong') },
+  { id: 'ALL', label: t('Tất cả (đối soát)') },
 ] as const
 type Tab = (typeof TABS)[number]['id']
 
 const STATUS: Record<string, { label: string; className: string }> = {
-  REQUESTED: { label: 'Chờ chuyển khoản', className: 'bg-warning-subtle text-warning-fg' },
-  NEEDS_DESTINATION: { label: 'Chờ khách nhập tài khoản', className: 'bg-info-subtle text-info-fg' },
-  PROCESSING: { label: 'Đang hoàn qua MoMo', className: 'bg-info-subtle text-info-fg' },
-  COMPLETED: { label: 'Đã hoàn', className: 'bg-success-subtle text-success-fg' },
-  FAILED: { label: 'Thất bại', className: 'bg-danger-subtle text-danger-fg' },
+  REQUESTED: { label: t('Chờ chuyển khoản'), className: 'bg-warning-subtle text-warning-fg' },
+  NEEDS_DESTINATION: { label: t('Chờ khách nhập tài khoản'), className: 'bg-info-subtle text-info-fg' },
+  PROCESSING: { label: t('Đang hoàn qua MoMo'), className: 'bg-info-subtle text-info-fg' },
+  COMPLETED: { label: t('Đã hoàn'), className: 'bg-success-subtle text-success-fg' },
+  FAILED: { label: t('Thất bại'), className: 'bg-danger-subtle text-danger-fg' },
 }
 const REASON: Record<string, string> = {
-  ORDER_CLOSED: 'Đơn đã thanh toán bị huỷ hoặc từ chối',
-  LATE_PAYMENT: 'Tiền đến sau khi đơn đã đóng',
-  CASE_UPHELD: 'Khiếu nại được chấp nhận',
+  ORDER_CLOSED: t('Đơn đã thanh toán bị huỷ hoặc từ chối'),
+  LATE_PAYMENT: t('Tiền đến sau khi đơn đã đóng'),
+  CASE_UPHELD: t('Khiếu nại được chấp nhận'),
 }
 
 /** Refunds MoMo could not send back, waiting for a bank transfer (process-refund.md); also the month-end sheet. */
@@ -55,29 +56,29 @@ export function AdminRefundsPage() {
   const items = data?.items ?? []
   const total = data?.total ?? 0
 
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xử lý hoàn tiền.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền xử lý hoàn tiền.')}</p>
 
   const copy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
-      toast.success('Đã sao chép.')
+      toast.success(t('Đã sao chép.'))
     } catch {
-      toast.error('Không sao chép được.')
+      toast.error(t('Không sao chép được.'))
     }
   }
 
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Hoàn tiền</h1>
+        <h1 className="text-2xl font-semibold">{t('Hoàn tiền')}</h1>
         <p className="text-sm text-muted-foreground">
-          Các khoản MoMo không hoàn lại được. Chuyển đúng số tiền tới tài khoản khách nhập, rồi ghi mã giao dịch của ngân hàng. Không sửa được số tiền.
+          {t('Các khoản MoMo không hoàn lại được. Chuyển đúng số tiền tới tài khoản khách nhập, rồi ghi mã giao dịch của ngân hàng. Không sửa được số tiền.')}
         </p>
       </div>
 
       <PageTabs
-        label="Hoàn tiền"
-        tabs={TABS.map((t) => ({ id: t.id, label: t.label, count: t.id === tab ? total : undefined }))}
+        label={t('Hoàn tiền')}
+        tabs={TABS.map((tItem) => ({ id: tItem.id, label: tItem.label, count: tItem.id === tab ? total : undefined }))}
         value={tab}
         onValueChange={(id) => {
           setTab(id as Tab)
@@ -87,7 +88,7 @@ export function AdminRefundsPage() {
 
       {refunds.isError ? <FormError message={problemMessage(refunds.error)} /> : null}
       {refunds.isPending ? <Skeleton className="h-32" /> : null}
-      {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">Không có khoản hoàn nào ở mục này.</Card> : null}
+      {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">{t('Không có khoản hoàn nào ở mục này.')}</Card> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((refund) => {
@@ -100,34 +101,34 @@ export function AdminRefundsPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-lg font-semibold tabular-nums">{formatVnd(refund.amount)}</span>
                     <Badge className={status.className}>{status.label}</Badge>
-                    {refund.mode === 'GATEWAY' ? <Badge variant="outline">Qua MoMo</Badge> : <Badge variant="outline">Chuyển khoản</Badge>}
+                    {refund.mode === 'GATEWAY' ? <Badge variant="outline">Qua MoMo</Badge> : <Badge variant="outline">{t('Chuyển khoản')}</Badge>}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Đơn #{refund.orderNumber} · chờ từ {formatRelative(refund.createdAt)}
+                    {t('Đơn #')}{refund.orderNumber}{t(' · chờ từ ')}{formatRelative(refund.createdAt)}
                   </p>
                 </div>
                 <p className="text-sm">
                   {REASON[refund.reason ?? ''] ?? refund.reason}
-                  {refund.gatewayResultCode ? <span className="text-muted-foreground"> · mã MoMo {refund.gatewayResultCode}</span> : null}
+                  {refund.gatewayResultCode ? <span className="text-muted-foreground">{t(' · mã MoMo ')}{refund.gatewayResultCode}</span> : null}
                 </p>
-                {refund.failureReason ? <p className="text-sm text-warning-fg">Lần chuyển trước thất bại: {refund.failureReason}</p> : null}
+                {refund.failureReason ? <p className="text-sm text-warning-fg">{t('Lần chuyển trước thất bại: ')}{refund.failureReason}</p> : null}
 
                 {destination ? (
                   <dl className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 rounded-sm bg-muted p-3 text-sm">
-                    <dt className="text-muted-foreground">Ngân hàng</dt>
+                    <dt className="text-muted-foreground">{t('Ngân hàng')}</dt>
                     <dd className="col-span-2">{destination.bankName}</dd>
-                    <dt className="text-muted-foreground">Số tài khoản</dt>
+                    <dt className="text-muted-foreground">{t('Số tài khoản')}</dt>
                     <dd className="font-medium tabular-nums">{destination.accountNumber}</dd>
-                    <Button variant="ghost" size="icon-sm" aria-label="Sao chép số tài khoản" onClick={() => void copy(destination.accountNumber ?? '')}>
+                    <Button variant="ghost" size="icon-sm" aria-label={t('Sao chép số tài khoản')} onClick={() => void copy(destination.accountNumber ?? '')}>
                       <CopyIcon />
                     </Button>
-                    <dt className="text-muted-foreground">Chủ tài khoản</dt>
+                    <dt className="text-muted-foreground">{t('Chủ tài khoản')}</dt>
                     <dd className="col-span-2 font-medium">{destination.accountName}</dd>
                   </dl>
                 ) : null}
                 {refund.bankReference ? (
                   <p className="text-sm text-muted-foreground">
-                    Mã giao dịch {refund.bankReference} · {formatDateTime(refund.transferredAt ?? refund.completedAt)}
+                    {t('Mã giao dịch ')}{refund.bankReference} · {formatDateTime(refund.transferredAt ?? refund.completedAt)}
                   </p>
                 ) : null}
 
@@ -139,7 +140,7 @@ export function AdminRefundsPage() {
                         setPaying(refund)
                       }}
                     >
-                      Đã chuyển khoản
+                      {t('Đã chuyển khoản')}
                     </Button>
                     <Button
                       variant="outline"
@@ -148,7 +149,7 @@ export function AdminRefundsPage() {
                         setBouncing(refund)
                       }}
                     >
-                      Chuyển không được
+                      {t('Chuyển không được')}
                     </Button>
                   </div>
                 ) : null}
@@ -163,19 +164,19 @@ export function AdminRefundsPage() {
       <Dialog open={paying !== null} onOpenChange={(open) => (open ? undefined : setPaying(null))}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Xác nhận đã chuyển {formatVnd(paying?.amount)}</DialogTitle>
+            <DialogTitle>{t('Xác nhận đã chuyển ')}{formatVnd(paying?.amount)}</DialogTitle>
             <DialogDescription>
-              Tới {paying?.destination?.accountName} · {paying?.destination?.bankName} · {paying?.destination?.accountNumber}. Tên chủ tài khoản trên kết quả chuyển phải khớp.
+              {t('Tới ')}{paying?.destination?.accountName} · {paying?.destination?.bankName} · {paying?.destination?.accountNumber}{t('. Tên chủ tài khoản trên kết quả chuyển phải khớp.')}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="bank-reference">Mã giao dịch của ngân hàng</Label>
+            <Label htmlFor="bank-reference">{t('Mã giao dịch của ngân hàng')}</Label>
             <Input id="bank-reference" value={reference} maxLength={100} onChange={(e) => setReference(e.target.value)} />
-            <p className="text-xs text-muted-foreground">Mỗi mã chỉ dùng cho một khoản hoàn; mã đã dùng sẽ bị từ chối.</p>
+            <p className="text-xs text-muted-foreground">{t('Mỗi mã chỉ dùng cho một khoản hoàn; mã đã dùng sẽ bị từ chối.')}</p>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
+              <Button variant="outline">{t('Huỷ')}</Button>
             </DialogClose>
             <Button
               disabled={reference.trim().length < 3 || complete.isPending}
@@ -183,7 +184,7 @@ export function AdminRefundsPage() {
                 if (paying?.id) complete.mutate({ id: paying.id, bankReference: reference }, { onSuccess: () => setPaying(null) })
               }}
             >
-              Xác nhận
+              {t('Xác nhận')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -192,16 +193,16 @@ export function AdminRefundsPage() {
       <Dialog open={bouncing !== null} onOpenChange={(open) => (open ? undefined : setBouncing(null))}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Chuyển khoản không được?</DialogTitle>
-            <DialogDescription>Tài khoản đã nhập sẽ bị xoá và khách được yêu cầu nhập tài khoản khác. Lý do hiện cho khách.</DialogDescription>
+            <DialogTitle>{t('Chuyển khoản không được?')}</DialogTitle>
+            <DialogDescription>{t('Tài khoản đã nhập sẽ bị xoá và khách được yêu cầu nhập tài khoản khác. Lý do hiện cho khách.')}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="fail-reason">Lý do</Label>
-            <Textarea id="fail-reason" rows={3} maxLength={300} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ví dụ: tài khoản đã đóng, sai số tài khoản" />
+            <Label htmlFor="fail-reason">{t('Lý do')}</Label>
+            <Textarea id="fail-reason" rows={3} maxLength={300} value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t('Ví dụ: tài khoản đã đóng, sai số tài khoản')} />
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
+              <Button variant="outline">{t('Huỷ')}</Button>
             </DialogClose>
             <Button
               disabled={reason.trim().length === 0 || fail.isPending}
@@ -209,7 +210,7 @@ export function AdminRefundsPage() {
                 if (bouncing?.id) fail.mutate({ id: bouncing.id, reason }, { onSuccess: () => setBouncing(null) })
               }}
             >
-              Báo thất bại
+              {t('Báo thất bại')}
             </Button>
           </DialogFooter>
         </DialogContent>

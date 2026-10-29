@@ -3,6 +3,7 @@ import { PRESET_LABEL, addDays, daysInRange, type RangePreset } from '@/shared/l
 import { Input } from '@/shared/ui/input'
 import { ActionGroup, Segmented, Toolbar } from '@/shared/ui/section'
 import { GRANULARITY_LABEL, type Granularity, type StatsRange } from './use-stats-range'
+import { t } from '@/shared/i18n'
 
 const day = (d: string) => d.split('-').reverse().join('/')
 
@@ -16,7 +17,7 @@ export function RangePicker({ state, steps = true, comparable = true }: { state:
     <div className="flex flex-col gap-3">
       <Toolbar>
         <Segmented
-          label="Khoảng thời gian"
+          label={t('Khoảng thời gian')}
           options={(Object.keys(PRESET_LABEL) as RangePreset[]).map((p) => ({
             id: p,
             label:
@@ -37,7 +38,7 @@ export function RangePicker({ state, steps = true, comparable = true }: { state:
         />
         {steps ? (
           <Segmented
-            label="Chia theo"
+            label={t('Chia theo')}
             options={(Object.keys(GRANULARITY_LABEL) as Granularity[]).map((g) => ({ id: g, label: GRANULARITY_LABEL[g] }))}
             value={granularity}
             onChange={setGranularity}
@@ -46,26 +47,26 @@ export function RangePicker({ state, steps = true, comparable = true }: { state:
         {comparable ? (
           <label className="flex items-center gap-2 text-small text-muted-foreground">
             <input type="checkbox" className="size-4 accent-[var(--primary)]" checked={compare} onChange={(e) => setCompare(e.target.checked)} />
-            So với kỳ trước
+            {t('So với kỳ trước')}
           </label>
         ) : null}
       </Toolbar>
       {preset === 'custom' && custom ? (
         <ActionGroup className="text-small">
           <label className="flex items-center gap-2">
-            Từ
+            {t('Từ')}
             <Input type="date" className="h-8 w-40" max={today} value={custom.from} onChange={(e) => setCustom({ ...custom, from: e.target.value })} />
           </label>
           <label className="flex items-center gap-2">
-            đến
+            {t('đến')}
             <Input type="date" className="h-8 w-40" max={today} value={custom.to} onChange={(e) => setCustom({ ...custom, to: e.target.value })} />
           </label>
-          {invalid ? <span className="text-danger-fg">Ngày bắt đầu phải trước ngày kết thúc.</span> : null}
+          {invalid ? <span className="text-danger-fg">{t('Ngày bắt đầu phải trước ngày kết thúc.')}</span> : null}
         </ActionGroup>
       ) : null}
       <p className="text-small text-muted-foreground">
-        {range.from === range.to ? day(range.from) : `${day(range.from)} – ${day(range.to)}`} ({daysInRange(range.from, range.to)} ngày)
-        {compare && comparable ? ` · so với ${day(previous.from)} – ${day(previous.to)}` : ''}
+        {range.from === range.to ? day(range.from) : `${day(range.from)} – ${day(range.to)}`} ({daysInRange(range.from, range.to)}{t(' ngày)')}
+        {compare && comparable ? t(' · so với {v0} – {v1}', { v0: day(previous.from), v1: day(previous.to) }) : ''}
       </p>
     </div>
   )

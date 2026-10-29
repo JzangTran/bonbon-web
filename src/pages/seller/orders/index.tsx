@@ -27,6 +27,7 @@ import { FormError } from '@/widgets/auth-shell'
 import { OrderActions } from './order-actions'
 import { OrderSheet } from './order-sheet'
 import { countdown, useNow } from './use-now'
+import { t } from '@/shared/i18n'
 
 type Tab = 'new' | 'progress' | 'history'
 
@@ -105,42 +106,42 @@ export function SellerOrdersPage() {
   }
 
   const tabs: PageTab[] = [
-    { id: 'new', label: 'Mới', count: waiting, alert: true },
-    { id: 'progress', label: 'Đang làm', count: progress.data?.total ?? 0 },
-    { id: 'history', label: 'Lịch sử' },
+    { id: 'new', label: t('Mới'), count: waiting, alert: true },
+    { id: 'progress', label: t('Đang làm'), count: progress.data?.total ?? 0 },
+    { id: 'history', label: t('Lịch sử') },
   ]
 
   return (
     <div className="flex max-w-5xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Đơn hàng</h1>
-          <p className="text-sm text-muted-foreground">Đơn mới hiện ngay khi khách đặt. Nhận đơn trong vài phút, nếu không đơn sẽ tự bị từ chối.</p>
+          <h1 className="text-2xl font-semibold">{t('Đơn hàng')}</h1>
+          <p className="text-sm text-muted-foreground">{t('Đơn mới hiện ngay khi khách đặt. Nhận đơn trong vài phút, nếu không đơn sẽ tự bị từ chối.')}</p>
         </div>
         <Button variant="outline" size="sm" aria-pressed={soundOn} onClick={toggleSound}>
-          {soundOn ? <BellIcon /> : <BellOffIcon />} {soundOn ? 'Đang bật âm báo' : 'Âm báo đang tắt'}
+          {soundOn ? <BellIcon /> : <BellOffIcon />} {soundOn ? t('Đang bật âm báo') : t('Âm báo đang tắt')}
         </Button>
       </div>
 
       {socket === 'offline' ? (
         <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-sm text-warning-fg" role="status">
-          <WifiOffIcon className="size-4" aria-hidden="true" /> Mất kết nối trực tiếp, đang tự tải lại mỗi 10 giây.
+          <WifiOffIcon className="size-4" aria-hidden="true" />{t(' Mất kết nối trực tiếp, đang tự tải lại mỗi 10 giây.')}
         </p>
       ) : null}
 
       {waiting > 0 && tab !== 'new' ? (
         <div role="alert" className="flex flex-wrap items-center gap-3 rounded-sm bg-info-subtle px-4 py-3 text-info-fg">
-          <span className="font-semibold">Có {waiting} đơn mới đang chờ bạn nhận.</span>
+          <span className="font-semibold">{t('Có ')}{waiting}{t(' đơn mới đang chờ bạn nhận.')}</span>
           <Button size="sm" onClick={() => setTab('new')}>
-            Xem đơn mới
+            {t('Xem đơn mới')}
           </Button>
         </div>
       ) : null}
 
-      <PageTabs label="Đơn hàng" tabs={tabs} value={tab} onValueChange={(id) => setTab(id as Tab)} />
+      <PageTabs label={t('Đơn hàng')} tabs={tabs} value={tab} onValueChange={(id) => setTab(id as Tab)} />
 
-      {tab === 'new' ? <OrderList query={fresh} empty="Chưa có đơn mới. Đơn mới sẽ hiện ở đây ngay khi khách đặt." onOpen={setOpenId} /> : null}
-      {tab === 'progress' ? <OrderList query={progress} empty="Không có đơn nào đang làm." onOpen={setOpenId} /> : null}
+      {tab === 'new' ? <OrderList query={fresh} empty={t('Chưa có đơn mới. Đơn mới sẽ hiện ở đây ngay khi khách đặt.')} onOpen={setOpenId} /> : null}
+      {tab === 'progress' ? <OrderList query={progress} empty={t('Không có đơn nào đang làm.')} onOpen={setOpenId} /> : null}
       {tab === 'history' ? <History live={live} onOpen={setOpenId} /> : null}
 
       <OrderSheet id={openId} onClose={() => setOpenId(null)} />
@@ -184,7 +185,7 @@ function OrderRow({ order, now, onOpen }: { order: ShopOrderSummary; now: number
     <li>
       <Card className="gap-3 p-4">
         <div className="flex flex-wrap items-start gap-3">
-          <button type="button" onClick={onOpen} className="min-w-0 flex-1 basis-60 text-left" aria-label={`Mở đơn #${order.number}`}>
+          <button type="button" onClick={onOpen} className="min-w-0 flex-1 basis-60 text-left" aria-label={t('Mở đơn #{v0}', { v0: order.number })}>
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-semibold tabular-nums">#{order.number}</span>
               <OrderStatusBadge status={status} />
@@ -197,12 +198,12 @@ function OrderRow({ order, now, onOpen }: { order: ShopOrderSummary; now: number
             <span className="font-semibold tabular-nums">{formatVnd(order.grandTotal)}</span>
             {response ? (
               <span className={cn('text-sm tabular-nums', response.urgent ? 'font-semibold text-destructive' : 'text-muted-foreground')}>
-                Còn {response.text}
+                {t('Còn ')}{response.text}
               </span>
             ) : null}
             {handover ? (
               <span className={cn('text-sm tabular-nums', handover.urgent ? 'font-semibold text-destructive' : 'text-muted-foreground')}>
-                Hạn giao đi {handover.text}
+                {t('Hạn giao đi ')}{handover.text}
               </span>
             ) : null}
           </div>
@@ -230,31 +231,31 @@ function History({ live, onOpen, statuses }: { live: boolean; onOpen: (id: strin
       <div className="flex flex-wrap items-end gap-4">
         {statuses ? null : (
         <div className="flex flex-col gap-2">
-          <Label htmlFor="history-status">Trạng thái</Label>
+          <Label htmlFor="history-status">{t('Trạng thái')}</Label>
           <select
             id="history-status"
             className="h-10 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-sm"
             value={status}
             onChange={(e) => reset(setStatus)(e.target.value as 'ALL' | OrderStatus)}
           >
-            <option value="ALL">Tất cả</option>
-            <option value="DELIVERED">Đã giao</option>
-            <option value="REJECTED">Quán từ chối</option>
-            <option value="CANCELLED">Đã huỷ</option>
-            <option value="NOT_DELIVERED">Giao không thành công</option>
+            <option value="ALL">{t('Tất cả')}</option>
+            <option value="DELIVERED">{t('Đã giao')}</option>
+            <option value="REJECTED">{t('Quán từ chối')}</option>
+            <option value="CANCELLED">{t('Đã huỷ')}</option>
+            <option value="NOT_DELIVERED">{t('Giao không thành công')}</option>
           </select>
         </div>
         )}
         <div className="flex flex-col gap-2">
-          <Label htmlFor="history-from">Từ ngày</Label>
+          <Label htmlFor="history-from">{t('Từ ngày')}</Label>
           <Input id="history-from" type="date" value={from} max={to || undefined} onChange={(e) => reset(setFrom)(e.target.value)} />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="history-to">Đến ngày</Label>
+          <Label htmlFor="history-to">{t('Đến ngày')}</Label>
           <Input id="history-to" type="date" value={to} min={from || undefined} onChange={(e) => reset(setTo)(e.target.value)} />
         </div>
       </div>
-      <OrderList query={query} empty="Không có đơn nào trong bộ lọc này." onOpen={onOpen} />
+      <OrderList query={query} empty={t('Không có đơn nào trong bộ lọc này.')} onOpen={onOpen} />
       <Pagination paging={paging} total={total} />
     </div>
   )
@@ -267,7 +268,7 @@ export function SellerCancelledOrdersPage() {
   const [openId, setOpenId] = useState<string | null>(null)
   return (
     <div className="flex max-w-5xl flex-col gap-4">
-      <h1 className="text-2xl font-semibold">Đơn hủy</h1>
+      <h1 className="text-2xl font-semibold">{t('Đơn hủy')}</h1>
       <History live={false} statuses={CANCELLED} onOpen={setOpenId} />
       <OrderSheet id={openId} onClose={() => setOpenId(null)} />
     </div>

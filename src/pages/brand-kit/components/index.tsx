@@ -8,11 +8,12 @@ import { NotFoundPage } from '@/pages/not-found'
 import { BRAND_PATH, BrandFrame, COMPONENTS_PATH } from '../frame'
 import { Example, Point, Rule, Variant } from './parts'
 import { COMPONENT_GROUPS, COMPONENTS, type ComponentDoc } from './registry'
+import { t } from '@/shared/i18n'
 
 const pathOf = (slug: string) => `${COMPONENTS_PATH}/${slug}`
 
 const GROUPS = [
-  { title: 'Components', items: [{ label: 'Tổng quan', to: COMPONENTS_PATH }] },
+  { title: 'Components', items: [{ label: t('Tổng quan'), to: COMPONENTS_PATH }] },
   ...COMPONENT_GROUPS.map((g) => ({ title: g, items: COMPONENTS.filter((c) => c.group === g).map((c) => ({ label: c.name, to: pathOf(c.slug) })) })),
 ]
 
@@ -30,20 +31,19 @@ function Section({ id, title, children }: { id: string; title: string; children:
 /** /bo-nhan-dien/components: every component as a card, by group. */
 export function ComponentsIndexPage() {
   const trail = [
-    { name: 'Trang chủ', path: '/' },
-    { name: 'Thương hiệu', path: BRAND_PATH },
+    { name: t('Trang chủ'), path: '/' },
+    { name: t('Thương hiệu'), path: BRAND_PATH },
     { name: 'Components', path: COMPONENTS_PATH },
   ]
   return (
     <BrandFrame tab="components" sidebar={<DocsRail groups={GROUPS} current={COMPONENTS_PATH} label="Components" />}>
-      <PageSeo title="Components" description="Các thành phần giao diện của bonbon, mỗi thành phần có định nghĩa, cách dùng, nên và không nên." path={COMPONENTS_PATH} trail={trail} />
+      <PageSeo title="Components" description={t('Các thành phần giao diện của bonbon, mỗi thành phần có định nghĩa, cách dùng, nên và không nên.')} path={COMPONENTS_PATH} trail={trail} />
       <div className="flex flex-col gap-12">
         <div className="flex flex-col gap-4">
           <Breadcrumb trail={trail} />
           <h1 className="text-[3rem] leading-[3.5rem] font-semibold tracking-[-0.03em]">Components</h1>
           <p className="text-lead text-ink">
-            Những mảnh ghép dựng nên mọi màn hình của bonbon. Mỗi trang nói thành phần đó là gì, khi nào dùng và khi nào dùng thứ khác, các loại, cách nó phản hồi, nên và
-            không nên, trợ năng và cách viết chữ cho nó.
+            {t('Những mảnh ghép dựng nên mọi màn hình của bonbon. Mỗi trang nói thành phần đó là gì, khi nào dùng và khi nào dùng thứ khác, các loại, cách nó phản hồi, nên và không nên, trợ năng và cách viết chữ cho nó.')}
           </p>
         </div>
         {COMPONENT_GROUPS.map((g) => (
@@ -85,16 +85,16 @@ export function ComponentPage() {
 function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
   const path = pathOf(doc.slug)
   const trail = [
-    { name: 'Trang chủ', path: '/' },
+    { name: t('Trang chủ'), path: '/' },
     { name: 'Components', path: COMPONENTS_PATH },
     { name: doc.name, path },
   ]
   const sections = [
-    doc.types?.length ? { id: 'cac-loai', text: 'Các loại' } : null,
-    doc.behavior?.length ? { id: 'hanh-vi', text: 'Hành vi' } : null,
-    doc.layout ? { id: 'bo-cuc', text: 'Bố cục' } : null,
-    doc.accessibility?.length ? { id: 'tro-nang', text: 'Trợ năng' } : null,
-    doc.content?.length ? { id: 'noi-dung', text: 'Nội dung' } : null,
+    doc.types?.length ? { id: 'cac-loai', text: t('Các loại') } : null,
+    doc.behavior?.length ? { id: 'hanh-vi', text: t('Hành vi') } : null,
+    doc.layout ? { id: 'bo-cuc', text: t('Bố cục') } : null,
+    doc.accessibility?.length ? { id: 'tro-nang', text: t('Trợ năng') } : null,
+    doc.content?.length ? { id: 'noi-dung', text: t('Nội dung') } : null,
   ].filter((x): x is { id: string; text: string } => !!x)
 
   return (
@@ -110,11 +110,11 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
         </div>
 
         {doc.types?.length ? (
-          <Section id="cac-loai" title="Các loại">
+          <Section id="cac-loai" title={t('Các loại')}>
             <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
-              {doc.types.map((t) => (
-                <Variant key={t.name} name={t.name} demo={t.demo}>
-                  {t.text}
+              {doc.types.map((tItem) => (
+                <Variant key={tItem.name} name={tItem.name} demo={tItem.demo}>
+                  {tItem.text}
                 </Variant>
               ))}
             </div>
@@ -122,7 +122,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
         ) : null}
 
         {doc.behavior?.length ? (
-          <Section id="hanh-vi" title="Hành vi">
+          <Section id="hanh-vi" title={t('Hành vi')}>
             {doc.behavior.map((b) => (
               <div key={b.title} className="flex flex-col gap-4">
                 {b.demo ? <Variant name={b.title} demo={b.demo}>{b.text}</Variant> : <Point title={b.title}>{b.text}</Point>}
@@ -132,10 +132,10 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
         ) : null}
 
         {doc.layout ? (
-          <Section id="bo-cuc" title="Bố cục">
+          <Section id="bo-cuc" title={t('Bố cục')}>
             <Point>
-              {doc.layout.text.map((t, i) => (
-                <p key={i}>{t}</p>
+              {doc.layout.text.map((tItem, i) => (
+                <p key={i}>{tItem}</p>
               ))}
             </Point>
             {doc.layout.rules.length ? (
@@ -151,7 +151,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
         ) : null}
 
         {doc.accessibility?.length ? (
-          <Section id="tro-nang" title="Trợ năng">
+          <Section id="tro-nang" title={t('Trợ năng')}>
             {doc.accessibility.map((a) => (
               <Point key={a.title} title={a.title}>
                 <p>{a.text}</p>
@@ -161,7 +161,7 @@ function ComponentDocPage({ doc }: { doc: ComponentDoc }) {
         ) : null}
 
         {doc.content?.length ? (
-          <Section id="noi-dung" title="Nội dung">
+          <Section id="noi-dung" title={t('Nội dung')}>
             {doc.content.map((c) => (
               <Point key={c.title} title={c.title}>
                 <p>{c.text}</p>

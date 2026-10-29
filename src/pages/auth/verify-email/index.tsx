@@ -7,6 +7,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { AuthShell, FormError, FormSuccess, SuccessMark } from '@/widgets/auth-shell'
 import { siteUrl } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 /** Landing page of the emailed link; works for sellers and customers (customers then open the app). */
 export function VerifyEmailPage() {
@@ -24,19 +25,19 @@ export function VerifyEmailPage() {
   })
 
   return (
-    <AuthShell title={result.data ? 'Xác thực thành công' : 'Xác thực email'} heading="Đăng ký">
+    <AuthShell title={result.data ? t('Xác thực thành công') : t('Xác thực email')} heading={t('Đăng ký')}>
       {result.data ? <SuccessMark /> : null}
-      {!token ? <FormError message="Liên kết thiếu mã xác thực." /> : null}
-      {result.isPending && token ? <p className="text-sm text-muted-foreground">Đang xác thực…</p> : null}
-      {result.data === 'VERIFIED' ? <FormSuccess message="Email đã được xác thực. Bạn có thể đăng nhập." /> : null}
-      {result.data === 'ALREADY_VERIFIED' ? <FormSuccess message="Email này đã được xác thực trước đó." /> : null}
+      {!token ? <FormError message={t('Liên kết thiếu mã xác thực.')} /> : null}
+      {result.isPending && token ? <p className="text-sm text-muted-foreground">{t('Đang xác thực…')}</p> : null}
+      {result.data === 'VERIFIED' ? <FormSuccess message={t('Email đã được xác thực. Bạn có thể đăng nhập.')} /> : null}
+      {result.data === 'ALREADY_VERIFIED' ? <FormSuccess message={t('Email này đã được xác thực trước đó.')} /> : null}
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
       {result.data ? (
         <>
           <Button asChild size="lg" className="uppercase tracking-wide">
-            <a href={siteUrl('merchant', '/login')}>Đăng nhập người bán</a>
+            <a href={siteUrl('merchant', '/login')}>{t('Đăng nhập người bán')}</a>
           </Button>
-          <p className="text-sm text-muted-foreground">Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.</p>
+          <p className="text-sm text-muted-foreground">{t('Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.')}</p>
         </>
       ) : null}
       {result.isError || !token ? <ResendForm /> : null}
@@ -55,14 +56,14 @@ function ResendForm() {
     if (problem) setError(problemMessage(problem))
     else setSent(true)
   }
-  if (sent) return <FormSuccess message="Nếu tài khoản cần xác thực, chúng tôi đã gửi liên kết mới." />
+  if (sent) return <FormSuccess message={t('Nếu tài khoản cần xác thực, chúng tôi đã gửi liên kết mới.')} />
   return (
     <form onSubmit={submit} className="flex flex-col gap-2">
-      <Label htmlFor="resend-email">Gửi lại liên kết xác thực</Label>
+      <Label htmlFor="resend-email">{t('Gửi lại liên kết xác thực')}</Label>
       <Input id="resend-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       <FormError message={error} />
       <Button type="submit" variant="outline">
-        Gửi lại
+        {t('Gửi lại')}
       </Button>
     </form>
   )

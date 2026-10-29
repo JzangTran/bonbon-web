@@ -20,6 +20,7 @@ import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { FormError } from '@/widgets/auth-shell'
+import { intlLocale, t } from '@/shared/i18n'
 
 /** A distance in km as people type it, with a comma or a dot; NaN when it is not a number. */
 function km(text: string): number {
@@ -28,9 +29,9 @@ function km(text: string): number {
 
 function kmError(e: Errors, field: string, text: string, label: string) {
   const n = km(text)
-  if (Number.isNaN(n)) e[field] = `Hãy nhập ${label[0].toLowerCase()}${label.slice(1)} (km).`
-  else if (n < 0.1 || n > 50) e[field] = `${label} từ 0,1 đến 50 km.`
-  else if (Math.round(n * 10) !== n * 10) e[field] = `${label} chỉ lấy một chữ số thập phân.`
+  if (Number.isNaN(n)) e[field] = t('Hãy nhập {v0}{v1} (km).', { v0: label[0].toLowerCase(), v1: label.slice(1) })
+  else if (n < 0.1 || n > 50) e[field] = t('{v0} từ 0,1 đến 50 km.', { v0: label })
+  else if (Math.round(n * 10) !== n * 10) e[field] = t('{v0} chỉ lấy một chữ số thập phân.', { v0: label })
 }
 
 /**
@@ -43,7 +44,7 @@ export function AdminServiceAreasPage() {
   const [tab, setTab] = useState<'areas' | 'cap'>('areas')
 
   if (!session?.permissions.has('merchant-approval:read')) {
-    return <p className="text-muted-foreground">Bạn không có quyền xem khu vực phục vụ.</p>
+    return <p className="text-muted-foreground">{t('Bạn không có quyền xem khu vực phục vụ.')}</p>
   }
   const canWrite = session.permissions.has('merchant-approval:write-settings')
 
@@ -51,8 +52,8 @@ export function AdminServiceAreasPage() {
     return (
       <div className="flex flex-col gap-8">
         <Tabs tab={tab} setTab={setTab} canWrite={canWrite} />
-        <h1>Khu vực phục vụ</h1>
-        {canWrite ? <RadiusCapForm /> : <p className="text-muted-foreground">Bạn không có quyền đổi bán kính tối đa.</p>}
+        <h1>{t('Khu vực phục vụ')}</h1>
+        {canWrite ? <RadiusCapForm /> : <p className="text-muted-foreground">{t('Bạn không có quyền đổi bán kính tối đa.')}</p>}
       </div>
     )
   }
@@ -62,16 +63,15 @@ export function AdminServiceAreasPage() {
       <Tabs tab={tab} setTab={setTab} canWrite={canWrite} />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-2xl">
-          <h1 className="text-2xl font-semibold">Khu vực phục vụ</h1>
+          <h1 className="text-2xl font-semibold">{t('Khu vực phục vụ')}</h1>
           <p className="text-sm text-muted-foreground">
-            Mỗi khu vực là một hình tròn quanh một tâm (một chung cư, một khu công nghiệp). Quán có vị trí nằm trong hình tròn thuộc khu vực đó
-            và không đặt bán kính giao vượt mức tối đa của khu vực. Quán nằm ngoài mọi khu vực không mở được.
+            {t('Mỗi khu vực là một hình tròn quanh một tâm (một chung cư, một khu công nghiệp). Quán có vị trí nằm trong hình tròn thuộc khu vực đó và không đặt bán kính giao vượt mức tối đa của khu vực. Quán nằm ngoài mọi khu vực không mở được.')}
           </p>
         </div>
         {canWrite ? (
           <Button asChild>
             <Link to={consolePath('/service-areas/new')}>
-              <PlusIcon /> Thêm khu vực
+              <PlusIcon />{t(' Thêm khu vực')}
             </Link>
           </Button>
         ) : null}
@@ -82,13 +82,13 @@ export function AdminServiceAreasPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Tên khu vực</TableHead>
-              <TableHead>Tâm</TableHead>
-              <TableHead className="text-right">Bán kính khu vực</TableHead>
-              <TableHead className="text-right">Giao tối đa</TableHead>
-              <TableHead>Trạng thái</TableHead>
+              <TableHead>{t('Tên khu vực')}</TableHead>
+              <TableHead>{t('Tâm')}</TableHead>
+              <TableHead className="text-right">{t('Bán kính khu vực')}</TableHead>
+              <TableHead className="text-right">{t('Giao tối đa')}</TableHead>
+              <TableHead>{t('Trạng thái')}</TableHead>
               <TableHead className="text-right">
-                <span className="sr-only">Thao tác</span>
+                <span className="sr-only">{t('Thao tác')}</span>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -105,7 +105,7 @@ export function AdminServiceAreasPage() {
             {areas.data?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                  Chưa có khu vực nào. Khi chưa có khu vực, chưa quán nào đặt được vị trí để mở cửa hàng.
+                  {t('Chưa có khu vực nào. Khi chưa có khu vực, chưa quán nào đặt được vị trí để mở cửa hàng.')}
                 </TableCell>
               </TableRow>
             ) : null}
@@ -115,13 +115,13 @@ export function AdminServiceAreasPage() {
                 <TableCell className="tabular-nums">
                   {a.centerLat.toFixed(4)}, {a.centerLng.toFixed(4)}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">{a.radiusKm.toLocaleString('vi-VN')} km</TableCell>
-                <TableCell className="text-right tabular-nums">{a.maxDeliveryRadiusKm.toLocaleString('vi-VN')} km</TableCell>
-                <TableCell>{a.active ? <Badge className="bg-success-subtle text-success-fg">Đang hoạt động</Badge> : <Badge variant="outline">Đã tắt</Badge>}</TableCell>
+                <TableCell className="text-right tabular-nums">{a.radiusKm.toLocaleString(intlLocale)} km</TableCell>
+                <TableCell className="text-right tabular-nums">{a.maxDeliveryRadiusKm.toLocaleString(intlLocale)} km</TableCell>
+                <TableCell>{a.active ? <Badge className="bg-success-subtle text-success-fg">{t('Đang hoạt động')}</Badge> : <Badge variant="outline">{t('Đã tắt')}</Badge>}</TableCell>
                 <TableCell className="text-right">
                   {canWrite ? (
                     <Button asChild variant="link" size="sm">
-                      <Link to={consolePath(`/service-areas/${a.id}`)}>Sửa</Link>
+                      <Link to={consolePath(`/service-areas/${a.id}`)}>{t('Sửa')}</Link>
                     </Button>
                   ) : null}
                 </TableCell>
@@ -138,8 +138,8 @@ export function AdminServiceAreasPage() {
 function Tabs({ tab, setTab, canWrite }: { tab: 'areas' | 'cap'; setTab: (t: 'areas' | 'cap') => void; canWrite: boolean }) {
   return (
     <PageTabs
-      label="Khu vực phục vụ"
-      tabs={[{ id: 'areas', label: 'Khu vực' }, ...(canWrite ? [{ id: 'cap', label: 'Bán kính giao tối đa' }] : [])]}
+      label={t('Khu vực phục vụ')}
+      tabs={[{ id: 'areas', label: t('Khu vực') }, ...(canWrite ? [{ id: 'cap', label: t('Bán kính giao tối đa') }] : [])]}
       value={tab}
       onValueChange={(id) => setTab(id as 'areas' | 'cap')}
     />
@@ -152,11 +152,11 @@ export function AdminServiceAreaEditPage() {
   const { session } = useSession()
   const areas = useServiceAreas()
   if (!session?.permissions.has('merchant-approval:write-settings')) {
-    return <p className="text-muted-foreground">Bạn không có quyền sửa khu vực phục vụ.</p>
+    return <p className="text-muted-foreground">{t('Bạn không có quyền sửa khu vực phục vụ.')}</p>
   }
   if (id && areas.isPending) return <Skeleton className="h-96 max-w-3xl" />
   const area = id ? areas.data?.find((a) => a.id === id) : null
-  if (id && !area) return <FormError message={areas.isError ? problemMessage(areas.error) : 'Không tìm thấy khu vực.'} />
+  if (id && !area) return <FormError message={areas.isError ? problemMessage(areas.error) : t('Không tìm thấy khu vực.')} />
   return <AreaForm key={id ?? 'new'} area={area ?? null} />
 }
 
@@ -183,7 +183,7 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: SERVICE_AREAS_QUERY_KEY })
-      toast.success(area ? 'Đã cập nhật khu vực.' : 'Đã thêm khu vực.')
+      toast.success(area ? t('Đã cập nhật khu vực.') : t('Đã thêm khu vực.'))
       onClose()
     },
     onError: (e) => setErrors(problemFieldErrors(e)),
@@ -191,10 +191,10 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
 
   const submit = () => {
     const e: Errors = {}
-    requiredText(e, 'name', name, 'tên khu vực', 100, 2)
-    if (!centre) e.centerLat = 'Hãy chọn tâm khu vực trên bản đồ.'
-    kmError(e, 'radiusKm', radius, 'Bán kính khu vực')
-    kmError(e, 'maxDeliveryRadiusKm', maxDelivery, 'Bán kính giao tối đa')
+    requiredText(e, 'name', name, t('tên khu vực'), 100, 2)
+    if (!centre) e.centerLat = t('Hãy chọn tâm khu vực trên bản đồ.')
+    kmError(e, 'radiusKm', radius, t('Bán kính khu vực'))
+    kmError(e, 'maxDeliveryRadiusKm', maxDelivery, t('Bán kính giao tối đa'))
     setErrors(e)
     if (Object.keys(e).length > 0 || !centre) return
     save.mutate({ name: name.trim(), centerLat: centre.lat, centerLng: centre.lng, radiusKm: km(radius), maxDeliveryRadiusKm: km(maxDelivery), active })
@@ -202,9 +202,9 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
 
   return (
     <SubPage
-      back={{ to: consolePath('/service-areas'), label: 'Khu vực phục vụ' }}
-      title={area ? `Sửa ${area.name}` : 'Thêm khu vực phục vụ'}
-      description="Quán thuộc khu vực có tâm gần nhất khi nhiều khu vực chồng lên nhau."
+      back={{ to: consolePath('/service-areas'), label: t('Khu vực phục vụ') }}
+      title={area ? t('Sửa {v0}', { v0: area.name }) : t('Thêm khu vực phục vụ')}
+      description={t('Quán thuộc khu vực có tâm gần nhất khi nhiều khu vực chồng lên nhau.')}
     >
           <form
             className="flex flex-col gap-4"
@@ -214,13 +214,13 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
               submit()
             }}
           >
-            <FormRow label="Tên khu vực" required htmlFor="area-name" error={errors.name}>
+            <FormRow label={t('Tên khu vực')} required htmlFor="area-name" error={errors.name}>
               <Input id="area-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
             </FormRow>
-            <FormRow label="Tâm khu vực" required error={errors.centerLat ?? errors.centerLng}>
+            <FormRow label={t('Tâm khu vực')} required error={errors.centerLat ?? errors.centerLng}>
               <div className="flex flex-wrap items-center gap-3">
                 <Button type="button" variant="outline" onClick={() => setMapOpen(true)}>
-                  <MapPinIcon /> {centre ? 'Chọn lại' : 'Chọn trên bản đồ'}
+                  <MapPinIcon /> {centre ? t('Chọn lại') : t('Chọn trên bản đồ')}
                 </Button>
                 {centre ? (
                   <span className="flex items-center gap-1.5 text-sm text-success-fg">
@@ -228,30 +228,30 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
                     {centre.lat.toFixed(5)}, {centre.lng.toFixed(5)}
                   </span>
                 ) : (
-                  <span className="text-sm text-muted-foreground">Chưa chọn</span>
+                  <span className="text-sm text-muted-foreground">{t('Chưa chọn')}</span>
                 )}
               </div>
             </FormRow>
-            <FormRow label="Bán kính khu vực (km)" required htmlFor="area-radius" hint="Quán cách tâm không quá chừng này thì thuộc khu vực." error={errors.radiusKm}>
+            <FormRow label={t('Bán kính khu vực (km)')} required htmlFor="area-radius" hint={t('Quán cách tâm không quá chừng này thì thuộc khu vực.')} error={errors.radiusKm}>
               <Input id="area-radius" inputMode="decimal" maxLength={4} value={radius} onChange={(e) => setRadius(e.target.value)} />
             </FormRow>
-            <FormRow label="Giao tối đa (km)" required htmlFor="area-max" hint="Bán kính giao lớn nhất quán trong khu vực được đặt." error={errors.maxDeliveryRadiusKm}>
+            <FormRow label={t('Giao tối đa (km)')} required htmlFor="area-max" hint={t('Bán kính giao lớn nhất quán trong khu vực được đặt.')} error={errors.maxDeliveryRadiusKm}>
               <Input id="area-max" inputMode="decimal" maxLength={4} value={maxDelivery} onChange={(e) => setMaxDelivery(e.target.value)} />
             </FormRow>
             {area ? (
-              <FormRow label="Trạng thái" hint="Khu vực đã tắt không nhận thêm quán mới; quán đang thuộc khu vực giữ nguyên.">
+              <FormRow label={t('Trạng thái')} hint={t('Khu vực đã tắt không nhận thêm quán mới; quán đang thuộc khu vực giữ nguyên.')}>
                 <label className="flex min-h-9 items-center gap-2 text-sm">
-                  <input type="checkbox" className="size-4" checked={active} onChange={(e) => setActive(e.target.checked)} /> Đang hoạt động
+                  <input type="checkbox" className="size-4" checked={active} onChange={(e) => setActive(e.target.checked)} />{t(' Đang hoạt động')}
                 </label>
               </FormRow>
             ) : null}
             {save.isError && Object.keys(errors).length === 0 ? <FormError message={problemMessage(save.error)} /> : null}
             <SubPageActions>
               <Button type="submit" disabled={save.isPending}>
-                Lưu
+                {t('Lưu')}
               </Button>
               <Button type="button" variant="outline" onClick={onClose}>
-                Huỷ
+                {t('Huỷ')}
               </Button>
             </SubPageActions>
           </form>

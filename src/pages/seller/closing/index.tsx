@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { merchantPath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 /** A shop that asked to close: no new orders, what is under way finishes, and it becomes CLOSED once nothing is left (close-shop.md). */
 export function SellerClosingPage() {
@@ -19,13 +20,13 @@ export function SellerClosingPage() {
   if (status === 'CLOSED') {
     return (
       <div className="flex max-w-3xl flex-col gap-3">
-        <h1 className="text-2xl font-semibold">Cửa hàng đã đóng</h1>
-        <p className="text-muted-foreground">Mọi việc đã xong và cửa hàng đã đóng. Muốn bán lại, hãy mở một cửa hàng mới hoặc liên hệ hỗ trợ.</p>
+        <h1 className="text-2xl font-semibold">{t('Cửa hàng đã đóng')}</h1>
+        <p className="text-muted-foreground">{t('Mọi việc đã xong và cửa hàng đã đóng. Muốn bán lại, hãy mở một cửa hàng mới hoặc liên hệ hỗ trợ.')}</p>
       </div>
     )
   }
   if (status !== 'CLOSING') {
-    return <p className="text-muted-foreground">Cửa hàng không đang trong quá trình đóng.</p>
+    return <p className="text-muted-foreground">{t('Cửa hàng không đang trong quá trình đóng.')}</p>
   }
   const c = closure.data
   const b = c?.blockers
@@ -33,9 +34,9 @@ export function SellerClosingPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Cửa hàng đang đóng</h1>
+        <h1 className="text-2xl font-semibold">{t('Cửa hàng đang đóng')}</h1>
         <p className="text-sm text-muted-foreground">
-          Cửa hàng không còn hiện với khách và không nhận đơn mới. Các đơn đang làm vẫn làm tiếp, và bạn vẫn xem được thu nhập. Cửa hàng tự đóng hẳn khi tất cả các việc dưới đây xong; đóng rồi không mở lại được.
+          {t('Cửa hàng không còn hiện với khách và không nhận đơn mới. Các đơn đang làm vẫn làm tiếp, và bạn vẫn xem được thu nhập. Cửa hàng tự đóng hẳn khi tất cả các việc dưới đây xong; đóng rồi không mở lại được.')}
         </p>
       </div>
       {closure.isError ? <FormError message={problemMessage(closure.error)} /> : null}
@@ -44,30 +45,30 @@ export function SellerClosingPage() {
         <>
           <Card size="sm">
             <CardContent className="text-sm">
-              Lý do: <b>{CLOSE_REASON_LABEL[c.reason ?? ''] ?? c.reason}</b>
-              {c.reasonText ? ` — ${c.reasonText}` : ''} · yêu cầu lúc {formatDateTime(c.requestedAt)}
+              {t('Lý do: ')}<b>{CLOSE_REASON_LABEL[c.reason ?? ''] ?? c.reason}</b>
+              {c.reasonText ? ` — ${c.reasonText}` : ''}{t(' · yêu cầu lúc ')}{formatDateTime(c.requestedAt)}
             </CardContent>
           </Card>
           <Card size="sm">
             <CardHeader>
-              <CardTitle>{b.ready ? 'Mọi việc đã xong' : 'Còn chờ'}</CardTitle>
+              <CardTitle>{b.ready ? t('Mọi việc đã xong') : t('Còn chờ')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
-              {b.ready ? <p className="text-sm text-success-fg">Không còn gì chặn. Cửa hàng sẽ được đóng hẳn trong ít phút.</p> : null}
-              <Item done={(b.ordersInProgress ?? 0) === 0} title="Đơn đang làm" detail={`${b.ordersInProgress} đơn chưa giao xong`} to={merchantPath('/orders')} action="Xem đơn hàng" />
-              <Item done={(b.openCases ?? 0) === 0} title="Khiếu nại" detail={`${b.openCases} khiếu nại chưa xong`} to={merchantPath('/order-cases')} action="Xem khiếu nại" />
-              <Item done={(b.pendingAppeals ?? 0) === 0} title="Kháng nghị điểm phạt" detail={`${b.pendingAppeals} kháng nghị chờ quản trị viên`} to={merchantPath('/performance')} action="Xem hiệu suất" />
-              <Item done={(b.heldForCases ?? 0) === 0} title="Tiền đang giữ cho khiếu nại" detail={`${formatVnd(b.heldForCases)} được giải phóng khi khiếu nại xong`} to={merchantPath('/earnings')} action="Xem thu nhập" />
+              {b.ready ? <p className="text-sm text-success-fg">{t('Không còn gì chặn. Cửa hàng sẽ được đóng hẳn trong ít phút.')}</p> : null}
+              <Item done={(b.ordersInProgress ?? 0) === 0} title={t('Đơn đang làm')} detail={t('{v0} đơn chưa giao xong', { v0: b.ordersInProgress })} to={merchantPath('/orders')} action={t('Xem đơn hàng')} />
+              <Item done={(b.openCases ?? 0) === 0} title={t('Khiếu nại')} detail={t('{v0} khiếu nại chưa xong', { v0: b.openCases })} to={merchantPath('/order-cases')} action={t('Xem khiếu nại')} />
+              <Item done={(b.pendingAppeals ?? 0) === 0} title={t('Kháng nghị điểm phạt')} detail={t('{v0} kháng nghị chờ quản trị viên', { v0: b.pendingAppeals })} to={merchantPath('/performance')} action={t('Xem hiệu suất')} />
+              <Item done={(b.heldForCases ?? 0) === 0} title={t('Tiền đang giữ cho khiếu nại')} detail={t('{v0} được giải phóng khi khiếu nại xong', { v0: formatVnd(b.heldForCases) })} to={merchantPath('/earnings')} action={t('Xem thu nhập')} />
               <Item
                 done={(b.balance ?? 0) === 0}
-                title="Số dư sổ cái"
+                title={t('Số dư sổ cái')}
                 detail={
                   (b.balance ?? 0) > 0
-                    ? `Nền tảng nợ bạn ${formatVnd(b.balance)}: sẽ được chi trả vào tài khoản nhận tiền`
-                    : `Bạn nợ nền tảng ${formatVnd(Math.abs(b.balance ?? 0))} (hoa hồng đơn tiền mặt): hãy liên hệ hỗ trợ để thanh toán hoặc được xử lý`
+                    ? t('Nền tảng nợ bạn {v0}: sẽ được chi trả vào tài khoản nhận tiền', { v0: formatVnd(b.balance) })
+                    : t('Bạn nợ nền tảng {v0} (hoa hồng đơn tiền mặt): hãy liên hệ hỗ trợ để thanh toán hoặc được xử lý', { v0: formatVnd(Math.abs(b.balance ?? 0)) })
                 }
                 to={(b.balance ?? 0) > 0 ? merchantPath('/earnings') : merchantPath('/support-tickets')}
-                action={(b.balance ?? 0) > 0 ? 'Xem thu nhập' : 'Liên hệ hỗ trợ'}
+                action={(b.balance ?? 0) > 0 ? t('Xem thu nhập') : t('Liên hệ hỗ trợ')}
               />
             </CardContent>
           </Card>

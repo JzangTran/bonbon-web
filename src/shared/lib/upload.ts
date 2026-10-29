@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 /** Same ceiling as the server (ImageSanitizer): longest side in pixels. */
 export const MAX_IMAGE_SIDE = 10_000
@@ -10,18 +11,18 @@ export const MAX_IMAGE_SIDE = 10_000
 export async function checkUpload(file: File, { maxMb, pdf = false }: { maxMb: number; pdf?: boolean }): Promise<string | null> {
   const isPdf = file.type === 'application/pdf'
   if (!IMAGE_TYPES.includes(file.type) && !(pdf && isPdf)) {
-    return pdf ? 'Chỉ nhận ảnh JPG, PNG, WebP hoặc tệp PDF.' : 'Chỉ nhận ảnh JPG, PNG hoặc WebP.'
+    return pdf ? t('Chỉ nhận ảnh JPG, PNG, WebP hoặc tệp PDF.') : t('Chỉ nhận ảnh JPG, PNG hoặc WebP.')
   }
-  if (file.size === 0) return 'Tệp trống.'
-  if (file.size > maxMb * 1024 * 1024) return `Tệp lớn hơn ${maxMb} MB. Hãy chọn tệp nhỏ hơn.`
+  if (file.size === 0) return t('Tệp trống.')
+  if (file.size > maxMb * 1024 * 1024) return t('Tệp lớn hơn {v0} MB. Hãy chọn tệp nhỏ hơn.', { v0: maxMb })
   if (isPdf) return null
   try {
     const bitmap = await createImageBitmap(file)
     const { width, height } = bitmap
     bitmap.close()
-    if (width > MAX_IMAGE_SIDE || height > MAX_IMAGE_SIDE) return `Ảnh quá lớn (tối đa ${MAX_IMAGE_SIDE} px mỗi cạnh).`
+    if (width > MAX_IMAGE_SIDE || height > MAX_IMAGE_SIDE) return t('Ảnh quá lớn (tối đa {v0} px mỗi cạnh).', { v0: MAX_IMAGE_SIDE })
   } catch {
-    return 'Không đọc được ảnh này. Hãy chọn ảnh khác.'
+    return t('Không đọc được ảnh này. Hãy chọn ảnh khác.')
   }
   return null
 }

@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import * as React from 'react'
 import { Input } from './input'
@@ -11,7 +12,7 @@ function PasswordInput({ className, ...props }: Omit<React.ComponentProps<'input
       <button
         type="button"
         onClick={() => setShown((s) => !s)}
-        aria-label={shown ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+        aria-label={shown ? t('Ẩn mật khẩu') : t('Hiện mật khẩu')}
         aria-pressed={shown}
         className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground"
       >

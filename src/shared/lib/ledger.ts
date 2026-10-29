@@ -1,15 +1,16 @@
+import { t } from '@/shared/i18n'
 import { formatVnd } from './format'
 
 /** What each kind of ledger entry is called on screen. */
 export const LEDGER_TYPE_LABEL: Record<string, string> = {
-  ONLINE_EARNING: 'Đơn online đã giao',
-  COD_COMMISSION: 'Hoa hồng đơn tiền mặt',
-  PAYOUT: 'Nền tảng chi trả cho quán',
-  COLLECTION: 'Quán trả hoa hồng',
-  ADJUSTMENT: 'Điều chỉnh',
-  CASE_REFUND: 'Hoàn tiền theo khiếu nại',
-  CASE_COMMISSION_REVERSAL: 'Hoàn hoa hồng theo khiếu nại',
-  TAX_WITHHOLDING: 'Thuế khấu trừ',
+  ONLINE_EARNING: t('Đơn online đã giao'),
+  COD_COMMISSION: t('Hoa hồng đơn tiền mặt'),
+  PAYOUT: t('Nền tảng chi trả cho quán'),
+  COLLECTION: t('Quán trả hoa hồng'),
+  ADJUSTMENT: t('Điều chỉnh'),
+  CASE_REFUND: t('Hoàn tiền theo khiếu nại'),
+  CASE_COMMISSION_REVERSAL: t('Hoàn hoa hồng theo khiếu nại'),
+  TAX_WITHHOLDING: t('Thuế khấu trừ'),
 }
 
 export const LEDGER_TYPES = Object.keys(LEDGER_TYPE_LABEL)
@@ -37,7 +38,7 @@ export function periodEnd(start: string, granularity: 'day' | 'week' | 'month'):
 /** "tuần 05/10", "tháng 10/2026", "05/10": the label of a statement row. */
 export function periodLabel(start: string, granularity: 'day' | 'week' | 'month'): string {
   const [y, m, d] = start.split('-')
-  if (granularity === 'month') return `Tháng ${m}/${y}`
-  if (granularity === 'week') return `Tuần ${d}/${m}`
+  if (granularity === 'month') return t('Tháng {v0}/{v1}', { v0: m, v1: y })
+  if (granularity === 'week') return t('Tuần {v0}/{v1}', { v0: d, v1: m })
   return `${d}/${m}/${y}`
 }

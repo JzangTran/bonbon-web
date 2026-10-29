@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { CheckIcon } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 
@@ -15,7 +16,7 @@ export function Stepper({ steps, current, onSelect, className }: {
   className?: string
 }) {
   return (
-    <ol className={cn('flex w-full items-start', className)} aria-label="Các bước">
+    <ol className={cn('flex w-full items-start', className)} aria-label={t('Các bước')}>
       {steps.map((step, index) => {
         const n = index + 1
         const done = step.done ?? n < current

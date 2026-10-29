@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { CopyIcon, PlusIcon, XIcon } from 'lucide-react'
 import { WEEKDAYS } from '@/shared/lib/format'
 import { Button } from '@/shared/ui/button'
@@ -29,12 +30,12 @@ export function OpeningHoursEditor({ value, onChange }: { value: OpeningWindow[]
         return (
           <div key={day} className="flex flex-wrap items-center gap-2 px-3 py-2">
             <span className="w-full shrink-0 text-sm font-medium sm:w-20">{name}</span>
-            {windows.length === 0 ? <span className="text-sm text-muted-foreground">Nghỉ</span> : null}
+            {windows.length === 0 ? <span className="text-sm text-muted-foreground">{t('Nghỉ')}</span> : null}
             {windows.map(({ w, i }) => (
               <span key={i} className="flex max-w-full flex-wrap items-center gap-1 rounded-md bg-muted px-2 py-1">
                 <Input
                   type="time"
-                  aria-label={`${name} mở cửa`}
+                  aria-label={t('{v0} mở cửa', { v0: name })}
                   className="h-8 w-36"
                   value={w.opensAt}
                   onChange={(e) => update(i, { opensAt: e.target.value })}
@@ -42,13 +43,13 @@ export function OpeningHoursEditor({ value, onChange }: { value: OpeningWindow[]
                 <span aria-hidden="true">–</span>
                 <Input
                   type="time"
-                  aria-label={`${name} đóng cửa`}
+                  aria-label={t('{v0} đóng cửa', { v0: name })}
                   className="h-8 w-36"
                   value={w.closesAt}
                   onChange={(e) => update(i, { closesAt: e.target.value })}
                 />
-                {w.closesAt < w.opensAt ? <span className="text-xs text-muted-foreground">(qua đêm)</span> : null}
-                <Button type="button" variant="ghost" size="icon-sm" aria-label={`Xoá khung giờ ${name}`} onClick={() => remove(i)}>
+                {w.closesAt < w.opensAt ? <span className="text-xs text-muted-foreground">{t('(qua đêm)')}</span> : null}
+                <Button type="button" variant="ghost" size="icon-sm" aria-label={t('Xoá khung giờ {v0}', { v0: name })} onClick={() => remove(i)}>
                   <XIcon />
                 </Button>
               </span>
@@ -56,12 +57,12 @@ export function OpeningHoursEditor({ value, onChange }: { value: OpeningWindow[]
             <div className="ml-auto flex gap-1">
               {windows.length < MAX_PER_DAY ? (
                 <Button type="button" variant="ghost" size="sm" onClick={() => add(day)}>
-                  <PlusIcon /> Thêm khung
+                  <PlusIcon />{t(' Thêm khung')}
                 </Button>
               ) : null}
               {windows.length > 0 ? (
-                <Button type="button" variant="ghost" size="sm" onClick={() => copyToAll(day)} title="Áp dụng lịch ngày này cho cả tuần">
-                  <CopyIcon /> Cả tuần
+                <Button type="button" variant="ghost" size="sm" onClick={() => copyToAll(day)} title={t('Áp dụng lịch ngày này cho cả tuần')}>
+                  <CopyIcon />{t(' Cả tuần')}
                 </Button>
               ) : null}
             </div>

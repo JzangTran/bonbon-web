@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -12,10 +13,10 @@ import { siteUrl } from '@/shared/config/sites'
 
 const schema = z
   .object({
-    newPassword: z.string().min(8, 'Mật khẩu tối thiểu 8 ký tự').max(100, 'Tối đa 100 ký tự'),
+    newPassword: z.string().min(8, t('Mật khẩu tối thiểu 8 ký tự')).max(100, t('Tối đa 100 ký tự')),
     confirmPassword: z.string().max(100),
   })
-  .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: 'Mật khẩu nhập lại không khớp' })
+  .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: t('Mật khẩu nhập lại không khớp') })
 type Values = z.infer<typeof schema>
 
 /**
@@ -40,31 +41,31 @@ export function SetPasswordPage({ mode }: { mode: 'reset' | 'initial' }) {
 
   const loginUrl = mode === 'initial' ? siteUrl('console', '/login') : siteUrl('merchant', '/login')
   return (
-    <AuthShell title={mode === 'reset' ? 'Đặt lại mật khẩu' : 'Đặt mật khẩu quản trị'}>
+    <AuthShell title={mode === 'reset' ? t('Đặt lại mật khẩu') : t('Đặt mật khẩu quản trị')}>
       {done ? (
         <>
-          <FormSuccess message="Đã đặt mật khẩu mới. Mọi phiên đăng nhập cũ đã được đăng xuất." />
+          <FormSuccess message={t('Đã đặt mật khẩu mới. Mọi phiên đăng nhập cũ đã được đăng xuất.')} />
           <Button asChild>
-            <a href={loginUrl}>Đăng nhập</a>
+            <a href={loginUrl}>{t('Đăng nhập')}</a>
           </Button>
         </>
       ) : !token ? (
-        <FormError message="Liên kết thiếu mã. Hãy yêu cầu liên kết mới." />
+        <FormError message={t('Liên kết thiếu mã. Hãy yêu cầu liên kết mới.')} />
       ) : (
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="newPassword">Mật khẩu mới</Label>
+            <Label htmlFor="newPassword">{t('Mật khẩu mới')}</Label>
             <Input id="newPassword" type="password" autoComplete="new-password" aria-invalid={!!errors.newPassword} {...form.register('newPassword')} />
             {errors.newPassword ? <p role="alert" className="text-sm text-destructive">{errors.newPassword.message}</p> : null}
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="confirmPassword">Nhập lại mật khẩu</Label>
+            <Label htmlFor="confirmPassword">{t('Nhập lại mật khẩu')}</Label>
             <Input id="confirmPassword" type="password" autoComplete="new-password" aria-invalid={!!errors.confirmPassword} {...form.register('confirmPassword')} />
             {errors.confirmPassword ? <p role="alert" className="text-sm text-destructive">{errors.confirmPassword.message}</p> : null}
           </div>
           <FormError message={error} />
           <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-            Lưu mật khẩu
+            {t('Lưu mật khẩu')}
           </Button>
         </form>
       )}

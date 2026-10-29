@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation } from '@tanstack/react-query'
 import { EyeIcon, TriangleAlertIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -33,54 +34,54 @@ export function Row({ label, children }: { label: string; children: ReactNode })
 export function ShopApplicationSections({ shop, canViewIdentity }: { shop: Detail; canViewIdentity: boolean }) {
   return (
     <>
-      <Section title="1 · Thông tin quán">
-        <Row label="Địa chỉ">
+      <Section title={t('1 · Thông tin quán')}>
+        <Row label={t('Địa chỉ')}>
           {shop.formattedAddress ?? '—'}
           {shop.addressDetail ? ` · ${shop.addressDetail}` : ''}
         </Row>
-        <Row label="Điện thoại / email">
+        <Row label={t('Điện thoại / email')}>
           {shop.phone ?? '—'} · {shop.email ?? '—'}
         </Row>
         {shop.lat !== undefined && shop.lng !== undefined ? (
-          <Row label="Toạ độ">
+          <Row label={t('Toạ độ')}>
             <a className="text-link" href={`https://www.google.com/maps?q=${shop.lat},${shop.lng}`} target="_blank" rel="noreferrer">
               {shop.lat.toFixed(5)}, {shop.lng.toFixed(5)}
             </a>
           </Row>
         ) : null}
       </Section>
-      <Section title="2 · Giao hàng & giờ mở cửa">
-        <Row label="Bán kính / phí">
+      <Section title={t('2 · Giao hàng & giờ mở cửa')}>
+        <Row label={t('Bán kính / phí')}>
           {shop.deliveryRadiusKm ?? '—'} km · {formatVnd(shop.deliveryFee)}
         </Row>
-        <Row label="Miễn phí từ / tối thiểu">
+        <Row label={t('Miễn phí từ / tối thiểu')}>
           {formatVnd(shop.freeDeliveryThreshold)} · {formatVnd(shop.minOrderValue)}
         </Row>
-        <Row label="Giờ mở cửa">
+        <Row label={t('Giờ mở cửa')}>
           {shop.openingHours?.length
             ? shop.openingHours.map((w) => `${weekdayName(w.weekday)} ${formatTime(w.opensAt)}–${formatTime(w.closesAt)}`).join(' · ')
             : '—'}
         </Row>
       </Section>
-      <Section title="3 · Thuế & tài khoản nhận tiền">
-        <Row label="Loại hình">{shop.businessType === 'HOUSEHOLD' ? `Hộ kinh doanh · ${shop.businessName ?? '—'}` : 'Cá nhân'}</Row>
-        <Row label="Mã số thuế">{shop.taxCode ?? '—'}</Row>
-        <Row label="Địa chỉ kinh doanh">{shop.businessAddress ?? '—'}</Row>
-        <Row label="Email hoá đơn">{shop.invoiceEmails?.join(', ') || '—'}</Row>
+      <Section title={t('3 · Thuế & tài khoản nhận tiền')}>
+        <Row label={t('Loại hình')}>{shop.businessType === 'HOUSEHOLD' ? t('Hộ kinh doanh · {v0}', { v0: shop.businessName ?? '—' }) : t('Cá nhân')}</Row>
+        <Row label={t('Mã số thuế')}>{shop.taxCode ?? '—'}</Row>
+        <Row label={t('Địa chỉ kinh doanh')}>{shop.businessAddress ?? '—'}</Row>
+        <Row label={t('Email hoá đơn')}>{shop.invoiceEmails?.join(', ') || '—'}</Row>
         {shop.businessLicenseUrl ? (
-          <Row label="Giấy phép kinh doanh">
+          <Row label={t('Giấy phép kinh doanh')}>
             <a className="text-link" href={shop.businessLicenseUrl} target="_blank" rel="noreferrer">
-              Mở tệp (liên kết hết hạn sau 5 phút)
+              {t('Mở tệp (liên kết hết hạn sau 5 phút)')}
             </a>
           </Row>
         ) : null}
-        <Row label="Tài khoản nhận tiền">
+        <Row label={t('Tài khoản nhận tiền')}>
           {shop.bankName ?? '—'} · ••••{shop.accountLast4 ?? '????'} · {shop.accountHolderName ?? '—'}
         </Row>
         {shop.payoutHolderMatchesIdentity === false ? (
           <p className="flex items-center gap-2 rounded-md bg-warning-subtle px-3 py-2 text-sm text-warning-fg">
             <TriangleAlertIcon className="size-4 shrink-0" />
-            Tên chủ tài khoản không khớp tên trên giấy tờ ({shop.identityFullName}). Kiểm tra kỹ.
+            {t('Tên chủ tài khoản không khớp tên trên giấy tờ (')}{shop.identityFullName}{t('). Kiểm tra kỹ.')}
           </p>
         ) : null}
       </Section>
@@ -103,32 +104,32 @@ function IdentitySection({ shop, canView }: { shop: Detail; canView: boolean }) 
   const docs = reveal.data
 
   return (
-    <Section title="4 · Định danh">
-      <Row label="Giấy tờ">
+    <Section title={t('4 · Định danh')}>
+      <Row label={t('Giấy tờ')}>
         {shop.identityDocType ?? '—'} · {shop.identityFullName ?? '—'}
       </Row>
       {docs ? (
         <>
-          <Row label="Số giấy tờ">{docs.docNumber ?? '—'}</Row>
+          <Row label={t('Số giấy tờ')}>{docs.docNumber ?? '—'}</Row>
           <div className="flex flex-wrap gap-3">
             {[docs.frontPhotoUrl, docs.selfiePhotoUrl].map((url, i) =>
               url ? (
                 <a key={i} href={url} target="_blank" rel="noreferrer" className="block">
-                  <img src={url} alt={i === 0 ? 'Ảnh mặt trước giấy tờ' : 'Ảnh cầm giấy tờ'} className="h-40 w-64 rounded-md border object-cover" />
+                  <img src={url} alt={i === 0 ? t('Ảnh mặt trước giấy tờ') : t('Ảnh cầm giấy tờ')} className="h-40 w-64 rounded-md border object-cover" />
                 </a>
               ) : null,
             )}
           </div>
-          <p className="text-xs text-muted-foreground">Liên kết ảnh hết hạn sau 5 phút.</p>
+          <p className="text-xs text-muted-foreground">{t('Liên kết ảnh hết hạn sau 5 phút.')}</p>
         </>
       ) : canView ? (
         <div>
           <Button variant="outline" disabled={reveal.isPending} onClick={() => reveal.mutate()}>
-            <EyeIcon /> Xem giấy tờ (được ghi nhật ký)
+            <EyeIcon />{t(' Xem giấy tờ (được ghi nhật ký)')}
           </Button>
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground">Bạn không có quyền xem giấy tờ tuỳ thân.</p>
+        <p className="text-sm text-muted-foreground">{t('Bạn không có quyền xem giấy tờ tuỳ thân.')}</p>
       )}
     </Section>
   )

@@ -1,13 +1,14 @@
+import { t } from '@/shared/i18n'
 /** The ranges a shop usually wants: today, the last week, the last month, or two dates of its own. */
 export type RangePreset = 'today' | '7d' | '30d' | '90d' | '12m' | 'custom'
 
 export const PRESET_LABEL: Record<RangePreset, string> = {
-  today: 'Hôm nay',
-  '7d': '7 ngày qua',
-  '30d': '30 ngày qua',
-  '90d': '90 ngày qua',
-  '12m': '12 tháng qua',
-  custom: 'Tuỳ chọn',
+  today: t('Hôm nay'),
+  '7d': t('7 ngày qua'),
+  '30d': t('30 ngày qua'),
+  '90d': t('90 ngày qua'),
+  '12m': t('12 tháng qua'),
+  custom: t('Tuỳ chọn'),
 }
 
 const vietnamDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit' })

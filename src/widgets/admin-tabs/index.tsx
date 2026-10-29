@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
 
@@ -5,10 +6,10 @@ import { consolePath } from '@/shared/config/sites'
 export function AdminHomeTabs() {
   return (
     <PageTabs
-      label="Trang chủ quản trị"
+      label={t('Trang chủ quản trị')}
       tabs={[
-        { id: 'overview', label: 'Tổng quan', to: consolePath() },
-        { id: 'statistics', label: 'Thống kê hệ thống', to: consolePath('/statistics') },
+        { id: 'overview', label: t('Tổng quan'), to: consolePath() },
+        { id: 'statistics', label: t('Thống kê hệ thống'), to: consolePath('/statistics') },
       ]}
     />
   )

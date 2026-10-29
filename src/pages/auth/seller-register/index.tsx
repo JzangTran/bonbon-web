@@ -17,17 +17,18 @@ import { AuthHero, AuthStepPage, FormError, FormSuccess, SuccessMark } from '@/w
 import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
 import { merchantPath, legalUrl } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 const schema = z.object({
-  name: z.string().trim().min(1, 'Vui lòng nhập họ tên').max(100, 'Tối đa 100 ký tự'),
-  email: z.email('Email không hợp lệ').max(255),
-  password: z.string().min(8, 'Mật khẩu tối thiểu 8 ký tự').max(100, 'Tối đa 100 ký tự'),
-  acceptTerms: z.boolean().refine((v) => v, 'Bạn cần đồng ý để tiếp tục'),
+  name: z.string().trim().min(1, t('Vui lòng nhập họ tên')).max(100, t('Tối đa 100 ký tự')),
+  email: z.email(t('Email không hợp lệ')).max(255),
+  password: z.string().min(8, t('Mật khẩu tối thiểu 8 ký tự')).max(100, t('Tối đa 100 ký tự')),
+  acceptTerms: z.boolean().refine((v) => v, t('Bạn cần đồng ý để tiếp tục')),
   marketing: z.boolean(),
 })
 type Values = z.infer<typeof schema>
 
-const STEPS = [{ label: 'Nhập email' }, { label: 'Tạo mật khẩu' }, { label: 'Xác thực email' }]
+const STEPS = [{ label: t('Nhập email') }, { label: t('Tạo mật khẩu') }, { label: t('Xác thực email') }]
 const RESEND_SECONDS = 60
 
 function useCurrentDocument(type: 'SELLER_TERMS' | 'PRIVACY_POLICY') {
@@ -67,7 +68,7 @@ export function SellerRegisterPage() {
   const onSubmit = form.handleSubmit(async (values) => {
     setError(null)
     if (!captchaToken) {
-      setError('Vui lòng xác nhận bạn không phải robot.')
+      setError(t('Vui lòng xác nhận bạn không phải robot.'))
       return
     }
     if (!terms.data?.id || !privacy.data?.id) return
@@ -96,17 +97,17 @@ export function SellerRegisterPage() {
   if (step === 1) {
     return (
       <AuthHero
-        heading="Đăng ký"
-        eyebrow="bonbon dành cho người bán"
-        headline="Trở thành người bán"
-        headlineSoft="ngay hôm nay"
+        heading={t('Đăng ký')}
+        eyebrow={t('bonbon dành cho người bán')}
+        headline={t('Trở thành người bán')}
+        headlineSoft={t('ngay hôm nay')}
         points={SELLER_POINTS}
-        cardTitle="Đăng ký"
+        cardTitle={t('Đăng ký')}
         footer={
           <>
-            Bạn đã có tài khoản?{' '}
+            {t('Bạn đã có tài khoản?')}{' '}
             <Link to={merchantPath('/login')} className="text-link font-medium">
-              Đăng nhập
+              {t('Đăng nhập')}
             </Link>
           </>
         }
@@ -120,11 +121,11 @@ export function SellerRegisterPage() {
             {errors.email ? <p role="alert" className="text-sm text-destructive">{errors.email.message}</p> : null}
           </div>
           <Button type="submit" size="lg" disabled={email.trim().length === 0}>
-            Tiếp theo
+            {t('Tiếp theo')}
           </Button>
         </form>
           <GoogleSignIn />
-        <LegalNote action="đăng ký" />
+        <LegalNote action={t('đăng ký')} />
       </AuthHero>
     )
   }
@@ -134,30 +135,30 @@ export function SellerRegisterPage() {
   const longEnough = password.length >= 8 && password.length <= 100
   return (
     <AuthStepPage
-      heading="Đăng ký"
+      heading={t('Đăng ký')}
       steps={STEPS}
       current={2}
-      title="Thiết lập tài khoản"
-      description={`Bước cuối! Cho bonbon biết tên bạn và đặt mật khẩu cho ${email}.`}
+      title={t('Thiết lập tài khoản')}
+      description={t('Bước cuối! Cho bonbon biết tên bạn và đặt mật khẩu cho {v0}.', { v0: email })}
       onBack={() => setStep(1)}
     >
       <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="name">Họ tên</Label>
+          <Label htmlFor="name">{t('Họ tên')}</Label>
           <Input id="name" autoComplete="name" className="h-11" aria-invalid={!!errors.name} {...form.register('name')} />
           {errors.name ? <p role="alert" className="text-sm text-destructive">{errors.name.message}</p> : null}
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password">Mật khẩu</Label>
+          <Label htmlFor="password">{t('Mật khẩu')}</Label>
           <PasswordInput id="password" autoComplete="new-password" className="h-11" aria-invalid={!!errors.password} {...form.register('password')} />
-          <ul className="mt-1 flex flex-col gap-1 text-xs" aria-label="Yêu cầu mật khẩu">
+          <ul className="mt-1 flex flex-col gap-1 text-xs" aria-label={t('Yêu cầu mật khẩu')}>
             <li className={cn('flex items-center gap-1.5', longEnough ? 'text-success-fg' : 'text-muted-foreground')}>
               {longEnough ? <CheckIcon className="size-3.5" /> : <CircleIcon className="size-3.5" />}
-              Từ 8 đến 100 ký tự
+              {t('Từ 8 đến 100 ký tự')}
             </li>
             <li className="flex items-center gap-1.5 text-muted-foreground">
               <CircleIcon className="size-3.5 opacity-0" />
-              Nên có cả chữ hoa, chữ thường và số
+              {t('Nên có cả chữ hoa, chữ thường và số')}
             </li>
           </ul>
         </div>
@@ -165,13 +166,13 @@ export function SellerRegisterPage() {
         <label className="flex items-start gap-2 text-sm">
           <input type="checkbox" className="mt-1" {...form.register('acceptTerms')} />
           <span>
-            Tôi đồng ý với{' '}
+            {t('Tôi đồng ý với')}{' '}
             <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
-              {terms.data?.title ?? 'Điều khoản dành cho người bán'}
+              {terms.data?.title ?? t('Điều khoản dành cho người bán')}
             </a>{' '}
-            và đã đọc{' '}
+            {t('và đã đọc')}{' '}
             <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-link">
-              {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
+              {privacy.data?.title ?? t('Chính sách quyền riêng tư')}
             </a>
             .
           </span>
@@ -179,13 +180,13 @@ export function SellerRegisterPage() {
         {errors.acceptTerms ? <p role="alert" className="text-sm text-destructive">{errors.acceptTerms.message}</p> : null}
         <label className="flex items-start gap-2 text-sm text-muted-foreground">
           <input type="checkbox" className="mt-1" {...form.register('marketing')} />
-          Nhận tin khuyến mãi và hướng dẫn bán hàng qua email (không bắt buộc).
+          {t('Nhận tin khuyến mãi và hướng dẫn bán hàng qua email (không bắt buộc).')}
         </label>
 
         <Captcha onToken={setCaptchaToken} />
         <FormError message={error} />
         <Button type="submit" size="lg" disabled={form.formState.isSubmitting || terms.isLoading || privacy.isLoading}>
-          {form.formState.isSubmitting ? 'Đang tạo tài khoản…' : 'Đăng ký'}
+          {form.formState.isSubmitting ? t('Đang tạo tài khoản…') : t('Đăng ký')}
         </Button>
       </form>
     </AuthStepPage>
@@ -213,27 +214,27 @@ function SentStep({ email }: { email: string }) {
       setError(problemMessage(problem))
       return
     }
-    setNotice('Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết.')
+    setNotice(t('Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết.'))
     setWait(RESEND_SECONDS)
   }
 
   return (
     <AuthStepPage
-      heading="Đăng ký"
+      heading={t('Đăng ký')}
       steps={STEPS}
       current={3}
-      title="Kiểm tra hộp thư của bạn"
-      description={`Chúng tôi đã gửi liên kết xác thực tới ${email}. Liên kết có hiệu lực 24 giờ.`}
+      title={t('Kiểm tra hộp thư của bạn')}
+      description={t('Chúng tôi đã gửi liên kết xác thực tới {v0}. Liên kết có hiệu lực 24 giờ.', { v0: email })}
     >
       <SuccessMark />
-      <p className="text-center text-sm text-muted-foreground">Mở email và bấm liên kết để hoàn tất đăng ký. Không thấy thư? Hãy xem cả mục thư rác.</p>
+      <p className="text-center text-sm text-muted-foreground">{t('Mở email và bấm liên kết để hoàn tất đăng ký. Không thấy thư? Hãy xem cả mục thư rác.')}</p>
       {notice ? <FormSuccess message={notice} /> : null}
       <FormError message={error} />
       <Button type="button" variant="outline" size="lg" disabled={wait > 0} onClick={resend}>
-        {wait > 0 ? `Gửi lại sau ${wait} giây` : 'Gửi lại email xác thực'}
+        {wait > 0 ? t('Gửi lại sau {v0} giây', { v0: wait }) : t('Gửi lại email xác thực')}
       </Button>
       <Button type="button" size="lg" onClick={() => navigate(merchantPath('/login'))}>
-        Đến trang đăng nhập
+        {t('Đến trang đăng nhập')}
       </Button>
     </AuthStepPage>
   )

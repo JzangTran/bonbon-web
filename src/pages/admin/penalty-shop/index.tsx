@@ -28,8 +28,9 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { consolePath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
-const SUSPENSION_STATUS: Record<string, string> = { SCHEDULED: 'Đã báo, chưa hiệu lực', APPLIED: 'Đang bị đình chỉ', CANCELLED: 'Đã huỷ', LIFTED: 'Đã khôi phục' }
+const SUSPENSION_STATUS: Record<string, string> = { SCHEDULED: t('Đã báo, chưa hiệu lực'), APPLIED: t('Đang bị đình chỉ'), CANCELLED: t('Đã huỷ'), LIFTED: t('Đã khôi phục') }
 
 type Action =
   | { kind: 'waive'; penalty: PenaltyRecord }
@@ -53,12 +54,12 @@ export function AdminPenaltyShopPage() {
   const consequence = CONSEQUENCE[h?.consequence ?? 'NONE'] ?? CONSEQUENCE.NONE
   const open = (suspensions.data?.items ?? []).find((s) => s.status === 'SCHEDULED' || s.status === 'APPLIED')
 
-  if (!canRead) return <p className="text-muted-foreground">Bạn không có quyền xem điểm phạt của các quán.</p>
+  if (!canRead) return <p className="text-muted-foreground">{t('Bạn không có quyền xem điểm phạt của các quán.')}</p>
 
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <Link to={consolePath('/penalties')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" /> Điểm phạt các quán
+        <ArrowLeftIcon className="size-4" />{t(' Điểm phạt các quán')}
       </Link>
       {history.isError ? <FormError message={problemMessage(history.error)} /> : null}
       {history.isPending ? <Skeleton className="h-40" /> : null}
@@ -67,54 +68,54 @@ export function AdminPenaltyShopPage() {
           <Card className="gap-2 p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h1 className="text-2xl font-semibold">{h.name}</h1>
-              {canWrite ? <Button onClick={() => setAction({ kind: 'add' })}>Cộng điểm</Button> : null}
+              {canWrite ? <Button onClick={() => setAction({ kind: 'add' })}>{t('Cộng điểm')}</Button> : null}
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <span className="text-4xl font-semibold tabular-nums">{h.activePoints}</span>
-              <span className="text-muted-foreground">điểm còn hiệu lực</span>
+              <span className="text-muted-foreground">{t('điểm còn hiệu lực')}</span>
               <Badge className={consequence.className}>{consequence.label}</Badge>
-              {h.reviewFlagged ? <Badge className="bg-danger-subtle text-danger-fg">Nên xem xét đình chỉ</Badge> : null}
+              {h.reviewFlagged ? <Badge className="bg-danger-subtle text-danger-fg">{t('Nên xem xét đình chỉ')}</Badge> : null}
             </div>
-            {h.restrictionStartsAt ? <p className="text-sm text-muted-foreground">Hạn chế hiển thị bắt đầu {formatDateTime(h.restrictionStartsAt)}</p> : null}
+            {h.restrictionStartsAt ? <p className="text-sm text-muted-foreground">{t('Hạn chế hiển thị bắt đầu ')}{formatDateTime(h.restrictionStartsAt)}</p> : null}
           </Card>
 
           <section className="flex flex-col gap-3">
-            <h2 className="text-lg font-semibold">Lịch sử điểm</h2>
-            {(h.penalties ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">Quán chưa có điểm phạt nào.</Card> : null}
+            <h2 className="text-lg font-semibold">{t('Lịch sử điểm')}</h2>
+            {(h.penalties ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{t('Quán chưa có điểm phạt nào.')}</Card> : null}
             <ul className="flex flex-col gap-3">
               {(h.penalties ?? []).map((p) => (
                 <li key={p.id}>
                   <Card className="gap-1 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-semibold">{p.points} điểm</span>
-                        <Badge variant="outline">{p.source === 'MANUAL' ? 'Cộng thủ công' : `Tuần ${p.weekStart}`}</Badge>
-                        {p.status === 'WAIVED' ? <Badge className="bg-muted text-muted-foreground">Đã miễn</Badge> : p.expired ? <Badge className="bg-muted text-muted-foreground">Hết hạn</Badge> : <Badge className="bg-warning-subtle text-warning-fg">Còn hiệu lực</Badge>}
+                        <span className="font-semibold">{p.points}{t(' điểm')}</span>
+                        <Badge variant="outline">{p.source === 'MANUAL' ? t('Cộng thủ công') : t('Tuần {v0}', { v0: p.weekStart })}</Badge>
+                        {p.status === 'WAIVED' ? <Badge className="bg-muted text-muted-foreground">{t('Đã miễn')}</Badge> : p.expired ? <Badge className="bg-muted text-muted-foreground">{t('Hết hạn')}</Badge> : <Badge className="bg-warning-subtle text-warning-fg">{t('Còn hiệu lực')}</Badge>}
                         {p.appealStatus ? <Badge variant="outline">{APPEAL_LABEL[p.appealStatus] ?? p.appealStatus}</Badge> : null}
                       </div>
                       {canWrite ? (
                         <div className="flex gap-2">
                           {p.appealStatus === 'PENDING' ? (
                             <Button size="sm" onClick={() => setAction({ kind: 'appeal', penalty: p })}>
-                              Quyết kháng nghị
+                              {t('Quyết kháng nghị')}
                             </Button>
                           ) : null}
                           {p.status === 'ACTIVE' && !p.expired ? (
                             <Button size="sm" variant="outline" onClick={() => setAction({ kind: 'waive', penalty: p })}>
-                              Miễn điểm
+                              {t('Miễn điểm')}
                             </Button>
                           ) : null}
                         </div>
                       ) : null}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Cấp {formatDateTime(p.issuedAt)} · hết hạn {formatDateTime(p.expiresAt)}
-                      {p.faultOrders !== undefined ? ` · ${p.faultOrders} đơn lỗi trên ${p.finishedOrders} đơn` : ''}
+                      {t('Cấp ')}{formatDateTime(p.issuedAt)}{t(' · hết hạn ')}{formatDateTime(p.expiresAt)}
+                      {p.faultOrders !== undefined ? t(' · {v0} đơn lỗi trên {v1} đơn', { v0: p.faultOrders, v1: p.finishedOrders }) : ''}
                     </p>
-                    {p.reason ? <p className="text-sm">Lý do: {p.reason}</p> : null}
-                    {p.appealReason ? <p className="text-sm">Quán kháng nghị: {p.appealReason}</p> : null}
-                    {p.appealDecisionReason ? <p className="text-sm">Quyết định kháng nghị: {p.appealDecisionReason}</p> : null}
-                    {p.decisionReason && p.decisionReason !== p.appealDecisionReason ? <p className="text-sm">Miễn điểm: {p.decisionReason}</p> : null}
+                    {p.reason ? <p className="text-sm">{t('Lý do: ')}{p.reason}</p> : null}
+                    {p.appealReason ? <p className="text-sm">{t('Quán kháng nghị: ')}{p.appealReason}</p> : null}
+                    {p.appealDecisionReason ? <p className="text-sm">{t('Quyết định kháng nghị: ')}{p.appealDecisionReason}</p> : null}
+                    {p.decisionReason && p.decisionReason !== p.appealDecisionReason ? <p className="text-sm">{t('Miễn điểm: ')}{p.decisionReason}</p> : null}
                   </Card>
                 </li>
               ))}
@@ -123,24 +124,24 @@ export function AdminPenaltyShopPage() {
 
           <section className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold">Đình chỉ</h2>
+              <h2 className="text-lg font-semibold">{t('Đình chỉ')}</h2>
               {canSuspend && !open ? (
                 <Button variant="outline" onClick={() => setAction({ kind: 'suspend' })}>
-                  Đình chỉ cửa hàng
+                  {t('Đình chỉ cửa hàng')}
                 </Button>
               ) : null}
               {canSuspend && open?.status === 'SCHEDULED' ? (
                 <Button variant="outline" onClick={() => setAction({ kind: 'cancel' })}>
-                  Huỷ lịch đình chỉ
+                  {t('Huỷ lịch đình chỉ')}
                 </Button>
               ) : null}
-              {canSuspend && open?.status === 'APPLIED' ? <Button onClick={() => setAction({ kind: 'reinstate' })}>Khôi phục cửa hàng</Button> : null}
+              {canSuspend && open?.status === 'APPLIED' ? <Button onClick={() => setAction({ kind: 'reinstate' })}>{t('Khôi phục cửa hàng')}</Button> : null}
             </div>
             <p className="text-sm text-muted-foreground">
-              Đình chỉ có lịch báo trước ít nhất 5 ngày (mức tối thiểu theo luật); quán vẫn hoạt động đến ngày đó. Chỉ yêu cầu của cơ quan có thẩm quyền mới đình chỉ ngay.
+              {t('Đình chỉ có lịch báo trước ít nhất 5 ngày (mức tối thiểu theo luật); quán vẫn hoạt động đến ngày đó. Chỉ yêu cầu của cơ quan có thẩm quyền mới đình chỉ ngay.')}
             </p>
             {suspensions.isError ? <FormError message={problemMessage(suspensions.error)} /> : null}
-            {suspensions.data && (suspensions.data.items ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">Quán chưa bị đình chỉ lần nào.</Card> : null}
+            {suspensions.data && (suspensions.data.items ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{t('Quán chưa bị đình chỉ lần nào.')}</Card> : null}
             <ul className="flex flex-col gap-3">
               {(suspensions.data?.items ?? []).map((s) => (
                 <SuspensionItem key={s.id} suspension={s} />
@@ -163,15 +164,15 @@ function SuspensionItem({ suspension: s }: { suspension: ShopSuspension }) {
           <Badge className={s.status === 'APPLIED' ? 'bg-danger-subtle text-danger-fg' : s.status === 'SCHEDULED' ? 'bg-warning-subtle text-warning-fg' : 'bg-muted text-muted-foreground'}>
             {SUSPENSION_STATUS[s.status ?? ''] ?? s.status}
           </Badge>
-          {s.kind === 'IMMEDIATE' ? <Badge variant="outline">Theo yêu cầu cơ quan</Badge> : null}
+          {s.kind === 'IMMEDIATE' ? <Badge variant="outline">{t('Theo yêu cầu cơ quan')}</Badge> : null}
         </div>
         <p className="text-sm">{s.reason}</p>
-        {s.authorityReference ? <p className="text-sm text-muted-foreground">Yêu cầu: {s.authorityReference}</p> : null}
+        {s.authorityReference ? <p className="text-sm text-muted-foreground">{t('Yêu cầu: ')}{s.authorityReference}</p> : null}
         <p className="text-sm text-muted-foreground">
-          Báo {formatDateTime(s.noticeSentAt)} · hiệu lực {formatDateTime(s.effectiveAt)}
-          {s.endedAt ? ` · kết thúc ${formatDateTime(s.endedAt)}` : ''}
+          {t('Báo ')}{formatDateTime(s.noticeSentAt)}{t(' · hiệu lực ')}{formatDateTime(s.effectiveAt)}
+          {s.endedAt ? t(' · kết thúc {v0}', { v0: formatDateTime(s.endedAt) }) : ''}
         </p>
-        {s.endReason ? <p className="text-sm">Lý do kết thúc: {s.endReason}</p> : null}
+        {s.endReason ? <p className="text-sm">{t('Lý do kết thúc: ')}{s.endReason}</p> : null}
       </Card>
     </li>
   )
@@ -195,14 +196,14 @@ function Actions({ action, onClose, vendorId }: { action: Action | null; onClose
   const busy = waive.isPending || add.isPending || decide.isPending || suspend.isPending || cancel.isPending || reinstate.isPending
 
   const title =
-    action?.kind === 'waive' ? 'Miễn điểm phạt' : action?.kind === 'appeal' ? 'Quyết định kháng nghị' : action?.kind === 'add' ? 'Cộng điểm phạt' :
-    action?.kind === 'suspend' ? 'Đình chỉ cửa hàng' : action?.kind === 'cancel' ? 'Huỷ lịch đình chỉ' : 'Khôi phục cửa hàng'
+    action?.kind === 'waive' ? t('Miễn điểm phạt') : action?.kind === 'appeal' ? t('Quyết định kháng nghị') : action?.kind === 'add' ? t('Cộng điểm phạt') :
+    action?.kind === 'suspend' ? t('Đình chỉ cửa hàng') : action?.kind === 'cancel' ? t('Huỷ lịch đình chỉ') : t('Khôi phục cửa hàng')
   const description =
-    action?.kind === 'waive' ? 'Điểm của quán được tính lại ngay, nên có thể gỡ hạn chế hiển thị lập tức. Quán thấy lý do này.' :
-    action?.kind === 'appeal' ? `Quán nói: ${action.penalty.appealReason}. Chấp nhận thì điểm được miễn; từ chối thì giữ nguyên. Quán thấy lý do này.` :
-    action?.kind === 'add' ? 'Điểm hết hạn sau 90 ngày như mọi điểm khác. Đủ 3 điểm thì quán được báo sẽ bị hạn chế hiển thị sau 5 ngày. Quán thấy lý do này.' :
-    action?.kind === 'suspend' ? 'Quán được báo ngay kèm lý do và ngày hiệu lực, và vẫn hoạt động đến lúc đó.' :
-    action?.kind === 'cancel' ? 'Quán tiếp tục hoạt động bình thường và được báo. Lý do được ghi lại.' : 'Quán hiện lại với khách và nhận đơn trở lại. Lý do được ghi lại.'
+    action?.kind === 'waive' ? t('Điểm của quán được tính lại ngay, nên có thể gỡ hạn chế hiển thị lập tức. Quán thấy lý do này.') :
+    action?.kind === 'appeal' ? t('Quán nói: {v0}. Chấp nhận thì điểm được miễn; từ chối thì giữ nguyên. Quán thấy lý do này.', { v0: action.penalty.appealReason }) :
+    action?.kind === 'add' ? t('Điểm hết hạn sau 90 ngày như mọi điểm khác. Đủ 3 điểm thì quán được báo sẽ bị hạn chế hiển thị sau 5 ngày. Quán thấy lý do này.') :
+    action?.kind === 'suspend' ? t('Quán được báo ngay kèm lý do và ngày hiệu lực, và vẫn hoạt động đến lúc đó.') :
+    action?.kind === 'cancel' ? t('Quán tiếp tục hoạt động bình thường và được báo. Lý do được ghi lại.') : t('Quán hiện lại với khách và nhận đơn trở lại. Lý do được ghi lại.')
   const ready =
     reason.trim().length > 0 && (action?.kind !== 'suspend' || !immediate || authority.trim().length > 0) && (action?.kind !== 'suspend' || immediate || date === '' || date >= earliest)
 
@@ -243,7 +244,7 @@ function Actions({ action, onClose, vendorId }: { action: Action | null; onClose
         <div className="flex flex-col gap-3">
           {action?.kind === 'add' ? (
             <div className="flex flex-col gap-1">
-              <Label htmlFor="points">Số điểm (1 đến 3)</Label>
+              <Label htmlFor="points">{t('Số điểm (1 đến 3)')}</Label>
               <Input id="points" type="number" min={1} max={3} className="w-24" value={points} onChange={(e) => setPoints(Math.min(3, Math.max(1, Number(e.target.value))))} />
             </div>
           ) : null}
@@ -251,42 +252,42 @@ function Actions({ action, onClose, vendorId }: { action: Action | null; onClose
             <>
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={immediate} onChange={(e) => setImmediate(e.target.checked)} />
-                Đình chỉ ngay theo yêu cầu của cơ quan có thẩm quyền
+                {t('Đình chỉ ngay theo yêu cầu của cơ quan có thẩm quyền')}
               </label>
               {immediate ? (
                 <div className="flex flex-col gap-1">
-                  <Label htmlFor="authority">Số hiệu và ngày của yêu cầu</Label>
-                  <Input id="authority" value={authority} maxLength={300} onChange={(e) => setAuthority(e.target.value)} placeholder="Ví dụ: CV 123/QLTT ngày 08/10/2026" />
+                  <Label htmlFor="authority">{t('Số hiệu và ngày của yêu cầu')}</Label>
+                  <Input id="authority" value={authority} maxLength={300} onChange={(e) => setAuthority(e.target.value)} placeholder={t('Ví dụ: CV 123/QLTT ngày 08/10/2026')} />
                 </div>
               ) : (
                 <div className="flex flex-col gap-1">
-                  <Label htmlFor="effective">Ngày hiệu lực (để trống là đúng 5 ngày)</Label>
+                  <Label htmlFor="effective">{t('Ngày hiệu lực (để trống là đúng 5 ngày)')}</Label>
                   <Input id="effective" type="date" min={earliest} className="w-44" value={date} onChange={(e) => setDate(e.target.value)} />
                 </div>
               )}
             </>
           ) : null}
           <div className="flex flex-col gap-1">
-            <Label htmlFor="reason">Lý do</Label>
+            <Label htmlFor="reason">{t('Lý do')}</Label>
             <Textarea id="reason" rows={3} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Đóng</Button>
+            <Button variant="outline">{t('Đóng')}</Button>
           </DialogClose>
           {action?.kind === 'appeal' ? (
             <>
               <Button variant="outline" disabled={!ready || busy} onClick={() => submit('REJECT')}>
-                Từ chối
+                {t('Từ chối')}
               </Button>
               <Button disabled={!ready || busy} onClick={() => submit('ACCEPT')}>
-                Chấp nhận, miễn điểm
+                {t('Chấp nhận, miễn điểm')}
               </Button>
             </>
           ) : (
             <Button disabled={!ready || busy} onClick={() => submit()}>
-              Xác nhận
+              {t('Xác nhận')}
             </Button>
           )}
         </DialogFooter>

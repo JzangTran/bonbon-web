@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type Review = components['schemas']['Review']
 export type ReviewPage = components['schemas']['ReviewPage']
@@ -37,7 +38,7 @@ export function useReplyActions() {
       return result.data
     },
     onSuccess: (_data, vars) => {
-      toast.success(vars.existing ? 'Đã cập nhật phản hồi.' : 'Đã gửi phản hồi.')
+      toast.success(vars.existing ? t('Đã cập nhật phản hồi.') : t('Đã gửi phản hồi.'))
       void refresh()
     },
     onError,
@@ -48,7 +49,7 @@ export function useReplyActions() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success('Đã xoá phản hồi.')
+      toast.success(t('Đã xoá phản hồi.'))
       void refresh()
     },
     onError,
@@ -99,7 +100,7 @@ export function useModerationActions() {
       return result.data
     },
     onSuccess: () => {
-      toast.success('Đã ẩn.')
+      toast.success(t('Đã ẩn.'))
       void refresh()
     },
     onError: (error) => {
@@ -117,7 +118,7 @@ export function useModerationActions() {
       return result.data
     },
     onSuccess: () => {
-      toast.success('Đã khôi phục.')
+      toast.success(t('Đã khôi phục.'))
       void refresh()
     },
     onError: (error) => {

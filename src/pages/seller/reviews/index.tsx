@@ -13,10 +13,11 @@ import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { t } from '@/shared/i18n'
 
 const TABS = [
-  { unreplied: false, label: 'Tất cả' },
-  { unreplied: true, label: 'Chưa phản hồi' },
+  { unreplied: false, label: t('Tất cả') },
+  { unreplied: true, label: t('Chưa phản hồi') },
 ] as const
 
 /** Customers' reviews of the shop and the one reply each (respond-to-review.md); a reply can change for 24 hours. */
@@ -47,8 +48,8 @@ export function SellerReviewsPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Đánh giá của khách</h1>
-        <p className="text-sm text-muted-foreground">Phản hồi hiển thị công khai dưới đánh giá. Sửa hoặc xoá được trong 24 giờ kể từ lúc đăng.</p>
+        <h1 className="text-2xl font-semibold">{t('Đánh giá của khách')}</h1>
+        <p className="text-sm text-muted-foreground">{t('Phản hồi hiển thị công khai dưới đánh giá. Sửa hoặc xoá được trong 24 giờ kể từ lúc đăng.')}</p>
       </div>
 
       <div role="tablist" className="flex gap-1 border-b">
@@ -75,7 +76,7 @@ export function SellerReviewsPage() {
       {reviews.isError ? <FormError message={problemMessage(reviews.error)} /> : null}
       {reviews.isPending ? <Skeleton className="h-32" /> : null}
       {data && items.length === 0 ? (
-        <Card className="p-6 text-muted-foreground">{unreplied ? 'Bạn đã phản hồi hết các đánh giá.' : 'Quán chưa có đánh giá nào.'}</Card>
+        <Card className="p-6 text-muted-foreground">{unreplied ? t('Bạn đã phản hồi hết các đánh giá.') : t('Quán chưa có đánh giá nào.')}</Card>
       ) : null}
 
       <ul className="flex flex-col gap-3">
@@ -88,17 +89,17 @@ export function SellerReviewsPage() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Stars value={review.rating ?? 0} />
                   <p className="text-sm text-muted-foreground">
-                    Đơn #{review.orderNumber} · {review.reviewerName} · {formatRelative(review.createdAt)}
+                    {t('Đơn #')}{review.orderNumber} · {review.reviewerName} · {formatRelative(review.createdAt)}
                   </p>
                 </div>
-                {review.comment ? <p>{review.comment}</p> : <p className="text-sm text-muted-foreground">Không có nhận xét.</p>}
+                {review.comment ? <p>{review.comment}</p> : <p className="text-sm text-muted-foreground">{t('Không có nhận xét.')}</p>}
                 {reply ? (
                   <div className="rounded-sm bg-muted p-3 text-sm">
-                    <p className="text-xs text-muted-foreground">Quán phản hồi · {formatRelative(reply.createdAt)}</p>
+                    <p className="text-xs text-muted-foreground">{t('Quán phản hồi · ')}{formatRelative(reply.createdAt)}</p>
                     <p>{reply.text}</p>
                     {reply.hidden ? (
                       <p className="mt-1 text-xs text-warning-fg">
-                        Phản hồi bị ẩn vì vi phạm quy định{reply.hiddenReason ? `: ${reply.hiddenReason}` : ''}
+                        {t('Phản hồi bị ẩn vì vi phạm quy định')}{reply.hiddenReason ? `: ${reply.hiddenReason}` : ''}
                       </p>
                     ) : null}
                   </div>
@@ -111,41 +112,41 @@ export function SellerReviewsPage() {
                       submit()
                     }}
                   >
-                    <Label htmlFor={`reply-${review.id}`}>{editing ? 'Sửa phản hồi' : 'Phản hồi của quán'}</Label>
+                    <Label htmlFor={`reply-${review.id}`}>{editing ? t('Sửa phản hồi') : t('Phản hồi của quán')}</Label>
                     <Textarea
                       id={`reply-${review.id}`}
                       autoFocus
                       rows={4}
                       maxLength={1000}
                       value={text}
-                      placeholder="Hãy lịch sự và cụ thể. Phản hồi hiển thị công khai."
+                      placeholder={t('Hãy lịch sự và cụ thể. Phản hồi hiển thị công khai.')}
                       onChange={(e) => setText(e.target.value)}
                     />
                     {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
                     <div className="flex gap-2">
                       <Button type="submit" disabled={text.trim().length === 0 || save.isPending}>
-                        {editing ? 'Lưu thay đổi' : 'Gửi phản hồi'}
+                        {editing ? t('Lưu thay đổi') : t('Gửi phản hồi')}
                       </Button>
                       <Button type="button" variant="outline" onClick={() => setTarget(null)}>
-                        Huỷ
+                        {t('Huỷ')}
                       </Button>
                     </div>
                   </form>
                 ) : null}
                 <div className={cn('flex flex-wrap items-center gap-2', target?.id === review.id && 'hidden')}>
-                  {!reply ? <Button onClick={() => openReply(review)}>Phản hồi</Button> : null}
+                  {!reply ? <Button onClick={() => openReply(review)}>{t('Phản hồi')}</Button> : null}
                   {reply && !reply.hidden && open ? (
                     <>
                       <Button variant="outline" onClick={() => openReply(review)}>
-                        Sửa phản hồi
+                        {t('Sửa phản hồi')}
                       </Button>
                       <Button variant="outline" onClick={() => setDeleting(review)}>
-                        Xoá
+                        {t('Xoá')}
                       </Button>
-                      <span className="text-xs text-muted-foreground">Sửa hoặc xoá được đến {formatDateTime(reply.editableUntil)}</span>
+                      <span className="text-xs text-muted-foreground">{t('Sửa hoặc xoá được đến ')}{formatDateTime(reply.editableUntil)}</span>
                     </>
                   ) : null}
-                  {reply && !reply.hidden && !open ? <span className="text-xs text-muted-foreground">Đã quá 24 giờ, không sửa hoặc xoá được phản hồi.</span> : null}
+                  {reply && !reply.hidden && !open ? <span className="text-xs text-muted-foreground">{t('Đã quá 24 giờ, không sửa hoặc xoá được phản hồi.')}</span> : null}
                 </div>
               </Card>
             </li>
@@ -158,12 +159,12 @@ export function SellerReviewsPage() {
       <Dialog open={deleting !== null} onOpenChange={(open) => (open ? undefined : setDeleting(null))}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Xoá phản hồi này?</DialogTitle>
-            <DialogDescription>Bạn có thể phản hồi lại sau đó.</DialogDescription>
+            <DialogTitle>{t('Xoá phản hồi này?')}</DialogTitle>
+            <DialogDescription>{t('Bạn có thể phản hồi lại sau đó.')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
+              <Button variant="outline">{t('Huỷ')}</Button>
             </DialogClose>
             <Button
               disabled={remove.isPending}
@@ -172,7 +173,7 @@ export function SellerReviewsPage() {
                 setDeleting(null)
               }}
             >
-              Xoá
+              {t('Xoá')}
             </Button>
           </DialogFooter>
         </DialogContent>

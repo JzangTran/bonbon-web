@@ -2,6 +2,7 @@ import { BarChart3Icon, LineChartIcon, Table2Icon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Segmented, StatsPanel } from '@/shared/ui/section'
 import { TimeChart, type ChartKind, type ChartPoint, type ChartSeries } from '@/shared/ui/time-chart'
+import { t } from '@/shared/i18n'
 
 export type ChartMetric<T> = { id: string; label: string; value: (row: T) => number | null | undefined; format: (n: number) => string }
 
@@ -41,8 +42,8 @@ export function ChartPanel<T>({
   const metric = metrics.find((m) => m.id === metricId) ?? metrics[0]
   const series: ChartSeries[] = previous
     ? [
-        { key: 'now', label: 'Kỳ này' },
-        { key: 'before', label: 'Kỳ trước' },
+        { key: 'now', label: t('Kỳ này') },
+        { key: 'before', label: t('Kỳ trước') },
       ]
     : [{ key: 'now', label: metric.label }]
   const points: ChartPoint[] = current.map((row, i) => ({
@@ -60,13 +61,13 @@ export function ChartPanel<T>({
           {description ? <p className="text-small text-muted-foreground">{description}</p> : null}
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          {metrics.length > 1 ? <Segmented label="Số liệu" options={metrics.map((m) => ({ id: m.id, label: m.label }))} value={metric.id} onChange={setMetricId} /> : null}
+          {metrics.length > 1 ? <Segmented label={t('Số liệu')} options={metrics.map((m) => ({ id: m.id, label: m.label }))} value={metric.id} onChange={setMetricId} /> : null}
           <Segmented
-            label="Kiểu hiển thị"
+            label={t('Kiểu hiển thị')}
             options={[
-              { id: 'bar', label: <><BarChart3Icon /><span>Cột</span></> },
-              { id: 'line', label: <><LineChartIcon /><span>Đường</span></> },
-              { id: 'table', label: <><Table2Icon /><span>Bảng</span></> },
+              { id: 'bar', label: <><BarChart3Icon /><span>{t('Cột')}</span></> },
+              { id: 'line', label: <><LineChartIcon /><span>{t('Đường')}</span></> },
+              { id: 'table', label: <><Table2Icon /><span>{t('Bảng')}</span></> },
             ]}
             value={view === 'table' ? 'table' : kind}
             onChange={(v) => {

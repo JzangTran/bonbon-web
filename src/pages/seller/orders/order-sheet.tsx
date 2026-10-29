@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { PhoneIcon } from 'lucide-react'
 import { OrderStatusBadge, useShopOrder, type OrderStatus } from '@/entities/order'
 import { problemMessage } from '@/shared/api'
@@ -8,7 +9,7 @@ import { FormError } from '@/widgets/auth-shell'
 import { OrderActions } from './order-actions'
 import { countdown, useNow } from './use-now'
 
-const ACTORS: Record<string, string> = { CUSTOMER: 'Khách', SHOP: 'Quán', SYSTEM: 'Hệ thống', ADMIN: 'Quản trị' }
+const ACTORS: Record<string, string> = { CUSTOMER: t('Khách'), SHOP: t('Quán'), SYSTEM: t('Hệ thống'), ADMIN: t('Quản trị') }
 
 /** One order in full: contact, items with options and notes, totals, timeline, and the actions it allows. */
 export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => void }) {
@@ -23,13 +24,13 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
     <Sheet open={id !== null} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
         <SheetHeader>
-          <SheetTitle>{data ? `Đơn #${data.number}` : 'Đơn hàng'}</SheetTitle>
-          <SheetDescription>{data ? `Đặt lúc ${formatDateTime(data.placedAt)}` : 'Đang tải…'}</SheetDescription>
+          <SheetTitle>{data ? t('Đơn #{v0}', { v0: data.number }) : t('Đơn hàng')}</SheetTitle>
+          <SheetDescription>{data ? t('Đặt lúc {v0}', { v0: formatDateTime(data.placedAt) }) : t('Đang tải…')}</SheetDescription>
         </SheetHeader>
         {order.isPending ? <Skeleton className="mx-4 h-64" /> : null}
         {order.isError ? (
           <div className="px-4">
-            <FormError message={problemMessage(order.error, 'Không tìm thấy đơn hàng này.')} />
+            <FormError message={problemMessage(order.error, t('Không tìm thấy đơn hàng này.'))} />
           </div>
         ) : null}
         {data && status ? (
@@ -38,12 +39,12 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
               <OrderStatusBadge status={status} />
               {response ? (
                 <span className={response.urgent ? 'font-semibold text-destructive' : 'text-sm text-muted-foreground'}>
-                  Còn {response.text} để trả lời
+                  {t('Còn ')}{response.text}{t(' để trả lời')}
                 </span>
               ) : null}
               {handover ? (
                 <span className={handover.urgent ? 'font-semibold text-destructive' : 'text-sm text-muted-foreground'}>
-                  Hạn giao đi: {handover.text}
+                  {t('Hạn giao đi: ')}{handover.text}
                 </span>
               ) : null}
             </div>
@@ -51,7 +52,7 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
             <OrderActions id={data.id!} status={status} size="lg" />
 
             <section className="flex flex-col gap-1">
-              <h3 className="font-semibold">Khách</h3>
+              <h3 className="font-semibold">{t('Khách')}</h3>
               <p>{data.customerName}</p>
               <p className="flex items-center gap-2 tabular-nums">
                 <PhoneIcon className="size-4" aria-hidden="true" />
@@ -64,11 +65,11 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                 )}
               </p>
               <p className="text-sm text-muted-foreground">{data.deliveryAddress}</p>
-              {data.note ? <p className="mt-1 rounded-sm bg-highlight-subtle px-3 py-2 text-sm text-highlight-fg">Ghi chú giao hàng: {data.note}</p> : null}
+              {data.note ? <p className="mt-1 rounded-sm bg-highlight-subtle px-3 py-2 text-sm text-highlight-fg">{t('Ghi chú giao hàng: ')}{data.note}</p> : null}
             </section>
 
             <section className="flex flex-col gap-2">
-              <h3 className="font-semibold">Món</h3>
+              <h3 className="font-semibold">{t('Món')}</h3>
               <ul className="divide-y rounded-sm border">
                 {(data.items ?? []).map((line, index) => (
                   <li key={index} className="flex gap-3 px-3 py-2">
@@ -78,29 +79,29 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                       {(line.options ?? []).length > 0 ? (
                         <p className="text-sm text-muted-foreground">{(line.options ?? []).map((o) => o.name).join(', ')}</p>
                       ) : null}
-                      {line.note ? <p className="text-sm text-highlight-fg">Ghi chú: {line.note}</p> : null}
+                      {line.note ? <p className="text-sm text-highlight-fg">{t('Ghi chú: ')}{line.note}</p> : null}
                     </div>
                     <span className="tabular-nums">{formatVnd(line.lineTotal)}</span>
                   </li>
                 ))}
               </ul>
               <dl className="ml-auto grid w-64 grid-cols-2 gap-y-1 text-sm">
-                <dt className="text-muted-foreground">Tiền món</dt>
+                <dt className="text-muted-foreground">{t('Tiền món')}</dt>
                 <dd className="text-right tabular-nums">{formatVnd(data.totals?.itemsTotal)}</dd>
-                <dt className="text-muted-foreground">Phí giao</dt>
+                <dt className="text-muted-foreground">{t('Phí giao')}</dt>
                 <dd className="text-right tabular-nums">{formatVnd(data.totals?.deliveryFee)}</dd>
-                <dt className="font-semibold">Khách trả</dt>
+                <dt className="font-semibold">{t('Khách trả')}</dt>
                 <dd className="text-right font-semibold tabular-nums">{formatVnd(data.totals?.grandTotal)}</dd>
               </dl>
               <p className="text-sm text-muted-foreground">
                 {data.paymentMethod === 'COD'
-                  ? `Thu tiền mặt khi giao · ${data.paymentStatus === 'PAID' ? 'đã thu tiền' : 'chưa thu'}`
-                  : 'Khách đã thanh toán qua MoMo · không thu tiền khi giao'}
+                  ? `Thu tiền mặt khi giao · ${data.paymentStatus === 'PAID' ? t('đã thu tiền') : t('chưa thu')}`
+                  : t('Khách đã thanh toán qua MoMo · không thu tiền khi giao')}
               </p>
             </section>
 
             <section className="flex flex-col gap-2">
-              <h3 className="font-semibold">Lịch sử đơn</h3>
+              <h3 className="font-semibold">{t('Lịch sử đơn')}</h3>
               <ol className="flex flex-col gap-2 border-l pl-4">
                 {(data.timeline ?? []).map((step, index) => (
                   <li key={index} className="text-sm">
@@ -109,7 +110,7 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                       {' '}
                       · {ACTORS[step.by ?? ''] ?? step.by} · {formatDateTime(step.at)}
                     </span>
-                    {step.reason ? <p className="text-muted-foreground">Lý do: {step.reason}</p> : null}
+                    {step.reason ? <p className="text-muted-foreground">{t('Lý do: ')}{step.reason}</p> : null}
                   </li>
                 ))}
               </ol>
@@ -122,12 +123,12 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
 }
 
 const STATUS_LABELS: Record<string, string> = {
-  PLACED: 'Khách đặt đơn',
-  CONFIRMED: 'Quán nhận đơn',
-  PREPARING: 'Đang chuẩn bị',
-  OUT_FOR_DELIVERY: 'Đang giao',
-  DELIVERED: 'Đã giao',
-  REJECTED: 'Quán từ chối',
-  CANCELLED: 'Đã huỷ',
-  NOT_DELIVERED: 'Giao không thành công',
+  PLACED: t('Khách đặt đơn'),
+  CONFIRMED: t('Quán nhận đơn'),
+  PREPARING: t('Đang chuẩn bị'),
+  OUT_FOR_DELIVERY: t('Đang giao'),
+  DELIVERED: t('Đã giao'),
+  REJECTED: t('Quán từ chối'),
+  CANCELLED: t('Đã huỷ'),
+  NOT_DELIVERED: t('Giao không thành công'),
 }

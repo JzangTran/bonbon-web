@@ -3,6 +3,7 @@ import { NavLink } from 'react-router'
 import { cn } from '@/shared/lib/utils'
 import type { Location } from './locate'
 import type { NavParent } from './types'
+import { t } from '@/shared/i18n'
 
 /** A page row on the rail: grey text, the current one in orange with an orange piece of the rail beside it. */
 const rowClass = (current: boolean) =>
@@ -33,7 +34,7 @@ export function NavTree({ nav, location, homePath, onNavigate }: {
           <li>
             <NavLink to={homePath} end onClick={onNavigate} aria-current={atHome ? 'page' : 'false'} className={rowClass(atHome)}>
               <HomeIcon className="mr-2.5 size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
-              Trang chủ
+              {t('Trang chủ')}
             </NavLink>
           </li>
         ) : null}

@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CheckIcon } from 'lucide-react'
 import { toast } from 'sonner'
@@ -20,7 +21,7 @@ export function ReviewStep({ shop, goTo }: { shop: ShopApplication; goTo: (step:
     },
     onSuccess: (data) => {
       queryClient.setQueryData(SHOP_QUERY_KEY, data)
-      toast.success('Đã gửi hồ sơ. Bạn sẽ nhận email khi có kết quả.')
+      toast.success(t('Đã gửi hồ sơ. Bạn sẽ nhận email khi có kết quả.'))
     },
     onError: (e) => {
       if (problemCode(e) === 'SHOP_APPLICATION_INCOMPLETE') {
@@ -32,11 +33,11 @@ export function ReviewStep({ shop, goTo }: { shop: ShopApplication; goTo: (step:
 
   return (
     <StepCard
-      title="5 · Xác nhận & gửi duyệt"
-      description="Quản trị viên xem hồ sơ và bạn nhận email khi có kết quả. Trong lúc chờ, hồ sơ không sửa được."
+      title={t('5 · Xác nhận & gửi duyệt')}
+      description={t('Quản trị viên xem hồ sơ và bạn nhận email khi có kết quả. Trong lúc chờ, hồ sơ không sửa được.')}
       footer={
         <Button disabled={incomplete.length > 0 || submit.isPending} onClick={() => submit.mutate()}>
-          {shop.status === 'REJECTED' ? 'Gửi lại hồ sơ' : 'Gửi duyệt'}
+          {shop.status === 'REJECTED' ? t('Gửi lại hồ sơ') : t('Gửi duyệt')}
         </Button>
       }
     >
@@ -48,10 +49,10 @@ export function ReviewStep({ shop, goTo }: { shop: ShopApplication; goTo: (step:
             </span>
             <span className="font-medium">{STEPS[(s.step ?? 1) - 1]}</span>
             {!s.complete ? (
-              <span className="text-muted-foreground">Còn thiếu: {(s.missing ?? []).map((f) => FIELD_LABEL[f] ?? f).join(', ')}</span>
+              <span className="text-muted-foreground">{t('Còn thiếu: ')}{(s.missing ?? []).map((f) => FIELD_LABEL[f] ?? f).join(', ')}</span>
             ) : null}
             <Button variant="link" size="sm" className="ml-auto" onClick={() => goTo(s.step ?? 1)}>
-              {s.complete ? 'Xem lại' : 'Bổ sung'}
+              {s.complete ? t('Xem lại') : t('Bổ sung')}
             </Button>
           </li>
         ))}

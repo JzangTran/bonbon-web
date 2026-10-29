@@ -18,29 +18,30 @@ import { AdminHomeTabs } from '@/widgets/admin-tabs'
 import { FormError } from '@/widgets/auth-shell'
 import { ChartPanel, type ChartMetric } from '@/widgets/chart-panel'
 import { RangePicker, granularityLabel, useStatsRange, type StatsRange } from '@/widgets/range-picker'
+import { intlLocale, t } from '@/shared/i18n'
 
 type Tab = 'overview' | 'shops' | 'users'
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'overview', label: 'Theo thời gian' },
-  { id: 'shops', label: 'Theo cửa hàng' },
-  { id: 'users', label: 'Người dùng mới' },
+  { id: 'overview', label: t('Theo thời gian') },
+  { id: 'shops', label: t('Theo cửa hàng') },
+  { id: 'users', label: t('Người dùng mới') },
 ]
 const SORTS: { id: MerchantSort; label: string }[] = [
-  { id: 'revenue', label: 'Doanh thu' },
-  { id: 'orders', label: 'Số đơn' },
-  { id: 'commission', label: 'Hoa hồng' },
-  { id: 'name', label: 'Tên' },
+  { id: 'revenue', label: t('Doanh thu') },
+  { id: 'orders', label: t('Số đơn') },
+  { id: 'commission', label: t('Hoa hồng') },
+  { id: 'name', label: t('Tên') },
 ]
-const number = (n: number | undefined) => (n ?? 0).toLocaleString('vi-VN')
+const number = (n: number | undefined) => (n ?? 0).toLocaleString(intlLocale)
 const OVERVIEW_METRICS: ChartMetric<PlatformOverviewBucket>[] = [
-  { id: 'grossRevenue', label: 'Doanh thu gộp', value: (b) => b.grossRevenue, format: formatVnd },
-  { id: 'commission', label: 'Hoa hồng', value: (b) => b.commission, format: formatVnd },
-  { id: 'orders', label: 'Số đơn', value: (b) => b.orders, format: (n) => `${number(n)} đơn` },
+  { id: 'grossRevenue', label: t('Doanh thu gộp'), value: (b) => b.grossRevenue, format: formatVnd },
+  { id: 'commission', label: t('Hoa hồng'), value: (b) => b.commission, format: formatVnd },
+  { id: 'orders', label: t('Số đơn'), value: (b) => b.orders, format: (n) => t('{v0} đơn', { v0: number(n) }) },
 ]
 type GrowthBucket = NonNullable<UserGrowthReport['buckets']>[number]
 const GROWTH_METRICS: ChartMetric<GrowthBucket>[] = [
-  { id: 'customers', label: 'Khách mới', value: (b) => b.customers, format: number },
-  { id: 'sellers', label: 'Người bán mới', value: (b) => b.sellers, format: number },
+  { id: 'customers', label: t('Khách mới'), value: (b) => b.customers, format: number },
+  { id: 'sellers', label: t('Người bán mới'), value: (b) => b.sellers, format: number },
 ]
 
 /**
@@ -52,19 +53,19 @@ export function AdminPlatformStatsPage() {
   const allowed = !!session?.permissions.has('platform-stats:read')
   const state = useStatsRange('30d')
   const [tab, setTab] = useState<Tab>('overview')
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem thống kê hệ thống.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền xem thống kê hệ thống.')}</p>
 
   return (
     <PageStack>
       <div className="flex flex-col gap-6">
         <AdminHomeTabs />
         <div className="flex flex-col gap-2">
-          <h1>Thống kê hệ thống</h1>
+          <h1>{t('Thống kê hệ thống')}</h1>
           <p className="max-w-3xl text-ui text-muted-foreground">
-            Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam). Doanh thu gộp là tiền khách đã trả, gồm phí giao; hoa hồng là thu nhập của nền tảng, chưa trừ phần hoàn lại do khiếu nại.
+            {t('Chỉ tính đơn đã giao, theo ngày giao (giờ Việt Nam). Doanh thu gộp là tiền khách đã trả, gồm phí giao; hoa hồng là thu nhập của nền tảng, chưa trừ phần hoàn lại do khiếu nại.')}
           </p>
         </div>
-        <PageTabs label="Thống kê" tabs={TABS} value={tab} onValueChange={(id) => setTab(id as Tab)} />
+        <PageTabs label={t('Thống kê')} tabs={TABS} value={tab} onValueChange={(id) => setTab(id as Tab)} />
         <RangePicker state={state} steps={tab !== 'shops'} comparable={tab !== 'shops'} />
       </div>
       {tab === 'overview' ? <Overview state={state} /> : tab === 'shops' ? <ByMerchant range={state.range} enabled={!state.invalid} /> : <Users state={state} />}
@@ -85,20 +86,20 @@ function Overview({ state }: { state: StatsRange }) {
       {totals ? (
         <StatsPanel className={overview.isFetching ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
           <StatRow>
-            <StatTile label="Đơn đã giao" value={number(totals.orders)} hint={deltaText(totals.orders, prev?.orders)} />
-            <StatTile label="Doanh thu gộp" value={formatVnd(totals.grossRevenue)} hint={deltaText(totals.grossRevenue, prev?.grossRevenue)} />
-            <StatTile label="Hoa hồng" value={formatVnd(totals.commission)} hint={deltaText(totals.commission, prev?.commission)} />
+            <StatTile label={t('Đơn đã giao')} value={number(totals.orders)} hint={deltaText(totals.orders, prev?.orders)} />
+            <StatTile label={t('Doanh thu gộp')} value={formatVnd(totals.grossRevenue)} hint={deltaText(totals.grossRevenue, prev?.grossRevenue)} />
+            <StatTile label={t('Hoa hồng')} value={formatVnd(totals.commission)} hint={deltaText(totals.commission, prev?.commission)} />
           </StatRow>
           <StatRow className="border-t border-grey-200 pt-6">
-            <StatTile label="Cửa hàng hoạt động" value={number(totals.activeShops)} hint="có ít nhất một đơn đã giao" />
-            <StatTile label="Khách hoạt động" value={number(totals.activeCustomers)} hint="có ít nhất một đơn đã giao" />
-            <StatTile label="Người bán có quán hoạt động" value={number(totals.activeSellers)} hint="mỗi tài khoản một cửa hàng" />
+            <StatTile label={t('Cửa hàng hoạt động')} value={number(totals.activeShops)} hint={t('có ít nhất một đơn đã giao')} />
+            <StatTile label={t('Khách hoạt động')} value={number(totals.activeCustomers)} hint={t('có ít nhất một đơn đã giao')} />
+            <StatTile label={t('Người bán có quán hoạt động')} value={number(totals.activeSellers)} hint={t('mỗi tài khoản một cửa hàng')} />
           </StatRow>
         </StatsPanel>
       ) : null}
       {overview.data ? (
         <ChartPanel
-          title={`Theo ${granularityLabel(granularity).toLowerCase()}`}
+          title={t('Theo {v0}', { v0: granularityLabel(granularity).toLowerCase() })}
           metrics={OVERVIEW_METRICS}
           current={overview.data.buckets ?? []}
           previous={compare ? before.data?.buckets : undefined}
@@ -124,15 +125,15 @@ function Users({ state }: { state: StatsRange }) {
         <>
           <StatsPanel>
             <StatRow>
-              <StatTile label="Khách mới" value={number(data.customers)} hint={deltaText(data.customers, prev?.customers)} />
-              <StatTile label="Người bán mới" value={number(data.sellers)} hint={deltaText(data.sellers, prev?.sellers)} />
+              <StatTile label={t('Khách mới')} value={number(data.customers)} hint={deltaText(data.customers, prev?.customers)} />
+              <StatTile label={t('Người bán mới')} value={number(data.sellers)} hint={deltaText(data.sellers, prev?.sellers)} />
             </StatRow>
             <p className="text-small text-muted-foreground">
-              Tính theo ngày vai trò được thêm. Một người đăng ký làm khách rồi mở quán được tính một lần ở mỗi chuỗi.
+              {t('Tính theo ngày vai trò được thêm. Một người đăng ký làm khách rồi mở quán được tính một lần ở mỗi chuỗi.')}
             </p>
           </StatsPanel>
           <ChartPanel
-            title={`Theo ${granularityLabel(granularity).toLowerCase()}`}
+            title={t('Theo {v0}', { v0: granularityLabel(granularity).toLowerCase() })}
             metrics={GROWTH_METRICS}
             current={data.buckets ?? []}
             previous={compare ? before.data?.buckets : undefined}
@@ -161,8 +162,8 @@ function ByMerchant({ range, enabled }: { range: { from: string; to: string }; e
           <Input
             className="pl-9"
             type="search"
-            placeholder="Tìm theo tên cửa hàng"
-            aria-label="Tìm cửa hàng"
+            placeholder={t('Tìm theo tên cửa hàng')}
+            aria-label={t('Tìm cửa hàng')}
             value={q}
             onChange={(e) => {
               setQ(e.target.value)
@@ -171,9 +172,9 @@ function ByMerchant({ range, enabled }: { range: { from: string; to: string }; e
           />
         </div>
         <span className="flex items-center gap-2 text-small text-muted-foreground">
-          Sắp xếp
+          {t('Sắp xếp')}
           <Segmented
-            label="Sắp xếp theo"
+            label={t('Sắp xếp theo')}
             options={SORTS}
             value={sort}
             onChange={(s) => {
@@ -188,16 +189,16 @@ function ByMerchant({ range, enabled }: { range: { from: string; to: string }; e
       {data ? (
         <StatsPanel className="gap-3 p-2 sm:p-3">
           {items.length === 0 ? (
-            <p className="py-8 text-center text-muted-foreground">{q ? 'Không có cửa hàng nào khớp.' : 'Chưa có cửa hàng nào có đơn đã giao trong khoảng này.'}</p>
+            <p className="py-8 text-center text-muted-foreground">{q ? t('Không có cửa hàng nào khớp.') : t('Chưa có cửa hàng nào có đơn đã giao trong khoảng này.')}</p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-12">#</TableHead>
-                  <TableHead>Cửa hàng</TableHead>
-                  <TableHead className="text-right">Đơn đã giao</TableHead>
-                  <TableHead className="text-right">Doanh thu gộp</TableHead>
-                  <TableHead className="text-right">Hoa hồng</TableHead>
+                  <TableHead>{t('Cửa hàng')}</TableHead>
+                  <TableHead className="text-right">{t('Đơn đã giao')}</TableHead>
+                  <TableHead className="text-right">{t('Doanh thu gộp')}</TableHead>
+                  <TableHead className="text-right">{t('Hoa hồng')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -9,9 +9,11 @@ import { SITE, siteUrl, type Site, legalUrl } from '@/shared/config/sites'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { OrangeRings } from '@/shared/ui/orange-rings'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
+import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { MegaMenu, barItemClass } from './resources-menu'
 import { MENUS, type MenuKey, type ResourceLink } from './resources'
 import { articlesOf } from '@/entities/article'
+import { t } from '@/shared/i18n'
 
 
 type NavLink = { label: string; to: string }
@@ -23,10 +25,10 @@ type NavItem = NavLink | NavSite | NavMenu
 
 /** The public site's menu. Hướng dẫn opens a submenu. */
 const NAV: NavItem[] = [
-  { label: 'Hướng dẫn', menu: 'guides' },
+  { label: t('Hướng dẫn'), menu: 'guides' },
   { label: 'Blog', to: '/blog' },
-  { label: 'Tài nguyên', menu: 'resources' },
-  { label: 'Trung tâm trợ giúp', site: 'help' },
+  { label: t('Tài nguyên'), menu: 'resources' },
+  { label: t('Trung tâm trợ giúp'), site: 'help' },
 ]
 
 /** A link to a page of the public site: inside the app on the public host, a plain address from the seller and admin hosts. */
@@ -66,14 +68,14 @@ export function SiteHeader() {
   const { session } = useSession()
   const { pathname } = useLocation()
   const area =
-    session?.role === 'SELLER' ? { href: siteUrl('merchant'), label: 'Vào trang người bán' }
-    : session?.role === 'ADMIN' ? { href: siteUrl('console'), label: 'Vào trang quản trị' }
+    session?.role === 'SELLER' ? { href: siteUrl('merchant'), label: t('Vào trang người bán') }
+    : session?.role === 'ADMIN' ? { href: siteUrl('console'), label: t('Vào trang quản trị') }
     : null
   const current = (item: NavItem) => ('menu' in item ? MENUS[item.menu].here.some((to) => isHere(pathname, to)) : target(item).here(pathname))
   const firstStep = articlesOf('bat-dau')[0]
   const latestPost = [...articlesOf('blog')].sort((a, b) => b.updated.localeCompare(a.updated))[0]
   const feature = (menu: MenuKey) =>
-    menu === 'guides' ? (firstStep ? { article: firstStep, kicker: 'Bắt đầu tại đây', action: 'Đọc bước 1' } : undefined) : latestPost ? { article: latestPost, action: 'Đọc bài' } : undefined
+    menu === 'guides' ? (firstStep ? { article: firstStep, kicker: t('Bắt đầu tại đây'), action: t('Đọc bước 1') } : undefined) : latestPost ? { article: latestPost, action: t('Đọc bài') } : undefined
   const resourceLink = (l: ResourceLink, className: string, onClick: () => void) =>
     l.to ? (
       <PublicLink to={l.to} className={className} onClick={onClick}>
@@ -93,7 +95,7 @@ export function SiteHeader() {
             <Lockup className="h-8" />
           </a>
 
-          <nav aria-label="Menu chính" className="hidden items-center gap-1 lg:flex">
+          <nav aria-label={t('Menu chính')} className="hidden items-center gap-1 lg:flex">
             {NAV.map((item) =>
               'menu' in item ? (
                 <MegaMenu key={item.label} label={item.label} current={current(item)} columns={[...MENUS[item.menu].columns]} feature={feature(item.menu)} renderLink={resourceLink} />
@@ -110,6 +112,7 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitch compact />
             {area ? (
               <a href={area.href} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
                 {area.label}
@@ -117,16 +120,16 @@ export function SiteHeader() {
             ) : (
               <>
               <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'hidden min-h-9 bg-muted px-4 text-sm text-ink hover:bg-border md:inline-flex')}>
-                Mở quán
+                {t('Mở quán')}
               </a>
               <a href={siteUrl('public') + '#tai-app'} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
                 <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
-                Tải app
+                {t('Tải app')}
               </a>
               </>
             )}
             <DropdownMenu>
-              <DropdownMenuTrigger aria-label="Mở menu" className="flex size-10 items-center justify-center rounded-full text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring lg:hidden">
+              <DropdownMenuTrigger aria-label={t('Mở menu')} className="flex size-10 items-center justify-center rounded-full text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring lg:hidden">
                 <MenuIcon className="size-6" aria-hidden="true" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-64 rounded-lg">
@@ -152,7 +155,7 @@ export function SiteHeader() {
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="cursor-pointer text-base font-semibold text-primary">
-                  <a href={area ? area.href : siteUrl('public') + '#tai-app'}>{area ? area.label : 'Tải app'}</a>
+                  <a href={area ? area.href : siteUrl('public') + '#tai-app'}>{area ? area.label : t('Tải app')}</a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -170,36 +173,36 @@ type FooterColumn = { label: string; links: FooterLink[] }
 function footerGroups(): { title: string; columns: FooterColumn[] }[] {
   return [
     {
-      title: 'Sản phẩm',
+      title: t('Sản phẩm'),
       columns: [
-        { label: 'Đặt món', links: [{ label: 'Tải ứng dụng', href: siteUrl('public') + '#tai-app' }, { label: 'Quán trong khu', href: siteUrl('public') + '#quan' }] },
+        { label: t('Đặt món'), links: [{ label: t('Tải ứng dụng'), href: siteUrl('public') + '#tai-app' }, { label: t('Quán trong khu'), href: siteUrl('public') + '#quan' }] },
         {
-          label: 'Bán hàng',
+          label: t('Bán hàng'),
           links: [
-            { label: 'Mở quán trên bonbon', href: siteUrl('merchant', '/register') },
-            { label: 'Đăng nhập kênh người bán', href: siteUrl('merchant', '/login') },
+            { label: t('Mở quán trên bonbon'), href: siteUrl('merchant', '/register') },
+            { label: t('Đăng nhập kênh người bán'), href: siteUrl('merchant', '/login') },
           ],
         },
-        { label: 'Hướng dẫn', links: [{ label: 'Bắt đầu', to: '/huong-dan/bat-dau' }, { label: 'Quản lý cửa hàng', to: '/huong-dan/quan-ly-cua-hang' }] },
+        { label: t('Hướng dẫn'), links: [{ label: t('Bắt đầu'), to: '/huong-dan/bat-dau' }, { label: t('Quản lý cửa hàng'), to: '/huong-dan/quan-ly-cua-hang' }] },
       ],
     },
     {
-      title: 'Tài nguyên',
+      title: t('Tài nguyên'),
       columns: [
-        { label: 'Đọc thêm', links: [{ label: 'Blog', to: '/blog' }, { label: 'Thương hiệu', to: '/bo-nhan-dien' }, { label: 'Nhà phát triển', to: '/nha-phat-trien' }] },
+        { label: t('Đọc thêm'), links: [{ label: 'Blog', to: '/blog' }, { label: t('Thương hiệu'), to: '/bo-nhan-dien' }, { label: t('Nhà phát triển'), to: '/nha-phat-trien' }] },
         {
-          label: 'Hỗ trợ',
+          label: t('Hỗ trợ'),
           links: [
-            { label: 'Trung tâm trợ giúp', href: siteUrl('help') },
-            { label: 'Liên hệ hỗ trợ', href: siteUrl('help', '/lien-he') },
+            { label: t('Trung tâm trợ giúp'), href: siteUrl('help') },
+            { label: t('Liên hệ hỗ trợ'), href: siteUrl('help', '/lien-he') },
           ],
         },
         {
-          label: 'Pháp lý',
+          label: t('Pháp lý'),
           links: [
-            { label: 'Điều khoản sử dụng', href: legalUrl('CUSTOMER_TERMS') },
-            { label: 'Điều khoản người bán', href: legalUrl('SELLER_TERMS') },
-            { label: 'Chính sách quyền riêng tư', href: legalUrl('PRIVACY_POLICY') },
+            { label: t('Điều khoản sử dụng'), href: legalUrl('CUSTOMER_TERMS') },
+            { label: t('Điều khoản người bán'), href: legalUrl('SELLER_TERMS') },
+            { label: t('Chính sách quyền riêng tư'), href: legalUrl('PRIVACY_POLICY') },
           ],
         },
       ],
@@ -254,18 +257,18 @@ export function SiteFooter() {
             <a href={siteUrl('merchant', '/register')} className="group relative flex flex-col gap-2 overflow-hidden rounded-2xl bg-primary p-6 text-white">
               <OrangeRings className="absolute -top-24 -right-24 w-72 opacity-40 mix-blend-screen" />
               <StoreIcon className="relative size-6" strokeWidth={1.5} aria-hidden="true" />
-              <span className="relative mt-2 text-body font-medium">Mở quán trên bonbon</span>
-              <span className="relative text-small text-white/85">Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.</span>
+              <span className="relative mt-2 text-body font-medium">{t('Mở quán trên bonbon')}</span>
+              <span className="relative text-small text-white/85">{t('Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.')}</span>
               <span className="relative mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-small font-medium text-ink">
-                Bắt đầu
+                {t('Bắt đầu')}
                 <ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </span>
             </a>
             <PublicLink to="/huong-dan/bat-dau" className="group flex flex-col gap-2 rounded-2xl bg-accent p-6">
               <BookOpenIcon className="size-6 text-primary" strokeWidth={1.5} aria-hidden="true" />
-              <span className="mt-2 text-body font-medium text-ink">Hướng dẫn mở quán</span>
-              <span className="text-small text-muted-foreground">Ba bước từ tạo tài khoản tới đơn hàng đầu tiên.</span>
-              <span className="text-link mt-1 text-small font-medium">Đọc hướng dẫn</span>
+              <span className="mt-2 text-body font-medium text-ink">{t('Hướng dẫn mở quán')}</span>
+              <span className="text-small text-muted-foreground">{t('Ba bước từ tạo tài khoản tới đơn hàng đầu tiên.')}</span>
+              <span className="text-link mt-1 text-small font-medium">{t('Đọc hướng dẫn')}</span>
             </PublicLink>
           </div>
         </div>
@@ -273,15 +276,18 @@ export function SiteFooter() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <Lockup className="h-7" />
-            <TextSizeControl />
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <LanguageSwitch />
+              <TextSizeControl />
+            </div>
           </div>
           <div className="flex flex-col gap-1 text-small text-muted-foreground">
-            <span>© {new Date().getFullYear()} bonbon. Đặt món từ quán trong khu.</span>
+            <span>© {new Date().getFullYear()}{t(' bonbon. Đặt món từ quán trong khu.')}</span>
           </div>
-          <nav aria-label="Pháp lý" className="flex flex-wrap gap-x-6 gap-y-2">
-            <a href={legalUrl('CUSTOMER_TERMS')} className="text-caption text-muted-foreground hover:text-ink">Điều khoản sử dụng</a>
-            <a href={legalUrl('SELLER_TERMS')} className="text-caption text-muted-foreground hover:text-ink">Điều khoản người bán</a>
-            <a href={legalUrl('PRIVACY_POLICY')} className="text-caption text-muted-foreground hover:text-ink">Chính sách quyền riêng tư</a>
+          <nav aria-label={t('Pháp lý')} className="flex flex-wrap gap-x-6 gap-y-2">
+            <a href={legalUrl('CUSTOMER_TERMS')} className="text-caption text-muted-foreground hover:text-ink">{t('Điều khoản sử dụng')}</a>
+            <a href={legalUrl('SELLER_TERMS')} className="text-caption text-muted-foreground hover:text-ink">{t('Điều khoản người bán')}</a>
+            <a href={legalUrl('PRIVACY_POLICY')} className="text-caption text-muted-foreground hover:text-ink">{t('Chính sách quyền riêng tư')}</a>
           </nav>
         </div>
       </Wrap>

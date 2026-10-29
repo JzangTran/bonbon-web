@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -23,7 +24,7 @@ export function useApplyShop<T>(call: (input: T) => Promise<{ data?: ShopApplica
     onSuccess: (data) => {
       setFieldErrors({})
       queryClient.setQueryData(SHOP_QUERY_KEY, data)
-      toast.success(data.status === 'PENDING' ? 'Đã lưu. Địa chỉ mới cần được duyệt lại.' : success)
+      toast.success(data.status === 'PENDING' ? t('Đã lưu. Địa chỉ mới cần được duyệt lại.') : success)
     },
     onError: (e) => {
       setFieldErrors(problemFieldErrors(e))

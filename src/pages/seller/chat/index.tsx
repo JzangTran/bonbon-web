@@ -17,6 +17,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
+import { t } from '@/shared/i18n'
 
 /** Customers writing to the shop (send-message.md, view-conversation-list.md): the list on one side, the open conversation on the other. */
 export function SellerChatPage() {
@@ -39,9 +40,9 @@ export function SellerChatPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">Tin nhắn</h1>
+        <h1 className="text-2xl font-semibold">{t('Tin nhắn')}</h1>
         <p className="text-sm text-muted-foreground">
-          Khách nhắn hỏi về món, thời gian hoặc địa chỉ giao. Khách chỉ thấy &quot;cửa hàng&quot; trả lời, không thấy ai bên bạn viết. {live ? 'Tin mới hiện ngay.' : 'Đang kiểm tra tin mới mỗi vài giây.'}
+          {t('Khách nhắn hỏi về món, thời gian hoặc địa chỉ giao. Khách chỉ thấy "cửa hàng" trả lời, không thấy ai bên bạn viết. ')}{live ? t('Tin mới hiện ngay.') : t('Đang kiểm tra tin mới mỗi vài giây.')}
         </p>
       </div>
 
@@ -50,7 +51,7 @@ export function SellerChatPage() {
       <div className="grid gap-4 md:grid-cols-[320px_1fr]">
         <div className={cn('flex flex-col gap-2', selected ? 'hidden md:flex' : '')}>
           {conversations.isPending ? <Skeleton className="h-24" /> : null}
-          {conversations.data && items.length === 0 ? <EmptyState title="Chưa có khách nào nhắn tin." className="px-3 py-6" /> : null}
+          {conversations.data && items.length === 0 ? <EmptyState title={t('Chưa có khách nào nhắn tin.')} className="px-3 py-6" /> : null}
           <ul className="flex flex-col gap-2">
             {items.map((c) => (
               <li key={c.id}>
@@ -61,13 +62,13 @@ export function SellerChatPage() {
           {total > size ? (
             <div className="flex items-center justify-between text-sm">
               <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
-                Trước
+                {t('Trước')}
               </Button>
               <span className="text-muted-foreground">
                 {page + 1} / {Math.ceil(total / size)}
               </span>
               <Button variant="outline" size="sm" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-                Sau
+                {t('Sau')}
               </Button>
             </div>
           ) : null}
@@ -77,7 +78,7 @@ export function SellerChatPage() {
           {selected ? (
             <Thread key={selected} conversationId={selected} live={live} onBack={() => setParams({})} />
           ) : (
-            <Card className="hidden p-6 text-sm text-muted-foreground md:block">Chọn một cuộc trò chuyện để xem và trả lời.</Card>
+            <Card className="hidden p-6 text-sm text-muted-foreground md:block">{t('Chọn một cuộc trò chuyện để xem và trả lời.')}</Card>
           )}
         </div>
       </div>
@@ -96,10 +97,10 @@ function ConversationRow({ conversation: c, active, onOpen }: { conversation: Co
         </div>
         <div className="flex items-center justify-between gap-2">
           <span className={cn('truncate text-sm', c.unread ? 'text-foreground' : 'text-muted-foreground')}>
-            {last?.sender === 'SHOP' ? 'Bạn: ' : ''}
-            {last?.text || (last?.hasImage ? 'Đã gửi một ảnh' : '')}
+            {last?.sender === 'SHOP' ? t('Bạn: ') : ''}
+            {last?.text || (last?.hasImage ? t('Đã gửi một ảnh') : '')}
           </span>
-          {c.unread ? <span aria-label="Chưa đọc" className="size-2.5 shrink-0 rounded-full bg-primary" /> : null}
+          {c.unread ? <span aria-label={t('Chưa đọc')} className="size-2.5 shrink-0 rounded-full bg-primary" /> : null}
         </div>
       </Card>
     </button>
@@ -142,10 +143,10 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
   return (
     <Card className="flex h-[70vh] flex-col gap-0 p-0">
       <div className="flex items-center gap-2 border-b p-3">
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={onBack} aria-label="Quay lại danh sách">
+        <Button variant="ghost" size="icon" className="md:hidden" onClick={onBack} aria-label={t('Quay lại danh sách')}>
           <ArrowLeftIcon />
         </Button>
-        <span className="font-semibold">Cuộc trò chuyện</span>
+        <span className="font-semibold">{t('Cuộc trò chuyện')}</span>
       </div>
       <div className="flex-1 overflow-y-auto p-3">
         {thread.isError ? <FormError message={problemMessage(thread.error)} /> : null}
@@ -153,7 +154,7 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
         {thread.hasNextPage ? (
           <div className="mb-3 text-center">
             <Button variant="outline" size="sm" disabled={thread.isFetchingNextPage} onClick={() => void thread.fetchNextPage()}>
-              Tải tin cũ hơn
+              {t('Tải tin cũ hơn')}
             </Button>
           </div>
         ) : null}
@@ -163,16 +164,16 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
       <div className="flex flex-col gap-2 border-t p-3">
         {replyTo ? (
           <div className="flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1 text-xs">
-            <span className="truncate">Trả lời: {replyTo.text || 'Ảnh'}</span>
-            <button type="button" onClick={() => setReplyTo(null)} aria-label="Bỏ trả lời">
+            <span className="truncate">{t('Trả lời: ')}{replyTo.text || t('Ảnh')}</span>
+            <button type="button" onClick={() => setReplyTo(null)} aria-label={t('Bỏ trả lời')}>
               <XIcon className="size-4" />
             </button>
           </div>
         ) : null}
         {image ? (
           <div className="flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1 text-xs">
-            <span className="truncate">Ảnh: {image.name}</span>
-            <button type="button" onClick={() => setImage(null)} aria-label="Bỏ ảnh">
+            <span className="truncate">{t('Ảnh: ')}{image.name}</span>
+            <button type="button" onClick={() => setImage(null)} aria-label={t('Bỏ ảnh')}>
               <XIcon className="size-4" />
             </button>
           </div>
@@ -190,14 +191,14 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
               if (ok) setImage(ok)
             }}
           />
-          <Button type="button" variant="outline" size="icon" onClick={() => file.current?.click()} aria-label="Đính kèm ảnh">
+          <Button type="button" variant="outline" size="icon" onClick={() => file.current?.click()} aria-label={t('Đính kèm ảnh')}>
             <ImageIcon />
           </Button>
           <Textarea
             value={text}
             maxLength={1000}
             rows={2}
-            placeholder="Nhập tin nhắn…"
+            placeholder={t('Nhập tin nhắn…')}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -206,7 +207,7 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
               }
             }}
           />
-          <Button type="button" onClick={submit} disabled={send.isPending || (!text.trim() && !image)} aria-label="Gửi">
+          <Button type="button" onClick={submit} disabled={send.isPending || (!text.trim() && !image)} aria-label={t('Gửi')}>
             <SendIcon />
           </Button>
         </div>

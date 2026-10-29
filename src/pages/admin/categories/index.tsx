@@ -12,6 +12,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
+import { intlLocale, t } from '@/shared/i18n'
 
 type Node = components['schemas']['CategoryNode']
 
@@ -26,7 +27,7 @@ function flatten(nodes: Node[], out: Node[] = []): Node[] {
 }
 
 function formatRate(rate: number | undefined) {
-  return rate === undefined || rate === null ? null : `${rate.toLocaleString('vi-VN')}%`
+  return rate === undefined || rate === null ? null : `${rate.toLocaleString(intlLocale)}%`
 }
 
 /** The platform category tree (manage-categories.md): 3 levels, a fixed root, a commission rate per node. */
@@ -46,7 +47,7 @@ export function AdminCategoriesPage() {
   const selected = all.find((n) => n.id === selectedId) ?? null
 
   if (!session?.permissions.has('category:write')) {
-    return <p className="text-muted-foreground">Bạn không có quyền quản lý ngành hàng.</p>
+    return <p className="text-muted-foreground">{t('Bạn không có quyền quản lý ngành hàng.')}</p>
   }
 
   const toggle = (id: string) =>
@@ -73,7 +74,7 @@ export function AdminCategoriesPage() {
             variant="ghost"
             size="icon"
             className={cn('size-8', children.length === 0 && 'invisible')}
-            aria-label={open ? 'Thu gọn' : 'Mở rộng'}
+            aria-label={open ? t('Thu gọn') : t('Mở rộng')}
             onClick={() => toggle(node.id!)}
           >
             {open ? <ChevronDownIcon /> : <ChevronRightIcon />}
@@ -84,18 +85,18 @@ export function AdminCategoriesPage() {
             className={cn('flex min-h-10 min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5 py-1 text-left text-sm', hidden && 'text-muted-foreground')}
           >
             <span className={cn(node.level === 1 && 'font-semibold')}>{node.name}</span>
-            <Badge variant="outline">Cấp {node.level}</Badge>
+            <Badge variant="outline">{t('Cấp ')}{node.level}</Badge>
             {node.active === false ? (
               <Badge variant="secondary">
-                <EyeOffIcon /> Đã ẩn
+                <EyeOffIcon />{t(' Đã ẩn')}
               </Badge>
             ) : null}
             <span className="ml-auto text-xs text-muted-foreground">
               {node.commissionRate !== undefined && node.commissionRate !== null
                 ? formatRate(node.commissionRate)
                 : node.effectiveCommissionRate !== undefined && node.effectiveCommissionRate !== null
-                  ? `kế thừa ${formatRate(node.effectiveCommissionRate)}`
-                  : 'mặc định hệ thống'}
+                  ? t('kế thừa {v0}', { v0: formatRate(node.effectiveCommissionRate) })
+                  : t('mặc định hệ thống')}
             </span>
           </button>
         </div>
@@ -109,9 +110,9 @@ export function AdminCategoriesPage() {
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Ngành hàng</h1>
+        <h1 className="text-2xl font-semibold">{t('Ngành hàng')}</h1>
         <p className="text-sm text-muted-foreground">
-          Cây 3 cấp, cấp 1 cố định. Mỗi món thuộc một ngành cấp 3; hoa hồng lấy theo ngành gần nhất có đặt tỷ lệ.
+          {t('Cây 3 cấp, cấp 1 cố định. Mỗi món thuộc một ngành cấp 3; hoa hồng lấy theo ngành gần nhất có đặt tỷ lệ.')}
         </p>
       </div>
       <div className="flex flex-wrap items-start gap-6">
@@ -180,27 +181,27 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
       ...(isRoot ? {} : { name: name.trim() }),
       ...(trimmed === '' ? { clearCommissionRate: true } : { commissionRate: Number(trimmed.replace(',', '.')) }),
     })
-  }, 'Đã lưu ngành hàng.')
-  const setActive = useCategoryMutation((active: boolean) => patchCategory(node.id!, { active }), node.active === false ? 'Đã hiện lại ngành.' : 'Đã ẩn ngành.')
-  const move = useCategoryMutation((parentId: string) => patchCategory(node.id!, { parentId }), 'Đã chuyển ngành.')
+  }, t('Đã lưu ngành hàng.'))
+  const setActive = useCategoryMutation((active: boolean) => patchCategory(node.id!, { active }), node.active === false ? t('Đã hiện lại ngành.') : t('Đã ẩn ngành.'))
+  const move = useCategoryMutation((parentId: string) => patchCategory(node.id!, { parentId }), t('Đã chuyển ngành.'))
   const reorder = useCategoryMutation(async (direction: -1 | 1) => {
     const other = siblings[index + direction]
     if (!other) return
     await patchCategory(node.id!, { sortOrder: other.sortOrder })
     await patchCategory(other.id!, { sortOrder: node.sortOrder })
-  }, 'Đã đổi thứ tự.')
+  }, t('Đã đổi thứ tự.'))
   const remove = useCategoryMutation(async () => {
     const { error } = await api.DELETE('/api/admin/categories/{id}', { params: { path: { id: node.id! } } })
     if (error) throw error
     onDeleted()
-  }, 'Đã xoá ngành.')
+  }, t('Đã xoá ngành.'))
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sửa: {node.name}</CardTitle>
+        <CardTitle>{t('Sửa: ')}{node.name}</CardTitle>
         <CardDescription>
-          {isRoot ? 'Ngành gốc cố định, chỉ đặt được tỷ lệ hoa hồng (áp dụng cho mọi ngành không tự đặt).' : `Ngành cấp ${node.level}.`}
+          {isRoot ? t('Ngành gốc cố định, chỉ đặt được tỷ lệ hoa hồng (áp dụng cho mọi ngành không tự đặt).') : t('Ngành cấp {v0}.', { v0: node.level })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -213,33 +214,33 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
         >
           {!isRoot ? (
             <div className="flex flex-col gap-2">
-              <Label htmlFor="cat-name">Tên ngành</Label>
+              <Label htmlFor="cat-name">{t('Tên ngành')}</Label>
               <Input id="cat-name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
             </div>
           ) : null}
           <div className="flex flex-col gap-2">
-            <Label htmlFor="cat-rate">Tỷ lệ hoa hồng (%)</Label>
+            <Label htmlFor="cat-rate">{t('Tỷ lệ hoa hồng (%)')}</Label>
             <Input
               id="cat-rate"
               inputMode="decimal"
               placeholder={
                 node.effectiveCommissionRate !== undefined && node.effectiveCommissionRate !== null && node.commissionRate == null
-                  ? `Để trống = kế thừa ${formatRate(node.effectiveCommissionRate)}`
-                  : 'Để trống = kế thừa'
+                  ? t('Để trống = kế thừa {v0}', { v0: formatRate(node.effectiveCommissionRate) })
+                  : t('Để trống = kế thừa')
               }
               value={rate}
               onChange={(e) => setRate(e.target.value)}
             />
           </div>
           <Button type="submit" disabled={save.isPending}>
-            Lưu
+            {t('Lưu')}
           </Button>
         </form>
         {!isRoot ? (
           <div className="mt-6 flex flex-col gap-3 border-t pt-4">
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" disabled={index <= 0 || reorder.isPending} onClick={() => reorder.mutate(-1)}>
-                <ArrowUpIcon /> Lên
+                <ArrowUpIcon />{t(' Lên')}
               </Button>
               <Button
                 variant="outline"
@@ -247,15 +248,15 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
                 disabled={index < 0 || index >= siblings.length - 1 || reorder.isPending}
                 onClick={() => reorder.mutate(1)}
               >
-                <ArrowDownIcon /> Xuống
+                <ArrowDownIcon />{t(' Xuống')}
               </Button>
               <Button variant="outline" size="sm" disabled={setActive.isPending} onClick={() => setActive.mutate(node.active === false)}>
-                {node.active === false ? 'Hiện lại' : 'Ẩn ngành'}
+                {node.active === false ? t('Hiện lại') : t('Ẩn ngành')}
               </Button>
             </div>
             {moveTargets.length > 0 ? (
               <div className="flex flex-col gap-2">
-                <Label htmlFor="cat-move">Chuyển sang ngành cha</Label>
+                <Label htmlFor="cat-move">{t('Chuyển sang ngành cha')}</Label>
                 <select
                   id="cat-move"
                   className="h-9 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-2.5 text-sm"
@@ -263,11 +264,11 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
                   onChange={(e) => e.target.value && move.mutate(e.target.value)}
                 >
                   <option value="" disabled>
-                    Chọn ngành cấp {(node.level ?? 0) - 1}…
+                    {t('Chọn ngành cấp ')}{(node.level ?? 0) - 1}…
                   </option>
-                  {moveTargets.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name}
+                  {moveTargets.map((tItem) => (
+                    <option key={tItem.id} value={tItem.id}>
+                      {tItem.name}
                     </option>
                   ))}
                 </select>
@@ -278,12 +279,12 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
               size="sm"
               disabled={remove.isPending}
               onClick={() => {
-                if (window.confirm(`Xoá ngành “${node.name}”? Ngành đang có món sẽ không xoá được, hãy ẩn thay vì xoá.`)) {
+                if (window.confirm(t('Xoá ngành “{v0}”? Ngành đang có món sẽ không xoá được, hãy ẩn thay vì xoá.', { v0: node.name }))) {
                   remove.mutate(undefined)
                 }
               }}
             >
-              Xoá ngành
+              {t('Xoá ngành')}
             </Button>
           </div>
         ) : null}
@@ -306,7 +307,7 @@ function CreateCategory({ parent, root, onCreated }: { parent: Node | null; root
       return data
     },
     onSuccess: async (data) => {
-      toast.success('Đã thêm ngành.')
+      toast.success(t('Đã thêm ngành.'))
       setName('')
       setError(null)
       await queryClient.invalidateQueries({ queryKey: QUERY_KEY })
@@ -319,9 +320,9 @@ function CreateCategory({ parent, root, onCreated }: { parent: Node | null; root
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Thêm ngành con</CardTitle>
+        <CardTitle>{t('Thêm ngành con')}</CardTitle>
         <CardDescription>
-          Thêm vào “{target.name}” (cấp {(target.level ?? 0) + 1}). Chọn một ngành bên trái để thêm vào ngành đó.
+          {t('Thêm vào “')}{target.name}{t('” (cấp ')}{(target.level ?? 0) + 1}{t('). Chọn một ngành bên trái để thêm vào ngành đó.')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -333,12 +334,12 @@ function CreateCategory({ parent, root, onCreated }: { parent: Node | null; root
           }}
         >
           <div className="flex flex-col gap-2">
-            <Label htmlFor="cat-new">Tên ngành</Label>
+            <Label htmlFor="cat-new">{t('Tên ngành')}</Label>
             <Input id="cat-new" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <FormError message={error} />
           <Button type="submit" disabled={create.isPending}>
-            <PlusIcon /> Thêm ngành
+            <PlusIcon />{t(' Thêm ngành')}
           </Button>
         </form>
       </CardContent>

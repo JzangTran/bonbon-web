@@ -11,6 +11,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { consolePath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 /** One ticket for the administrators: the whole thread, who wrote it, the order it is about, and the reply box. */
 export function AdminSupportTicketDetailPage() {
@@ -21,59 +22,59 @@ export function AdminSupportTicketDetailPage() {
   const ticket = useAdminTicket(id, canRead)
   const answer = useAnswerTicket(id)
   const [body, setBody] = useState('')
-  const t = ticket.data
-  const status = TICKET_STATUS[t?.status ?? ''] ?? { label: t?.status ?? '', className: '' }
+  const tItem = ticket.data
+  const status = TICKET_STATUS[tItem?.status ?? ''] ?? { label: tItem?.status ?? '', className: '' }
 
-  if (!canRead) return <p className="text-muted-foreground">Bạn không có quyền xem phiếu hỗ trợ.</p>
+  if (!canRead) return <p className="text-muted-foreground">{t('Bạn không có quyền xem phiếu hỗ trợ.')}</p>
 
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <Link to={consolePath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" /> Hộp thư phiếu
+        <ArrowLeftIcon className="size-4" />{t(' Hộp thư phiếu')}
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}
       {ticket.isPending ? <Skeleton className="h-48" /> : null}
-      {t ? (
+      {tItem ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold">{t.subject}</h1>
+            <h1 className="text-2xl font-semibold">{tItem.subject}</h1>
             <Badge className={status.className}>{status.label}</Badge>
           </div>
 
           <Card className="gap-1 p-4 text-sm">
             <p>
-              <span className="text-muted-foreground">Người gửi:</span> {t.userName} ({t.audience === 'SHOP' ? 'cửa hàng' : 'khách'})
+              <span className="text-muted-foreground">{t('Người gửi:')}</span> {tItem.userName} ({tItem.audience === 'SHOP' ? t('cửa hàng') : t('khách')})
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link className="text-link" to={consolePath(`/lookup/customers/${t.userId}`)}>
-                Tra cứu tài khoản
+              <Link className="text-link" to={consolePath(`/lookup/customers/${tItem.userId}`)}>
+                {t('Tra cứu tài khoản')}
               </Link>
-              {t.orderId ? (
-                <Link className="text-link" to={consolePath(`/lookup/orders/${t.orderId}`)}>
-                  Đơn #{t.orderNumber}
+              {tItem.orderId ? (
+                <Link className="text-link" to={consolePath(`/lookup/orders/${tItem.orderId}`)}>
+                  {t('Đơn #')}{tItem.orderNumber}
                 </Link>
               ) : null}
             </div>
-            {t.closedBy ? <p className="text-muted-foreground">Đóng bởi {t.closedBy === 'SYSTEM' ? 'hệ thống (quá hạn không ai nhắn thêm)' : t.closedBy === 'USER' ? 'người dùng' : 'quản trị viên'}.</p> : null}
+            {tItem.closedBy ? <p className="text-muted-foreground">{t('Đóng bởi ')}{tItem.closedBy === 'SYSTEM' ? t('hệ thống (quá hạn không ai nhắn thêm)') : tItem.closedBy === 'USER' ? t('người dùng') : t('quản trị viên')}.</p> : null}
           </Card>
 
           <Card className="p-4">
-            <TicketThread messages={t.messages ?? []} supportOnRight />
+            <TicketThread messages={tItem.messages ?? []} supportOnRight />
           </Card>
 
-          {t.status !== 'CLOSED' && canReply ? (
+          {tItem.status !== 'CLOSED' && canReply ? (
             <Card className="gap-3 p-4">
-              <h2 className="font-semibold">Trả lời</h2>
-              <p className="text-sm text-muted-foreground">Người dùng chỉ thấy &quot;Hỗ trợ Bonbon&quot;, không thấy tên bạn. Họ nhận thông báo, và email nếu để bật.</p>
-              <Textarea rows={5} value={body} maxLength={2000} onChange={(e) => setBody(e.target.value)} aria-label="Nội dung trả lời" />
+              <h2 className="font-semibold">{t('Trả lời')}</h2>
+              <p className="text-sm text-muted-foreground">{t('Người dùng chỉ thấy "Hỗ trợ Bonbon", không thấy tên bạn. Họ nhận thông báo, và email nếu để bật.')}</p>
+              <Textarea rows={5} value={body} maxLength={2000} onChange={(e) => setBody(e.target.value)} aria-label={t('Nội dung trả lời')} />
               <div>
                 <Button disabled={answer.isPending || !body.trim()} onClick={() => answer.mutate(body, { onSuccess: () => setBody('') })}>
-                  Gửi trả lời
+                  {t('Gửi trả lời')}
                 </Button>
               </div>
             </Card>
           ) : null}
-          {t.status === 'CLOSED' ? <Card className="p-4 text-sm text-muted-foreground">Phiếu đã đóng, không trả lời thêm được.</Card> : null}
+          {tItem.status === 'CLOSED' ? <Card className="p-4 text-sm text-muted-foreground">{t('Phiếu đã đóng, không trả lời thêm được.')}</Card> : null}
         </>
       ) : null}
     </div>

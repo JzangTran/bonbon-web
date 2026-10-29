@@ -15,13 +15,14 @@ import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { t } from '@/shared/i18n'
 
 const TABS = [
-  { hidden: undefined, label: 'Tất cả' },
-  { hidden: false, label: 'Đang hiển thị' },
-  { hidden: true, label: 'Đã ẩn' },
+  { hidden: undefined, label: t('Tất cả') },
+  { hidden: false, label: t('Đang hiển thị') },
+  { hidden: true, label: t('Đã ẩn') },
 ] as const
-const QUICK_REASONS = ['Ngôn từ xúc phạm hoặc tục tĩu.', 'Chứa thông tin cá nhân.', 'Nội dung quảng cáo hoặc spam.', 'Không liên quan đến đơn hàng.']
+const QUICK_REASONS = [t('Ngôn từ xúc phạm hoặc tục tĩu.'), t('Chứa thông tin cá nhân.'), t('Nội dung quảng cáo hoặc spam.'), t('Không liên quan đến đơn hàng.')]
 
 /** Every review, hidden ones included (moderate-review.md): hide with a reason, restore, and the same for a shop's reply. */
 export function AdminReviewsPage() {
@@ -38,24 +39,24 @@ export function AdminReviewsPage() {
   const items = data?.items ?? []
   const total = data?.total ?? 0
 
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền kiểm duyệt đánh giá.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền kiểm duyệt đánh giá.')}</p>
 
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Kiểm duyệt đánh giá</h1>
+        <h1 className="text-2xl font-semibold">{t('Kiểm duyệt đánh giá')}</h1>
         <p className="text-sm text-muted-foreground">
-          Ẩn không xoá hẳn và luôn có lý do ghi lại. Đánh giá bị ẩn không tính vào điểm của quán và không hiện công khai; khách vẫn thấy đánh giá của mình.
+          {t('Ẩn không xoá hẳn và luôn có lý do ghi lại. Đánh giá bị ẩn không tính vào điểm của quán và không hiện công khai; khách vẫn thấy đánh giá của mình.')}
         </p>
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-3">
         <PageTabs
-          label="Đánh giá"
-          tabs={TABS.map((t) => ({ id: String(t.hidden), label: t.label }))}
+          label={t('Đánh giá')}
+          tabs={TABS.map((tItem) => ({ id: String(tItem.hidden), label: tItem.label }))}
           value={String(hidden)}
           onValueChange={(id) => {
-            setHidden(TABS.find((t) => String(t.hidden) === id)?.hidden)
+            setHidden(TABS.find((tItem) => String(tItem.hidden) === id)?.hidden)
             paging.reset()
           }}
         />
@@ -68,13 +69,13 @@ export function AdminReviewsPage() {
               paging.reset()
             }}
           />
-          Chỉ 1–2 sao
+          {t('Chỉ 1–2 sao')}
         </label>
       </div>
 
       {reviews.isError ? <FormError message={problemMessage(reviews.error)} /> : null}
       {reviews.isPending ? <Skeleton className="h-32" /> : null}
-      {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">Không có đánh giá nào.</Card> : null}
+      {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">{t('Không có đánh giá nào.')}</Card> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((review) => (
@@ -97,11 +98,11 @@ export function AdminReviewsPage() {
       <Dialog open={target !== null} onOpenChange={(open) => (open ? undefined : setTarget(null))}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{target?.kind === 'reply' ? 'Ẩn phản hồi của quán?' : 'Ẩn đánh giá này?'}</DialogTitle>
-            <DialogDescription>Lý do được ghi vào nhật ký kiểm duyệt và hiện cho người viết.</DialogDescription>
+            <DialogTitle>{target?.kind === 'reply' ? t('Ẩn phản hồi của quán?') : t('Ẩn đánh giá này?')}</DialogTitle>
+            <DialogDescription>{t('Lý do được ghi vào nhật ký kiểm duyệt và hiện cho người viết.')}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="hide-reason">Lý do</Label>
+            <Label htmlFor="hide-reason">{t('Lý do')}</Label>
             <Textarea id="hide-reason" rows={3} maxLength={300} value={reason} onChange={(e) => setReason(e.target.value)} />
             <div className="flex flex-wrap gap-2">
               {QUICK_REASONS.map((quick) => (
@@ -113,7 +114,7 @@ export function AdminReviewsPage() {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
+              <Button variant="outline">{t('Huỷ')}</Button>
             </DialogClose>
             <Button
               disabled={reason.trim().length === 0 || hide.isPending}
@@ -121,7 +122,7 @@ export function AdminReviewsPage() {
                 if (target) hide.mutate({ target, reason }, { onSuccess: () => setTarget(null) })
               }}
             >
-              Ẩn
+              {t('Ẩn')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -142,41 +143,41 @@ function ReviewRow({ review, busy, onHide, onUnhide }: {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Stars value={review.rating ?? 0} />
-          {review.hidden ? <Badge className="bg-warning-subtle text-warning-fg">Đã ẩn</Badge> : null}
+          {review.hidden ? <Badge className="bg-warning-subtle text-warning-fg">{t('Đã ẩn')}</Badge> : null}
         </div>
         <p className="text-sm text-muted-foreground">
-          Đơn #{review.orderNumber} · {review.reviewerName} · {formatDateTime(review.createdAt)}
+          {t('Đơn #')}{review.orderNumber} · {review.reviewerName} · {formatDateTime(review.createdAt)}
         </p>
       </div>
-      {review.comment ? <p>{review.comment}</p> : <p className="text-sm text-muted-foreground">Không có nhận xét.</p>}
-      {review.hidden && review.hiddenReason ? <p className="text-sm text-warning-fg">Lý do ẩn: {review.hiddenReason}</p> : null}
+      {review.comment ? <p>{review.comment}</p> : <p className="text-sm text-muted-foreground">{t('Không có nhận xét.')}</p>}
+      {review.hidden && review.hiddenReason ? <p className="text-sm text-warning-fg">{t('Lý do ẩn: ')}{review.hiddenReason}</p> : null}
       <div>
         {review.hidden ? (
           <Button variant="outline" disabled={busy} onClick={() => onUnhide({ kind: 'review', id: review.id! })}>
-            Khôi phục đánh giá
+            {t('Khôi phục đánh giá')}
           </Button>
         ) : (
           <Button variant="outline" onClick={() => onHide({ kind: 'review', id: review.id! })}>
-            Ẩn đánh giá
+            {t('Ẩn đánh giá')}
           </Button>
         )}
       </div>
       {reply ? (
         <div className="flex flex-col gap-1 rounded-sm bg-muted p-3 text-sm">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs text-muted-foreground">Quán phản hồi · {formatDateTime(reply.createdAt)}</p>
-            {reply.hidden ? <Badge className="bg-warning-subtle text-warning-fg">Đã ẩn</Badge> : null}
+            <p className="text-xs text-muted-foreground">{t('Quán phản hồi · ')}{formatDateTime(reply.createdAt)}</p>
+            {reply.hidden ? <Badge className="bg-warning-subtle text-warning-fg">{t('Đã ẩn')}</Badge> : null}
           </div>
           <p>{reply.text}</p>
-          {reply.hidden && reply.hiddenReason ? <p className="text-xs text-warning-fg">Lý do ẩn: {reply.hiddenReason}</p> : null}
+          {reply.hidden && reply.hiddenReason ? <p className="text-xs text-warning-fg">{t('Lý do ẩn: ')}{reply.hiddenReason}</p> : null}
           <div>
             {reply.hidden ? (
               <Button size="sm" variant="outline" disabled={busy} onClick={() => onUnhide({ kind: 'reply', id: reply.id! })}>
-                Khôi phục phản hồi
+                {t('Khôi phục phản hồi')}
               </Button>
             ) : (
               <Button size="sm" variant="outline" onClick={() => onHide({ kind: 'reply', id: reply.id! })}>
-                Ẩn phản hồi
+                {t('Ẩn phản hồi')}
               </Button>
             )}
           </div>

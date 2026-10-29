@@ -15,6 +15,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { consolePath } from '@/shared/config/sites'
 import { PageTabs } from '@/shared/ui/workspace-slots'
+import { t } from '@/shared/i18n'
 
 type OrderKind = OrderQuery['kind']
 type CustomerKind = CustomerQuery['kind']
@@ -28,20 +29,20 @@ export function AdminLookupPage() {
   const canOrders = !!session?.permissions.has('admin-order:read')
   const canCustomers = !!session?.permissions.has('admin-customer:read')
   const [tab, setTab] = useState<'orders' | 'customers'>(canOrders ? 'orders' : 'customers')
-  const tabs = [...(canOrders ? [{ id: 'orders', label: 'Tìm đơn' }] : []), ...(canCustomers ? [{ id: 'customers', label: 'Tìm tài khoản' }] : [])]
+  const tabs = [...(canOrders ? [{ id: 'orders', label: t('Tìm đơn') }] : []), ...(canCustomers ? [{ id: 'customers', label: t('Tìm tài khoản') }] : [])]
 
   return (
     <div className="flex max-w-4xl flex-col gap-8">
-      {tabs.length > 1 ? <PageTabs label="Tra cứu" tabs={tabs} value={tab} onValueChange={(id) => setTab(id as 'orders' | 'customers')} /> : null}
+      {tabs.length > 1 ? <PageTabs label={t('Tra cứu')} tabs={tabs} value={tab} onValueChange={(id) => setTab(id as 'orders' | 'customers')} /> : null}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold">Tra cứu đơn và tài khoản</h1>
+        <h1 className="text-2xl font-semibold">{t('Tra cứu đơn và tài khoản')}</h1>
         <p className="text-sm text-muted-foreground">
-          Nhập đúng một mã: không có danh sách người dùng để duyệt. Số điện thoại, email và địa chỉ được che; muốn xem đầy đủ phải chọn lý do và việc đó được ghi nhật ký.
+          {t('Nhập đúng một mã: không có danh sách người dùng để duyệt. Số điện thoại, email và địa chỉ được che; muốn xem đầy đủ phải chọn lý do và việc đó được ghi nhật ký.')}
         </p>
       </div>
       {canOrders && tab === 'orders' ? <OrderSearch /> : null}
       {canCustomers && tab === 'customers' ? <CustomerSearch /> : null}
-      {!canOrders && !canCustomers ? <p className="text-muted-foreground">Bạn không có quyền tra cứu.</p> : null}
+      {!canOrders && !canCustomers ? <p className="text-muted-foreground">{t('Bạn không có quyền tra cứu.')}</p> : null}
     </div>
   )
 }
@@ -52,11 +53,11 @@ function OrderSearch() {
   const [query, setQuery] = useState<OrderQuery | null>(null)
   const result = useOrderSearch(query)
   const items = result.data?.items ?? []
-  const placeholder = kind === 'code' ? 'Mã đơn, ví dụ 1042' : kind === 'customerEmail' ? 'Email tài khoản, nhập đầy đủ' : 'Số điện thoại tài khoản, nhập đầy đủ'
+  const placeholder = kind === 'code' ? t('Mã đơn, ví dụ 1042') : kind === 'customerEmail' ? t('Email tài khoản, nhập đầy đủ') : t('Số điện thoại tài khoản, nhập đầy đủ')
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-lg font-semibold">Tìm đơn</h2>
+      <h2 className="text-lg font-semibold">{t('Tìm đơn')}</h2>
       <form
         className="flex flex-wrap items-end gap-2"
         onSubmit={(e) => {
@@ -64,8 +65,8 @@ function OrderSearch() {
           setQuery({ kind, value })
         }}
       >
-        <div className="flex gap-1" role="radiogroup" aria-label="Tìm đơn theo">
-          {([['code', 'Mã đơn'], ['customerEmail', 'Email khách'], ['customerPhone', 'SĐT khách']] as const).map(([k, label]) => (
+        <div className="flex gap-1" role="radiogroup" aria-label={t('Tìm đơn theo')}>
+          {([['code', t('Mã đơn')], ['customerEmail', t('Email khách')], ['customerPhone', t('SĐT khách')]] as const).map(([k, label]) => (
             <Button key={k} type="button" role="radio" aria-checked={kind === k} size="sm" variant={kind === k ? 'default' : 'outline'} onClick={() => setKind(k)}>
               {label}
             </Button>
@@ -73,17 +74,17 @@ function OrderSearch() {
         </div>
         <div className="flex min-w-60 flex-1 flex-col gap-1.5">
           <Label htmlFor="order-search" className="sr-only">
-            Giá trị tìm đơn
+            {t('Giá trị tìm đơn')}
           </Label>
           <Input id="order-search" value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder} />
         </div>
         <Button type="submit" disabled={!value.trim()}>
-          <SearchIcon /> Tìm
+          <SearchIcon />{t(' Tìm')}
         </Button>
       </form>
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
       {result.isFetching ? <Skeleton className="h-16" /> : null}
-      {query && result.data && items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">Không tìm thấy đơn nào khớp chính xác.</Card> : null}
+      {query && result.data && items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">{t('Không tìm thấy đơn nào khớp chính xác.')}</Card> : null}
       <ul className="flex flex-col gap-2">
         {items.map((o) => (
           <li key={o.id}>
@@ -91,7 +92,7 @@ function OrderSearch() {
               <Card className="gap-1 p-3 transition-colors hover:bg-accent">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-semibold">Đơn #{o.number}</span>
+                    <span className="font-semibold">{t('Đơn #')}{o.number}</span>
                     <OrderStatusBadge status={(o.status ?? 'PLACED') as OrderStatus} />
                   </div>
                   <span className="font-semibold tabular-nums">{formatVnd(o.grandTotal)}</span>
@@ -117,7 +118,7 @@ function CustomerSearch() {
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-lg font-semibold">Tìm tài khoản</h2>
+      <h2 className="text-lg font-semibold">{t('Tìm tài khoản')}</h2>
       <form
         className="flex flex-wrap items-end gap-2"
         onSubmit={(e) => {
@@ -125,8 +126,8 @@ function CustomerSearch() {
           setQuery({ kind, value })
         }}
       >
-        <div className="flex gap-1" role="radiogroup" aria-label="Tìm tài khoản theo">
-          {([['email', 'Email'], ['phone', 'Số điện thoại']] as const).map(([k, label]) => (
+        <div className="flex gap-1" role="radiogroup" aria-label={t('Tìm tài khoản theo')}>
+          {([['email', 'Email'], ['phone', t('Số điện thoại')]] as const).map(([k, label]) => (
             <Button key={k} type="button" role="radio" aria-checked={kind === k} size="sm" variant={kind === k ? 'default' : 'outline'} onClick={() => setKind(k)}>
               {label}
             </Button>
@@ -134,17 +135,17 @@ function CustomerSearch() {
         </div>
         <div className="flex min-w-60 flex-1 flex-col gap-1.5">
           <Label htmlFor="customer-search" className="sr-only">
-            Giá trị tìm tài khoản
+            {t('Giá trị tìm tài khoản')}
           </Label>
-          <Input id="customer-search" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Nhập đầy đủ, khớp chính xác" />
+          <Input id="customer-search" value={value} onChange={(e) => setValue(e.target.value)} placeholder={t('Nhập đầy đủ, khớp chính xác')} />
         </div>
         <Button type="submit" disabled={!value.trim()}>
-          <SearchIcon /> Tìm
+          <SearchIcon />{t(' Tìm')}
         </Button>
       </form>
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
       {result.isFetching ? <Skeleton className="h-16" /> : null}
-      {query && result.data && items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">Không tìm thấy tài khoản nào khớp chính xác.</Card> : null}
+      {query && result.data && items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">{t('Không tìm thấy tài khoản nào khớp chính xác.')}</Card> : null}
       <ul className="flex flex-col gap-2">
         {items.map((c) => (
           <li key={c.id}>
@@ -154,12 +155,12 @@ function CustomerSearch() {
                   <span className="font-semibold">{c.name}</span>
                   {(c.roles ?? []).map((r) => (
                     <Badge key={r} variant="outline">
-                      {r === 'SELLER' ? 'Người bán' : 'Khách'}
+                      {r === 'SELLER' ? t('Người bán') : t('Khách')}
                     </Badge>
                   ))}
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {c.email} · {c.phone ?? 'chưa có số điện thoại'}
+                  {c.email} · {c.phone ?? t('chưa có số điện thoại')}
                 </p>
               </Card>
             </Link>

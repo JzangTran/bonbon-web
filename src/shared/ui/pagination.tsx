@@ -2,6 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon 
 import { useId } from 'react'
 import { PAGE_SIZES, type PageSize, type Paging } from '@/shared/lib/use-paging'
 import { cn } from '@/shared/lib/utils'
+import { intlLocale, t } from '@/shared/i18n'
 
 /** The page numbers around the current one, with gaps: 1 … 4 5 6 … 12. Zero-based in, zero-based out. */
 function pageWindow(page: number, pages: number): (number | 'gap')[] {
@@ -31,13 +32,13 @@ export function Pagination({ paging, total, className }: { paging: Paging; total
   const to = Math.min(total, (page + 1) * size)
   if (total === 0) return null
   return (
-    <nav aria-label="Phân trang" className={cn('flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-ui text-muted-foreground', className)}>
+    <nav aria-label={t('Phân trang')} className={cn('flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-ui text-muted-foreground', className)}>
       <div className="flex items-center gap-4">
         <span className="tabular-nums">
-          {from}–{to} trên {total.toLocaleString('vi-VN')}
+          {from}–{to}{t(' trên ')}{total.toLocaleString(intlLocale)}
         </span>
         <span className="flex items-center gap-2">
-          <label htmlFor={id}>Số dòng</label>
+          <label htmlFor={id}>{t('Số dòng')}</label>
           <select
             id={id}
             value={size}
@@ -54,10 +55,10 @@ export function Pagination({ paging, total, className }: { paging: Paging; total
       </div>
       {pages > 1 ? (
         <div className="flex items-center gap-0.5">
-          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label="Trang đầu" disabled={page === 0} onClick={() => setPage(0)}>
+          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label={t('Trang đầu')} disabled={page === 0} onClick={() => setPage(0)}>
             <ChevronsLeftIcon className="size-4" />
           </button>
-          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label="Trang trước" disabled={page === 0} onClick={() => setPage(page - 1)}>
+          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label={t('Trang trước')} disabled={page === 0} onClick={() => setPage(page - 1)}>
             <ChevronLeftIcon className="size-4" />
           </button>
           {pageWindow(page, pages).map((p, i) =>
@@ -79,10 +80,10 @@ export function Pagination({ paging, total, className }: { paging: Paging; total
               </button>
             ),
           )}
-          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label="Trang sau" disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>
+          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label={t('Trang sau')} disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>
             <ChevronRightIcon className="size-4" />
           </button>
-          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label="Trang cuối" disabled={page >= pages - 1} onClick={() => setPage(pages - 1)}>
+          <button type="button" className={cn(square, 'hover:bg-grey-100')} aria-label={t('Trang cuối')} disabled={page >= pages - 1} onClick={() => setPage(pages - 1)}>
             <ChevronsRightIcon className="size-4" />
           </button>
         </div>

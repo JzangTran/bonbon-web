@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
@@ -24,12 +25,12 @@ export function ForgotPasswordPage() {
 
   return (
     <AuthShell
-      title="Quên mật khẩu"
-      description="Nhập email đăng ký, chúng tôi sẽ gửi liên kết đặt lại mật khẩu (hiệu lực 1 giờ)."
-      footer={<a href={siteUrl('merchant', '/login')} className="text-link">Về trang đăng nhập</a>}
+      title={t('Quên mật khẩu')}
+      description={t('Nhập email đăng ký, chúng tôi sẽ gửi liên kết đặt lại mật khẩu (hiệu lực 1 giờ).')}
+      footer={<a href={siteUrl('merchant', '/login')} className="text-link">{t('Về trang đăng nhập')}</a>}
     >
       {sent ? (
-        <FormSuccess message="Nếu email này có tài khoản, chúng tôi đã gửi liên kết đặt lại mật khẩu." />
+        <FormSuccess message={t('Nếu email này có tài khoản, chúng tôi đã gửi liên kết đặt lại mật khẩu.')} />
       ) : (
         <form onSubmit={submit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
@@ -38,7 +39,7 @@ export function ForgotPasswordPage() {
           </div>
           <FormError message={error} />
           <Button type="submit" size="lg" disabled={submitting}>
-            Gửi liên kết
+            {t('Gửi liên kết')}
           </Button>
         </form>
       )}

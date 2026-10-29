@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { formatDateTime, formatVnd } from "@/shared/lib/format";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
@@ -23,7 +24,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-lg font-semibold">
-              Đơn #{orderCase.orderNumber}
+              {t('Đơn #')}{orderCase.orderNumber}
             </span>
             <Badge variant="outline">
               {CASE_TYPE_LABEL[orderCase.type ?? ""] ?? orderCase.type}
@@ -31,19 +32,19 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
             <Badge className={status.className}>{status.label}</Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            Gửi lúc {formatDateTime(orderCase.openedAt)}
+            {t('Gửi lúc ')}{formatDateTime(orderCase.openedAt)}
           </p>
         </div>
         <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm">
           {orderCase.customerName ? (
             <>
-              <dt className="text-muted-foreground">Người nhận</dt>
+              <dt className="text-muted-foreground">{t('Người nhận')}</dt>
               <dd>{orderCase.customerName}</dd>
             </>
           ) : null}
           {!noShow ? (
             <>
-              <dt className="text-muted-foreground">Khách được hoàn</dt>
+              <dt className="text-muted-foreground">{t('Khách được hoàn')}</dt>
               <dd className="font-semibold tabular-nums">
                 {formatVnd(orderCase.refundAmount)}
               </dd>
@@ -51,16 +52,16 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
           ) : null}
           {!noShow && orderCase.shopBears !== undefined ? (
             <>
-              <dt className="text-muted-foreground">Quán chịu</dt>
+              <dt className="text-muted-foreground">{t('Quán chịu')}</dt>
               <dd className="tabular-nums">
-                {formatVnd(orderCase.shopBears)} (đã trừ hoa hồng được hoàn lại)
+                {formatVnd(orderCase.shopBears)}{t(' (đã trừ hoa hồng được hoàn lại)')}
               </dd>
             </>
           ) : null}
           {orderCase.status === "AWAITING_SHOP" &&
           orderCase.shopResponseDueAt ? (
             <>
-              <dt className="text-muted-foreground">Hạn trả lời</dt>
+              <dt className="text-muted-foreground">{t('Hạn trả lời')}</dt>
               <dd>{formatDateTime(orderCase.shopResponseDueAt)}</dd>
             </>
           ) : null}
@@ -69,7 +70,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
 
       {!noShow ? (
         <Card className="gap-2 p-4">
-          <h3 className="font-semibold">Món bị báo</h3>
+          <h3 className="font-semibold">{t('Món bị báo')}</h3>
           <ul className="divide-y text-sm">
             {(orderCase.lines ?? []).map((line) => (
               <li
@@ -90,14 +91,14 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
 
       {orderCase.note ? (
         <Card className="gap-1 p-4">
-          <h3 className="font-semibold">{noShow ? "Quán báo" : "Khách nói"}</h3>
+          <h3 className="font-semibold">{noShow ? t('Quán báo') : t('Khách nói')}</h3>
           <p className="text-sm whitespace-pre-wrap">{orderCase.note}</p>
         </Card>
       ) : null}
 
       {(orderCase.photos ?? []).length > 0 ? (
         <Card className="gap-2 p-4">
-          <h3 className="font-semibold">Ảnh khách gửi</h3>
+          <h3 className="font-semibold">{t('Ảnh khách gửi')}</h3>
           <div className="flex flex-wrap gap-3">
             {(orderCase.photos ?? []).map((photo) => (
               <a
@@ -109,7 +110,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
               >
                 <img
                   src={photo.url}
-                  alt="Ảnh khách gửi"
+                  alt={t('Ảnh khách gửi')}
                   className="size-full object-cover"
                 />
               </a>
@@ -120,11 +121,11 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
 
       {orderCase.shopResponse ? (
         <Card className="gap-1 p-4">
-          <h3 className="font-semibold">Quán trả lời</h3>
+          <h3 className="font-semibold">{t('Quán trả lời')}</h3>
           <p className="text-sm">
             {orderCase.shopResponse === "ACCEPTED"
-              ? "Quán chấp nhận."
-              : "Quán phản đối."}
+              ? t('Quán chấp nhận.')
+              : t('Quán phản đối.')}
           </p>
           {orderCase.shopResponseNote ? (
             <p className="text-sm whitespace-pre-wrap">
@@ -136,7 +137,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
 
       {orderCase.customerAnswer ? (
         <Card className="gap-1 p-4">
-          <h3 className="font-semibold">Khách trả lời</h3>
+          <h3 className="font-semibold">{t('Khách trả lời')}</h3>
           <p className="text-sm">
             {CUSTOMER_ANSWER[orderCase.customerAnswer] ??
               orderCase.customerAnswer}
@@ -151,22 +152,22 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
 
       {orderCase.noShowOutcome ? (
         <p className="text-sm text-muted-foreground">
-          Kết cục:{" "}
+          {t('Kết cục:')}{" "}
           {NO_SHOW_OUTCOME[orderCase.noShowOutcome] ?? orderCase.noShowOutcome}
         </p>
       ) : null}
 
       {orderCase.decidedAt ? (
         <Card className="gap-1 p-4">
-          <h3 className="font-semibold">Kết quả</h3>
+          <h3 className="font-semibold">{t('Kết quả')}</h3>
           <p className="text-sm">
-            {orderCase.status === "UPHELD" ? "Được chấp nhận" : "Bị bác bỏ"}
+            {orderCase.status === "UPHELD" ? t('Được chấp nhận') : t('Bị bác bỏ')}
             {orderCase.decidedBy === "SHOP"
-              ? " bởi quán"
+              ? t(' bởi quán')
               : orderCase.decidedBy === "ADMIN"
-                ? " bởi quản trị viên"
+                ? t(' bởi quản trị viên')
                 : ""}{" "}
-            lúc {formatDateTime(orderCase.decidedAt)}.
+            {t('lúc ')}{formatDateTime(orderCase.decidedAt)}.
           </p>
           {orderCase.reason ? (
             <p className="text-sm whitespace-pre-wrap">{orderCase.reason}</p>

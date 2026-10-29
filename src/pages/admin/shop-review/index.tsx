@@ -13,21 +13,22 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { FormError } from '@/widgets/auth-shell'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 const TABS = [
-  { status: 'PENDING', label: 'Chờ duyệt' },
-  { status: 'REJECTED', label: 'Đã từ chối' },
-  { status: 'APPROVED', label: 'Đã duyệt' },
-  { status: 'ALL', label: 'Tất cả' },
+  { status: 'PENDING', label: t('Chờ duyệt') },
+  { status: 'REJECTED', label: t('Đã từ chối') },
+  { status: 'APPROVED', label: t('Đã duyệt') },
+  { status: 'ALL', label: t('Tất cả') },
 ] as const
 type Status = (typeof TABS)[number]['status']
 
-const BUSINESS_TYPE: Record<string, string> = { INDIVIDUAL: 'Cá nhân', HOUSEHOLD: 'Hộ kinh doanh' }
+const BUSINESS_TYPE: Record<string, string> = { INDIVIDUAL: t('Cá nhân'), HOUSEHOLD: t('Hộ kinh doanh') }
 const STATUS_LABEL: Record<string, string> = {
-  PENDING: 'Chờ duyệt',
-  APPROVED: 'Đã duyệt',
-  REJECTED: 'Đã từ chối',
-  SUSPENDED: 'Đang bị khoá',
+  PENDING: t('Chờ duyệt'),
+  APPROVED: t('Đã duyệt'),
+  REJECTED: t('Đã từ chối'),
+  SUSPENDED: t('Đang bị khoá'),
 }
 
 /** Submitted shop applications, oldest first (view-registration-requests.md); drafts never appear. */
@@ -48,30 +49,30 @@ export function ShopReviewQueuePage() {
   })
 
   if (!session?.permissions.has('merchant-approval:read')) {
-    return <p className="text-muted-foreground">Bạn không có quyền duyệt cửa hàng.</p>
+    return <p className="text-muted-foreground">{t('Bạn không có quyền duyệt cửa hàng.')}</p>
   }
 
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Duyệt cửa hàng</h1>
-          <p className="text-sm text-muted-foreground">Hồ sơ gửi sớm nhất ở trên cùng để không hồ sơ nào bị bỏ quên.</p>
+          <h1 className="text-2xl font-semibold">{t('Duyệt cửa hàng')}</h1>
+          <p className="text-sm text-muted-foreground">{t('Hồ sơ gửi sớm nhất ở trên cùng để không hồ sơ nào bị bỏ quên.')}</p>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <PageTabs
-          label="Hồ sơ cửa hàng"
-          tabs={TABS.map((t) => ({ id: t.status, label: t.label, count: t.status === 'PENDING' && queue.data ? queue.data.length : undefined, alert: true }))}
+          label={t('Hồ sơ cửa hàng')}
+          tabs={TABS.map((tItem) => ({ id: tItem.status, label: tItem.label, count: tItem.status === 'PENDING' && queue.data ? queue.data.length : undefined, alert: true }))}
           value={status}
           onValueChange={(id) => setStatus(id as Status)}
         />
         <div className="relative mb-2 w-full max-w-xs">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            aria-label="Tìm cửa hàng"
-            placeholder="Tìm theo tên quán, phường, tỉnh…"
+            aria-label={t('Tìm cửa hàng')}
+            placeholder={t('Tìm theo tên quán, phường, tỉnh…')}
             className="pl-8"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -84,13 +85,13 @@ export function ShopReviewQueuePage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Cửa hàng</TableHead>
-              <TableHead>Phường / Tỉnh</TableHead>
-              <TableHead>Loại hình</TableHead>
-              <TableHead>Gửi lúc</TableHead>
-              <TableHead>Lưu ý</TableHead>
+              <TableHead>{t('Cửa hàng')}</TableHead>
+              <TableHead>{t('Phường / Tỉnh')}</TableHead>
+              <TableHead>{t('Loại hình')}</TableHead>
+              <TableHead>{t('Gửi lúc')}</TableHead>
+              <TableHead>{t('Lưu ý')}</TableHead>
               <TableHead className="text-right">
-                <span className="sr-only">Thao tác</span>
+                <span className="sr-only">{t('Thao tác')}</span>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -107,21 +108,21 @@ export function ShopReviewQueuePage() {
             {queue.data?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                  {status === 'PENDING' ? 'Không có hồ sơ nào đang chờ duyệt.' : 'Không có hồ sơ phù hợp.'}
+                  {status === 'PENDING' ? t('Không có hồ sơ nào đang chờ duyệt.') : t('Không có hồ sơ phù hợp.')}
                 </TableCell>
               </TableRow>
             ) : null}
             {queue.data?.map(({ shop, resubmitted }) => (
               <TableRow key={shop?.vendorId}>
-                <TableCell className="font-medium">{shop?.name ?? '(chưa đặt tên)'}</TableCell>
+                <TableCell className="font-medium">{shop?.name ?? t('(chưa đặt tên)')}</TableCell>
                 <TableCell>{[shop?.ward, shop?.province].filter(Boolean).join(', ') || '—'}</TableCell>
                 <TableCell>{shop?.businessType ? BUSINESS_TYPE[shop.businessType] : '—'}</TableCell>
                 <TableCell title={shop?.submittedAt}>{formatRelative(shop?.submittedAt)}</TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
-                    {resubmitted && shop?.status === 'PENDING' ? <Badge variant="secondary">Gửi lại sau từ chối</Badge> : null}
+                    {resubmitted && shop?.status === 'PENDING' ? <Badge variant="secondary">{t('Gửi lại sau từ chối')}</Badge> : null}
                     {shop?.payoutHolderMatchesIdentity === false ? (
-                      <Badge className="bg-warning-subtle text-warning-fg">Tên chủ TK ≠ CCCD</Badge>
+                      <Badge className="bg-warning-subtle text-warning-fg">{t('Tên chủ TK ≠ CCCD')}</Badge>
                     ) : null}
                     {status === 'ALL' && shop?.status ? (
                       <Badge variant="outline">{STATUS_LABEL[shop.status] ?? shop.status}</Badge>
@@ -130,7 +131,7 @@ export function ShopReviewQueuePage() {
                 </TableCell>
                 <TableCell className="text-right">
                   <Button asChild variant="link" size="sm">
-                    <Link to={consolePath(`/shop-review/${shop?.vendorId}`)}>Xem hồ sơ</Link>
+                    <Link to={consolePath(`/shop-review/${shop?.vendorId}`)}>{t('Xem hồ sơ')}</Link>
                   </Button>
                 </TableCell>
               </TableRow>

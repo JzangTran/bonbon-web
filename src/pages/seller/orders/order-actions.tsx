@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { useOrderAction, type OrderAction, type OrderStatus } from '@/entities/order'
 import { Button } from '@/shared/ui/button'
@@ -24,17 +25,17 @@ export function OrderActions({ id, status, size = 'default' }: { id: string; sta
       <>
         <div className="flex flex-wrap gap-2">
           <Button size={size} disabled={action.isPending} onClick={() => run({ kind: 'confirm' })}>
-            Nhận đơn
+            {t('Nhận đơn')}
           </Button>
           <Button size={size} variant="outline" disabled={action.isPending} onClick={() => setAsking('reject')}>
-            Từ chối
+            {t('Từ chối')}
           </Button>
         </div>
         <ReasonDialog
           open={asking === 'reject'}
-          title="Từ chối đơn này?"
-          description="Khách sẽ được báo và đơn bị tính là quán từ chối. Hãy ghi rõ lý do."
-          confirmLabel="Từ chối đơn"
+          title={t('Từ chối đơn này?')}
+          description={t('Khách sẽ được báo và đơn bị tính là quán từ chối. Hãy ghi rõ lý do.')}
+          confirmLabel={t('Từ chối đơn')}
           reason={reason}
           setReason={setReason}
           pending={action.isPending}
@@ -55,15 +56,15 @@ export function OrderActions({ id, status, size = 'default' }: { id: string; sta
           </Button>
           {canCancel ? (
             <Button size={size} variant="outline" disabled={action.isPending} onClick={() => setAsking('cancel')}>
-              Huỷ đơn
+              {t('Huỷ đơn')}
             </Button>
           ) : null}
         </div>
         <ReasonDialog
           open={asking === 'cancel'}
-          title="Huỷ đơn này?"
-          description="Khách sẽ được hoàn tiền nếu đã trả và đơn tính là lỗi của quán. Hãy ghi rõ lý do."
-          confirmLabel="Huỷ đơn"
+          title={t('Huỷ đơn này?')}
+          description={t('Khách sẽ được hoàn tiền nếu đã trả và đơn tính là lỗi của quán. Hãy ghi rõ lý do.')}
+          confirmLabel={t('Huỷ đơn')}
           reason={reason}
           setReason={setReason}
           pending={action.isPending}
@@ -105,12 +106,12 @@ function ReasonDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="order-reason">Lý do</Label>
+          <Label htmlFor="order-reason">{t('Lý do')}</Label>
           <Textarea id="order-reason" rows={3} maxLength={300} value={reason} onChange={(e) => setReason(e.target.value)} />
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={onClose}>
-            Quay lại
+            {t('Quay lại')}
           </Button>
           <Button variant="destructive" disabled={pending || reason.trim() === ''} onClick={onConfirm}>
             {confirmLabel}

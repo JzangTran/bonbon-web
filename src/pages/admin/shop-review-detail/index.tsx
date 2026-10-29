@@ -16,16 +16,17 @@ import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
 import { Section, ShopApplicationSections } from '@/widgets/shop-application'
 import { consolePath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 type Detail = components['schemas']['ShopApplicationDetail']
 
 const STATUS: Record<string, { label: string; className: string }> = {
-  PENDING: { label: 'Chờ duyệt', className: 'bg-warning-subtle text-warning-fg' },
-  APPROVED: { label: 'Đã duyệt', className: 'bg-success-subtle text-success-fg' },
-  REJECTED: { label: 'Đã từ chối', className: 'bg-danger-subtle text-danger-fg' },
-  SUSPENDED: { label: 'Đang bị khoá', className: 'bg-danger-subtle text-danger-fg' },
+  PENDING: { label: t('Chờ duyệt'), className: 'bg-warning-subtle text-warning-fg' },
+  APPROVED: { label: t('Đã duyệt'), className: 'bg-success-subtle text-success-fg' },
+  REJECTED: { label: t('Đã từ chối'), className: 'bg-danger-subtle text-danger-fg' },
+  SUSPENDED: { label: t('Đang bị khoá'), className: 'bg-danger-subtle text-danger-fg' },
 }
-const QUICK_REASONS = ['Ảnh giấy tờ bị mờ, vui lòng chụp lại.', 'Tên chủ tài khoản không khớp tên trên giấy tờ.', 'Địa chỉ cửa hàng chưa chính xác.']
+const QUICK_REASONS = [t('Ảnh giấy tờ bị mờ, vui lòng chụp lại.'), t('Tên chủ tài khoản không khớp tên trên giấy tờ.'), t('Địa chỉ cửa hàng chưa chính xác.')]
 
 /** One application: everything except identity documents, which open separately and are logged. */
 export function ShopReviewDetailPage() {
@@ -43,7 +44,7 @@ export function ShopReviewDetailPage() {
   })
 
   if (!session?.permissions.has('merchant-approval:read')) {
-    return <p className="text-muted-foreground">Bạn không có quyền duyệt cửa hàng.</p>
+    return <p className="text-muted-foreground">{t('Bạn không có quyền duyệt cửa hàng.')}</p>
   }
   if (application.isPending) {
     return <Skeleton className="h-96 max-w-5xl" />
@@ -57,24 +58,24 @@ export function ShopReviewDetailPage() {
   return (
     <div className="flex max-w-6xl flex-col gap-10">
       <Link to={consolePath('/shop-review')} className="text-link inline-flex items-center gap-1 text-sm">
-        <ArrowLeftIcon className="size-4" /> Duyệt cửa hàng
+        <ArrowLeftIcon className="size-4" />{t(' Duyệt cửa hàng')}
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold">{shop.name ?? '(chưa đặt tên)'}</h1>
+        <h1 className="text-2xl font-semibold">{shop.name ?? t('(chưa đặt tên)')}</h1>
         <Badge className={status.className}>{status.label}</Badge>
         <span className="text-sm text-muted-foreground" title={formatDateTime(shop.submittedAt)}>
-          Gửi {formatRelative(shop.submittedAt)}
+          {t('Gửi ')}{formatRelative(shop.submittedAt)}
         </span>
       </div>
       <div className="flex flex-wrap items-start gap-6">
         <div className="flex min-w-0 flex-[999_1_36rem] flex-col gap-4">
           <ShopApplicationSections shop={shop} canViewIdentity={session.permissions.has('merchant-approval:read-identity')} />
           {application.data.history?.length ? (
-            <Section title="Lịch sử quyết định">
+            <Section title={t('Lịch sử quyết định')}>
               <ul className="flex flex-col gap-2 text-sm">
                 {application.data.history.map((d, i) => (
                   <li key={i}>
-                    <span className="font-medium">{d.decision === 'APPROVED' ? 'Duyệt' : 'Từ chối'}</span> ·{' '}
+                    <span className="font-medium">{d.decision === 'APPROVED' ? t('Duyệt') : t('Từ chối')}</span> ·{' '}
                     {formatDateTime(d.decidedAt)}
                     {d.reason ? <span className="text-muted-foreground"> — {d.reason}</span> : null}
                   </li>
@@ -109,7 +110,7 @@ function DecisionPanel({ shop }: { shop: Detail }) {
       })
       if (problem) throw problem
     },
-    onSuccess: () => done(`Đã duyệt ${shop.name}. Người bán sẽ nhận email.`),
+    onSuccess: () => done(t('Đã duyệt {v0}. Người bán sẽ nhận email.', { v0: shop.name })),
     onError: (e) => setError(problemMessage(e)),
   })
   const reject = useMutation({
@@ -120,7 +121,7 @@ function DecisionPanel({ shop }: { shop: Detail }) {
       })
       if (problem) throw problem
     },
-    onSuccess: () => done(`Đã từ chối ${shop.name}. Người bán sẽ nhận email kèm lý do.`),
+    onSuccess: () => done(t('Đã từ chối {v0}. Người bán sẽ nhận email kèm lý do.', { v0: shop.name })),
     onError: (e) => setError(problemMessage(e)),
   })
 
@@ -128,17 +129,17 @@ function DecisionPanel({ shop }: { shop: Detail }) {
     <aside className="flex w-full flex-[1_1_20rem] flex-col gap-4 lg:max-w-sm">
       <Card size="sm">
         <CardHeader>
-          <CardTitle>Quyết định</CardTitle>
+          <CardTitle>{t('Quyết định')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <Button onClick={() => setConfirmApprove(true)}>Duyệt cửa hàng</Button>
-          <p className="text-xs text-muted-foreground">Người bán nhận email ngay khi duyệt hoặc từ chối.</p>
+          <Button onClick={() => setConfirmApprove(true)}>{t('Duyệt cửa hàng')}</Button>
+          <p className="text-xs text-muted-foreground">{t('Người bán nhận email ngay khi duyệt hoặc từ chối.')}</p>
           <FormError message={error} />
         </CardContent>
       </Card>
       <Card size="sm" className="border-destructive/40">
         <CardHeader>
-          <CardTitle>Từ chối</CardTitle>
+          <CardTitle>{t('Từ chối')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <div className="flex flex-wrap gap-1.5">
@@ -149,29 +150,29 @@ function DecisionPanel({ shop }: { shop: Detail }) {
             ))}
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="reject-reason">Lý do (người bán sẽ thấy)</Label>
+            <Label htmlFor="reject-reason">{t('Lý do (người bán sẽ thấy)')}</Label>
             <Textarea id="reject-reason" rows={4} maxLength={1000} value={reason} onChange={(e) => setReason(e.target.value)} />
           </div>
           <Button
             variant="destructive"
             disabled={reason.trim().length < 5 || reject.isPending}
             onClick={() => {
-              if (window.confirm(`Từ chối hồ sơ ${shop.name}?`)) reject.mutate()
+              if (window.confirm(t('Từ chối hồ sơ {v0}?', { v0: shop.name }))) reject.mutate()
             }}
           >
-            Từ chối hồ sơ
+            {t('Từ chối hồ sơ')}
           </Button>
         </CardContent>
       </Card>
       <Dialog open={confirmApprove} onOpenChange={setConfirmApprove}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Duyệt {shop.name}?</DialogTitle>
-            <DialogDescription>Cửa hàng sẽ hiện với khách trong khu khi có món đang bán.</DialogDescription>
+            <DialogTitle>{t('Duyệt ')}{shop.name}?</DialogTitle>
+            <DialogDescription>{t('Cửa hàng sẽ hiện với khách trong khu khi có món đang bán.')}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Huỷ</Button>
+              <Button variant="outline">{t('Huỷ')}</Button>
             </DialogClose>
             <Button
               disabled={approve.isPending}
@@ -180,7 +181,7 @@ function DecisionPanel({ shop }: { shop: Detail }) {
                 approve.mutate()
               }}
             >
-              Duyệt
+              {t('Duyệt')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -13,12 +13,13 @@ import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { t } from '@/shared/i18n'
 
 const TABS: { id: CaseStatus; label: string }[] = [
-  { id: 'OPEN', label: 'Cần quyết' },
-  { id: 'AWAITING_SHOP', label: 'Chờ quán' },
-  { id: 'UPHELD', label: 'Đã chấp nhận' },
-  { id: 'DISMISSED', label: 'Đã bác bỏ' },
+  { id: 'OPEN', label: t('Cần quyết') },
+  { id: 'AWAITING_SHOP', label: t('Chờ quán') },
+  { id: 'UPHELD', label: t('Đã chấp nhận') },
+  { id: 'DISMISSED', label: t('Đã bác bỏ') },
 ]
 
 /** Complaints about delivered orders that the shop disputed or did not answer, waiting for a decision (review-order-cases.md). */
@@ -32,20 +33,20 @@ export function AdminOrderCasesPage() {
   const items = data?.items ?? []
   const total = data?.total ?? 0
 
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem khiếu nại về đơn hàng.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền xem khiếu nại về đơn hàng.')}</p>
 
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Khiếu nại đơn hàng</h1>
+        <h1 className="text-2xl font-semibold">{t('Khiếu nại đơn hàng')}</h1>
         <p className="text-sm text-muted-foreground">
-          Khách báo vấn đề với đơn đã giao. Quán có 12 giờ để trả lời; chỉ những khiếu nại quán phản đối hoặc không trả lời mới cần bạn quyết.
+          {t('Khách báo vấn đề với đơn đã giao. Quán có 12 giờ để trả lời; chỉ những khiếu nại quán phản đối hoặc không trả lời mới cần bạn quyết.')}
         </p>
       </div>
 
       <PageTabs
-        label="Khiếu nại đơn hàng"
-        tabs={TABS.map((t) => ({ id: t.id, label: t.label, count: t.id === tab ? total : undefined }))}
+        label={t('Khiếu nại đơn hàng')}
+        tabs={TABS.map((tItem) => ({ id: tItem.id, label: tItem.label, count: tItem.id === tab ? total : undefined }))}
         value={tab}
         onValueChange={(id) => {
           setTab(id as CaseStatus)
@@ -55,7 +56,7 @@ export function AdminOrderCasesPage() {
 
       {cases.isError ? <FormError message={problemMessage(cases.error)} /> : null}
       {cases.isPending ? <Skeleton className="h-32" /> : null}
-      {data && items.length === 0 ? <EmptyState title="Không có khiếu nại nào ở mục này." /> : null}
+      {data && items.length === 0 ? <EmptyState title={t('Không có khiếu nại nào ở mục này.')} /> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((item) => {
@@ -66,17 +67,17 @@ export function AdminOrderCasesPage() {
                 <Card className="gap-2 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-semibold">Đơn #{item.orderNumber}</span>
+                      <span className="font-semibold">{t('Đơn #')}{item.orderNumber}</span>
                       <Badge variant="outline">{CASE_TYPE_LABEL[item.type ?? ''] ?? item.type}</Badge>
                       <Badge className={status.className}>{status.label}</Badge>
                       {item.status === 'OPEN' ? (
-                        <Badge variant="outline">{item.shopResponse === 'DISPUTED' ? 'Quán phản đối' : 'Quán không trả lời'}</Badge>
+                        <Badge variant="outline">{item.shopResponse === 'DISPUTED' ? t('Quán phản đối') : t('Quán không trả lời')}</Badge>
                       ) : null}
                     </div>
                     <span className="text-lg font-semibold tabular-nums">{formatVnd(item.refundAmount)}</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    {item.vendorName} · khách {item.customerName} · {item.status === 'OPEN' ? `chờ từ ${formatRelative(item.openedAt)}` : formatDateTime(item.openedAt)}
+                    {item.vendorName}{t(' · khách ')}{item.customerName} · {item.status === 'OPEN' ? t('chờ từ {v0}', { v0: formatRelative(item.openedAt) }) : formatDateTime(item.openedAt)}
                   </p>
                 </Card>
               </Link>

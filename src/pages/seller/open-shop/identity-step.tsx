@@ -11,6 +11,7 @@ import { FormError } from '@/widgets/auth-shell'
 import { Field, SaveButtons, StepCard, UploadField } from './step-kit'
 import { str, useStep } from './step-logic'
 import { legalUrl } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 type Body = {
   docType?: 'CCCD' | 'CMND'
@@ -50,14 +51,14 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
     const e: Errors = {}
     const n = docNumber.replace(/\s/g, '')
     const valid = docType === 'CCCD' ? /^\d{12}$/.test(n) : /^(\d{9}|\d{12})$/.test(n)
-    if (strict && n === '' && !numberSaved) e.docNumber = 'Hãy nhập số giấy tờ.'
-    else if (n !== '' && !valid) e.docNumber = docType === 'CCCD' ? 'CCCD gồm 12 chữ số.' : 'CMND gồm 9 hoặc 12 chữ số.'
-    if (strict || fullName.trim() !== '') requiredText(e, 'fullName', fullName, 'họ tên như trên giấy tờ', 100)
-    if (strict && !id?.frontPhotoUrl) e.frontPhoto = 'Hãy tải ảnh mặt trước giấy tờ.'
-    if (strict && !id?.selfiePhotoUrl) e.selfiePhoto = 'Hãy tải ảnh bạn cầm giấy tờ.'
-    if (strict && !accurate) e.accuracyConfirmed = 'Hãy xác nhận cam kết thông tin chính xác.'
-    if (strict && !id?.sellerTermsAccepted && !acceptTerms) e.sellerTerms = 'Hãy đồng ý Điều khoản dành cho người bán.'
-    if (strict && !id?.identityConsentGiven && !consent) e.identityConsent = 'Hãy đồng ý để bonbon xử lý dữ liệu định danh.'
+    if (strict && n === '' && !numberSaved) e.docNumber = t('Hãy nhập số giấy tờ.')
+    else if (n !== '' && !valid) e.docNumber = docType === 'CCCD' ? t('CCCD gồm 12 chữ số.') : t('CMND gồm 9 hoặc 12 chữ số.')
+    if (strict || fullName.trim() !== '') requiredText(e, 'fullName', fullName, t('họ tên như trên giấy tờ'), 100)
+    if (strict && !id?.frontPhotoUrl) e.frontPhoto = t('Hãy tải ảnh mặt trước giấy tờ.')
+    if (strict && !id?.selfiePhotoUrl) e.selfiePhoto = t('Hãy tải ảnh bạn cầm giấy tờ.')
+    if (strict && !accurate) e.accuracyConfirmed = t('Hãy xác nhận cam kết thông tin chính xác.')
+    if (strict && !id?.sellerTermsAccepted && !acceptTerms) e.sellerTerms = t('Hãy đồng ý Điều khoản dành cho người bán.')
+    if (strict && !id?.identityConsentGiven && !consent) e.identityConsent = t('Hãy đồng ý để bonbon xử lý dữ liệu định danh.')
     return e
   }
 
@@ -76,7 +77,7 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         onSuccess: () => {
           setDocNumber('')
           if (andNext) onNext()
-          else toast.success('Đã lưu nháp.')
+          else toast.success(t('Đã lưu nháp.'))
         },
       },
     )
@@ -84,12 +85,12 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
 
   return (
     <StepCard
-      title="4 · Định danh chủ cửa hàng"
-      description="Giấy tờ được mã hoá; chỉ quản trị viên có quyền riêng mới xem được và mỗi lần xem đều được ghi lại."
+      title={t('4 · Định danh chủ cửa hàng')}
+      description={t('Giấy tờ được mã hoá; chỉ quản trị viên có quyền riêng mới xem được và mỗi lần xem đều được ghi lại.')}
       footer={<SaveButtons pending={save.isPending || terms.isPending || privacy.isPending} onSave={submit} />}
     >
-      <FormRow label="Loại giấy tờ" required>
-        <div role="radiogroup" aria-label="Loại giấy tờ" className="flex gap-4">
+      <FormRow label={t('Loại giấy tờ')} required>
+        <div role="radiogroup" aria-label={t('Loại giấy tờ')} className="flex gap-4">
           {(['CCCD', 'CMND'] as const).map((value) => (
             <label key={value} className="flex min-h-9 items-center gap-2 text-sm">
               <input type="radio" name="doc-type" checked={docType === value} onChange={() => setDocType(value)} /> {value}
@@ -99,29 +100,29 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
       </FormRow>
       <Field
         id="id-number"
-        label="Số giấy tờ"
+        label={t('Số giấy tờ')}
         required
-        hint={id?.docNumberLast4 ? `Đã lưu ••••${id.docNumberLast4}; để trống để giữ nguyên.` : 'CCCD 12 số, CMND 9 hoặc 12 số.'}
+        hint={id?.docNumberLast4 ? t('Đã lưu ••••{v0}; để trống để giữ nguyên.', { v0: id.docNumberLast4 }) : t('CCCD 12 số, CMND 9 hoặc 12 số.')}
         error={save.errors.docNumber}
       >
         <Input id="id-number" inputMode="numeric" autoComplete="off" maxLength={14} value={docNumber} onChange={(e) => setDocNumber(e.target.value)} />
       </Field>
-      <Field id="id-name" label="Họ tên như trên giấy tờ" required error={save.errors.fullName}>
+      <Field id="id-name" label={t('Họ tên như trên giấy tờ')} required error={save.errors.fullName}>
         <Input id="id-name" maxLength={100} value={fullName} onChange={(e) => setFullName(e.target.value)} />
       </Field>
       <UploadField
-        label="Ảnh mặt trước giấy tờ"
+        label={t('Ảnh mặt trước giấy tờ')}
         required
-        hint="JPG, PNG hoặc WebP, tối đa 8 MB."
+        hint={t('JPG, PNG hoặc WebP, tối đa 8 MB.')}
         kind="identity-front"
         accept="image/jpeg,image/png,image/webp"
         previewUrl={id?.frontPhotoUrl}
         error={save.errors.frontPhoto}
       />
       <UploadField
-        label="Ảnh bạn cầm giấy tờ"
+        label={t('Ảnh bạn cầm giấy tờ')}
         required
-        hint="Thấy rõ mặt và giấy tờ. JPG, PNG hoặc WebP, tối đa 8 MB."
+        hint={t('Thấy rõ mặt và giấy tờ. JPG, PNG hoặc WebP, tối đa 8 MB.')}
         kind="identity-selfie"
         accept="image/jpeg,image/png,image/webp"
         previewUrl={id?.selfiePhotoUrl}
@@ -131,21 +132,21 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         <Consent error={save.errors.accuracyConfirmed}>
           <label className="flex items-start gap-3">
             <input type="checkbox" className="mt-0.5 size-4" checked={accurate} onChange={(e) => setAccurate(e.target.checked)} />
-            Tôi cam kết mọi thông tin đã cung cấp là chính xác và trung thực.
+            {t('Tôi cam kết mọi thông tin đã cung cấp là chính xác và trung thực.')}
           </label>
         </Consent>
         {id?.sellerTermsAccepted ? (
           <p className="flex items-center gap-2 text-success-fg">
-            <CheckIcon className="size-4" /> Đã đồng ý Điều khoản dành cho người bán.
+            <CheckIcon className="size-4" />{t(' Đã đồng ý Điều khoản dành cho người bán.')}
           </p>
         ) : (
           <Consent error={save.errors.sellerTerms}>
             <label className="flex items-start gap-3">
               <input type="checkbox" className="mt-0.5 size-4" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
               <span>
-                Tôi đồng ý với{' '}
+                {t('Tôi đồng ý với')}{' '}
                 <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
-                  {terms.data?.title ?? 'Điều khoản dành cho người bán'}
+                  {terms.data?.title ?? t('Điều khoản dành cho người bán')}
                 </a>
                 .
               </span>
@@ -154,16 +155,16 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         )}
         {id?.identityConsentGiven ? (
           <p className="flex items-center gap-2 text-success-fg">
-            <CheckIcon className="size-4" /> Đã đồng ý xử lý dữ liệu định danh.
+            <CheckIcon className="size-4" />{t(' Đã đồng ý xử lý dữ liệu định danh.')}
           </p>
         ) : (
           <Consent error={save.errors.identityConsent}>
             <label className="flex items-start gap-3">
               <input type="checkbox" className="mt-0.5 size-4" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
               <span>
-                Tôi đồng ý để bonbon xử lý dữ liệu định danh nhằm xác minh cửa hàng — xem{' '}
+                {t('Tôi đồng ý để bonbon xử lý dữ liệu định danh nhằm xác minh cửa hàng — xem')}{' '}
                 <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-link">
-                  {privacy.data?.title ?? 'Chính sách quyền riêng tư'}
+                  {privacy.data?.title ?? t('Chính sách quyền riêng tư')}
                 </a>
                 .
               </span>

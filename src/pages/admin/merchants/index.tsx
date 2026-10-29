@@ -15,28 +15,29 @@ import { PageTabs } from '@/shared/ui/workspace-slots'
 import { consolePath } from '@/shared/config/sites'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
+import { intlLocale, t } from '@/shared/i18n'
 
 const STATUS_TABS: { id: MerchantStatus; label: string }[] = [
-  { id: 'APPROVED', label: 'Đang hoạt động' },
-  { id: 'SUSPENDED', label: 'Bị đình chỉ' },
-  { id: 'PENDING', label: 'Chờ duyệt' },
-  { id: 'REJECTED', label: 'Bị từ chối' },
-  { id: 'CLOSED', label: 'Đã đóng' },
-  { id: 'ALL', label: 'Tất cả' },
+  { id: 'APPROVED', label: t('Đang hoạt động') },
+  { id: 'SUSPENDED', label: t('Bị đình chỉ') },
+  { id: 'PENDING', label: t('Chờ duyệt') },
+  { id: 'REJECTED', label: t('Bị từ chối') },
+  { id: 'CLOSED', label: t('Đã đóng') },
+  { id: 'ALL', label: t('Tất cả') },
 ]
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
-  APPROVED: { label: 'Hoạt động', className: 'bg-success-subtle text-success-fg' },
-  PENDING: { label: 'Chờ duyệt', className: 'bg-warning-subtle text-warning-fg' },
-  REJECTED: { label: 'Bị từ chối', className: 'bg-danger-subtle text-danger-fg' },
-  SUSPENDED: { label: 'Bị đình chỉ', className: 'bg-danger-subtle text-danger-fg' },
-  CLOSING: { label: 'Đang đóng', className: 'bg-warning-subtle text-warning-fg' },
-  CLOSED: { label: 'Đã đóng', className: 'bg-muted text-muted-foreground' },
+  APPROVED: { label: t('Hoạt động'), className: 'bg-success-subtle text-success-fg' },
+  PENDING: { label: t('Chờ duyệt'), className: 'bg-warning-subtle text-warning-fg' },
+  REJECTED: { label: t('Bị từ chối'), className: 'bg-danger-subtle text-danger-fg' },
+  SUSPENDED: { label: t('Bị đình chỉ'), className: 'bg-danger-subtle text-danger-fg' },
+  CLOSING: { label: t('Đang đóng'), className: 'bg-warning-subtle text-warning-fg' },
+  CLOSED: { label: t('Đã đóng'), className: 'bg-muted text-muted-foreground' },
 }
 const COMMISSION_STAGE: Record<string, string> = {
-  OVERDUE: 'Nợ hoa hồng quá hạn',
-  RESTRICTED: 'Hạn chế vì nợ hoa hồng',
-  PAUSED: 'Tạm ngừng nhận đơn vì nợ hoa hồng',
-  REVIEW: 'Chờ xem xét vì nợ hoa hồng',
+  OVERDUE: t('Nợ hoa hồng quá hạn'),
+  RESTRICTED: t('Hạn chế vì nợ hoa hồng'),
+  PAUSED: t('Tạm ngừng nhận đơn vì nợ hoa hồng'),
+  REVIEW: t('Chờ xem xét vì nợ hoa hồng'),
 }
 
 type Tab = 'list' | 'coverage'
@@ -47,21 +48,21 @@ export function AdminMerchantsPage() {
   const allowed = !!session?.permissions.has('merchant-approval:read')
   const [tab, setTab] = useState<Tab>('list')
 
-  if (!allowed) return <p className="text-muted-foreground">Bạn không có quyền xem danh sách cửa hàng.</p>
+  if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền xem danh sách cửa hàng.')}</p>
 
   return (
     <div className="flex max-w-5xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Cửa hàng</h1>
+        <h1 className="text-2xl font-semibold">{t('Cửa hàng')}</h1>
         <p className="text-sm text-muted-foreground">
-          Danh sách mọi cửa hàng đã gửi hồ sơ và vùng phủ thực tế. Muốn xử lý hồ sơ chờ duyệt, vào mục Duyệt cửa hàng.
+          {t('Danh sách mọi cửa hàng đã gửi hồ sơ và vùng phủ thực tế. Muốn xử lý hồ sơ chờ duyệt, vào mục Duyệt cửa hàng.')}
         </p>
       </div>
       <PageTabs
-        label="Cửa hàng"
+        label={t('Cửa hàng')}
         tabs={[
-          { id: 'list', label: 'Danh sách' },
-          { id: 'coverage', label: 'Vùng phủ' },
+          { id: 'list', label: t('Danh sách') },
+          { id: 'coverage', label: t('Vùng phủ') },
         ]}
         value={tab}
         onValueChange={(id) => setTab(id as Tab)}
@@ -90,30 +91,30 @@ function Directory() {
           paging.reset()
         }}
       >
-        <Input className="max-w-xs" type="search" placeholder="Tìm theo tên, phường, tỉnh" aria-label="Tìm cửa hàng" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Input className="max-w-xs" type="search" placeholder={t('Tìm theo tên, phường, tỉnh')} aria-label={t('Tìm cửa hàng')} value={search} onChange={(e) => setSearch(e.target.value)} />
         <Button type="submit" variant="outline">
-          Tìm
+          {t('Tìm')}
         </Button>
       </form>
-      <div className="flex flex-wrap gap-1" role="group" aria-label="Trạng thái">
-        {STATUS_TABS.map((t) => (
+      <div className="flex flex-wrap gap-1" role="group" aria-label={t('Trạng thái')}>
+        {STATUS_TABS.map((tItem) => (
           <Button
-            key={t.id}
+            key={tItem.id}
             size="sm"
-            variant={status === t.id ? 'default' : 'outline'}
-            aria-pressed={status === t.id}
+            variant={status === tItem.id ? 'default' : 'outline'}
+            aria-pressed={status === tItem.id}
             onClick={() => {
-              setStatus(t.id)
+              setStatus(tItem.id)
               paging.reset()
             }}
           >
-            {t.label}
+            {tItem.label}
           </Button>
         ))}
       </div>
       {merchants.isError ? <FormError message={problemMessage(merchants.error)} /> : null}
       {merchants.isPending ? <Skeleton className="h-32" /> : null}
-      {data && (data.items ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{q ? 'Không có cửa hàng nào khớp.' : 'Chưa có cửa hàng nào ở mục này.'}</Card> : null}
+      {data && (data.items ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{q ? t('Không có cửa hàng nào khớp.') : t('Chưa có cửa hàng nào ở mục này.')}</Card> : null}
       <ul className="flex flex-col gap-2">
         {(data?.items ?? []).map((m) => (
           <MerchantItem key={m.vendorId} m={m} />
@@ -128,24 +129,24 @@ function MerchantItem({ m }: { m: MerchantRow }) {
   const badge = STATUS_BADGE[m.status ?? ''] ?? { label: m.status ?? '', className: '' }
   const place = [m.ward, m.province].filter(Boolean).join(', ')
   const flags = [
-    m.performanceRestricted ? 'Bị hạn chế hiển thị' : null,
+    m.performanceRestricted ? t('Bị hạn chế hiển thị') : null,
     m.commissionStage && COMMISSION_STAGE[m.commissionStage] ? COMMISSION_STAGE[m.commissionStage] : null,
-    m.suspension === 'SCHEDULED' ? 'Có lịch đình chỉ' : null,
+    m.suspension === 'SCHEDULED' ? t('Có lịch đình chỉ') : null,
   ].filter(Boolean)
   return (
     <li>
       <Link to={consolePath(`/merchants/${m.vendorId}`)} className="block rounded-sm border bg-card p-4 hover:bg-muted/50">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="font-semibold">
-            {m.name ?? '(chưa đặt tên)'} <Badge className={cn('ml-2', badge.className)}>{badge.label}</Badge>
+            {m.name ?? t('(chưa đặt tên)')} <Badge className={cn('ml-2', badge.className)}>{badge.label}</Badge>
           </p>
           <p className="text-sm text-muted-foreground">
-            {m.ratingAverage !== undefined && m.ratingAverage !== null ? `★ ${m.ratingAverage.toLocaleString('vi-VN', { maximumFractionDigits: 1 })} (${m.ratingCount})` : 'Chưa có đánh giá'}
+            {m.ratingAverage !== undefined && m.ratingAverage !== null ? `★ ${m.ratingAverage.toLocaleString(intlLocale, { maximumFractionDigits: 1 })} (${m.ratingCount})` : t('Chưa có đánh giá')}
           </p>
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          {place || 'Chưa có địa chỉ'} · bán kính {m.deliveryRadiusKm ?? '—'} km · {(m.deliveredOrders ?? 0).toLocaleString('vi-VN')} đơn đã giao ·{' '}
-          {m.activePoints ? `${m.activePoints} điểm phạt` : 'không có điểm phạt'} · tạo {formatDateTime(m.createdAt)}
+          {place || t('Chưa có địa chỉ')}{t(' · bán kính ')}{m.deliveryRadiusKm ?? '—'} km · {(m.deliveredOrders ?? 0).toLocaleString(intlLocale)}{t(' đơn đã giao ·')}{' '}
+          {m.activePoints ? t('{v0} điểm phạt', { v0: m.activePoints }) : t('không có điểm phạt')}{t(' · tạo ')}{formatDateTime(m.createdAt)}
         </p>
         {flags.length > 0 ? (
           <p className="mt-2 flex flex-wrap gap-1.5">
@@ -173,7 +174,7 @@ function Coverage() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted-foreground">
-        Không có vùng do quản trị vẽ: mỗi quán tự đặt bán kính giao. Quán có bán kính lớn hơn {data?.outlierFactor ?? 2} lần trung vị của tỉnh được đánh dấu để xem kỹ; đây chỉ là quan sát, không có gì bị hạn chế tự động.
+        {t('Không có vùng do quản trị vẽ: mỗi quán tự đặt bán kính giao. Quán có bán kính lớn hơn ')}{data?.outlierFactor ?? 2}{t(' lần trung vị của tỉnh được đánh dấu để xem kỹ; đây chỉ là quan sát, không có gì bị hạn chế tự động.')}
       </p>
       <form
         className="flex flex-wrap items-center gap-2"
@@ -182,27 +183,27 @@ function Coverage() {
           setApplied({ province: province.trim(), ward: ward.trim() })
         }}
       >
-        <Input className="w-48" placeholder="Tỉnh / thành" aria-label="Lọc theo tỉnh hoặc thành" value={province} onChange={(e) => setProvince(e.target.value)} />
-        <Input className="w-48" placeholder="Phường / xã" aria-label="Lọc theo phường hoặc xã" value={ward} onChange={(e) => setWard(e.target.value)} />
+        <Input className="w-48" placeholder={t('Tỉnh / thành')} aria-label={t('Lọc theo tỉnh hoặc thành')} value={province} onChange={(e) => setProvince(e.target.value)} />
+        <Input className="w-48" placeholder={t('Phường / xã')} aria-label={t('Lọc theo phường hoặc xã')} value={ward} onChange={(e) => setWard(e.target.value)} />
         <Button type="submit" variant="outline">
-          Lọc
+          {t('Lọc')}
         </Button>
       </form>
       {coverage.isError ? <FormError message={problemMessage(coverage.error)} /> : null}
       {coverage.isPending ? <Skeleton className="h-32" /> : null}
       {data ? (
         <p className="text-sm">
-          {items.length} cửa hàng đang hoạt động
-          {outliers > 0 ? <span className="text-warning-fg"> · {outliers} quán bán kính lớn bất thường</span> : null}
+          {items.length}{t(' cửa hàng đang hoạt động')}
+          {outliers > 0 ? <span className="text-warning-fg"> · {outliers}{t(' quán bán kính lớn bất thường')}</span> : null}
         </p>
       ) : null}
-      {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">Không có cửa hàng nào trong phạm vi này.</Card> : null}
+      {data && items.length === 0 ? <Card className="p-6 text-muted-foreground">{t('Không có cửa hàng nào trong phạm vi này.')}</Card> : null}
       {items.length > 0 ? (
         <div className="overflow-x-auto rounded-xl border border-grey-200">
           <table className="w-full text-ui">
             <thead className="text-small text-muted-foreground">
               <tr>
-                {['Cửa hàng', 'Khu vực', 'Bán kính', 'Trung vị tỉnh', 'Đơn đã giao'].map((h) => (
+                {[t('Cửa hàng'), t('Khu vực'), t('Bán kính'), t('Trung vị tỉnh'), t('Đơn đã giao')].map((h) => (
                   <th key={h} className="px-3 py-2.5 text-left font-normal whitespace-nowrap [&:nth-child(n+3)]:text-right">
                     {h}
                   </th>
@@ -221,10 +222,10 @@ function Coverage() {
                   <td className="px-3 py-3">{[s.ward, s.province].filter(Boolean).join(', ') || '—'}</td>
                   <td className="px-3 py-3 text-right tabular-nums">
                     {s.radiusKm} km
-                    {s.outlier ? <Badge className="ml-2 bg-warning-subtle text-warning-fg">Xem kỹ</Badge> : null}
+                    {s.outlier ? <Badge className="ml-2 bg-warning-subtle text-warning-fg">{t('Xem kỹ')}</Badge> : null}
                   </td>
                   <td className="px-3 py-3 text-right tabular-nums">{s.provinceMedianRadiusKm} km</td>
-                  <td className="px-3 py-3 text-right tabular-nums">{(s.deliveredOrders ?? 0).toLocaleString('vi-VN')}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{(s.deliveredOrders ?? 0).toLocaleString(intlLocale)}</td>
                 </tr>
               ))}
             </tbody>

@@ -6,6 +6,8 @@ import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { buttonClass } from '@/shared/ui/button'
 import { TextSizeControl } from '@/shared/ui/text-size-control'
+import { LanguageSwitch } from '@/shared/ui/language-switch'
+import { t } from '@/shared/i18n'
 
 export type DocsTab = { key: string; label: string; icon: LucideIcon; to: string }
 export type DocsNavGroup = { title: string; items: { label: string; to: string }[] }
@@ -14,7 +16,7 @@ export type DocsNavGroup = { title: string; items: { label: string; to: string }
  * The left menu on a thin rail, as on the GitBook docs: grey upper-case group names, grey pages, the current page in orange beside an
  * orange piece of the rail; hovering any row gives a light grey ground and black text.
  */
-export function DocsRail({ groups, current, label = 'Mục lục' }: { groups: DocsNavGroup[]; current?: string; label?: string }) {
+export function DocsRail({ groups, current, label = t('Mục lục') }: { groups: DocsNavGroup[]; current?: string; label?: string }) {
   return (
     <nav aria-label={label} className="flex flex-col gap-6 border-l border-grey-200">
       {groups.map((g) => (
@@ -63,33 +65,33 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, chil
   return (
     <div className="flex min-h-svh flex-col bg-background text-ink">
       <a href="#main" className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-ui font-medium text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
-        Bỏ qua đến nội dung chính
+        {t('Bỏ qua đến nội dung chính')}
       </a>
       <header className="sticky top-0 z-30 border-b border-grey-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <a href={siteUrl('public')} aria-label="bonbon, trang chủ" className="flex items-center">
+            <a href={siteUrl('public')} aria-label={t('bonbon, trang chủ')} className="flex items-center">
               <Lockup className="h-7" />
             </a>
             <span className="text-ui text-muted-foreground">{label}</span>
           </div>
           <div className="flex items-center gap-2">
             <a href={siteUrl('public')} className="hidden rounded-md px-2.5 py-1.5 text-ui text-muted-foreground transition-colors hover:bg-grey-100 hover:text-ink sm:inline">
-              Về bonbon
+              {t('Về bonbon')}
             </a>
             <a href={siteUrl('public') + '#tai-app'} className={buttonClass()}>
-              Tải app
+              {t('Tải app')}
             </a>
           </div>
         </div>
         <nav aria-label={label} className="mx-auto flex w-full max-w-[1440px] gap-1 overflow-x-auto px-4 sm:px-6">
-          {tabs.map((t) => {
-            const Icon = t.icon
-            const on = t.key === tab
+          {tabs.map((tItem) => {
+            const Icon = tItem.icon
+            const on = tItem.key === tab
             return (
               <Link
-                key={t.key}
-                to={t.to}
+                key={tItem.key}
+                to={tItem.to}
                 aria-current={on ? 'page' : undefined}
                 className={cn(
                   '-mb-px flex shrink-0 items-center gap-2 rounded-t-md border-b-2 px-3 py-2.5 text-ui whitespace-nowrap outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring',
@@ -97,7 +99,7 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, chil
                 )}
               >
                 <Icon className="size-4" strokeWidth={1.75} aria-hidden="true" />
-                {t.label}
+                {tItem.label}
               </Link>
             )
           })}
@@ -113,16 +115,19 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, chil
       <footer className="border-t border-grey-200 bg-beige-50">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4 py-6 text-small text-muted-foreground sm:px-6">
           <span>© {new Date().getFullYear()} bonbon</span>
-          <TextSizeControl />
-          <nav aria-label="Pháp lý" className="flex flex-wrap gap-x-5">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <LanguageSwitch />
+            <TextSizeControl />
+          </div>
+          <nav aria-label={t('Pháp lý')} className="flex flex-wrap gap-x-5">
             <a href={legalUrl('CUSTOMER_TERMS')} className="hover:text-ink">
-              Điều khoản sử dụng
+              {t('Điều khoản sử dụng')}
             </a>
             <a href={legalUrl('SELLER_TERMS')} className="hover:text-ink">
-              Điều khoản người bán
+              {t('Điều khoản người bán')}
             </a>
             <a href={legalUrl('PRIVACY_POLICY')} className="hover:text-ink">
-              Chính sách quyền riêng tư
+              {t('Chính sách quyền riêng tư')}
             </a>
           </nav>
         </div>

@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { useSession } from '@/entities/session'
@@ -49,8 +50,8 @@ export function AdminLoginPage({ area }: { area: 'console' | 'ops' }) {
 
   return (
     <AuthShell
-      title={area === 'ops' ? 'Đăng nhập vận hành' : 'Đăng nhập quản trị'}
-      description={area === 'ops' ? 'Chỉ dành cho quản trị viên hạ tầng của bonbon.' : 'Chỉ dành cho quản trị viên bonbon.'}
+      title={area === 'ops' ? t('Đăng nhập vận hành') : t('Đăng nhập quản trị')}
+      description={area === 'ops' ? t('Chỉ dành cho quản trị viên hạ tầng của bonbon.') : t('Chỉ dành cho quản trị viên bonbon.')}
     >
       <form onSubmit={submit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
@@ -58,13 +59,13 @@ export function AdminLoginPage({ area }: { area: 'console' | 'ops' }) {
           <Input id="admin-email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="admin-password">Mật khẩu</Label>
+          <Label htmlFor="admin-password">{t('Mật khẩu')}</Label>
           <Input id="admin-password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         {needsCaptcha ? <Captcha onToken={setCaptchaToken} /> : null}
         <FormError message={error} />
         <Button type="submit" size="lg" disabled={submitting}>
-          {submitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
+          {submitting ? t('Đang đăng nhập…') : t('Đăng nhập')}
         </Button>
       </form>
     </AuthShell>

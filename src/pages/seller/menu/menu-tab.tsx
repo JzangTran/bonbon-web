@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { ArrowDownIcon, ArrowUpIcon, CheckIcon, PencilIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useMenuMutation, type Menu, type MenuItem, type MenuSection, type OptionGroups } from '@/entities/menu'
@@ -31,7 +32,7 @@ export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; gr
 
   const createSection = useMenuMutation(
     (sectionName: string) => api.POST('/api/merchant/menu-sections', { body: { name: sectionName } }),
-    'Đã thêm mục thực đơn.',
+    t('Đã thêm mục thực đơn.'),
   )
   const reorderSections = useMenuMutation(
     (ids: string[]) => api.PUT('/api/merchant/menu-sections/order', { body: { ids } }),
@@ -41,10 +42,10 @@ export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; gr
     <div className="flex flex-col gap-6">
       {sections.length === 0 && !adding ? (
         <Card className="items-start gap-3 p-6">
-          <p className="font-semibold">Thực đơn đang trống</p>
-          <p className="text-sm text-muted-foreground">Bắt đầu bằng một mục như “Cơm”, “Nước uống”, rồi thêm món vào đó.</p>
+          <p className="font-semibold">{t('Thực đơn đang trống')}</p>
+          <p className="text-sm text-muted-foreground">{t('Bắt đầu bằng một mục như “Cơm”, “Nước uống”, rồi thêm món vào đó.')}</p>
           <Button onClick={() => setAdding(true)}>
-            <PlusIcon /> Thêm mục thực đơn
+            <PlusIcon />{t(' Thêm mục thực đơn')}
           </Button>
         </Card>
       ) : null}
@@ -78,18 +79,18 @@ export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; gr
               })
             }}
           >
-            <Input autoFocus required maxLength={60} placeholder="Tên mục, ví dụ Cơm" value={name} onChange={(e) => setName(e.target.value)} />
+            <Input autoFocus required maxLength={60} placeholder={t('Tên mục, ví dụ Cơm')} value={name} onChange={(e) => setName(e.target.value)} />
             <Button type="submit" disabled={createSection.isPending}>
-              Thêm
+              {t('Thêm')}
             </Button>
             <Button type="button" variant="ghost" onClick={() => setAdding(false)}>
-              Huỷ
+              {t('Huỷ')}
             </Button>
           </form>
         ) : (
           <div>
             <Button variant="outline" onClick={() => setAdding(true)}>
-              <PlusIcon /> Thêm mục thực đơn
+              <PlusIcon />{t(' Thêm mục thực đơn')}
             </Button>
           </div>
         )
@@ -129,11 +130,11 @@ function SectionCard({
   const [name, setName] = useState(section.name ?? '')
   const rename = useMenuMutation(
     (value: string) => api.PATCH('/api/merchant/menu-sections/{id}', { params: { path: { id: section.id! } }, body: { name: value } }),
-    'Đã đổi tên mục.',
+    t('Đã đổi tên mục.'),
   )
   const remove = useMenuMutation(
     () => api.DELETE('/api/merchant/menu-sections/{id}', { params: { path: { id: section.id! } } }),
-    'Đã xoá mục thực đơn.',
+    t('Đã xoá mục thực đơn.'),
   )
   const reorderItems = useMenuMutation((ids: string[]) =>
     api.PUT('/api/merchant/menu-sections/{id}/items/order', { params: { path: { id: section.id! } }, body: { ids } }),
@@ -151,47 +152,47 @@ function SectionCard({
             }}
           >
             <Input autoFocus required maxLength={60} value={name} onChange={(e) => setName(e.target.value)} className="max-w-xs" />
-            <Button type="submit" size="icon-sm" aria-label="Lưu tên mục" disabled={rename.isPending}>
+            <Button type="submit" size="icon-sm" aria-label={t('Lưu tên mục')} disabled={rename.isPending}>
               <CheckIcon />
             </Button>
-            <Button type="button" size="icon-sm" variant="ghost" aria-label="Huỷ" onClick={() => setRenaming(false)}>
+            <Button type="button" size="icon-sm" variant="ghost" aria-label={t('Huỷ')} onClick={() => setRenaming(false)}>
               <XIcon />
             </Button>
           </form>
         ) : (
           <>
             <h2 className="text-lg font-semibold">{section.name}</h2>
-            <span className="text-sm text-muted-foreground">{items.length} món</span>
-            <Button variant="ghost" size="icon-sm" aria-label="Đổi tên mục" onClick={() => setRenaming(true)}>
+            <span className="text-sm text-muted-foreground">{items.length}{t(' món')}</span>
+            <Button variant="ghost" size="icon-sm" aria-label={t('Đổi tên mục')} onClick={() => setRenaming(true)}>
               <PencilIcon />
             </Button>
           </>
         )}
         <div className="ml-auto flex items-center gap-1">
-          <Button variant="ghost" size="icon-sm" aria-label="Chuyển mục lên" disabled={!canUp} onClick={() => onMove(-1)}>
+          <Button variant="ghost" size="icon-sm" aria-label={t('Chuyển mục lên')} disabled={!canUp} onClick={() => onMove(-1)}>
             <ArrowUpIcon />
           </Button>
-          <Button variant="ghost" size="icon-sm" aria-label="Chuyển mục xuống" disabled={!canDown} onClick={() => onMove(1)}>
+          <Button variant="ghost" size="icon-sm" aria-label={t('Chuyển mục xuống')} disabled={!canDown} onClick={() => onMove(1)}>
             <ArrowDownIcon />
           </Button>
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label="Xoá mục"
+            aria-label={t('Xoá mục')}
             disabled={remove.isPending}
             onClick={() => {
-              if (window.confirm(`Xoá mục “${section.name}”? Mục còn món thì không xoá được.`)) remove.mutate(undefined)
+              if (window.confirm(t('Xoá mục “{v0}”? Mục còn món thì không xoá được.', { v0: section.name }))) remove.mutate(undefined)
             }}
           >
             <Trash2Icon />
           </Button>
           <Button size="sm" onClick={onAdd}>
-            <PlusIcon /> Thêm món
+            <PlusIcon />{t(' Thêm món')}
           </Button>
         </div>
       </div>
       {items.length === 0 ? (
-        <p className="px-4 py-6 text-sm text-muted-foreground">Chưa có món nào trong mục này.</p>
+        <p className="px-4 py-6 text-sm text-muted-foreground">{t('Chưa có món nào trong mục này.')}</p>
       ) : (
         <ul className="divide-y">
           {items.map((item, index) => (
@@ -231,7 +232,7 @@ function DishRow({
   )
   const remove = useMenuMutation(
     () => api.DELETE('/api/merchant/menu-items/{id}', { params: { path: { id: item.id! } } }),
-    'Đã xoá món.',
+    t('Đã xoá món.'),
   )
   const switchedOff = item.status === 'SOLD_OUT'
   const outOfStock = item.stockQuantity === 0
@@ -248,12 +249,12 @@ function DishRow({
       <div className="min-w-0 flex-1 basis-48">
         <div className="flex flex-wrap items-center gap-2">
           <span className={cn('font-semibold', item.soldOut && 'text-muted-foreground')}>{item.name}</span>
-          {outOfStock ? <Badge variant="secondary">Hết tồn kho</Badge> : null}
-          {blockedByOptions ? <Badge className="bg-warning-subtle text-warning-fg">Thiếu lựa chọn bắt buộc</Badge> : null}
+          {outOfStock ? <Badge variant="secondary">{t('Hết tồn kho')}</Badge> : null}
+          {blockedByOptions ? <Badge className="bg-warning-subtle text-warning-fg">{t('Thiếu lựa chọn bắt buộc')}</Badge> : null}
         </div>
         {item.description ? <p className="line-clamp-1 text-sm text-muted-foreground">{item.description}</p> : null}
         {item.stockQuantity !== undefined && item.stockQuantity !== null && !outOfStock ? (
-          <p className="text-xs text-muted-foreground">Còn {item.stockQuantity} phần</p>
+          <p className="text-xs text-muted-foreground">{t('Còn ')}{item.stockQuantity}{t(' phần')}</p>
         ) : null}
       </div>
       <span className="w-28 text-right font-semibold tabular-nums">{formatVnd(item.price)}</span>
@@ -264,25 +265,25 @@ function DishRow({
         disabled={toggle.isPending}
         onClick={() => toggle.mutate(switchedOff ? 'AVAILABLE' : 'SOLD_OUT')}
       >
-        {switchedOff ? 'Đang hết món' : 'Đang bán'}
+        {switchedOff ? t('Đang hết món') : t('Đang bán')}
       </Button>
       <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon-sm" aria-label="Chuyển món lên" disabled={!canUp} onClick={() => onMove(-1)}>
+        <Button variant="ghost" size="icon-sm" aria-label={t('Chuyển món lên')} disabled={!canUp} onClick={() => onMove(-1)}>
           <ArrowUpIcon />
         </Button>
-        <Button variant="ghost" size="icon-sm" aria-label="Chuyển món xuống" disabled={!canDown} onClick={() => onMove(1)}>
+        <Button variant="ghost" size="icon-sm" aria-label={t('Chuyển món xuống')} disabled={!canDown} onClick={() => onMove(1)}>
           <ArrowDownIcon />
         </Button>
-        <Button variant="ghost" size="icon-sm" aria-label={`Sửa ${item.name}`} onClick={onEdit}>
+        <Button variant="ghost" size="icon-sm" aria-label={t('Sửa {v0}', { v0: item.name })} onClick={onEdit}>
           <PencilIcon />
         </Button>
         <Button
           variant="ghost"
           size="icon-sm"
-          aria-label={`Xoá ${item.name}`}
+          aria-label={t('Xoá {v0}', { v0: item.name })}
           disabled={remove.isPending}
           onClick={() => {
-            if (window.confirm(`Xoá món “${item.name}”? Đơn cũ vẫn giữ nguyên thông tin món.`)) remove.mutate(undefined)
+            if (window.confirm(t('Xoá món “{v0}”? Đơn cũ vẫn giữ nguyên thông tin món.', { v0: item.name }))) remove.mutate(undefined)
           }}
         >
           <Trash2Icon />
