@@ -9,7 +9,10 @@ import { Label } from '@/shared/ui/label'
 import { ActionGroup, StatRow, StatsPanel, StatTile } from '@/shared/ui/section'
 import { Textarea } from '@/shared/ui/textarea'
 import { ChartDemo, OrdersTable, PaginationDemo, SegmentedDemo, TabsDemo } from './demos'
-import { t } from '@/shared/i18n'
+import { t, tx } from '@/shared/i18n'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { EmptyState } from '@/shared/ui/empty-state'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/ui/sheet'
 
 export type ComponentDoc = {
   slug: string
@@ -38,14 +41,14 @@ const star = (
 
 export const COMPONENTS: ComponentDoc[] = [
   {
-    slug: 'nut',
-    name: t('Nút'),
+    slug: 'button',
+    name: 'Button',
     group: t('Thao tác'),
     summary: t('Nút thực hiện một hành động.'),
     when: (
       <>
         {t('Dùng nút cho việc làm thay đổi một thứ gì đó: nhận đơn, lưu, gửi, chuyển sang bước sau. Muốn đưa người xem sang trang khác thì dùng')}{' '}
-        <a href="/bo-nhan-dien/components/lien-ket" className="text-link">
+        <a href="/bo-nhan-dien/components/text-link" className="text-link">
           {t('liên kết')}
         </a>
         .
@@ -128,8 +131,8 @@ export const COMPONENTS: ComponentDoc[] = [
     ],
   },
   {
-    slug: 'lien-ket',
-    name: t('Liên kết'),
+    slug: 'text-link',
+    name: 'TextLink',
     group: t('Thao tác'),
     summary: t('Liên kết đưa người xem tới một trang hoặc một phần khác.'),
     when: t('Dùng liên kết trong câu chữ để dẫn sang nơi khác. Muốn làm một việc (lưu, gửi, xoá) thì dùng nút.'),
@@ -137,13 +140,13 @@ export const COMPONENTS: ComponentDoc[] = [
       demo: (
         <p className="text-body">
           {t('Đọc')}{' '}
-          <a href="/bo-nhan-dien" className="text-link">
+          <a href="/bo-nhan-dien/design-language/logo" className="text-link">
             {t('quy tắc sử dụng logo')}
           </a>{' '}
           {t('trước khi in logo lên bao bì.')}
         </p>
       ),
-      code: t('<a href="/bo-nhan-dien" className="text-link">quy tắc sử dụng logo</a>'),
+      code: t('<a href="/bo-nhan-dien/design-language/logo" className="text-link">quy tắc sử dụng logo</a>'),
     },
     behavior: [
       { title: t('Rê chuột'), text: t('Gạch chân cam dày lên. Chữ không đổi màu và không xê dịch, vì độ dày tăng xuống phía dưới từ một khoảng cách cố định.') },
@@ -185,8 +188,8 @@ export const COMPONENTS: ComponentDoc[] = [
     content: [{ title: t('Chữ của liên kết tự đủ nghĩa'), text: t('Người dùng trình đọc màn hình thường nghe danh sách liên kết riêng; "bấm vào đây" không nói gì.') }],
   },
   {
-    slug: 'o-nhap',
-    name: t('Ô nhập'),
+    slug: 'input',
+    name: 'Input',
     group: t('Nhập liệu'),
     summary: t('Ô nhập cho người dùng gõ một đoạn chữ hoặc số.'),
     when: t('Dùng cho thông tin người dùng tự gõ: tên quán, số điện thoại, ghi chú. Khi chỉ có vài lựa chọn biết trước, dùng lựa chọn nhanh hoặc ô chọn.'),
@@ -280,8 +283,8 @@ export const COMPONENTS: ComponentDoc[] = [
     ],
   },
   {
-    slug: 'lua-chon-nhanh',
-    name: t('Lựa chọn nhanh'),
+    slug: 'segmented',
+    name: 'Segmented',
     group: t('Nhập liệu'),
     summary: t('Một viên xám chứa vài lựa chọn loại trừ nhau; chọn một là đổi ngay.'),
     when: t('Dùng cho 2–5 lựa chọn ngắn đổi cách xem dữ liệu: kỳ thống kê, kiểu biểu đồ, cách sắp xếp. Nhiều lựa chọn hơn thì dùng ô chọn; bật/tắt một thứ thì dùng hộp kiểm.'),
@@ -312,8 +315,8 @@ export const COMPONENTS: ComponentDoc[] = [
     content: [{ title: t('Một hai từ'), text: t('"Ngày", "Tuần", "Tháng". Không lặp lại tên nhóm trong từng lựa chọn.') }],
   },
   {
-    slug: 'tab',
-    name: 'Tab',
+    slug: 'page-tabs',
+    name: 'PageTabs',
     group: t('Điều hướng'),
     summary: t('Tab chia một trang thành các phần khác nhau, xem từng phần một.'),
     when: t('Dùng khi một trang có hai việc hoặc hai nhóm nội dung khác nhau, như "Sao kê" và "Sổ cái". Hai thứ cần nhìn cùng lúc thì đừng tách tab.'),
@@ -346,8 +349,8 @@ export const COMPONENTS: ComponentDoc[] = [
     content: [{ title: t('Tên tab là danh từ ngắn'), text: t('"Mới", "Đang làm", "Lịch sử". Không viết động từ, không lặp tên trang.') }],
   },
   {
-    slug: 'phan-trang',
-    name: t('Phân trang'),
+    slug: 'pagination',
+    name: 'Pagination',
     group: t('Điều hướng'),
     summary: t('Phân trang chia một danh sách dài thành nhiều trang và cho chọn số dòng mỗi trang.'),
     when: t('Dùng dưới mọi bảng và danh sách có thể dài hơn một trang. Danh sách luôn ngắn (dưới 25 dòng) thì không cần.'),
@@ -360,8 +363,8 @@ export const COMPONENTS: ComponentDoc[] = [
     accessibility: [{ title: t('Nút có tên'), text: t('Các nút mũi tên có aria-label (Trang đầu, Trang trước…); trang hiện tại có aria-current="page".') }],
   },
   {
-    slug: 'nhan-trang-thai',
-    name: t('Nhãn trạng thái'),
+    slug: 'badge',
+    name: 'Badge',
     group: t('Hiển thị'),
     summary: t('Nhãn nhỏ cho biết một thứ đang ở trạng thái nào.'),
     when: t('Dùng cho trạng thái của đơn, phiếu hỗ trợ, khu vực. Không dùng làm nút hay để trang trí.'),
@@ -400,8 +403,8 @@ export const COMPONENTS: ComponentDoc[] = [
     content: [{ title: t('Ngắn, nói trạng thái'), text: t('"Đang chuẩn bị", "Đã giao". Không viết câu.') }],
   },
   {
-    slug: 'bang',
-    name: t('Bảng'),
+    slug: 'table',
+    name: 'Table',
     group: t('Hiển thị'),
     summary: t('Bảng xếp nhiều dòng cùng loại thành cột để so sánh.'),
     when: t('Dùng khi người xem cần so sánh nhiều thứ theo cùng các thuộc tính: đơn, quán, khoản tiền. Ít cột và mỗi dòng nhiều chữ thì dùng danh sách thẻ.'),
@@ -420,8 +423,8 @@ export const COMPONENTS: ComponentDoc[] = [
     content: [{ title: t('Tên cột ngắn'), text: t('"Tổng", "Khách", "Gửi lúc". Đơn vị đặt trong giá trị (129.000 ₫), không trong tên cột.') }],
   },
   {
-    slug: 'so-lieu',
-    name: t('Ô số liệu'),
+    slug: 'stat-tile',
+    name: 'StatTile',
     group: t('Hiển thị'),
     summary: t('Ô số liệu đưa một con số quan trọng lên đầu, kèm so sánh.'),
     when: t('Dùng ở đầu trang thống kê cho vài con số chính. Nhiều con số cần so với nhau theo thời gian thì dùng biểu đồ.'),
@@ -447,8 +450,8 @@ export const COMPONENTS: ComponentDoc[] = [
     ],
   },
   {
-    slug: 'bieu-do',
-    name: t('Biểu đồ'),
+    slug: 'chart-panel',
+    name: 'ChartPanel',
     group: t('Hiển thị'),
     summary: t('Biểu đồ cho thấy một con số thay đổi thế nào theo thời gian.'),
     when: t('Dùng khi xu hướng quan trọng hơn từng con số: doanh thu theo ngày, tỷ lệ đơn lỗi theo tuần. Chỉ một con số thì dùng ô số liệu.'),
@@ -477,6 +480,126 @@ export const COMPONENTS: ComponentDoc[] = [
       { title: t('Màu đã kiểm tra'), text: t('Ba màu chuỗi được kiểm tra cho người mù màu trên nền be; chữ và nhãn không dùng màu của chuỗi.') },
     ],
   },
+  {
+    slug: 'card',
+    name: 'Card',
+    group: tx('Bề mặt', 'Surfaces'),
+    summary: tx('Card gom một mục nội dung và các hành động của nó trên một bề mặt.', 'A Card groups one item of content and its actions on one surface.'),
+    when: tx(
+      'Dùng cho một mục đứng riêng: một đơn, một cài đặt, một biểu mẫu nhỏ. Nhiều mục cùng loại cần so sánh thì dùng Table; một con số quan trọng thì dùng StatTile.',
+      'Use it for one standalone item: an order, a setting, a small form. Many items of the same kind to compare need a Table; one important number needs a StatTile.',
+    ),
+    example: {
+      demo: (
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>{t('Ngôn ngữ')}</CardTitle>
+            <CardDescription>{t('Tiếng Việt hoặc tiếng Anh, ghi nhớ trên thiết bị này.')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="secondary">English</Button>
+          </CardContent>
+        </Card>
+      ),
+      code: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+
+<Card>
+  <CardHeader>
+    <CardTitle>…</CardTitle>
+    <CardDescription>…</CardDescription>
+  </CardHeader>
+  <CardContent>…</CardContent>
+</Card>`,
+    },
+    layout: {
+      text: [tx('Card bo 12 px, không bóng. Các card trong một trang cách nhau 24–48 px; đừng lồng card trong card.', 'Cards are rounded 12 px with no shadow. Cards on a page are 24–48 px apart; never nest a card inside a card.')],
+      rules: [],
+    },
+    accessibility: [{ title: tx('Tiêu đề thật', 'A real title'), text: tx('CardTitle là tiêu đề của mục; trang có nhiều card thì mỗi card một tiêu đề để người dùng trình đọc màn hình nhảy giữa chúng.', 'CardTitle titles the item; on a page with many cards, give each one a title so screen reader users can jump between them.') }],
+  },
+  {
+    slug: 'sheet',
+    name: 'Sheet',
+    group: tx('Bề mặt', 'Surfaces'),
+    summary: tx('Sheet là một lớp trượt ra từ cạnh màn hình để xem hoặc sửa một mục mà không rời trang.', 'A Sheet is a layer that slides in from the edge to view or edit one item without leaving the page.'),
+    when: tx(
+      'Dùng để mở chi tiết một đơn hay sửa một món ngay trên danh sách. Câu hỏi xác nhận ngắn dùng Dialog; việc nhiều bước dùng một trang riêng.',
+      "Use it to open an order's details or edit a dish right on the list. Short confirmation questions use a Dialog; multi-step work gets its own page.",
+    ),
+    example: {
+      demo: (
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="secondary">{t('Sửa món')}</Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>{t('Sửa món')}</SheetTitle>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+      ),
+      code: `import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/ui/sheet'
+
+<Sheet>
+  <SheetTrigger asChild><Button variant="secondary">…</Button></SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader><SheetTitle>…</SheetTitle></SheetHeader>
+  </SheetContent>
+</Sheet>`,
+    },
+    behavior: [
+      {
+        title: tx('Mở và đóng', 'Opening and closing'),
+        text: tx(
+          'Trên web sheet trượt từ phải, có nút đóng ở góc; Esc hoặc bấm ra ngoài cũng đóng. Trên điện thoại sheet trượt từ dưới lên.',
+          'On the web the sheet slides in from the right with a close button in the corner; Esc or clicking outside also closes it. On phones it slides up from the bottom.',
+        ),
+      },
+    ],
+    accessibility: [
+      {
+        title: tx('Giữ tiêu điểm', 'Focus is kept'),
+        text: tx(
+          'Khi mở, tiêu điểm vào trong sheet và không thoát ra trang phía sau; khi đóng, tiêu điểm trở về nút đã mở nó.',
+          'When open, focus moves into the sheet and cannot leave to the page behind; when closed, it returns to the button that opened it.',
+        ),
+      },
+    ],
+  },
+  {
+    slug: 'empty-state',
+    name: 'EmptyState',
+    group: t('Hiển thị'),
+    summary: tx(
+      'EmptyState là thứ một danh sách hiện khi chưa có gì: một hình, một câu nói vì sao, và việc nên làm tiếp.',
+      'An EmptyState is what a list shows when it has nothing: a picture, a sentence saying why, and what to do next.',
+    ),
+    when: tx(
+      'Dùng thay cho một danh sách hoặc bảng trống. Kết quả tìm kiếm không có gì thì dùng hình no-result và gợi ý đổi bộ lọc.',
+      'Use it in place of an empty list or table. When a search finds nothing, use the no-result picture and suggest changing filters.',
+    ),
+    example: {
+      demo: (
+        <EmptyState title={t('Thực đơn đang trống')} className="w-full max-w-md">
+          {t('Bắt đầu bằng một mục như “Cơm”, “Nước uống”, rồi thêm món vào đó.')}
+        </EmptyState>
+      ),
+      code: `import { EmptyState } from '@/shared/ui/empty-state'
+
+<EmptyState illustration="empty" title="…">…</EmptyState>`,
+    },
+    types: [
+      { name: 'empty', text: tx('Chưa có gì, và đó là bình thường.', 'Nothing yet, and that is normal.'), demo: <EmptyState title={t('Chưa có đơn nào.')} className="w-full" /> },
+      { name: 'no-result', text: tx('Có dữ liệu nhưng bộ lọc không khớp.', 'There is data but the filters match none of it.'), demo: <EmptyState illustration="no-result" title={t('Không có kết quả.')} className="w-full" /> },
+    ],
+    content: [
+      {
+        title: tx('Nói vì sao và làm gì', 'Say why and what to do'),
+        text: tx('Tiêu đề nói tình trạng; câu phụ nói việc tiếp theo. Đừng chỉ viết "Không có dữ liệu".', 'The title states the situation; the second line says the next step. Never just write "No data".'),
+      },
+    ],
+  },
 ]
 
-export const COMPONENT_GROUPS = [t('Thao tác'), t('Nhập liệu'), t('Điều hướng'), t('Hiển thị')]
+export const COMPONENT_GROUPS = [t('Thao tác'), t('Nhập liệu'), t('Điều hướng'), t('Hiển thị'), tx('Bề mặt', 'Surfaces')]

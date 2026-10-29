@@ -1,32 +1,28 @@
-import { ComponentIcon, PaletteIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { DocsFrame, type DocsTab } from '@/shared/ui/docs-frame'
+import { DocsFrame, DocsRail, type DocsNavGroup, type DocsTab } from '@/shared/ui/docs-frame'
 import { t } from '@/shared/i18n'
+import { COMPONENT_GROUPS, COMPONENTS } from './components/registry'
+import { BRAND_GROUPS, COMPONENTS_PATH, componentPath, groupPath, pagePath, type BrandGroupKey } from './site'
 
-export const BRAND_PATH = '/bo-nhan-dien'
-export const COMPONENTS_PATH = '/bo-nhan-dien/components'
+const TABS: DocsTab[] = BRAND_GROUPS.map((g) => ({ key: g.key, label: g.title, icon: g.icon, to: groupPath(g.key) }))
 
-const TABS: DocsTab[] = [
-  { key: 'identity', label: t('Nhận diện'), icon: PaletteIcon, to: BRAND_PATH },
-  { key: 'components', label: 'Components', icon: ComponentIcon, to: COMPONENTS_PATH },
-]
-
-/** The brand site, laid out like the help center: the identity (logo, colours, type, rules) and the components, as tabs. */
-export function BrandFrame({ tab, ...rest }: { tab: 'identity' | 'components'; sidebar?: ReactNode; aside?: ReactNode; children: ReactNode }) {
-  return <DocsFrame label={t('Thương hiệu')} tabs={TABS} tab={tab} {...rest} />
+function railOf(group: BrandGroupKey): DocsNavGroup[] {
+  if (group === 'components') {
+    return [
+      { title: 'Components', items: [{ label: t('Tổng quan'), to: COMPONENTS_PATH }] },
+      ...COMPONENT_GROUPS.map((g) => ({ title: g, items: COMPONENTS.filter((c) => c.group === g).map((c) => ({ label: c.name, to: componentPath(c.slug) })) })),
+    ]
+  }
+  const g = BRAND_GROUPS.find((x) => x.key === group)!
+  return [{ title: g.title, items: g.pages.map((p) => ({ label: p.title, to: pagePath(group, p.slug) })) }]
 }
 
-/** A section of a brand page: a heading the side menu and the headings list jump to, a line under it, then the samples. */
-export function BrandSection({ id, title, intro, children }: { id: string; title: string; intro: ReactNode; children: ReactNode }) {
+/** The brand site, laid out like the help center: the five parts as tabs, the part's pages on the left, the page's headings on the right. */
+export function BrandFrame({ group, current, aside, children }: { group: BrandGroupKey; current: string; aside?: ReactNode; children: ReactNode }) {
+  const title = BRAND_GROUPS.find((x) => x.key === group)!.title
   return (
-    <section aria-labelledby={id} className="flex scroll-mt-36 flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 id={id} className="text-h2 font-semibold">
-          {title}
-        </h2>
-        <p className="text-body text-ink">{intro}</p>
-      </div>
+    <DocsFrame label={t('Thương hiệu')} tabs={TABS} tab={group} sidebar={<DocsRail groups={railOf(group)} current={current} label={title} />} aside={aside}>
       {children}
-    </section>
+    </DocsFrame>
   )
 }

@@ -33,6 +33,11 @@ export function setLocale(next: Locale) {
   window.location.reload()
 }
 
+/** Long-form text written in both languages side by side (the brand guidelines), where a dictionary entry per paragraph would drift. */
+export function tx(vi: string, en: string): string {
+  return locale === 'en' ? en : vi
+}
+
 /** Translates a Vietnamese source string; `{name}` placeholders take values from `vars`. */
 export function t(vi: string, vars?: Record<string, unknown>): string {
   const text = locale === 'en' ? (EN[vi] ?? vi) : vi

@@ -11,10 +11,10 @@ export const RESOURCE_COLUMNS: ResourceColumn[] = [
   {
     label: t('Thương hiệu'),
     links: [
-      { label: t('Logo và biểu tượng'), to: '/bo-nhan-dien#logo' },
-      { label: t('Màu sắc'), to: '/bo-nhan-dien#mau-sac' },
-      { label: t('Font chữ'), to: '/bo-nhan-dien#chu' },
-      { label: t('Quy tắc sử dụng'), to: '/bo-nhan-dien#quy-tac' },
+      { label: 'Get started', to: '/bo-nhan-dien/get-started/whats-new' },
+      { label: 'Logo', to: '/bo-nhan-dien/design-language/logo' },
+      { label: 'Color', to: '/bo-nhan-dien/design-language/color' },
+      { label: 'Typography', to: '/bo-nhan-dien/design-language/typography' },
       { label: 'Components', to: '/bo-nhan-dien/components' },
     ],
   },
