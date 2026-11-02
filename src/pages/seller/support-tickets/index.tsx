@@ -42,7 +42,7 @@ export function SellerSupportTicketsPage() {
 
       {tickets.isError ? <FormError message={problemMessage(tickets.error)} /> : null}
       {tickets.isPending ? <Skeleton className="h-24" /> : null}
-      {tickets.data && items.length === 0 ? <EmptyState title={t('Bạn chưa gửi phiếu nào.')} /> : null}
+      {tickets.data && items.length === 0 ? <EmptyState mascot="all-clear" title={t('Bạn chưa gửi phiếu nào.')} /> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((tItem) => {

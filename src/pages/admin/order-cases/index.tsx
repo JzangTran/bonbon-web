@@ -56,7 +56,7 @@ export function AdminOrderCasesPage() {
 
       {cases.isError ? <FormError message={problemMessage(cases.error)} /> : null}
       {cases.isPending ? <Skeleton className="h-32" /> : null}
-      {data && items.length === 0 ? <EmptyState title={t('Không có khiếu nại nào ở mục này.')} /> : null}
+      {data && items.length === 0 ? <EmptyState mascot="all-clear" title={t('Không có khiếu nại nào ở mục này.')} /> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((item) => {

@@ -1,5 +1,24 @@
 /** The mascot's poses that have a rendered picture (mascot/<pose>.webp). */
-export type MascotPose = 'serve' | 'phone' | 'cook' | 'deliver' | 'eat' | 'wave' | 'not-found'
+export type MascotPose =
+  | 'serve'
+  | 'phone'
+  | 'cook'
+  | 'deliver'
+  | 'eat'
+  | 'wave'
+  | 'not-found'
+  | 'empty-orders'
+  | 'all-clear'
+  | 'empty-chat'
+  | 'empty-notifications'
+  | 'check-email'
+  | 'verified'
+  | 'payment-done'
+  | 'maintenance'
+  | 'error'
+  | 'search'
+  | 'update'
+  | 'seller-desk'
 
 // rendered pictures of the mascot, one per pose (mascot/<pose>.webp, transparent background); see mascot/README.md
 const PICTURES = import.meta.glob<string>('./mascot/*.webp', { eager: true, query: '?url', import: 'default' })

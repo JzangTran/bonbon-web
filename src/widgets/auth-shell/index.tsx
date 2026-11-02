@@ -1,7 +1,9 @@
 import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { pictureOf, type MascotPose } from '@/shared/assets/mascot-pictures'
 import { siteUrl } from '@/shared/config/sites'
 import { Lockup, Mark } from '@/shared/ui/brand'
+import { MascotArt } from '@/shared/ui/illustrations'
 import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
@@ -9,9 +11,25 @@ import { t } from '@/shared/i18n'
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
-/** Pictures of the seller site, stacked and tilted on the orange rings: the right half of the sign-in pages. */
+/**
+ * The right half of the sign-in pages, on the orange ribbon: the bonbon bear at its shop counter with the seller site open, or, until
+ * that picture is added, pictures of the seller site stacked and tilted.
+ */
 function AuthArt() {
+  const desk = pictureOf('seller-desk')
   const shots = ['/images/guides/tong-quan.jpg', '/images/guides/thuc-don.jpg', '/images/guides/don-hang.jpg']
+  if (desk) {
+    return (
+      <div aria-hidden="true" className="relative hidden overflow-hidden lg:block">
+        <OrangeRibbon variant="wave" fade className="absolute top-1/2 -left-[20%] w-[140%] -translate-y-1/2 rotate-[-12deg]" />
+        <img
+          src={desk}
+          alt=""
+          className="absolute top-1/2 left-1/2 w-[72%] max-w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-3xl shadow-[0_24px_60px_rgb(0_0_0/0.16)]"
+        />
+      </div>
+    )
+  }
   return (
     <div aria-hidden="true" className="relative hidden overflow-hidden lg:block">
       <OrangeRibbon variant="wave" fade className="absolute top-1/2 -left-[20%] w-[140%] -translate-y-1/2 rotate-[-12deg]" />
@@ -174,8 +192,12 @@ export function AuthStepPage({ steps, current, title, description, onBack, child
   )
 }
 
-/** The big outlined check of a finished flow. */
-export function SuccessMark() {
+/**
+ * The end of a finished flow: the bonbon bear for the moment (`mascot`, e.g. the envelope for "check your inbox"), or the big outlined
+ * check when no picture fits.
+ */
+export function SuccessMark({ mascot }: { mascot?: MascotPose }) {
+  if (mascot && pictureOf(mascot)) return <MascotArt pose={mascot} fallback="success" className="mx-auto w-44" />
   return (
     <span className="flex size-12 items-center justify-center rounded-full bg-accent text-primary">
       <CheckIcon className="size-6" />

@@ -72,7 +72,7 @@ export function AdminContactRequestsPage() {
       </div>
       {inbox.isError ? <FormError message={problemMessage(inbox.error)} /> : null}
       {inbox.isPending ? <Skeleton className="h-32" /> : null}
-      {inbox.data && items.length === 0 ? <EmptyState title={t('Không có yêu cầu nào ở mục này.')} /> : null}
+      {inbox.data && items.length === 0 ? <EmptyState mascot="all-clear" title={t('Không có yêu cầu nào ở mục này.')} /> : null}
       <ul className="flex flex-col divide-y divide-grey-200 rounded-xl border border-grey-200">
         {items.map((r) => (
           <li key={r.id}>

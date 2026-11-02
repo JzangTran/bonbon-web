@@ -26,7 +26,7 @@ export function VerifyEmailPage() {
 
   return (
     <AuthShell title={result.data ? t('Xác thực thành công') : t('Xác thực email')} heading={t('Đăng ký')}>
-      {result.data ? <SuccessMark /> : null}
+      {result.data ? <SuccessMark mascot="verified" /> : null}
       {!token ? <FormError message={t('Liên kết thiếu mã xác thực.')} /> : null}
       {result.isPending && token ? <p className="text-sm text-muted-foreground">{t('Đang xác thực…')}</p> : null}
       {result.data === 'VERIFIED' ? <FormSuccess message={t('Email đã được xác thực. Bạn có thể đăng nhập.')} /> : null}

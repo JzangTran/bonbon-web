@@ -226,7 +226,7 @@ function SentStep({ email }: { email: string }) {
       title={t('Kiểm tra hộp thư của bạn')}
       description={t('Chúng tôi đã gửi liên kết xác thực tới {v0}. Liên kết có hiệu lực 24 giờ.', { v0: email })}
     >
-      <SuccessMark />
+      <SuccessMark mascot="check-email" />
       <p className="text-center text-sm text-muted-foreground">{t('Mở email và bấm liên kết để hoàn tất đăng ký. Không thấy thư? Hãy xem cả mục thư rác.')}</p>
       {notice ? <FormSuccess message={notice} /> : null}
       <FormError message={error} />

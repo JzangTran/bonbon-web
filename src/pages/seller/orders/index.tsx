@@ -164,9 +164,7 @@ function OrderList({ query, empty, onOpen }: { query: ListQuery; empty: string; 
   if (query.isError) return <FormError message={problemMessage(query.error)} />
   const items = query.data?.items ?? []
   if (items.length === 0) {
-    return (
-      <EmptyState title={empty} />
-    )
+    return <EmptyState mascot="empty-orders" title={empty} />
   }
   return (
     <ul className="flex flex-col gap-3">

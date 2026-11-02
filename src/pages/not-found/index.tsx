@@ -4,7 +4,6 @@ import { siteUrl } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
 import { Lockup } from '@/shared/ui/brand'
 import { buttonClass } from '@/shared/ui/button'
-import { Illustration } from '@/shared/ui/illustrations'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 
 /**
@@ -22,11 +21,7 @@ export function NotFoundPage() {
         <LanguageSwitch compact />
       </header>
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-8 px-6 pb-12 md:flex-row md:gap-16">
-        {picture ? (
-          <img src={picture} alt="" aria-hidden="true" className="w-52 shrink-0 mix-blend-multiply sm:w-64 md:order-2 md:w-80" />
-        ) : (
-          <Illustration name="no-result" />
-        )}
+        {picture ? <img src={picture} alt="" aria-hidden="true" className="w-52 shrink-0 mix-blend-multiply sm:w-64 md:order-2 md:w-80" /> : null}
         <div className="flex max-w-md flex-col items-center gap-4 text-center md:items-start md:text-left">
           <p className="text-ui font-semibold tracking-wide text-primary uppercase">{t('Lỗi 404')}</p>
           <h1 className="text-[2.25rem] leading-[1.1] font-medium tracking-[-0.02em] text-balance sm:text-[2.75rem]">{t('Ơ, trang này đi đâu mất rồi?')}</h1>

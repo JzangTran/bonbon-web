@@ -60,7 +60,7 @@ export function AdminSupportTicketsPage() {
 
       {inbox.isError ? <FormError message={problemMessage(inbox.error)} /> : null}
       {inbox.isPending ? <Skeleton className="h-32" /> : null}
-      {inbox.data && items.length === 0 ? <EmptyState title={t('Không có phiếu nào ở mục này.')} /> : null}
+      {inbox.data && items.length === 0 ? <EmptyState mascot="all-clear" title={t('Không có phiếu nào ở mục này.')} /> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((tItem) => {

@@ -51,7 +51,7 @@ export function SellerChatPage() {
       <div className="grid gap-4 md:grid-cols-[320px_1fr]">
         <div className={cn('flex flex-col gap-2', selected ? 'hidden md:flex' : '')}>
           {conversations.isPending ? <Skeleton className="h-24" /> : null}
-          {conversations.data && items.length === 0 ? <EmptyState title={t('Chưa có khách nào nhắn tin.')} className="px-3 py-6" /> : null}
+          {conversations.data && items.length === 0 ? <EmptyState mascot="empty-chat" title={t('Chưa có khách nào nhắn tin.')} className="px-3 py-6" /> : null}
           <ul className="flex flex-col gap-2">
             {items.map((c) => (
               <li key={c.id}>
