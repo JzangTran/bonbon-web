@@ -2,12 +2,8 @@ import type { ReactNode } from 'react'
 import {
   ArrowRightIcon,
   ChevronDownIcon,
-  CompassIcon,
-  MapPinIcon,
   MessageCircleIcon,
   ShieldCheckIcon,
-  SmartphoneIcon,
-  TruckIcon,
   WalletIcon,
 } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
@@ -71,47 +67,30 @@ function Badge({ children }: { children: ReactNode }) {
 function Hero() {
   return (
     <section id="order" className="relative scroll-mt-20 overflow-hidden">
-      <Wrap className="flex flex-col items-center pt-14 pb-24 text-center lg:pt-20 lg:pb-40">
-        <Reveal className="flex flex-col items-center gap-6">
+      <Wrap className="flex flex-col items-center pt-12 pb-24 text-center lg:pt-16 lg:pb-36">
+        {/* compact, after gitbook.com: a pill, a two-line headline, one line under it, two buttons */}
+        <Reveal className="flex flex-col items-center gap-5">
           <a
             href={siteUrl('merchant', '/register')}
-            className="inline-flex items-center gap-2 rounded-full bg-muted py-1 pr-3 pl-1 text-sm font-medium text-ink transition-colors hover:bg-border"
+            className="inline-flex items-center gap-2 rounded-full border border-grey-200 bg-white py-1 pr-3 pl-1 text-sm text-muted-foreground transition-colors hover:bg-grey-100 hover:text-ink"
           >
             <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">{t('Mới')}</span>
             {t('Mở quán trên bonbon chỉ trong vài bước')}
             <ArrowRightIcon className="size-4" aria-hidden="true" />
           </a>
-          <h1 className="max-w-4xl text-[2.5rem] leading-[1.1] font-semibold tracking-[-0.025em] sm:text-[3.5rem] lg:text-[4rem]">
-            {t('Đặt món từ quán ngay dưới sảnh, ')}<span className="text-primary">{t('giao tận cửa.')}</span>
+          <h1 className="max-w-[56rem] text-[2.5rem] leading-[1.08] font-medium tracking-[-0.03em] text-balance sm:text-[3.5rem]">
+            {t('Đặt món từ quán dưới sảnh. ')}<span className="text-primary">{t('Giao tận cửa.')}</span>
           </h1>
-          <p className="max-w-2xl text-lg leading-[1.75rem] text-muted-foreground">
-            {t('Các quán ăn trong chung cư và khu công nghiệp của bạn, trong một ứng dụng. Quán tự mang món tới, phí giao thấp, theo dõi từng bước.')}
-          </p>
-          <div id="get-app" className="flex scroll-mt-24 flex-col items-center gap-3">
-            <div className="flex flex-wrap justify-center gap-3">
-              <span aria-disabled="true" className={cn(btnSolid, 'cursor-default')}>
-                <SmartphoneIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
-                {t('Tải app đặt món')}
-              </span>
-              <a href="#how-it-works" className={btnPale}>
-                <CompassIcon className="size-5" strokeWidth={1.75} aria-hidden="true" />
-                {t('Xem quán trong khu')}
-              </a>
-            </div>
-            <p className="text-sm text-muted-foreground">{t('Ứng dụng sắp có trên App Store và Google Play.')}</p>
+          <p className="max-w-2xl text-lg leading-[1.75rem] text-muted-foreground">{t('Quán ăn trong toà và trong khu của bạn, trong một ứng dụng.')}</p>
+          <div id="get-app" className="flex scroll-mt-24 flex-wrap justify-center gap-3">
+            <span aria-disabled="true" title={t('Ứng dụng sắp có trên App Store và Google Play.')} className={cn(btnSolid, 'cursor-default')}>
+              {t('Tải app đặt món')}
+              <ArrowRightIcon className="size-4" aria-hidden="true" />
+            </span>
+            <a href="#how-it-works" className={btnPale}>
+              {t('Xem quán trong khu')}
+            </a>
           </div>
-          <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm">
-            <li className="flex items-center gap-2">
-              <TruckIcon className="size-[18px] text-primary" strokeWidth={1.75} aria-hidden="true" />
-              <b>{t('Quán tự giao')}</b>
-              <span className="text-muted-foreground">{t('trong cùng toà, vài phút là tới')}</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <MapPinIcon className="size-[18px] text-primary" strokeWidth={1.75} aria-hidden="true" />
-              <b>{t('Theo dõi từng bước')}</b>
-              <span className="text-muted-foreground">{t('cập nhật ngay khi quán làm')}</span>
-            </li>
-          </ul>
         </Reveal>
 
         <Reveal delay={120} className="relative mt-14 w-full max-w-5xl">
