@@ -14,7 +14,7 @@ import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { siteButton, siteButtonSolid } from '@/widgets/site-chrome/buttons'
 import { siteUrl } from '@/shared/config/sites'
-import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
+import { OrangeKnot, OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Reveal } from '@/shared/ui/reveal'
 import { BearScene, type BearKind } from './bear-scene'
 import { HeroPoster } from './hero-poster'
@@ -116,7 +116,7 @@ function Hero() {
 
         <Reveal delay={120} className="relative mt-14 w-full max-w-5xl">
           {/* the one 3D ribbon of the page, sweeping across behind the bear */}
-          <OrangeRibbon variant="wave" fade className="absolute top-[58%] left-1/2 w-[135%] -translate-x-1/2 -translate-y-1/2" />
+          <OrangeKnot className="absolute top-[58%] left-1/2 w-[100%] max-w-none -translate-x-1/2 -translate-y-1/2" />
           <HeroPoster />
         </Reveal>
       </Wrap>
