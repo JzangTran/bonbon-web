@@ -71,11 +71,6 @@ function Badge({ children }: { children: ReactNode }) {
 function Hero() {
   return (
     <section id="order" className="relative scroll-mt-20 overflow-hidden">
-      {/* ribbons cut by the page corners, after gitbook.com: a different shape in each corner */}
-      <OrangeRibbon variant="hook" className="absolute top-0 left-0 hidden w-[24rem] -translate-x-[42%] -translate-y-[22%] md:block" />
-      <OrangeRibbon variant="sweep" className="absolute top-0 right-0 hidden w-[26rem] translate-x-[30%] -translate-y-[18%] md:block" />
-      <OrangeRibbon variant="curl" className="absolute bottom-0 left-0 hidden w-[24rem] -translate-x-[30%] translate-y-[22%] md:block" />
-      <OrangeRibbon variant="fold" className="absolute right-0 bottom-0 hidden w-[24rem] translate-x-[26%] translate-y-[24%] md:block" />
       <Wrap className="flex flex-col items-center pt-14 pb-24 text-center lg:pt-20 lg:pb-40">
         <Reveal className="flex flex-col items-center gap-6">
           <a
@@ -120,11 +115,9 @@ function Hero() {
         </Reveal>
 
         <Reveal delay={120} className="relative mt-14 w-full max-w-5xl">
-          {/* the middle: a long wave of its own behind the picture */}
-          <OrangeRibbon variant="wave" fade className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-[40%]" />
-          <div className="relative rounded-[1.25rem] bg-white p-2 text-left shadow-[0_30px_80px_rgb(0_0_0/0.12)]">
-            <HeroPoster />
-          </div>
+          {/* the one 3D ribbon of the page, sweeping across behind the bear */}
+          <OrangeRibbon variant="wave" fade className="absolute top-[58%] left-1/2 w-[135%] -translate-x-1/2 -translate-y-1/2" />
+          <HeroPoster />
         </Reveal>
       </Wrap>
     </section>
