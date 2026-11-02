@@ -14,14 +14,17 @@ function rule(group: OptionGroup) {
   return `${group.min === 0 ? t('Tuỳ chọn') : t('Bắt buộc')}, chọn ${range}`
 }
 
-export function OptionsTab({ menu, groups }: { menu: Menu; groups: OptionGroups }) {
+/** The option groups. `quick` (selling focus) leaves only the sold-out switch of each option. */
+export function OptionsTab({ menu, groups, quick = false }: { menu: Menu; groups: OptionGroups; quick?: boolean }) {
   const list = groups.groups ?? []
   const [editing, setEditing] = useState<OptionGroup | 'new' | null>(null)
   const dishName = (id: string) => (menu.sections ?? []).flatMap((s) => s.items ?? []).find((i) => i.id === id)?.name
 
   return (
     <div className="flex flex-col gap-6">
-      {list.length === 0 ? (
+      {list.length === 0 && quick ? (
+        <p className="text-sm text-muted-foreground">{t('Chưa có nhóm lựa chọn')}</p>
+      ) : list.length === 0 ? (
         <Card className="items-start gap-3 p-6">
           <p className="font-semibold">{t('Chưa có nhóm lựa chọn')}</p>
           <p className="text-sm text-muted-foreground">
@@ -37,15 +40,18 @@ export function OptionsTab({ menu, groups }: { menu: Menu; groups: OptionGroups 
             <GroupCard
               key={group.id}
               group={group}
+              quick={quick}
               dishNames={(group.menuItemIds ?? []).map(dishName).filter((n): n is string => Boolean(n))}
               onEdit={() => setEditing(group)}
             />
           ))}
-          <div>
-            <Button variant="outline" onClick={() => setEditing('new')}>
-              <PlusIcon />{t(' Thêm nhóm lựa chọn')}
-            </Button>
-          </div>
+          {!quick ? (
+            <div>
+              <Button variant="outline" onClick={() => setEditing('new')}>
+                <PlusIcon />{t(' Thêm nhóm lựa chọn')}
+              </Button>
+            </div>
+          ) : null}
         </>
       )}
       {editing ? (
@@ -55,7 +61,7 @@ export function OptionsTab({ menu, groups }: { menu: Menu; groups: OptionGroups 
   )
 }
 
-function GroupCard({ group, dishNames, onEdit }: { group: OptionGroup; dishNames: string[]; onEdit: () => void }) {
+function GroupCard({ group, quick, dishNames, onEdit }: { group: OptionGroup; quick: boolean; dishNames: string[]; onEdit: () => void }) {
   const remove = useOptionMutation(
     () => api.DELETE('/api/merchant/option-groups/{id}', { params: { path: { id: group.id! } } }),
     t('Đã xoá nhóm lựa chọn.'),
@@ -69,7 +75,7 @@ function GroupCard({ group, dishNames, onEdit }: { group: OptionGroup; dishNames
       <div className="flex flex-wrap items-center gap-2 border-b px-4 py-3">
         <h2 className="text-lg font-semibold">{group.name}</h2>
         <Badge variant="outline">{rule(group)}</Badge>
-        <div className="ml-auto flex items-center gap-1">
+        <div className={quick ? 'hidden' : 'ml-auto flex items-center gap-1'}>
           <Button variant="ghost" size="icon-sm" aria-label={t('Sửa nhóm {v0}', { v0: group.name })} onClick={onEdit}>
             <PencilIcon />
           </Button>

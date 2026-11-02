@@ -2,6 +2,7 @@ import { ClipboardListIcon, LifeBuoyIcon, MessageCircleIcon, SettingsIcon, Shopp
 import { Navigate, useLocation } from 'react-router'
 import { shopStatus, useShop } from '@/entities/shop'
 import { AcceptingOrdersSwitch } from '@/features/accepting-orders'
+import { SellingFocusToggle, useSellingFocus } from '@/features/selling-focus'
 import { WorkspaceShell, type AccountLink, type ExtraPage, type FooterLink, type NavParent, type Space } from './workspace'
 import { merchantPath, siteUrl } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
@@ -105,6 +106,19 @@ const FOOTER: FooterLink[] = [
   { to: siteUrl('help', '/legal/PRIVACY_POLICY'), label: t('Chính sách riêng tư'), external: true },
 ]
 
+/**
+ * "Bán hàng tập trung" (selling focus): only what a busy service needs, each one page. Orders with their New / In progress /
+ * Done tabs, chat with customers, and the menu to mark dishes and options sold out. Everything else (dashboard, statistics,
+ * money, reviews, settings) is out of the way until the seller leaves the mode.
+ */
+const FOCUS_NAV: NavParent[] = [
+  { key: 'orders', label: t('Đơn hàng'), icon: ClipboardListIcon, to: merchantPath('/orders') },
+  { key: 'chat', label: t('Tin nhắn'), icon: MessageCircleIcon, to: merchantPath('/chat') },
+  { key: 'menu', label: t('Còn/hết món'), icon: UtensilsIcon, to: merchantPath('/menu') },
+]
+const FOCUS_EXTRAS: ExtraPage[] = [{ to: merchantPath('/menu/options'), label: t('Tùy chọn món'), under: merchantPath('/menu') }]
+const FOCUS_PAGES = [merchantPath('/orders'), merchantPath('/chat'), merchantPath('/menu'), merchantPath('/menu/options')]
+
 /** While the shop is not approved or is closing, the menu is a short list of single pages. */
 const CLOSING_NAV: NavParent[] = [
   { key: 'closing', label: t('Đóng cửa hàng'), icon: StoreIcon, to: merchantPath('/closing') },
@@ -126,6 +140,7 @@ export function SellerLayout() {
   const status = shopStatus(shop.data)
   const approved = status === 'APPROVED'
   const closing = status === 'CLOSING' || status === 'CLOSED'
+  const focus = useSellingFocus() && approved
 
   if (shop.data && closing && !WHILE_CLOSING.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
     return <Navigate to={merchantPath('/closing')} replace />
@@ -133,15 +148,32 @@ export function SellerLayout() {
   if (shop.data && !approved && !closing && !OPEN_BEFORE_APPROVAL.includes(pathname)) {
     return <Navigate to="/focus/open-shop" replace />
   }
+  if (focus && !FOCUS_PAGES.includes(pathname)) {
+    return <Navigate to={merchantPath('/orders')} replace />
+  }
   return (
     <WorkspaceShell
       area={t('Kênh người bán')}
-      homePath={merchantPath()}
-      spaces={approved ? SPACES : [{ key: 'only', label: t('Kênh người bán'), icon: StoreIcon, nav: closing ? CLOSING_NAV : SETUP_NAV }]}
+      homePath={focus ? merchantPath('/orders') : merchantPath()}
+      spaces={
+        focus
+          ? [{ key: 'focus', label: t('Bán hàng tập trung'), icon: ShoppingBagIcon, nav: FOCUS_NAV, extras: FOCUS_EXTRAS }]
+          : approved
+            ? SPACES
+            : [{ key: 'only', label: t('Kênh người bán'), icon: StoreIcon, nav: closing ? CLOSING_NAV : SETUP_NAV }]
+      }
+      focus={focus ? { label: t('Bán hàng tập trung') } : undefined}
       account={ACCOUNT}
       footerLinks={FOOTER}
       loginPath={merchantPath('/login')}
-      headerExtra={approved ? <AcceptingOrdersSwitch /> : null}
+      headerExtra={
+        approved ? (
+          <>
+            <SellingFocusToggle />
+            <AcceptingOrdersSwitch />
+          </>
+        ) : null
+      }
       orderPath={() => merchantPath('/orders')}
     />
   )

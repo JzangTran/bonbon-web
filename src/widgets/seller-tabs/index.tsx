@@ -16,8 +16,11 @@ export function OrderCaseTabs() {
   )
 }
 
-/** The menu: dishes (and the form to add one), the option groups they offer, and the dishes flagged under the wrong category. */
-export function MenuTabs() {
+/**
+ * The menu: dishes (and the form to add one), the option groups they offer, and the dishes flagged under the wrong category.
+ * `quick` (selling focus) keeps the dishes and the options only.
+ */
+export function MenuTabs({ quick = false }: { quick?: boolean }) {
   const { pathname } = useLocation()
   return (
     <PageTabs
@@ -25,7 +28,7 @@ export function MenuTabs() {
       tabs={[
         { id: 'dishes', label: t('Món ăn'), to: merchantPath('/menu'), active: pathname === merchantPath('/menu') || pathname === merchantPath('/menu/new') },
         { id: 'options', label: t('Nhóm lựa chọn'), to: merchantPath('/menu/options') },
-        { id: 'category-cases', label: t('Món sai ngành'), to: merchantPath('/category-cases') },
+        ...(quick ? [] : [{ id: 'category-cases', label: t('Món sai ngành'), to: merchantPath('/category-cases') }]),
       ]}
     />
   )

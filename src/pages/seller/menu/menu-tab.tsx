@@ -23,7 +23,8 @@ function moved(ids: string[], id: string, by: -1 | 1): string[] | null {
   return next
 }
 
-export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; groups: OptionGroups; startNewDish?: boolean }) {
+/** The dishes by section. `quick` (selling focus) leaves only the sold-out switch of each dish: no adding, editing or moving. */
+export function MenuTab({ menu, groups, startNewDish = false, quick = false }: { menu: Menu; groups: OptionGroups; startNewDish?: boolean; quick?: boolean }) {
   const sections = menu.sections ?? []
   const firstSection = sections[0]?.id
   const [editing, setEditing] = useState<Editing | null>(() => (startNewDish && firstSection ? { item: null, sectionId: firstSection } : null))
@@ -40,7 +41,7 @@ export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; gr
 
   return (
     <div className="flex flex-col gap-6">
-      {sections.length === 0 && !adding ? (
+      {sections.length === 0 && !adding && !quick ? (
         <Card className="items-start gap-3 p-6">
           <p className="font-semibold">{t('Thực đơn đang trống')}</p>
           <p className="text-sm text-muted-foreground">{t('Bắt đầu bằng một mục như “Cơm”, “Nước uống”, rồi thêm món vào đó.')}</p>
@@ -54,6 +55,7 @@ export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; gr
         <SectionCard
           key={section.id}
           section={section}
+          quick={quick}
           canUp={index > 0}
           canDown={index < sections.length - 1}
           onMove={(by) => {
@@ -65,7 +67,7 @@ export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; gr
         />
       ))}
 
-      {sections.length > 0 || adding ? (
+      {!quick && (sections.length > 0 || adding) ? (
         adding ? (
           <form
             className="flex max-w-md items-center gap-2"
@@ -112,6 +114,7 @@ export function MenuTab({ menu, groups, startNewDish = false }: { menu: Menu; gr
 
 function SectionCard({
   section,
+  quick,
   canUp,
   canDown,
   onMove,
@@ -119,6 +122,7 @@ function SectionCard({
   onEdit,
 }: {
   section: MenuSection
+  quick: boolean
   canUp: boolean
   canDown: boolean
   onMove: (by: -1 | 1) => void
@@ -163,12 +167,14 @@ function SectionCard({
           <>
             <h2 className="text-lg font-semibold">{section.name}</h2>
             <span className="text-sm text-muted-foreground">{items.length}{t(' món')}</span>
-            <Button variant="ghost" size="icon-sm" aria-label={t('Đổi tên mục')} onClick={() => setRenaming(true)}>
-              <PencilIcon />
-            </Button>
+            {!quick ? (
+              <Button variant="ghost" size="icon-sm" aria-label={t('Đổi tên mục')} onClick={() => setRenaming(true)}>
+                <PencilIcon />
+              </Button>
+            ) : null}
           </>
         )}
-        <div className="ml-auto flex items-center gap-1">
+        <div className={cn('ml-auto flex items-center gap-1', quick && 'hidden')}>
           <Button variant="ghost" size="icon-sm" aria-label={t('Chuyển mục lên')} disabled={!canUp} onClick={() => onMove(-1)}>
             <ArrowUpIcon />
           </Button>
@@ -199,6 +205,7 @@ function SectionCard({
             <DishRow
               key={item.id}
               item={item}
+              quick={quick}
               canUp={index > 0}
               canDown={index < items.length - 1}
               onMove={(by) => {
@@ -216,12 +223,14 @@ function SectionCard({
 
 function DishRow({
   item,
+  quick,
   canUp,
   canDown,
   onMove,
   onEdit,
 }: {
   item: MenuItem
+  quick: boolean
   canUp: boolean
   canDown: boolean
   onMove: (by: -1 | 1) => void
@@ -267,7 +276,7 @@ function DishRow({
       >
         {switchedOff ? t('Đang hết món') : t('Đang bán')}
       </Button>
-      <div className="flex items-center gap-1">
+      <div className={cn('flex items-center gap-1', quick && 'hidden')}>
         <Button variant="ghost" size="icon-sm" aria-label={t('Chuyển món lên')} disabled={!canUp} onClick={() => onMove(-1)}>
           <ArrowUpIcon />
         </Button>

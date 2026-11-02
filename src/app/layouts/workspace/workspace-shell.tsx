@@ -36,6 +36,11 @@ export type WorkspaceProps = {
   /** extra controls on the right of the header, before the bell */
   headerExtra?: ReactNode
   orderPath?: (orderId: string) => string
+  /**
+   * A pared-down mode (the seller's "Bán hàng tập trung"): the label replaces the area name, and the page search, space tabs,
+   * breadcrumb, right column and footer are left out, so only the navigation given in `spaces` and the page remain.
+   */
+  focus?: { label: string }
 }
 
 /**
@@ -52,7 +57,7 @@ export function WorkspaceShell(props: WorkspaceProps) {
   )
 }
 
-function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPath, headerExtra, orderPath }: WorkspaceProps) {
+function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPath, headerExtra, orderPath, focus }: WorkspaceProps) {
   const { session, signOut } = useSession()
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -66,7 +71,8 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
   const unread = notifications.data?.unread ?? 0
 
   const wideNav = useMediaQuery('(min-width: 768px)')
-  const widePanel = useMediaQuery('(min-width: 1280px)')
+  // in focus there is no right column, so no button to open it either
+  const widePanel = useMediaQuery('(min-width: 1280px)') || Boolean(focus)
   const [navOpen, setNavOpen] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
   const [bellOpen, setBellOpen] = useState(false)
@@ -115,10 +121,14 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           <Link to={homePath} className="flex items-center">
             <Lockup className="h-7" />
           </Link>
-          <span className="hidden text-ui text-muted-foreground lg:inline">{area}</span>
+          {focus ? (
+            <span className="hidden rounded-full bg-accent px-3 py-1 text-caption font-semibold text-accent-foreground sm:inline">{focus.label}</span>
+          ) : (
+            <span className="hidden text-ui text-muted-foreground lg:inline">{area}</span>
+          )}
         </div>
 
-        <PageSearch nav={allNav} extras={allExtras} className="hidden w-full max-w-[25rem] md:block" />
+        {!focus ? <PageSearch nav={allNav} extras={allExtras} className="hidden w-full max-w-[25rem] md:block" /> : null}
 
         <div className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3">
           {headerExtra}
@@ -167,7 +177,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           </DropdownMenu>
         </div>
       </header>
-      {spaces.length > 1 && wideNav ? (
+      {spaces.length > 1 && wideNav && !focus ? (
         <div className="shrink-0 border-b border-grey-200 bg-ws-header px-4 sm:px-5">
           <SpaceTabs spaces={spaces} current={space.key} />
         </div>
@@ -194,68 +204,72 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
             navOpen ? 'translate-x-0' : '-translate-x-full',
           )}
         >
-          {!wideNav ? <PageSearch nav={allNav} extras={allExtras} className="mb-6" /> : null}
+          {!wideNav && !focus ? <PageSearch nav={allNav} extras={allExtras} className="mb-6" /> : null}
           <nav aria-label={area}>
             {!wideNav && spaces.length > 1 ? <SpaceTabs spaces={spaces} current={space.key} vertical onNavigate={() => setNavOpen(false)} /> : null}
-            <NavTree nav={space.nav} location={location} homePath={space === spaces[0] ? homePath : undefined} onNavigate={() => setNavOpen(false)} />
+            <NavTree nav={space.nav} location={location} homePath={space === spaces[0] && !focus ? homePath : undefined} onNavigate={() => setNavOpen(false)} />
           </nav>
         </aside>
 
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground outline-none">
           <div key={pathname} className="ws-content bb-page-in px-4 py-6 sm:px-8 sm:py-8">
-            <nav aria-label={t('Đường dẫn')} className="mb-4">
-              <ol className="flex flex-wrap items-center gap-1.5 text-caption text-muted-foreground">
-                <li>
-                  {atHome ? (
-                    <span aria-current="page">{t('Trang chủ')}</span>
-                  ) : (
-                    <Link to={homePath} className="hover:text-ink">
-                      {t('Trang chủ')}
-                    </Link>
-                  )}
-                </li>
-                {location.parent?.children && location.page ? (
-                  <Fragment>
-                    <li aria-hidden="true">
-                      <ChevronRightIcon className="size-3" />
-                    </li>
-                    <li>{location.parent.label}</li>
-                  </Fragment>
-                ) : null}
-                {location.page ? (
-                  <Fragment>
-                    <li aria-hidden="true">
-                      <ChevronRightIcon className="size-3" />
-                    </li>
-                    <li aria-current="page" className="text-ink">
-                      {location.page.label}
-                    </li>
-                  </Fragment>
-                ) : null}
-              </ol>
-            </nav>
+            {!focus ? (
+              <nav aria-label={t('Đường dẫn')} className="mb-4">
+                <ol className="flex flex-wrap items-center gap-1.5 text-caption text-muted-foreground">
+                  <li>
+                    {atHome ? (
+                      <span aria-current="page">{t('Trang chủ')}</span>
+                    ) : (
+                      <Link to={homePath} className="hover:text-ink">
+                        {t('Trang chủ')}
+                      </Link>
+                    )}
+                  </li>
+                  {location.parent?.children && location.page ? (
+                    <Fragment>
+                      <li aria-hidden="true">
+                        <ChevronRightIcon className="size-3" />
+                      </li>
+                      <li>{location.parent.label}</li>
+                    </Fragment>
+                  ) : null}
+                  {location.page ? (
+                    <Fragment>
+                      <li aria-hidden="true">
+                        <ChevronRightIcon className="size-3" />
+                      </li>
+                      <li aria-current="page" className="text-ink">
+                        {location.page.label}
+                      </li>
+                    </Fragment>
+                  ) : null}
+                </ol>
+              </nav>
+            ) : null}
             <div ref={setTabsHost} className="mb-6 empty:hidden" />
             <Outlet />
           </div>
-          <ShellFooter links={footerLinks} className="mt-2 wsnav:hidden" />
+          {!focus ? <ShellFooter links={footerLinks} className="mt-2 wsnav:hidden" /> : null}
         </main>
 
-        <aside
-          aria-label={t('Thông tin bổ sung')}
-          inert={!widePanel && !panelOpen}
-          className={cn(
-            'absolute inset-y-0 right-0 z-40 w-80 shrink-0 overflow-y-auto bg-card p-6 shadow-float transition-transform wspanel:static wspanel:z-auto wspanel:w-72 wspanel:translate-x-0 wspanel:py-8 wspanel:pr-8 wspanel:pl-0 wspanel:shadow-none wspanel:transition-none',
-            panelOpen ? 'translate-x-0' : 'translate-x-full',
-          )}
-        >
-          <div className="wspanel:border-l wspanel:border-grey-200 wspanel:pl-5">
-            <div ref={setPanelHost} className="flex flex-col gap-8 empty:hidden" />
-            {!custom ? <NotificationFeed orderPath={orderPath} /> : null}
-          </div>
-        </aside>
+        {!focus ? (
+          <aside
+            aria-label={t('Thông tin bổ sung')}
+            inert={!widePanel && !panelOpen}
+            className={cn(
+              'absolute inset-y-0 right-0 z-40 w-80 shrink-0 overflow-y-auto bg-card p-6 shadow-float transition-transform wspanel:static wspanel:z-auto wspanel:w-72 wspanel:translate-x-0 wspanel:py-8 wspanel:pr-8 wspanel:pl-0 wspanel:shadow-none wspanel:transition-none',
+              panelOpen ? 'translate-x-0' : 'translate-x-full',
+            )}
+          >
+            <div className="wspanel:border-l wspanel:border-grey-200 wspanel:pl-5">
+              <div ref={setPanelHost} className="flex flex-col gap-8 empty:hidden" />
+              {!custom ? <NotificationFeed orderPath={orderPath} /> : null}
+            </div>
+          </aside>
+        ) : null}
       </div>
 
-      <ShellFooter links={footerLinks} className="hidden wsnav:flex" />
+      {!focus ? <ShellFooter links={footerLinks} className="hidden wsnav:flex" /> : null}
 
       <Sheet open={bellOpen} onOpenChange={setBellOpen}>
         <SheetContent side="right" className="gap-0 p-0">

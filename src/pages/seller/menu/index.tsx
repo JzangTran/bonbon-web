@@ -1,6 +1,7 @@
 import { TriangleAlertIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { useMyOpenCaseCount } from '@/entities/dish-category-case'
+import { useSellingFocus } from '@/features/selling-focus'
 import { useMenu, useOptionGroups } from '@/entities/menu'
 import { problemMessage } from '@/shared/api'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -16,17 +17,21 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
   const menu = useMenu()
   const groups = useOptionGroups()
   const openCases = useMyOpenCaseCount()
+  // in selling focus the page only marks what is sold out: no editing, no category cases
+  const quick = useSellingFocus()
 
   return (
     <div className="flex max-w-5xl flex-col gap-10">
-      <MenuTabs />
+      <MenuTabs quick={quick} />
       <div>
-        <h1 className="text-2xl font-semibold">{t('Thực đơn')}</h1>
+        <h1 className="text-2xl font-semibold">{quick ? t('Còn/hết món') : t('Thực đơn')}</h1>
         <p className="text-sm text-muted-foreground">
-          {t('Mục thực đơn là cách bạn nhóm món cho khách xem. Nhóm lựa chọn (cỡ ly, topping…) dùng lại được cho nhiều món.')}
+          {quick
+            ? t('Bấm vào nút của món hoặc lựa chọn để báo hết hoặc bán lại. Khách thấy thay đổi ngay.')
+            : t('Mục thực đơn là cách bạn nhóm món cho khách xem. Nhóm lựa chọn (cỡ ly, topping…) dùng lại được cho nhiều món.')}
         </p>
       </div>
-      {openCases > 0 ? (
+      {openCases > 0 && !quick ? (
         <p className="flex flex-wrap items-center gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
           <TriangleAlertIcon className="size-4 shrink-0" />
           {t('Có ')}{openCases}{t(' món bị đánh dấu sai ngành hàng.')}
@@ -43,9 +48,9 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
       ) : menu.isError || groups.isError ? (
         <FormError message={problemMessage(menu.error ?? groups.error)} />
       ) : tab === 'dishes' ? (
-        <MenuTab menu={menu.data} groups={groups.data} startNewDish={startNewDish} />
+        <MenuTab menu={menu.data} groups={groups.data} startNewDish={startNewDish && !quick} quick={quick} />
       ) : (
-        <OptionsTab menu={menu.data} groups={groups.data} />
+        <OptionsTab menu={menu.data} groups={groups.data} quick={quick} />
       )}
     </div>
   )

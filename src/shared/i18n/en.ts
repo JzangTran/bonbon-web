@@ -2294,4 +2294,11 @@ export const EN: Record<string, string> = {
   "→ gợi ý:": "→ suggested:",
   "→ nên là:": "→ should be:",
   "→ quán xin:": "→ the shop asks for:",
+  "Còn/hết món": "In stock / sold out",
+  "Tùy chọn món": "Dish options",
+  "Bán hàng tập trung": "Selling focus",
+  "Thoát bán hàng tập trung": "Leave selling focus",
+  "Tập trung": "Focus",
+  "Chỉ giữ đơn hàng, tin nhắn và còn/hết món": "Keep only orders, chat and what is sold out",
+  "Bấm vào nút của món hoặc lựa chọn để báo hết hoặc bán lại. Khách thấy thay đổi ngay.": "Press the button of a dish or an option to mark it sold out or back on sale. Customers see the change at once.",
 }

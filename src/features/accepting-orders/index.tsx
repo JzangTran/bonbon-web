@@ -22,7 +22,7 @@ export function AcceptingOrdersSwitch() {
       aria-checked={accepting}
       disabled={toggle.isPending}
       onClick={() => toggle.mutate(!accepting)}
-      className="flex items-center gap-2 rounded-full px-1 py-1 text-xs font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+      className="flex shrink-0 items-center gap-2 rounded-full px-1 py-1 text-xs whitespace-nowrap font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
     >
       <span className="hidden sm:inline">{accepting ? t('Đang nhận đơn') : t('Tạm ngưng nhận đơn')}</span>
       <span aria-hidden="true" className={cn('relative inline-block h-[18px] w-[30px] rounded-full transition-colors', accepting ? 'bg-primary' : 'bg-input')}>
