@@ -31,14 +31,13 @@ export function AdminLoginPage({ area }: { area: 'console' | 'ops' }) {
       body: { email, password, captchaToken: captchaToken ?? undefined },
     })
     setSubmitting(false)
-    if (problem || !data?.accessToken || !data.refreshToken || !data.userId) {
+    if (problem || !data?.accessToken || !data.userId) {
       if (problemCode(problem) === 'CAPTCHA_REQUIRED') setNeedsCaptcha(true)
       setError(problemMessage(problem))
       return
     }
     signIn({
       accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
       userId: data.userId,
       email: data.email ?? email,
       name: data.name ?? '',

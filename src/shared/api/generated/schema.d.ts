@@ -1645,7 +1645,7 @@ export interface paths {
         put?: never;
         /**
          * Làm mới token
-         * @description Đổi refresh token lấy cặp token mới; refresh token cũ bị thu hồi (xoay vòng). Dùng lại token cũ sẽ khoá cả chuỗi phiên.
+         * @description Đổi refresh token lấy cặp token mới; refresh token cũ bị thu hồi (xoay vòng). Dùng lại token cũ sẽ khoá cả chuỗi phiên. Ứng dụng điện thoại gửi `refreshToken` trong body; web không gửi gì: token nằm trong cookie HttpOnly và token mới cũng được đặt lại vào cookie. Kết quả kèm `user` để web dựng lại phiên sau khi tải lại trang.
          *
          *     **Không cần đăng nhập.**
          */
@@ -6150,6 +6150,7 @@ export interface components {
             expiresIn?: number;
             /** @enum {string} */
             role?: "CUSTOMER" | "SELLER" | "ADMIN";
+            user?: components["schemas"]["UserSummary"];
         };
         UserSummary: {
             /**
@@ -6192,7 +6193,7 @@ export interface components {
             tokens?: components["schemas"]["TokenResponse"];
         };
         RefreshRequest: {
-            refreshToken: string;
+            refreshToken?: string;
         };
         Logout: {
             refreshToken?: string;
@@ -11593,7 +11594,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -12331,7 +12332,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -15148,7 +15149,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -15759,7 +15760,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
                 "application/json": components["schemas"]["RefreshRequest"];
             };
@@ -18594,7 +18595,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_STATUS`: `status` không phải DRAFT hoặc PUBLISHED.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -21071,7 +21072,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_POSITION`: Toạ độ ngoài phạm vi.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              *     - `INVALID_QUERY`: Từ khoá quá dài (tối đa 100 ký tự).
              *     - `INVALID_SORT`: `sort` chỉ nhận `distance` hoặc `name`.
              */
@@ -21120,7 +21121,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -21578,7 +21579,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -21894,7 +21895,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -22097,7 +22098,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -22250,7 +22251,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_STATUS`: `status` không phải AWAITING_SHOP, AWAITING_CUSTOMER, OPEN, UPHELD hoặc DISMISSED.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -22722,7 +22723,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_STATUS`: `status` không hợp lệ.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -23409,7 +23410,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -23591,7 +23592,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_STATUS`: `status` không phải OPEN, ANSWERED hoặc CLOSED.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -23726,7 +23727,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_STATUS`: `status` không phải OPEN, ANSWERED hoặc CLOSED.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -24550,7 +24551,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -24615,7 +24616,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_STATUS`: `status` không thuộc REQUESTED, NEEDS_DESTINATION, COMPLETED, ALL.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -25790,7 +25791,7 @@ export interface operations {
             /**
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
-             *     - `INVALID_PAGE`: `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `size` ngoài 1–100.
              */
             400: {
                 headers: {
@@ -25978,7 +25979,7 @@ export interface operations {
              * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
              *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
              *     - `INVALID_STATUS`: `status` không hợp lệ.
-             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–50.
+             *     - `INVALID_PAGE`: `page` âm hoặc `size` ngoài 1–100.
              */
             400: {
                 headers: {

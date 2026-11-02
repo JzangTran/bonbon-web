@@ -54,10 +54,9 @@ export function GoogleSignIn() {
 
   const finish = (data: LoginResponse) => {
     const { tokens, user } = data
-    if (!tokens?.accessToken || !tokens.refreshToken || !user?.id) return
+    if (!tokens?.accessToken || !user?.id) return
     signIn({
       accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
       userId: user.id,
       email: user.email ?? '',
       name: user.name ?? '',

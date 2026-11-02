@@ -1,10 +1,8 @@
 import { createContext } from 'react'
-import type { components } from '@/shared/api'
 
 export type Role = 'CUSTOMER' | 'SELLER' | 'ADMIN'
 
-type TokenResponse = components['schemas']['TokenResponse']
-
+/** Who is signed in. Lives in memory only: the access token is short-lived and the refresh token is in an HttpOnly cookie. */
 export type Session = {
   userId: string
   email: string
@@ -13,12 +11,10 @@ export type Session = {
   availableRoles: Role[]
   permissions: ReadonlySet<string>
   accessToken: string
-  refreshToken: string
 }
 
 export type SignInInput = {
   accessToken: string
-  refreshToken: string
   userId: string
   email: string
   name: string
@@ -26,15 +22,22 @@ export type SignInInput = {
   availableRoles?: Role[]
 }
 
+/**
+ * `restoring`: the page just loaded and is asking the server (with the cookie) whether someone is signed in.
+ * `offline`: that question could not reach the server; pages that need a session say so instead of sending people to sign in.
+ */
+export type SessionStatus = 'restoring' | 'ready' | 'offline'
+
 export type SessionContextValue = {
   session: Session | null
+  status: SessionStatus
   signIn: (input: SignInInput) => void
   signOut: () => Promise<void>
+  /** Asks the server again after `offline`. */
+  retry: () => void
 }
 
 export const SessionContext = createContext<SessionContextValue | null>(null)
-
-const STORAGE_KEY = 'bonbon.web.session'
 
 /** Permissions are read from the access token's `permissions` claim (for showing/hiding UI only). */
 export function permissionsOf(accessToken: string): Set<string> {
@@ -57,40 +60,39 @@ export function toSession(input: SignInInput): Session {
     availableRoles: input.availableRoles ?? [input.role],
     permissions: permissionsOf(input.accessToken),
     accessToken: input.accessToken,
-    refreshToken: input.refreshToken,
-  }
-}
-
-export function withTokens(session: Session, tokens: TokenResponse): Session {
-  return {
-    ...session,
-    accessToken: tokens.accessToken ?? session.accessToken,
-    refreshToken: tokens.refreshToken ?? session.refreshToken,
-    permissions: permissionsOf(tokens.accessToken ?? session.accessToken),
   }
 }
 
 /**
- * Kept in localStorage so a reload stays signed in. The refresh token is therefore readable by scripts on
- * this origin; the backend limits the damage (7-day life, rotation, reuse detection revokes the family).
+ * Nothing about the person is stored in the browser. The only thing kept is a flag saying "someone signed in here", so a page load
+ * knows whether to ask the server (anonymous visitors make no call), and so the other tabs hear about a sign-out.
  */
-export function loadSession(): Session | null {
+const HINT_KEY = 'bonbon.web.signedIn'
+
+export function hasSignInHint(): boolean {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
-    const stored = JSON.parse(raw) as Omit<Session, 'permissions'>
-    return { ...stored, permissions: permissionsOf(stored.accessToken) }
+    return localStorage.getItem(HINT_KEY) === '1'
   } catch {
-    return null
+    return false
   }
 }
 
-export function saveSession(session: Session | null) {
-  if (!session) {
-    localStorage.removeItem(STORAGE_KEY)
-    return
+export function setSignInHint(on: boolean) {
+  try {
+    if (on) localStorage.setItem(HINT_KEY, '1')
+    else localStorage.removeItem(HINT_KEY)
+  } catch {
+    // storage blocked: every load will simply ask the server
   }
-  const { permissions: _ignored, ...rest } = session
-  void _ignored
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(rest))
+}
+
+export const SIGN_IN_HINT_KEY = HINT_KEY
+
+/** Before this change the whole session (tokens, email, name) sat in localStorage: remove it wherever it is still there. */
+export function forgetLegacySession() {
+  try {
+    localStorage.removeItem('bonbon.web.session')
+  } catch {
+    // nothing to forget
+  }
 }

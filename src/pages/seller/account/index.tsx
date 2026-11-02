@@ -163,12 +163,12 @@ function PasswordCard() {
     setError(null)
     setDone(false)
     const { data, error: problem } = await api.POST('/api/account/change-password', { body: { currentPassword, newPassword } })
-    if (!data?.accessToken || !data.refreshToken || !session) {
+    if (!data?.accessToken || !session) {
       setError(problemMessage(problem as unknown))
       return
     }
     // Every other device is signed out; this one continues with the fresh pair.
-    signIn({ ...session, accessToken: data.accessToken, refreshToken: data.refreshToken })
+    signIn({ ...session, accessToken: data.accessToken })
     form.reset()
     setDone(true)
   })

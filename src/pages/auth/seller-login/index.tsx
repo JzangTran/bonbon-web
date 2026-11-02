@@ -41,10 +41,9 @@ export function SellerLoginPage() {
       toast.success(t('Việc xoá tài khoản đã được huỷ vì bạn đăng nhập lại.'), { description: t('Tài khoản của bạn vẫn như cũ.'), duration: 12_000 })
     }
     const { tokens, user } = data
-    if (!tokens?.accessToken || !tokens.refreshToken || !user?.id) return
+    if (!tokens?.accessToken || !user?.id) return
     signIn({
       accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
       userId: user.id,
       email: user.email ?? '',
       name: user.name ?? '',

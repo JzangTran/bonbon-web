@@ -20,8 +20,8 @@ export function useReauthenticate() {
       if (!session) return t('Phiên đăng nhập đã hết.')
       if (session.role === 'ADMIN') {
         const { data, error } = await api.POST('/api/admin/auth/login', { body: { email: session.email, password } })
-        if (!data?.accessToken || !data.refreshToken || !data.userId) return problemMessage(error, t('Mật khẩu không đúng.'))
-        signIn({ accessToken: data.accessToken, refreshToken: data.refreshToken, userId: data.userId, email: data.email ?? session.email, name: data.name ?? session.name, role: 'ADMIN' })
+        if (!data?.accessToken || !data.userId) return problemMessage(error, t('Mật khẩu không đúng.'))
+        signIn({ accessToken: data.accessToken, userId: data.userId, email: data.email ?? session.email, name: data.name ?? session.name, role: 'ADMIN' })
         return null
       }
       const { data, error } = await api.POST('/api/auth/login', { body: { email: session.email, password } })
@@ -33,10 +33,9 @@ export function useReauthenticate() {
         login = picked
       }
       const tokens = login.tokens
-      if (!tokens?.accessToken || !tokens.refreshToken || !login.user?.id) return t('Không đăng nhập lại được, hãy thử lại.')
+      if (!tokens?.accessToken || !login.user?.id) return t('Không đăng nhập lại được, hãy thử lại.')
       signIn({
         accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
         userId: login.user.id,
         email: login.user.email ?? session.email,
         name: login.user.name ?? session.name,
