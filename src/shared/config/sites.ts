@@ -67,3 +67,23 @@ export function siteOrigin(site: Site): string {
   const url = siteUrl(site, '/')
   return url.startsWith('http') ? url.replace(/\/$/, '') : window.location.origin
 }
+
+// pages any visitor may open, also from a phone: email links (verify, reset, set password), the payment return, the captcha bridge
+// the phone app uses, and the old legal address
+const OPEN_EVERYWHERE = ['/verify-email', '/forgot-password', '/reset-password', '/set-password', '/payment/return', '/captcha-bridge', '/legal/']
+
+/**
+ * Which kind of page a path is: `public` (home, guides, blog, resources, help, legal and the pages above), `seller` (the seller
+ * site, its sign-in and sign-up, focus pages) or `staff` (console and ops). Works on the subdomains and in path mode alike.
+ */
+export function pageAudience(pathname: string): 'public' | 'seller' | 'staff' {
+  if (OPEN_EVERYWHERE.some((p) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : p + '/'))) return 'public'
+  if (SITE === 'merchant') return 'seller'
+  if (SITE === 'console' || SITE === 'ops') return 'staff'
+  if (SITE === 'public' && PATH_MODE) {
+    const first = pathname.split('/')[1]
+    if (first === 'merchant' || first === 'focus') return 'seller'
+    if (first === 'console' || first === 'ops') return 'staff'
+  }
+  return 'public'
+}

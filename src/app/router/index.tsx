@@ -1,10 +1,11 @@
-import { createBrowserRouter, Navigate } from 'react-router'
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { AdminLayout } from '@/app/layouts/admin-layout'
 import { OpsLayout } from '@/app/layouts/ops-layout'
 import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 import { RouteError } from './route-error'
+import { SmallScreenGate } from './small-screen-gate'
 import { PATH_MODE, SITE, consolePath, helpPath, merchantPath, opsPath } from '@/shared/config/sites'
 
 // One build, five hosts (see shared/config/sites.ts): each host gets its own pages, and the shared ones (email links, legal texts,
@@ -15,7 +16,7 @@ const showHelp = SITE === 'help' || PATH_MODE
 const showConsole = SITE === 'console' || PATH_MODE
 const showOps = SITE === 'ops' || PATH_MODE
 
-const router = createBrowserRouter([
+const routes: RouteObject[] = [
   ...(showLanding ? [
   {
     path: '/',
@@ -422,7 +423,10 @@ const router = createBrowserRouter([
     path: '*',
     lazy: () => import('@/pages/not-found').then((m) => ({ Component: m.NotFoundPage })),
   },
-])
+]
+
+// every page sits under the small-screen gate: phones and tablets only reach the public pages
+const router = createBrowserRouter([{ element: <SmallScreenGate />, children: routes }])
 
 export function AppRouter() {
   return <RouterProvider router={router} />

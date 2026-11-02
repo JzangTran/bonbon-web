@@ -15,7 +15,7 @@ import { Reveal } from '@/shared/ui/reveal'
 import { BearScene, type BearKind } from './bear-scene'
 import { HeroPoster } from './hero-poster'
 import { Mascot } from './mascot'
-import { pictureOf } from './mascot-pictures'
+import { pictureOf } from '@/shared/assets/mascot-pictures'
 import { t } from '@/shared/i18n'
 
 

@@ -1,5 +1,5 @@
 import { cn } from '@/shared/lib/utils'
-import { pictureOf } from './mascot-pictures'
+import { pictureOf } from '@/shared/assets/mascot-pictures'
 import { PolarBear, type BearFace, type BearPose } from './polar-bear'
 
 

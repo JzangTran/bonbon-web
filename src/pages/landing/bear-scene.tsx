@@ -1,6 +1,6 @@
 import { cn } from '@/shared/lib/utils'
 import { Mascot } from './mascot'
-import { pictureOf } from './mascot-pictures'
+import { pictureOf } from '@/shared/assets/mascot-pictures'
 import type { BearFace, BearPose } from './polar-bear'
 
 export type BearKind = 'order' | 'cook' | 'deliver' | 'done' | 'shop'
