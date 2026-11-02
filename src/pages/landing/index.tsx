@@ -18,6 +18,8 @@ import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Reveal } from '@/shared/ui/reveal'
 import { BearScene, type BearKind } from './bear-scene'
 import { HeroPoster } from './hero-poster'
+import { Mascot } from './mascot'
+import { pictureOf } from './mascot-pictures'
 import { t } from '@/shared/i18n'
 
 
@@ -165,8 +167,9 @@ function OrderSteps() {
       </h2>
       {STEPS.map(({ bear, chip, title, body }, i) => (
         <div key={title} className="flex flex-col gap-3">
-          <div className="mb-2 overflow-hidden rounded-2xl bg-accent px-6 pt-6">
-            <BearScene kind={bear} />
+          {/* the same frame for every step, white like the rendered pictures' own ground, so the four line up */}
+          <div className="mb-2 flex aspect-[5/4] items-end justify-center overflow-hidden rounded-2xl bg-white px-4 pt-4 ring-1 ring-grey-200">
+            <BearScene kind={bear} className="max-h-full w-auto max-w-full" />
           </div>
           <span className="text-caption font-medium tracking-wide text-primary uppercase">
             {t('Bước ')}{i + 1} · {chip}
@@ -246,10 +249,17 @@ function SellerBand() {
           </a>
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
-          <div className="relative w-full max-w-[460px] overflow-hidden rounded-2xl bg-primary px-8 pt-10">
-            <OrangeRibbon variant="sweep" className="absolute -top-1/4 -right-1/4 w-[90%] opacity-40" />
-            <BearScene kind="shop" className="relative" />
-          </div>
+          {pictureOf('wave') ? (
+            // the rendered scene already has its own shop and counter: show it whole
+            <div className="w-full max-w-[600px] overflow-hidden rounded-2xl bg-[#fff6ef] shadow-[0_24px_60px_rgb(0_0_0/0.10)]">
+              <Mascot pose="wave" className="w-full" />
+            </div>
+          ) : (
+            <div className="relative w-full max-w-[460px] overflow-hidden rounded-2xl bg-primary px-8 pt-10">
+              <OrangeRibbon variant="sweep" className="absolute -top-1/4 -right-1/4 w-[90%] opacity-40" />
+              <BearScene kind="shop" className="relative" />
+            </div>
+          )}
         </div>
       </Wrap>
       </Reveal>

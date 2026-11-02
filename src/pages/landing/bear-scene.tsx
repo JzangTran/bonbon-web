@@ -1,5 +1,6 @@
 import { cn } from '@/shared/lib/utils'
 import { Mascot } from './mascot'
+import { pictureOf } from './mascot-pictures'
 import type { BearFace, BearPose } from './polar-bear'
 
 export type BearKind = 'order' | 'cook' | 'deliver' | 'done' | 'shop'
@@ -20,6 +21,8 @@ const SCENES: Record<BearKind, { pose: BearPose; face: BearFace }> = {
  */
 export function BearScene({ kind, className }: { kind: BearKind; className?: string }) {
   const s = SCENES[kind]
+  // a rendered picture brings its own soft ground; the drawn stand-in gets one here
+  if (pictureOf(s.pose)) return <Mascot pose={s.pose} className={cn('mx-auto max-h-full w-auto max-w-full', className)} />
   return (
     <div aria-hidden="true" className={cn('relative', className)}>
       <svg viewBox="0 0 240 200" className="absolute inset-x-0 bottom-0 h-auto w-full">
