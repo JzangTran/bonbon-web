@@ -1,5 +1,5 @@
 /** The mascot's poses that have a rendered picture (mascot/<pose>.webp). */
-export type MascotPose = 'serve' | 'phone' | 'cook' | 'deliver' | 'eat' | 'wave'
+export type MascotPose = 'serve' | 'phone' | 'cook' | 'deliver' | 'eat' | 'wave' | 'not-found'
 
 // rendered pictures of the mascot, one per pose (mascot/<pose>.webp, transparent background); see mascot/README.md
 const PICTURES = import.meta.glob<string>('./mascot/*.webp', { eager: true, query: '?url', import: 'default' })
