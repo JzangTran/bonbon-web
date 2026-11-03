@@ -48,6 +48,7 @@ export function DishSheet({
   const [name, setName] = useState(item?.name ?? '')
   const [description, setDescription] = useState(item?.description ?? '')
   const [price, setPrice] = useState(item ? String(item.price ?? '') : '')
+  const [original, setOriginal] = useState(item?.originalPrice ? String(item.originalPrice) : '')
   const [section, setSection] = useState(item?.sectionId ?? sectionId)
   const [categoryId, setCategoryId] = useState(item?.categoryId ?? '')
   const [stock, setStock] = useState(item?.stockQuantity === undefined || item?.stockQuantity === null ? '' : String(item.stockQuantity))
@@ -68,6 +69,10 @@ export function DishSheet({
   async function save() {
     const priceValue = parseInteger(price)
     if (priceValue === undefined) return setError(t('Giá món phải là số nguyên, ví dụ 45000.'))
+    const originalValue = parseInteger(original)
+    if (original.trim() !== '' && (originalValue === undefined || originalValue <= priceValue)) {
+      return setError(t('Giá gốc phải là số nguyên và cao hơn giá bán, ví dụ 55000.'))
+    }
     const stockValue = parseInteger(stock)
     if (stock.trim() !== '' && stockValue === undefined) return setError(t('Số phần còn lại phải là số nguyên.'))
     if (!categoryId) return setError(t('Hãy chọn ngành hàng cho món.'))
@@ -86,6 +91,7 @@ export function DishSheet({
             price: priceValue,
             ...(description.trim() ? { description: description.trim() } : {}),
             ...(stockValue !== undefined ? { stockQuantity: stockValue } : {}),
+            ...(originalValue !== undefined ? { originalPrice: originalValue } : {}),
           },
         })
         if (problem || !data) throw problem
@@ -102,6 +108,7 @@ export function DishSheet({
             ...(section !== item.sectionId ? { sectionId: section } : {}),
             ...(description.trim() ? { description: description.trim() } : { clearDescription: true }),
             ...(stockValue !== undefined ? { stockQuantity: stockValue } : { clearStock: true }),
+            ...(originalValue !== undefined ? { originalPrice: originalValue } : { clearOriginalPrice: true }),
           },
         })
         if (problem) throw problem
@@ -171,6 +178,27 @@ export function DishSheet({
             <div className="flex flex-col gap-2">
               <Label htmlFor="dish-price">{t('Giá (₫)')}</Label>
               <Input id="dish-price" required inputMode="numeric" className="tabular-nums" value={price} onChange={(e) => setPrice(e.target.value)} />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="dish-original">{t('Giá gốc (₫, khi giảm giá)')}</Label>
+              <Input
+                id="dish-original"
+                inputMode="numeric"
+                className="tabular-nums"
+                placeholder={t('Không giảm giá')}
+                aria-describedby="dish-original-hint"
+                value={original}
+                onChange={(e) => setOriginal(e.target.value)}
+              />
+              <p id="dish-original-hint" className="text-xs text-muted-foreground">
+                {(() => {
+                  const p = parseInteger(price)
+                  const o = parseInteger(original)
+                  return p !== undefined && o !== undefined && o > p
+                    ? t('Khách thấy: Giảm {v0}%, giá gốc gạch ngang.', { v0: Math.floor(((o - p) * 100) / o) })
+                    : t('Nhập giá trước giảm để món hiện nhãn Giảm %. Khách luôn trả giá bán.')
+                })()}
+              </p>
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="dish-stock">{t('Số phần còn lại')}</Label>

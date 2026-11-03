@@ -92,6 +92,10 @@ const routes: RouteObject[] = [
     lazy: () => import('@/pages/auth/reset-password').then((m) => ({ Component: () => <m.SetPasswordPage mode="initial" /> })),
   },
   {
+    path: '/shops/:id',
+    lazy: () => import('@/pages/shop-link').then((m) => ({ Component: m.ShopLinkPage })),
+  },
+  {
     path: '/payment/return',
     lazy: () => import('@/pages/payment-return').then((m) => ({ Component: m.PaymentReturnPage })),
   },
@@ -406,6 +410,10 @@ const routes: RouteObject[] = [
           {
             path: 'categories',
             lazy: () => import('@/pages/admin/categories').then((m) => ({ Component: m.AdminCategoriesPage })),
+          },
+          {
+            path: 'display-categories',
+            lazy: () => import('@/pages/admin/display-categories').then((m) => ({ Component: m.AdminDisplayCategoriesPage })),
           },
           {
             path: 'admins',

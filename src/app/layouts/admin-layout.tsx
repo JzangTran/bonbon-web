@@ -59,6 +59,7 @@ const CONTENT: NavParent[] = [
     icon: LayersIcon,
     children: [
       { to: consolePath('/categories'), label: t('Cây ngành hàng') },
+      { to: consolePath('/display-categories'), label: t('Danh mục trang chủ') },
       { to: consolePath('/category-moderation'), label: t('Món sai ngành') },
     ],
   },
