@@ -224,6 +224,10 @@ const routes: RouteObject[] = [
             lazy: () => import('@/pages/seller/reviews').then((m) => ({ Component: m.SellerReviewsPage })),
           },
           {
+            path: 'vouchers',
+            lazy: () => import('@/pages/seller/vouchers').then((m) => ({ Component: m.SellerVouchersPage })),
+          },
+          {
             path: 'menu',
             lazy: () => import('@/pages/seller/menu').then((m) => ({ Component: m.SellerMenuPage })),
           },

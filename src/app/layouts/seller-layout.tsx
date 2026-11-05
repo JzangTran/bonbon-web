@@ -1,4 +1,4 @@
-import { ClipboardListIcon, LifeBuoyIcon, MessageCircleIcon, SettingsIcon, ShoppingBagIcon, StoreIcon, UserRoundIcon, UtensilsIcon, WalletIcon } from 'lucide-react'
+import { ClipboardListIcon, LifeBuoyIcon, MessageCircleIcon, SettingsIcon, ShoppingBagIcon, StoreIcon, TicketPercentIcon, UserRoundIcon, UtensilsIcon, WalletIcon } from 'lucide-react'
 import { Navigate, useLocation } from 'react-router'
 import { shopStatus, useShop } from '@/entities/shop'
 import { AcceptingOrdersSwitch } from '@/features/accepting-orders'
@@ -34,6 +34,7 @@ const SELLING_NAV: NavParent[] = [
       { to: merchantPath('/menu/new'), label: t('Thêm món ăn') },
     ],
   },
+  { key: 'vouchers', label: t('Voucher của quán'), icon: TicketPercentIcon, to: merchantPath('/vouchers') },
   {
     key: 'care',
     label: t('Chăm sóc khách hàng'),

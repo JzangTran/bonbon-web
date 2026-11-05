@@ -54,6 +54,46 @@ export function LogoCard({ shop }: { shop: ShopApplication }) {
   )
 }
 
+/** The picture behind the top of the shop's page in the customer app, darkened there so the buttons stay readable. */
+export function CoverCard({ shop }: { shop: ShopApplication }) {
+  const upload = useApplyShop(async (file: File) => {
+    const form = new FormData()
+    form.append('file', file)
+    return api.PUT('/api/merchant/shop/cover', {
+      body: form as unknown as { file: string },
+      bodySerializer: (body) => body as unknown as FormData,
+    })
+  }, t('Đã đổi ảnh nền.'))
+  const remove = useApplyShop(() => api.DELETE('/api/merchant/shop/cover'), t('Đã gỡ ảnh nền.'))
+  const cover = shop.shop?.coverUrl
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('Ảnh nền quán')}</CardTitle>
+        <CardDescription>{t('Ảnh ngang ở đầu trang quán trong ứng dụng khách. JPG, PNG hoặc WebP, tối đa 5 MB.')}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-wrap items-center gap-4">
+        <ImageUpload
+          label={cover ? t('Đổi ảnh nền') : t('Thêm ảnh nền')}
+          accept="image/jpeg,image/png,image/webp"
+          previewUrl={cover}
+          pending={upload.isPending}
+          onPick={async (file) => {
+            const problem = await checkUpload(file, { maxMb: 5 })
+            if (problem) toast.error(problem)
+            else upload.mutate(file)
+          }}
+        />
+        {cover ? (
+          <Button variant="ghost" disabled={remove.isPending} onClick={() => remove.mutate(undefined)}>
+            {t('Gỡ ảnh nền')}
+          </Button>
+        ) : null}
+      </CardContent>
+    </Card>
+  )
+}
+
 /** The shop's QR code, to print and stick on the counter or the bags: customers scan it in the app to open the menu. */
 export function QrCard({ shop }: { shop: ShopApplication }) {
   const id = shop.shop?.id

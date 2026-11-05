@@ -12,7 +12,7 @@ import { DangerLinkCard } from '@/shared/ui/danger-link-card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { t } from '@/shared/i18n'
-import { LogoCard, QrCard } from './brand-cards'
+import { CoverCard, LogoCard, QrCard } from './brand-cards'
 
 type Update = components['schemas']['ShopProfileUpdateRequest']
 
@@ -29,6 +29,7 @@ export function SellerShopPage() {
       <h1 className="text-2xl font-semibold">{t('Hồ sơ cửa hàng')}</h1>
       <InfoCard key={`info-${shop.data.shop?.name}-${shop.data.shop?.address?.placeId}`} shop={shop.data} />
       <LogoCard shop={shop.data} />
+      <CoverCard shop={shop.data} />
       <QrCard shop={shop.data} />
       <DangerLinkCard
         title={t('Đóng cửa hàng')}
