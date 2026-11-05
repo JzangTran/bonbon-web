@@ -34,7 +34,9 @@ export function SellerLoginPage() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null)
   const [resent, setResent] = useState(false)
-  const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '', password: '' } })
+  // the seller sign-up sends an email that already has an account here, with what to do next
+  const arrived = location.state as { email?: string; notice?: string } | null
+  const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: arrived?.email ?? '', password: '' } })
 
   const finish = (data: LoginResponse) => {
     if (data.deletionCancelled) {
@@ -109,6 +111,7 @@ export function SellerLoginPage() {
         </>
       }
     >
+      {arrived?.notice ? <FormSuccess message={arrived.notice} /> : null}
       <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="email" className="sr-only">

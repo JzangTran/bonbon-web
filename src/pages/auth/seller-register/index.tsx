@@ -31,7 +31,7 @@ type Values = z.infer<typeof schema>
 const STEPS = [{ label: t('Nhập email') }, { label: t('Tạo mật khẩu') }, { label: t('Xác thực email') }]
 const RESEND_SECONDS = 60
 
-function useCurrentDocument(type: 'SELLER_TERMS' | 'PRIVACY_POLICY') {
+function useCurrentDocument(type: 'SELLER_TERMS' | 'CUSTOMER_TERMS' | 'PRIVACY_POLICY') {
   return useQuery({
     queryKey: ['legal-document', type],
     queryFn: async () => {
@@ -43,13 +43,18 @@ function useCurrentDocument(type: 'SELLER_TERMS' | 'PRIVACY_POLICY') {
 }
 
 /**
- * Seller sign-up in three steps: the email on the entry card, then name and password, then "check your mailbox".
+ * Seller sign-up in three steps: the email on the entry card, then name and password, then "check your mailbox". One email and
+ * password work for both modes: a new account can order as a customer too, an email that already has an account asks for that
+ * account's password and adds selling to it, and a seller goes to sign in.
  * The account is created in one call at the end of step 2; the email link finishes it.
  */
 export function SellerRegisterPage() {
+  const navigate = useNavigate()
   const terms = useCurrentDocument('SELLER_TERMS')
+  const customerTerms = useCurrentDocument('CUSTOMER_TERMS')
   const privacy = useCurrentDocument('PRIVACY_POLICY')
-  const [step, setStep] = useState<1 | 2 | 3>(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 'link'>(1)
+  const [checking, setChecking] = useState(false)
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const form = useForm<Values>({
@@ -62,7 +67,22 @@ export function SellerRegisterPage() {
 
   const toStepTwo = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (await form.trigger('email')) setStep(2)
+    setError(null)
+    if (!(await form.trigger('email'))) return
+    setChecking(true)
+    const { data, error: problem } = await api.POST('/api/auth/email-status', { body: { email: email.trim() } })
+    setChecking(false)
+    if (!data) {
+      setError(problemMessage(problem))
+    } else if (data.status === 'NEW') {
+      setStep(2)
+    } else if (data.status === 'ACCOUNT') {
+      setStep('link')
+    } else if (data.status === 'SELLER') {
+      navigate(merchantPath('/login'), { state: { email: email.trim(), notice: t('Email này đã có tài khoản người bán. Nhập mật khẩu của tài khoản để đăng nhập.') } })
+    } else {
+      setError(t('Email này đăng nhập bằng Google. Hãy đăng nhập app bonbon rồi chọn Đăng ký trở thành người bán hàng trong Tài khoản.'))
+    }
   }
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -71,22 +91,23 @@ export function SellerRegisterPage() {
       setError(t('Vui lòng xác nhận bạn không phải robot.'))
       return
     }
-    if (!terms.data?.id || !privacy.data?.id) return
+    if (!terms.data?.id || !customerTerms.data?.id || !privacy.data?.id) return
     const { error: problem } = await api.POST('/api/auth/register', {
       body: {
         email: values.email,
         password: values.password,
         name: values.name,
         role: 'SELLER',
-        acceptedDocumentIds: [terms.data.id, privacy.data.id],
+        acceptedDocumentIds: [terms.data.id, customerTerms.data.id, privacy.data.id],
         marketingConsent: values.marketing,
         captchaToken,
+        alsoCustomer: true,
       },
     })
     if (problem) {
       if (problemCode(problem) === 'LEGAL_DOCUMENTS_CHANGED') {
         form.setValue('acceptTerms', false)
-        await Promise.all([terms.refetch(), privacy.refetch()])
+        await Promise.all([terms.refetch(), customerTerms.refetch(), privacy.refetch()])
       }
       setError(problemMessage(problem))
       return
@@ -120,7 +141,8 @@ export function SellerRegisterPage() {
             <Input id="email" type="email" autoComplete="email" placeholder="Email" className="h-11" aria-invalid={!!errors.email} {...form.register('email')} />
             {errors.email ? <p role="alert" className="text-sm text-destructive">{errors.email.message}</p> : null}
           </div>
-          <Button type="submit" size="lg" disabled={email.trim().length === 0}>
+          <FormError message={error} />
+          <Button type="submit" size="lg" disabled={email.trim().length === 0 || checking}>
             {t('Tiếp theo')}
           </Button>
         </form>
@@ -131,6 +153,7 @@ export function SellerRegisterPage() {
   }
 
   if (step === 3) return <SentStep email={email} />
+  if (step === 'link') return <LinkAccountStep email={email.trim()} onBack={() => setStep(1)} />
 
   const longEnough = password.length >= 8 && password.length <= 100
   return (
@@ -169,6 +192,10 @@ export function SellerRegisterPage() {
             {t('Tôi đồng ý với')}{' '}
             <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
               {terms.data?.title ?? t('Điều khoản dành cho người bán')}
+            </a>
+            {', '}
+            <a href={legalUrl('CUSTOMER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
+              {customerTerms.data?.title ?? t('Điều khoản sử dụng')}
             </a>{' '}
             {t('và đã đọc')}{' '}
             <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-link">
@@ -187,6 +214,72 @@ export function SellerRegisterPage() {
         <FormError message={error} />
         <Button type="submit" size="lg" disabled={form.formState.isSubmitting || terms.isLoading || privacy.isLoading}>
           {form.formState.isSubmitting ? t('Đang tạo tài khoản…') : t('Đăng ký')}
+        </Button>
+      </form>
+    </AuthStepPage>
+  )
+}
+
+/** An email that already has a customer account: its password adds selling to that same account. */
+function LinkAccountStep({ email, onBack }: { email: string; onBack: () => void }) {
+  const navigate = useNavigate()
+  const terms = useCurrentDocument('SELLER_TERMS')
+  const privacy = useCurrentDocument('PRIVACY_POLICY')
+  const [password, setPassword] = useState('')
+  const [accepted, setAccepted] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    if (!captchaToken) return setError(t('Vui lòng xác nhận bạn không phải robot.'))
+    if (!terms.data?.id || !privacy.data?.id) return
+    setBusy(true)
+    const { error: problem } = await api.POST('/api/auth/register', {
+      body: { email, password, role: 'SELLER', acceptedDocumentIds: [terms.data.id, privacy.data.id], captchaToken },
+    })
+    setBusy(false)
+    if (problem) {
+      setError(problemMessage(problem))
+      return
+    }
+    navigate(merchantPath('/login'), { state: { email, notice: t('Đã thêm kênh bán hàng vào tài khoản của bạn. Đăng nhập để mở quán.') } })
+  }
+
+  return (
+    <AuthStepPage
+      heading={t('Đăng ký')}
+      steps={STEPS}
+      current={2}
+      title={t('Email này đã có tài khoản bonbon')}
+      description={t('Nhập mật khẩu của tài khoản {v0} để dùng chung tài khoản này cho việc bán hàng.', { v0: email })}
+      onBack={onBack}
+    >
+      <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="account-password">{t('Mật khẩu')}</Label>
+          <PasswordInput id="account-password" autoComplete="current-password" className="h-11" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <label className="flex items-start gap-2 text-sm">
+          <input type="checkbox" className="mt-1" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
+          <span>
+            {t('Tôi đồng ý với')}{' '}
+            <a href={legalUrl('SELLER_TERMS')} target="_blank" rel="noreferrer" className="text-link">
+              {terms.data?.title ?? t('Điều khoản dành cho người bán')}
+            </a>{' '}
+            {t('và đã đọc')}{' '}
+            <a href={legalUrl('PRIVACY_POLICY')} target="_blank" rel="noreferrer" className="text-link">
+              {privacy.data?.title ?? t('Chính sách quyền riêng tư')}
+            </a>
+            .
+          </span>
+        </label>
+        <Captcha onToken={setCaptchaToken} />
+        <FormError message={error} />
+        <Button type="submit" size="lg" disabled={busy || password.length < 8 || !accepted}>
+          {t('Thêm kênh bán hàng')}
         </Button>
       </form>
     </AuthStepPage>

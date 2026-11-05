@@ -2341,4 +2341,10 @@ export const EN: Record<string, string> = {
   "Không giảm giá": "No discount",
   "Khách thấy: Giảm {v0}%, giá gốc gạch ngang.": "Customers see: {v0}% off, the original price struck through.",
   "Nhập giá trước giảm để món hiện nhãn Giảm %. Khách luôn trả giá bán.": "Enter the price before the discount to show a % off label. Customers always pay the price.",
+  "Email này đã có tài khoản người bán. Nhập mật khẩu của tài khoản để đăng nhập.": "This email already has a seller account. Enter its password to sign in.",
+  "Email này đăng nhập bằng Google. Hãy đăng nhập app bonbon rồi chọn Đăng ký trở thành người bán hàng trong Tài khoản.": "This email signs in with Google. Sign in to the bonbon app, then choose Become a seller in Account.",
+  "Đã thêm kênh bán hàng vào tài khoản của bạn. Đăng nhập để mở quán.": "Selling is now on your account. Sign in to open your shop.",
+  "Email này đã có tài khoản bonbon": "This email already has a bonbon account",
+  "Nhập mật khẩu của tài khoản {v0} để dùng chung tài khoản này cho việc bán hàng.": "Enter the password of {v0} to use this same account for selling.",
+  "Thêm kênh bán hàng": "Add selling",
 }
