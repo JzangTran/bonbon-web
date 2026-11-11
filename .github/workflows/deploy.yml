@@ -1,12 +1,13 @@
 name: Deploy
 
-# After CI passes on main: build the web image (the static app on Caddy), push it to GitHub Container Registry, then roll it
+# The demo follows develop for now; set the branch below back to main once it serves real users.
+# After CI passes on develop: build the web image (the static app on Caddy), push it to GitHub Container Registry, then roll it
 # out on the demo server. The VITE_* values are public build settings, kept as repository variables.
 on:
   workflow_run:
     workflows: [CI]
     types: [completed]
-    branches: [main]
+    branches: [develop]
   workflow_dispatch:
 
 concurrency:
