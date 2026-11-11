@@ -4,7 +4,6 @@ import { pictureOf, type MascotPose } from '@/shared/assets/mascot-pictures'
 import { siteUrl } from '@/shared/config/sites'
 import { Lockup, Mark } from '@/shared/ui/brand'
 import { MascotArt } from '@/shared/ui/illustrations'
-import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { Stepper, type StepperStep } from '@/shared/ui/stepper'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { t } from '@/shared/i18n'
@@ -12,36 +11,23 @@ import { t } from '@/shared/i18n'
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
 
 /**
- * The right half of the sign-in pages, on the orange ribbon: the bonbon bear at its shop counter with the seller site open, or, until
- * that picture is added, pictures of the seller site stacked and tilted.
+ * The right half of the sign-in pages, after the GitBook sign-up art: pages of the seller site as tilted cards, stepping down to the left
+ * and running off the top right, over a soft blurred halo of warm colours.
  */
 function AuthArt() {
-  const desk = pictureOf('seller-desk')
-  const shots = ['/images/guides/tong-quan.jpg', '/images/guides/thuc-don.jpg', '/images/guides/don-hang.jpg']
-  if (desk) {
-    return (
-      <div aria-hidden="true" className="relative hidden overflow-hidden lg:block">
-        <OrangeRibbon variant="wave" fade className="absolute top-1/2 -left-[20%] w-[140%] -translate-y-1/2 rotate-[-12deg]" />
-        <img
-          src={desk}
-          alt=""
-          className="absolute top-1/2 left-1/2 w-[72%] max-w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-3xl shadow-[0_24px_60px_rgb(0_0_0/0.16)]"
-        />
-      </div>
-    )
-  }
+  const shots = ['/images/guides/tong-quan.jpg', '/images/guides/don-hang.jpg', '/images/guides/thuc-don.jpg']
   return (
     <div aria-hidden="true" className="relative hidden overflow-hidden lg:block">
-      <OrangeRibbon variant="wave" fade className="absolute top-1/2 -left-[20%] w-[140%] -translate-y-1/2 rotate-[-12deg]" />
-      <div className="absolute top-1/2 left-[18%] w-[78%] -translate-y-1/2 [perspective:1600px]">
-        <div className="flex flex-col gap-6 [transform:rotateX(28deg)_rotateZ(-18deg)] [transform-style:preserve-3d]">
+      <div className="absolute top-[60%] left-[2%] aspect-square w-[72%] -translate-y-1/2 rounded-full blur-2xl [background:radial-gradient(circle,transparent_40%,rgb(255_150_110/0.55)_50%,rgb(255_196_170/0.6)_57%,rgb(200_190_225/0.55)_65%,transparent_74%)]" />
+      <div className="absolute top-[8%] left-[26%] w-[105%] [perspective:2000px]">
+        <div className="relative [transform:rotateX(26deg)_rotateY(-6deg)_rotateZ(-30deg)] [transform-style:preserve-3d]">
           {shots.map((src, i) => (
             <img
               key={src}
               src={src}
               alt=""
-              className="w-full rounded-xl bg-white shadow-[0_20px_50px_rgb(0_0_0/0.12)]"
-              style={{ transform: `translateX(${i * 6}%)` }}
+              className="absolute top-0 left-0 w-full rounded-2xl border border-black/5 bg-white shadow-[-20px_36px_70px_rgb(0_0_0/0.13)]"
+              style={{ transform: `translate(${-i * 18}%, ${i * 40}%)`, zIndex: shots.length - i }}
             />
           ))}
         </div>
