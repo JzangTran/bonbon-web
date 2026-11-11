@@ -1,6 +1,7 @@
-const vnd = new Intl.NumberFormat('vi-VN')
-const relative = new Intl.RelativeTimeFormat('vi-VN', { numeric: 'auto' })
-const dateTime = new Intl.DateTimeFormat('vi-VN', {
+import { intlLocale, t } from '@/shared/i18n'
+const vnd = new Intl.NumberFormat(intlLocale)
+const relative = new Intl.RelativeTimeFormat(intlLocale, { numeric: 'auto' })
+const dateTime = new Intl.DateTimeFormat(intlLocale, {
   timeZone: 'Asia/Ho_Chi_Minh',
   day: '2-digit',
   month: '2-digit',
@@ -31,7 +32,7 @@ export function formatDateTime(iso: string | null | undefined): string {
 }
 
 /** ISO weekday (1 = Monday) to its Vietnamese name. */
-export const WEEKDAYS = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'] as const
+export const WEEKDAYS = [t('Thứ 2'), t('Thứ 3'), t('Thứ 4'), t('Thứ 5'), t('Thứ 6'), t('Thứ 7'), t('Chủ nhật')] as const
 
 export function weekdayName(weekday: number | undefined): string {
   return weekday ? WEEKDAYS[weekday - 1] : '—'

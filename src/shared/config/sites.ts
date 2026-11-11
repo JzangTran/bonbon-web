@@ -51,6 +51,9 @@ export const helpPath = (rest = ''): string => prefixed('help', rest)
  * Where a page of `site` lives, from wherever the person is now: a plain path when it is the same site (or all sites share the host),
  * else the full address on the other host. Use it with an <a href>, because it can leave the app.
  */
+/** A legal document on the help site, from any site: legalUrl('SELLER_TERMS'). */
+export const legalUrl = (type: string): string => siteUrl('help', `/legal/${type}`)
+
 export function siteUrl(site: Site, rest = ''): string {
   const path = rest === '' ? '/' : rest
   if (site === SITE) return path
@@ -63,4 +66,24 @@ export function siteUrl(site: Site, rest = ''): string {
 export function siteOrigin(site: Site): string {
   const url = siteUrl(site, '/')
   return url.startsWith('http') ? url.replace(/\/$/, '') : window.location.origin
+}
+
+// pages any visitor may open, also from a phone: email links (verify, reset, set password), the payment return, the captcha bridge
+// the phone app uses, and the old legal address
+const OPEN_EVERYWHERE = ['/verify-email', '/forgot-password', '/reset-password', '/set-password', '/payment/return', '/captcha-bridge', '/legal/']
+
+/**
+ * Which kind of page a path is: `public` (home, guides, blog, resources, help, legal and the pages above), `seller` (the seller
+ * site, its sign-in and sign-up, focus pages) or `staff` (console and ops). Works on the subdomains and in path mode alike.
+ */
+export function pageAudience(pathname: string): 'public' | 'seller' | 'staff' {
+  if (OPEN_EVERYWHERE.some((p) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : p + '/'))) return 'public'
+  if (SITE === 'merchant') return 'seller'
+  if (SITE === 'console' || SITE === 'ops') return 'staff'
+  if (SITE === 'public' && PATH_MODE) {
+    const first = pathname.split('/')[1]
+    if (first === 'merchant' || first === 'focus') return 'seller'
+    if (first === 'console' || first === 'ops') return 'staff'
+  }
+  return 'public'
 }

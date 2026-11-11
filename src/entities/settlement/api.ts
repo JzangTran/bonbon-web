@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type CommissionRates = components['schemas']['CommissionRates']
 export type CategoryCommissionRate = components['schemas']['CategoryCommissionRate']
@@ -24,13 +25,13 @@ export function useCommissionRates(enabled: boolean) {
   })
 }
 
-export function useCommissionHistory(page: number, enabled: boolean) {
+export function useCommissionHistory(page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...COMMISSION_KEY, 'history', page],
+    queryKey: [...COMMISSION_KEY, 'history', page, size],
     enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/commission-rates/history', { params: { query: { page, size: 10 } } })
+      const { data, error } = await api.GET('/api/admin/commission-rates/history', { params: { query: { page, size } } })
       if (error || !data) throw error
       return data
     },
@@ -52,7 +53,7 @@ export function useSetCommissionRate() {
       return result.data
     },
     onSuccess: () => {
-      toast.success('Đã lưu tỷ lệ hoa hồng. Đơn đặt từ bây giờ dùng tỷ lệ mới.')
+      toast.success(t('Đã lưu tỷ lệ hoa hồng. Đơn đặt từ bây giờ dùng tỷ lệ mới.'))
       void queryClient.invalidateQueries({ queryKey: COMMISSION_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),
@@ -61,14 +62,14 @@ export function useSetCommissionRate() {
 
 export type ShopFilter = 'ALL' | 'OWED_TO_SHOP' | 'OWED_BY_SHOP'
 
-export function useSettlementOverview(filter: ShopFilter, page: number, enabled: boolean) {
+export function useSettlementOverview(filter: ShopFilter, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...SETTLEMENT_KEY, 'overview', filter, page],
+    queryKey: [...SETTLEMENT_KEY, 'overview', filter, page, size],
     enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/settlement/overview', {
-        params: { query: { page, size: 20, ...(filter === 'ALL' ? {} : { status: filter }) } },
+        params: { query: { page, size, ...(filter === 'ALL' ? {} : { status: filter }) } },
       })
       if (error || !data) throw error
       return data
@@ -88,14 +89,14 @@ export function useSettlementVendor(id: string, enabled: boolean) {
   })
 }
 
-export function useVendorLedger(id: string, type: string | null, page: number, enabled: boolean) {
+export function useVendorLedger(id: string, type: string | null, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...SETTLEMENT_KEY, 'ledger', id, type, page],
+    queryKey: [...SETTLEMENT_KEY, 'ledger', id, type, page, size],
     enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/settlement/vendors/{id}/ledger', {
-        params: { path: { id }, query: { page, size: 20, ...(type ? { type } : {}) } },
+        params: { path: { id }, query: { page, size, ...(type ? { type } : {}) } },
       })
       if (error || !data) throw error
       return data
@@ -132,7 +133,7 @@ export function useRecordEntry(vendorId: string) {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã ghi vào sổ.')
+      toast.success(t('Đã ghi vào sổ.'))
       void queryClient.invalidateQueries({ queryKey: SETTLEMENT_KEY })
     },
     onError: (error) => {

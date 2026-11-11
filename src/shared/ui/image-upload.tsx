@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { FileTextIcon, LoaderCircleIcon, PlusIcon } from 'lucide-react'
 import { useId, type ChangeEvent } from 'react'
 import { cn } from '@/shared/lib/utils'
@@ -52,8 +53,8 @@ export function ImageUpload({
         <input id={id} type="file" accept={accept} aria-label={label} aria-describedby={describedBy} className="sr-only" onChange={change} />
       </label>
       {previewUrl ? (
-        <a className="text-sm text-primary hover:underline" href={previewUrl} target="_blank" rel="noreferrer">
-          {pdf ? 'Xem tệp đã tải' : 'Xem ảnh'}
+        <a className="text-link text-sm" href={previewUrl} target="_blank" rel="noreferrer">
+          {pdf ? t('Xem tệp đã tải') : t('Xem ảnh')}
         </a>
       ) : null}
     </div>

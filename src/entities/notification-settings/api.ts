@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
@@ -42,7 +43,7 @@ export function useSetQuietHours() {
       return data
     },
     onSuccess: (data) => {
-      toast.success(data.quietHours ? 'Đã đặt giờ yên lặng.' : 'Đã bỏ giờ yên lặng.')
+      toast.success(data.quietHours ? t('Đã đặt giờ yên lặng.') : t('Đã bỏ giờ yên lặng.'))
       queryClient.setQueryData([...KEY, 'preferences'], data)
     },
     onError: (error) => toast.error(problemMessage(error)),
@@ -68,7 +69,7 @@ export function useRemoveDevice() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success('Đã gỡ thiết bị.')
+      toast.success(t('Đã gỡ thiết bị.'))
       void queryClient.invalidateQueries({ queryKey: [...KEY, 'devices'] })
     },
     onError: (error) => toast.error(problemMessage(error)),

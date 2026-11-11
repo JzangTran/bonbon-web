@@ -5,15 +5,15 @@ const UPDATED = '2026-10-20'
 /** "Bắt đầu": from an account to the first order, one page per step; each ends with cards to the next steps (two at most). */
 export const START: Article[] = [
   {
-    collection: 'bat-dau',
-    slug: 'tao-tai-khoan',
+    collection: 'getting-started',
+    slug: 'create-an-account',
     title: 'Bước 1: Tạo tài khoản người bán',
     description: 'Đăng ký tài khoản người bán trên bonbon, xác thực email và đăng nhập lần đầu: mất khoảng năm phút.',
-    image: '/guides/dang-ky.jpg',
+    image: '/images/guides/dang-ky.jpg',
     imageAlt: 'Trang đăng ký tài khoản người bán của bonbon',
     tags: ['Bắt đầu', 'Tài khoản', '5 phút'],
     updated: UPDATED,
-    next: ['bat-dau/mo-cua-hang'],
+    next: ['getting-started/open-your-shop'],
     blocks: [
       { t: 'p', text: 'Tài khoản người bán là nơi bạn đăng nhập để mở cửa hàng, nhận đơn và theo dõi doanh thu. Mỗi tài khoản người bán quản lý đúng một cửa hàng.' },
       { t: 'h2', text: 'Chuẩn bị trước khi đăng ký' },
@@ -34,7 +34,7 @@ export const START: Article[] = [
           'Đọc và đồng ý Điều khoản dành cho người bán, rồi bấm “Đăng ký”.',
         ],
       },
-      { t: 'img', src: '/guides/dang-ky.jpg', alt: 'Biểu mẫu đăng ký người bán', caption: 'Biểu mẫu đăng ký người bán.' },
+      { t: 'img', src: '/images/guides/dang-ky.jpg', alt: 'Biểu mẫu đăng ký người bán', caption: 'Biểu mẫu đăng ký người bán.' },
       { t: 'note', text: 'Bạn cũng có thể tiếp tục bằng tài khoản Google. Khi đó vẫn cần đồng ý điều khoản trước khi mở cửa hàng.' },
       { t: 'h2', text: 'Xác thực email' },
       {
@@ -46,20 +46,20 @@ export const START: Article[] = [
         t: 'p',
         text: 'Sau khi email được xác thực, đăng nhập bằng email và mật khẩu vừa tạo. Vì chưa có cửa hàng được duyệt, bonbon đưa bạn thẳng tới biểu mẫu mở cửa hàng. Bạn có thể lưu nháp và quay lại điền tiếp bất cứ lúc nào.',
       },
-      { t: 'img', src: '/guides/dang-nhap.jpg', alt: 'Trang đăng nhập người bán', caption: 'Đăng nhập tại trang người bán.' },
+      { t: 'img', src: '/images/guides/dang-nhap.jpg', alt: 'Trang đăng nhập người bán', caption: 'Đăng nhập tại trang người bán.' },
     ],
   },
   {
-    collection: 'bat-dau',
-    slug: 'mo-cua-hang',
+    collection: 'getting-started',
+    slug: 'open-your-shop',
     title: 'Bước 2: Điền hồ sơ mở cửa hàng',
     description:
       'Năm phần của hồ sơ mở cửa hàng: thông tin quán, giao hàng và thời gian, thuế và nhận tiền, định danh, xác nhận. Lưu nháp từng phần.',
-    image: '/guides/mo-shop-1.jpg',
+    image: '/images/guides/mo-shop-1.jpg',
     imageAlt: 'Biểu mẫu mở cửa hàng, phần Thông tin quán',
     tags: ['Bắt đầu', 'Hồ sơ', 'Mở cửa hàng'],
     updated: UPDATED,
-    next: ['bat-dau/cho-duyet-nhan-don', 'quan-ly-cua-hang/thiet-lap-ho-so'],
+    next: ['getting-started/get-approved-and-take-orders', 'manage-your-shop/set-up-your-profile'],
     blocks: [
       {
         t: 'p',
@@ -74,13 +74,13 @@ export const START: Article[] = [
           'Vị trí của quán phải nằm trong một khu vực bonbon đang phục vụ. Khu vực này quyết định bán kính giao tối đa của quán.',
         ],
       },
-      { t: 'img', src: '/guides/mo-shop-1.jpg', alt: 'Phần Thông tin quán', caption: 'Phần 1: Thông tin quán.' },
+      { t: 'img', src: '/images/guides/mo-shop-1.jpg', alt: 'Phần Thông tin quán', caption: 'Phần 1: Thông tin quán.' },
       { t: 'h2', text: '2. Giao hàng và thời gian' },
       {
         t: 'p',
         text: 'Bạn xem khu vực phục vụ của quán, đặt bán kính giao (không vượt mức tối đa của khu vực), phí giao hàng, mức miễn phí giao và đơn tối thiểu (hai mục sau là tuỳ chọn), rồi đặt giờ mở cửa cho từng ngày trong tuần.',
       },
-      { t: 'img', src: '/guides/mo-shop-2.jpg', alt: 'Phần Giao hàng và thời gian', caption: 'Phần 2: Giao hàng và thời gian.' },
+      { t: 'img', src: '/images/guides/mo-shop-2.jpg', alt: 'Phần Giao hàng và thời gian', caption: 'Phần 2: Giao hàng và thời gian.' },
       { t: 'h2', text: '3. Thuế và nhận tiền' },
       {
         t: 'p',
@@ -100,15 +100,15 @@ export const START: Article[] = [
     ],
   },
   {
-    collection: 'bat-dau',
-    slug: 'cho-duyet-nhan-don',
+    collection: 'getting-started',
+    slug: 'get-approved-and-take-orders',
     title: 'Bước 3: Chờ duyệt, thêm thực đơn và nhận đơn đầu tiên',
     description: 'Sau khi gửi hồ sơ: cách bonbon duyệt, việc cần làm khi được duyệt và cách bật nhận đơn để bán đơn đầu tiên.',
-    image: '/guides/tong-quan.jpg',
+    image: '/images/guides/tong-quan.jpg',
     imageAlt: 'Trang tổng quan của người bán',
     tags: ['Bắt đầu', 'Duyệt hồ sơ', 'Đơn đầu tiên'],
     updated: UPDATED,
-    next: ['quan-ly-cua-hang/them-mon-an', 'quan-ly-cua-hang/nhan-va-xu-ly-don'],
+    next: ['manage-your-shop/add-dishes', 'manage-your-shop/accept-and-handle-orders'],
     blocks: [
       { t: 'h2', text: 'Chờ duyệt' },
       { t: 'p', text: 'Quản trị viên xem hồ sơ và bạn nhận email khi có kết quả. Trong lúc chờ, trang mở cửa hàng chỉ cho xem, không sửa được.' },
@@ -129,7 +129,7 @@ export const START: Article[] = [
         t: 'p',
         text: 'Công tắc “Đang nhận đơn” ở thanh trên cùng cho phép bạn tạm nghỉ ngay lập tức. Quán chỉ hiện là đang mở khi công tắc bật và đang trong khung giờ mở cửa đã đặt.',
       },
-      { t: 'img', src: '/guides/tong-quan.jpg', alt: 'Công tắc Đang nhận đơn và danh sách việc cần làm', caption: 'Công tắc “Đang nhận đơn” và danh sách việc cần làm.' },
+      { t: 'img', src: '/images/guides/tong-quan.jpg', alt: 'Công tắc Đang nhận đơn và danh sách việc cần làm', caption: 'Công tắc “Đang nhận đơn” và danh sách việc cần làm.' },
       { t: 'h2', text: 'Đơn đầu tiên' },
       {
         t: 'p',

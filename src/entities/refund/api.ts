@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type RefundRow = components['schemas']['RefundRow']
 export type RefundPage = components['schemas']['RefundPage']
@@ -8,15 +9,15 @@ export type RefundPage = components['schemas']['RefundPage']
 export const REFUNDS_KEY = ['admin', 'refunds'] as const
 
 /** The refund queue: the open bank transfers by default, {@code COMPLETED} or {@code ALL} for the month-end sheet. */
-export function useRefunds(status: 'OPEN' | 'COMPLETED' | 'ALL', page: number, enabled: boolean) {
+export function useRefunds(status: 'OPEN' | 'COMPLETED' | 'ALL', page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...REFUNDS_KEY, status, page],
+    queryKey: [...REFUNDS_KEY, status, page, size],
     enabled,
     placeholderData: keepPreviousData,
     refetchInterval: 30_000,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/refunds', {
-        params: { query: { page, size: 20, ...(status === 'OPEN' ? {} : { status }) } },
+        params: { query: { page, size, ...(status === 'OPEN' ? {} : { status }) } },
       })
       if (error || !data) throw error
       return data
@@ -34,7 +35,7 @@ export function useCompleteRefund() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã ghi nhận chuyển khoản. Khách được báo đã hoàn tiền.')
+      toast.success(t('Đã ghi nhận chuyển khoản. Khách được báo đã hoàn tiền.'))
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
     onError: (error) => {
@@ -54,7 +55,7 @@ export function useFailRefund() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã báo chuyển khoản thất bại. Khách sẽ nhập tài khoản khác.')
+      toast.success(t('Đã báo chuyển khoản thất bại. Khách sẽ nhập tài khoản khác.'))
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
     onError: (error) => {

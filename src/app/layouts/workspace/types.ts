@@ -24,5 +24,18 @@ export type ExtraPage = {
   under?: string
 }
 
-export type AccountLink = { to: string; label: string }
-export type FooterLink = { to: string; label: string }
+/**
+ * A part of the workspace with its own navigation, shown as a tab under the header (after the GitBook docs tabs): the seller's
+ * selling channel and settings, or the administrator's operations, content and settings.
+ */
+export type Space = {
+  key: string
+  label: string
+  icon: LucideIcon
+  nav: NavParent[]
+  extras?: ExtraPage[]
+}
+
+/** A row of the account menu; `external` links go to another bonbon site (the help center). */
+export type AccountLink = { to: string; label: string; external?: boolean }
+export type FooterLink = { to: string; label: string; external?: boolean }

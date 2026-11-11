@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { ShopApplication } from '@/entities/shop'
@@ -38,12 +39,12 @@ export function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: 
   /** `strict`: the step is being completed, so every part is needed; a draft only has to be well formed. */
   const problems = (strict: boolean): Errors => {
     const e: Errors = {}
-    if (strict || name.trim() !== '') requiredText(e, 'name', name, 'tên cửa hàng', 100)
+    if (strict || name.trim() !== '') requiredText(e, 'name', name, t('tên cửa hàng'), 100)
     const p = compactPhone(phone)
-    if (strict && p === '') e.phone = 'Hãy nhập số điện thoại cửa hàng.'
-    else if (p !== '' && !VN_PHONE.test(p)) e.phone = 'Số điện thoại Việt Nam không hợp lệ, ví dụ 0912345678 hoặc +84912345678.'
-    if (strict && email.trim() === '') e.email = 'Hãy nhập email cửa hàng.'
-    else if (email.trim() !== '' && !isEmail(email.trim())) e.email = 'Email không hợp lệ.'
+    if (strict && p === '') e.phone = t('Hãy nhập số điện thoại cửa hàng.')
+    else if (p !== '' && !VN_PHONE.test(p)) e.phone = t('Số điện thoại Việt Nam không hợp lệ, ví dụ 0912345678 hoặc +84912345678.')
+    if (strict && email.trim() === '') e.email = t('Hãy nhập email cửa hàng.')
+    else if (email.trim() !== '' && !isEmail(email.trim())) e.email = t('Email không hợp lệ.')
     return { ...e, ...validateShopAddress(address, strict) }
   }
 
@@ -60,20 +61,20 @@ export function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         lat: address.lat,
         lng: address.lng,
       },
-      { onSuccess: () => (andNext ? onNext() : toast.success('Đã lưu nháp.')) },
+      { onSuccess: () => (andNext ? onNext() : toast.success(t('Đã lưu nháp.'))) },
     )
   }
 
   return (
-    <StepCard title="1 · Thông tin quán" footer={<SaveButtons pending={save.isPending} onSave={submit} />}>
-      <Field id="shop-name" label="Tên cửa hàng" required error={save.errors.name}>
+    <StepCard title={t('1 · Thông tin quán')} footer={<SaveButtons pending={save.isPending} onSave={submit} />}>
+      <Field id="shop-name" label={t('Tên cửa hàng')} required error={save.errors.name}>
         <Input id="shop-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
       </Field>
       <ShopAddressFields value={address} onChange={setAddress} errors={save.errors} />
-      <Field id="shop-phone" label="Số điện thoại cửa hàng" required hint="Số điện thoại Việt Nam, ví dụ 0912345678." error={save.errors.phone}>
+      <Field id="shop-phone" label={t('Số điện thoại cửa hàng')} required hint={t('Số điện thoại Việt Nam, ví dụ 0912345678.')} error={save.errors.phone}>
         <Input id="shop-phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={15} placeholder="0912345678" value={phone} onChange={(e) => setPhone(e.target.value)} />
       </Field>
-      <Field id="shop-email" label="Email cửa hàng" required error={save.errors.email}>
+      <Field id="shop-email" label={t('Email cửa hàng')} required error={save.errors.email}>
         <Input id="shop-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </Field>
       {save.isError ? <FormError message={problemMessage(save.error)} /> : null}

@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { toast } from 'sonner'
@@ -35,10 +36,10 @@ export function SaveButtons({ pending, onSave }: { pending: boolean; onSave: (an
   return (
     <>
       <Button type="button" variant="outline" disabled={pending} onClick={() => onSave(false)}>
-        Lưu nháp
+        {t('Lưu nháp')}
       </Button>
       <Button type="button" disabled={pending} onClick={() => onSave(true)}>
-        Lưu & tiếp tục
+        {t('Lưu & tiếp tục')}
       </Button>
     </>
   )
@@ -60,7 +61,7 @@ function useUpload(kind: UploadKind) {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(SHOP_QUERY_KEY, data)
-      toast.success('Đã tải tệp lên.')
+      toast.success(t('Đã tải tệp lên.'))
     },
     onError: (e) => toast.error(problemMessage(e)),
   })

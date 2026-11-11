@@ -1,4 +1,5 @@
 import type { Site } from '@/shared/config/sites'
+import { locale } from '@/shared/i18n'
 import { absoluteUrl } from './url'
 
 /**
@@ -38,7 +39,7 @@ export function PageSeo({
       description,
       dateModified: article.updated,
       keywords: article.tags.join(', '),
-      inLanguage: 'vi',
+      inLanguage: locale,
       ...(image ? { image: absoluteUrl(image) } : {}),
       mainEntityOfPage: absoluteUrl(path, site),
       publisher: { '@type': 'Organization', name: 'bonbon' },

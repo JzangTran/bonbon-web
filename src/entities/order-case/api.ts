@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type OrderCase = components['schemas']['OrderCase']
 export type OrderCaseLine = components['schemas']['OrderCaseLine']
@@ -14,14 +15,14 @@ export const CASES_KEY = ['order-cases'] as const
 
 // --- the administrators' queue
 
-export function useAdminCases(status: CaseStatus, page: number, enabled: boolean) {
+export function useAdminCases(status: CaseStatus, page: number, enabled: boolean, size = 25) {
   return useQuery({
-    queryKey: [...CASES_KEY, 'admin', status, page],
+    queryKey: [...CASES_KEY, 'admin', status, page, size],
     enabled,
     placeholderData: keepPreviousData,
     refetchInterval: 30_000,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/admin/order-cases', { params: { query: { status, page, size: 20 } } })
+      const { data, error } = await api.GET('/api/admin/order-cases', { params: { query: { status, page, size } } })
       if (error || !data) throw error
       return data
     },
@@ -58,7 +59,7 @@ export function useDecideCase() {
       return data
     },
     onSuccess: (_, input) => {
-      toast.success(input.outcome === 'UPHELD' ? 'Đã chấp nhận khiếu nại. Khách sẽ được hoàn tiền.' : 'Đã bác bỏ khiếu nại.')
+      toast.success(input.outcome === 'UPHELD' ? t('Đã chấp nhận khiếu nại. Khách sẽ được hoàn tiền.') : t('Đã bác bỏ khiếu nại.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {
@@ -77,7 +78,7 @@ export function useReopenCase() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã mở lại khiếu nại.')
+      toast.success(t('Đã mở lại khiếu nại.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),
@@ -86,13 +87,13 @@ export function useReopenCase() {
 
 // --- the shop's side
 
-export function useShopCases(status: CaseStatus | null, page: number) {
+export function useShopCases(status: CaseStatus | null, page: number, size = 25) {
   return useQuery({
-    queryKey: [...CASES_KEY, 'shop', status, page],
+    queryKey: [...CASES_KEY, 'shop', status, page, size],
     placeholderData: keepPreviousData,
     refetchInterval: 30_000,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/merchant/order-cases', { params: { query: { page, size: 20, ...(status ? { status } : {}) } } })
+      const { data, error } = await api.GET('/api/merchant/order-cases', { params: { query: { page, size, ...(status ? { status } : {}) } } })
       if (error || !data) throw error
       return data
     },
@@ -119,7 +120,7 @@ export function useAcceptCase() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã chấp nhận khiếu nại. Khách được hoàn tiền.')
+      toast.success(t('Đã chấp nhận khiếu nại. Khách được hoàn tiền.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {
@@ -138,7 +139,7 @@ export function useDisputeCase() {
       return data
     },
     onSuccess: () => {
-      toast.success('Đã chuyển cho quản trị viên quyết định.')
+      toast.success(t('Đã chuyển cho quản trị viên quyết định.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {

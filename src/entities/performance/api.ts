@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
@@ -44,7 +45,7 @@ export function useAppealPenalty() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success('Đã gửi kháng nghị. Quản trị viên sẽ xem xét.')
+      toast.success(t('Đã gửi kháng nghị. Quản trị viên sẽ xem xét.'))
       void queryClient.invalidateQueries({ queryKey: PERFORMANCE_KEY })
     },
     onError: (error) => {

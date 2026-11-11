@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { PlusIcon, Trash2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useOptionMutation, type OptionGroup } from '@/entities/menu'
@@ -39,7 +40,7 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
     group
       ? api.PUT('/api/merchant/option-groups/{id}', { params: { path: { id: group.id! } }, body })
       : api.POST('/api/merchant/option-groups', { body }),
-    group ? 'Đã lưu nhóm lựa chọn.' : 'Đã thêm nhóm lựa chọn.',
+    group ? t('Đã lưu nhóm lựa chọn.') : t('Đã thêm nhóm lựa chọn.'),
   )
 
   const update = (key: number, patch: Partial<Row>) => setRows((prev) => prev.map((r) => (r.key === key ? { ...r, ...patch } : r)))
@@ -48,12 +49,12 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
     const minValue = Number(min)
     const maxValue = Number(max)
     const options = rows.map((r) => ({ ...r, delta: toInt(r.priceDelta) }))
-    if (options.some((o) => o.delta === undefined)) return setError('Giá cộng thêm phải là số nguyên không âm.')
+    if (options.some((o) => o.delta === undefined)) return setError(t('Giá cộng thêm phải là số nguyên không âm.'))
     if (!Number.isInteger(minValue) || !Number.isInteger(maxValue) || minValue < 0 || maxValue < 1) {
-      return setError('Số lựa chọn tối thiểu từ 0, tối đa từ 1.')
+      return setError(t('Số lựa chọn tối thiểu từ 0, tối đa từ 1.'))
     }
-    if (minValue > maxValue) return setError('Tối thiểu không được lớn hơn tối đa.')
-    if (maxValue > options.length) return setError('Tối đa không được vượt quá số lựa chọn bạn có.')
+    if (minValue > maxValue) return setError(t('Tối thiểu không được lớn hơn tối đa.'))
+    if (maxValue > options.length) return setError(t('Tối đa không được vượt quá số lựa chọn bạn có.'))
     setError(null)
     save.mutate(
       {
@@ -76,8 +77,8 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
     <Sheet open onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle>{group ? 'Sửa nhóm lựa chọn' : 'Thêm nhóm lựa chọn'}</SheetTitle>
-          <SheetDescription>Ví dụ “Cỡ ly”: bắt buộc chọn 1. “Topping”: tuỳ chọn, chọn tối đa 3.</SheetDescription>
+          <SheetTitle>{group ? t('Sửa nhóm lựa chọn') : t('Thêm nhóm lựa chọn')}</SheetTitle>
+          <SheetDescription>{t('Ví dụ “Cỡ ly”: bắt buộc chọn 1. “Topping”: tuỳ chọn, chọn tối đa 3.')}</SheetDescription>
         </SheetHeader>
         <form
           id="option-form"
@@ -88,36 +89,36 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
           }}
         >
           <div className="flex flex-col gap-2">
-            <Label htmlFor="group-name">Tên nhóm</Label>
+            <Label htmlFor="group-name">{t('Tên nhóm')}</Label>
             <Input id="group-name" required maxLength={60} value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="group-min">Chọn tối thiểu</Label>
+              <Label htmlFor="group-min">{t('Chọn tối thiểu')}</Label>
               <Input id="group-min" inputMode="numeric" className="tabular-nums" value={min} onChange={(e) => setMin(e.target.value)} />
-              <p className="text-xs text-muted-foreground">0 = khách có thể bỏ qua</p>
+              <p className="text-xs text-muted-foreground">{t('0 = khách có thể bỏ qua')}</p>
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="group-max">Chọn tối đa</Label>
+              <Label htmlFor="group-max">{t('Chọn tối đa')}</Label>
               <Input id="group-max" inputMode="numeric" className="tabular-nums" value={max} onChange={(e) => setMax(e.target.value)} />
-              <p className="text-xs text-muted-foreground">1 = chọn một</p>
+              <p className="text-xs text-muted-foreground">{t('1 = chọn một')}</p>
             </div>
           </div>
           <fieldset className="flex flex-col gap-3">
-            <legend className="mb-1 text-sm font-medium">Các lựa chọn</legend>
+            <legend className="mb-1 text-sm font-medium">{t('Các lựa chọn')}</legend>
             {rows.map((row, index) => (
               <div key={row.key} className="flex flex-col gap-2 rounded-sm border p-3">
                 <div className="flex items-center gap-2">
                   <Input
                     required
-                    aria-label={`Tên lựa chọn ${index + 1}`}
-                    placeholder="Tên, ví dụ L"
+                    aria-label={t('Tên lựa chọn {v0}', { v0: index + 1 })}
+                    placeholder={t('Tên, ví dụ L')}
                     maxLength={60}
                     value={row.name}
                     onChange={(e) => update(row.key, { name: e.target.value })}
                   />
                   <Input
-                    aria-label={`Giá cộng thêm ${index + 1}`}
+                    aria-label={t('Giá cộng thêm {v0}', { v0: index + 1 })}
                     inputMode="numeric"
                     className="w-28 tabular-nums"
                     placeholder="+ ₫"
@@ -128,7 +129,7 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label={`Bỏ lựa chọn ${index + 1}`}
+                    aria-label={t('Bỏ lựa chọn {v0}', { v0: index + 1 })}
                     disabled={rows.length === 1}
                     onClick={() => setRows((prev) => prev.filter((r) => r.key !== row.key))}
                   >
@@ -143,7 +144,7 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
                       checked={row.defaultChoice}
                       onChange={(e) => update(row.key, { defaultChoice: e.target.checked })}
                     />
-                    Chọn sẵn
+                    {t('Chọn sẵn')}
                   </label>
                   <label className="flex items-center gap-2">
                     <input
@@ -152,7 +153,7 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
                       checked={row.soldOut}
                       onChange={(e) => update(row.key, { soldOut: e.target.checked })}
                     />
-                    Đang hết
+                    {t('Đang hết')}
                   </label>
                 </div>
               </div>
@@ -168,17 +169,17 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
                 setNextKey((k) => k + 1)
               }}
             >
-              <PlusIcon /> Thêm lựa chọn
+              <PlusIcon />{t(' Thêm lựa chọn')}
             </Button>
           </fieldset>
           <FormError message={error} />
         </form>
         <SheetFooter className="flex-row justify-end gap-2 border-t px-4 py-3">
           <Button type="button" variant="ghost" onClick={onClose}>
-            Huỷ
+            {t('Huỷ')}
           </Button>
           <Button type="submit" form="option-form" disabled={save.isPending}>
-            Lưu nhóm
+            {t('Lưu nhóm')}
           </Button>
         </SheetFooter>
       </SheetContent>

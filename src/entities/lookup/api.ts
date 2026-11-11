@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
@@ -9,10 +10,10 @@ export type AdminCustomerDetail = components['schemas']['AdminCustomerDetail']
 export type RevealReason = 'DISPUTE' | 'DATA_REQUEST' | 'SAFETY' | 'OTHER'
 
 export const REASON_LABEL: Record<RevealReason, string> = {
-  DISPUTE: 'Tranh chấp',
-  DATA_REQUEST: 'Yêu cầu về dữ liệu',
-  SAFETY: 'An toàn',
-  OTHER: 'Lý do khác',
+  DISPUTE: t('Tranh chấp'),
+  DATA_REQUEST: t('Yêu cầu về dữ liệu'),
+  SAFETY: t('An toàn'),
+  OTHER: t('Lý do khác'),
 }
 
 export type OrderQuery = { kind: 'code' | 'customerEmail' | 'customerPhone'; value: string }

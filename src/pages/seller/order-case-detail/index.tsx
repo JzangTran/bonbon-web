@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
@@ -27,7 +28,7 @@ export function SellerOrderCaseDetailPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-6">
       <Link to={merchantPath('/order-cases')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" /> Danh sách khiếu nại
+        <ArrowLeftIcon className="size-4" />{t(' Danh sách khiếu nại')}
       </Link>
       {detail.isError ? <FormError message={problemMessage(detail.error)} /> : null}
       {detail.isPending ? <Skeleton className="h-64" /> : null}
@@ -36,12 +37,12 @@ export function SellerOrderCaseDetailPage() {
           <CaseEvidence orderCase={c} />
           {c.status === 'AWAITING_SHOP' ? (
             <Card className="gap-3 p-4">
-              <h3 className="font-semibold">Quán trả lời</h3>
+              <h3 className="font-semibold">{t('Quán trả lời')}</h3>
               <p className="text-sm text-muted-foreground">
-                Chấp nhận thì khách được hoàn {formatVnd(c.refundAmount)} ngay và quán chịu {formatVnd(c.shopBears)} trong sổ cái (phần hoa hồng của số này được hoàn lại cho quán). Phản đối thì quản trị viên xem ảnh và lý do của hai bên rồi quyết định.
+                {t('Chấp nhận thì khách được hoàn ')}{formatVnd(c.refundAmount)}{t(' ngay và quán chịu ')}{formatVnd(c.shopBears)}{t(' trong sổ cái (phần hoa hồng của số này được hoàn lại cho quán). Phản đối thì quản trị viên xem ảnh và lý do của hai bên rồi quyết định.')}
               </p>
               <div className="flex flex-wrap gap-2">
-                <Button onClick={() => setAccepting(true)}>Chấp nhận</Button>
+                <Button onClick={() => setAccepting(true)}>{t('Chấp nhận')}</Button>
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -49,7 +50,7 @@ export function SellerOrderCaseDetailPage() {
                     setDisputing(true)
                   }}
                 >
-                  Phản đối
+                  {t('Phản đối')}
                 </Button>
               </div>
             </Card>
@@ -58,17 +59,17 @@ export function SellerOrderCaseDetailPage() {
           <Dialog open={accepting} onOpenChange={setAccepting}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Chấp nhận khiếu nại?</DialogTitle>
+                <DialogTitle>{t('Chấp nhận khiếu nại?')}</DialogTitle>
                 <DialogDescription>
-                  Khách được hoàn {formatVnd(c.refundAmount)}. Quán chịu {formatVnd(c.shopBears)} và không hoàn tác được.
+                  {t('Khách được hoàn ')}{formatVnd(c.refundAmount)}{t('. Quán chịu ')}{formatVnd(c.shopBears)}{t(' và không hoàn tác được.')}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Huỷ</Button>
+                  <Button variant="outline">{t('Huỷ')}</Button>
                 </DialogClose>
                 <Button disabled={accept.isPending} onClick={() => accept.mutate(id, { onSuccess: () => setAccepting(false) })}>
-                  Chấp nhận
+                  {t('Chấp nhận')}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -77,19 +78,19 @@ export function SellerOrderCaseDetailPage() {
           <Dialog open={disputing} onOpenChange={setDisputing}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Phản đối khiếu nại</DialogTitle>
-                <DialogDescription>Quản trị viên sẽ quyết định. Lý do của bạn được gửi kèm và khách cũng thấy.</DialogDescription>
+                <DialogTitle>{t('Phản đối khiếu nại')}</DialogTitle>
+                <DialogDescription>{t('Quản trị viên sẽ quyết định. Lý do của bạn được gửi kèm và khách cũng thấy.')}</DialogDescription>
               </DialogHeader>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="dispute-note">Lý do phản đối</Label>
-                <Textarea id="dispute-note" rows={4} maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Ví dụ: đơn đã giao, khách ký nhận lúc 18:40" />
+                <Label htmlFor="dispute-note">{t('Lý do phản đối')}</Label>
+                <Textarea id="dispute-note" rows={4} maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('Ví dụ: đơn đã giao, khách ký nhận lúc 18:40')} />
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Huỷ</Button>
+                  <Button variant="outline">{t('Huỷ')}</Button>
                 </DialogClose>
                 <Button disabled={note.trim().length === 0 || dispute.isPending} onClick={() => dispute.mutate({ id, note }, { onSuccess: () => setDisputing(false) })}>
-                  Gửi cho quản trị viên
+                  {t('Gửi cho quản trị viên')}
                 </Button>
               </DialogFooter>
             </DialogContent>

@@ -5,67 +5,103 @@ import {
   COLLECTION_BASE,
   COLLECTION_TITLE,
   findArticle,
+  LEGACY_SLUGS,
   resolveArticles,
   type Article,
   type Collection,
 } from '@/entities/article'
 import { formatDate } from '@/shared/lib/format'
-import { WaveEdge } from '@/shared/ui/wave'
-import { ArticleView, ContentPage, DocsSidebar } from '@/widgets/article/article-view'
+import { ArticleView, BlogPostView, ContentPage, DocsSidebar } from '@/widgets/article/article-view'
+import { siteUrl } from '@/shared/config/sites'
 import { ArticleCard, Breadcrumb, CardGrid } from '@/widgets/article/parts'
 import { PageSeo } from '@/widgets/article/seo'
 import { NotFoundPage } from '@/pages/not-found'
+import { t } from '@/shared/i18n'
 
 type Trail = { name: string; path: string }[]
 
-const HOME: Trail = [{ name: 'Trang chủ', path: '/' }]
+const HOME: Trail = [{ name: t('Trang chủ'), path: '/' }]
 
 function trailFor(collection: Collection, current?: string): Trail {
   const own = { name: COLLECTION_TITLE[collection], path: COLLECTION_BASE[collection] }
   const base: Trail =
-    collection === 'blog' ? [...HOME, own] : [...HOME, { name: 'Hướng dẫn', path: COLLECTION_BASE['bat-dau'] }, own]
+    collection === 'blog' ? [...HOME, own] : [...HOME, { name: t('Hướng dẫn'), path: COLLECTION_BASE['getting-started'] }, own]
   return current ? [...base, { name: current, path: '' }] : base
 }
 
 /** The guides menu: every step of Bắt đầu, then every guide of Quản lý cửa hàng. */
-const GUIDE_GROUPS = (['bat-dau', 'quan-ly-cua-hang'] as const).map((c) => ({
+const GUIDE_GROUPS = (['getting-started', 'manage-your-shop'] as const).map((c) => ({
   title: COLLECTION_TITLE[c],
   items: articlesOf(c).map((a) => ({ label: a.title.replace(/^Bước \d+: /, ''), to: articlePath(c, a.slug) })),
 }))
 
-/** /huong-dan goes to the first step of "Bắt đầu"; so does /huong-dan/bat-dau. */
+/** /huong-dan goes to the first step of "Bắt đầu"; so does /guides/bat-dau. */
 export function GuideStartRedirect() {
-  const first = articlesOf('bat-dau')[0]
-  return <Navigate to={articlePath('bat-dau', first.slug)} replace />
+  const first = articlesOf('getting-started')[0]
+  return <Navigate to={articlePath('getting-started', first.slug)} replace />
 }
 
 /** One article of a collection, in the shared page format. */
 export function ArticlePage({ collection }: { collection: Collection }) {
   const { slug } = useParams()
   const article = findArticle(collection, slug)
+  // an old Vietnamese slug: send it to the English one
+  if (!article && slug && LEGACY_SLUGS[slug]) return <Navigate to={articlePath(collection, LEGACY_SLUGS[slug])} replace />
   if (!article) return <NotFoundPage />
   const path = articlePath(collection, article.slug)
   const trail = trailFor(collection, article.title)
   trail[trail.length - 1].path = path
   const next = resolveArticles(article.next).slice(0, 2)
+  const seo = (
+    <PageSeo
+      title={article.title}
+      description={article.description}
+      path={path}
+      image={article.image}
+      trail={trail}
+      article={{ updated: article.updated, tags: article.tags }}
+    />
+  )
+  if (collection === 'blog') {
+    const others = articlesOf('blog').filter((a) => a.slug !== article.slug)
+    return (
+      <>
+        {seo}
+        <BlogPostView
+          title={article.title}
+          description={article.description}
+          image={article.image}
+          imageAlt={article.imageAlt}
+          updated={article.updated}
+          blocks={article.blocks}
+          tags={article.tags}
+          allPath={COLLECTION_BASE.blog}
+          url={siteUrl('public', path)}
+          more={
+            others.length > 0 ? (
+              <section aria-labelledby="bai-khac" className="mt-24">
+                <h2 id="bai-khac" className="mb-6 text-h2 font-medium">
+                  {t('Đọc thêm bài viết')}
+                </h2>
+                <CardGrid articles={others} initial={3} step={3} />
+              </section>
+            ) : null
+          }
+        />
+      </>
+    )
+  }
   return (
     <>
-      <PageSeo
-        title={article.title}
-        description={article.description}
-        path={path}
-        image={article.image}
-        trail={trail}
-        article={{ updated: article.updated, tags: article.tags }}
-      />
+      {seo}
       <ArticleView
         trail={trail}
         title={article.title}
-        meta={`Cập nhật ngày ${formatDate(article.updated)}`}
+        meta={t('Cập nhật ngày {v0}', { v0: formatDate(article.updated) })}
         blocks={article.blocks}
         tags={article.tags}
         after={next.length > 0 ? <NextSteps articles={next} /> : null}
-        sidebar={collection === 'blog' ? undefined : <DocsSidebar groups={GUIDE_GROUPS} current={path} />}
+        sidebar={<DocsSidebar groups={GUIDE_GROUPS} current={path} />}
       />
     </>
   )
@@ -76,7 +112,7 @@ function NextSteps({ articles }: { articles: Article[] }) {
   return (
     <section aria-labelledby="buoc-tiep-theo" className="mt-12">
       <h2 id="buoc-tiep-theo" className="mb-4 text-[1.5rem] leading-9 font-semibold">
-        Bước tiếp theo
+        {t('Bước tiếp theo')}
       </h2>
       <ul className="grid gap-4 sm:grid-cols-2">
         {articles.map((a) => (
@@ -103,7 +139,6 @@ export function HubPage({ collection, title, intro }: { collection: Collection; 
           </div>
         </section>
         <section className="relative bg-background pt-8 pb-16 lg:pt-12 lg:pb-24">
-          <WaveEdge className="text-background" />
           <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6">
             <CardGrid articles={articles} />
           </div>
@@ -115,12 +150,12 @@ export function HubPage({ collection, title, intro }: { collection: Collection; 
 
 export const ManageHubPage = () => (
   <HubPage
-    collection="quan-ly-cua-hang"
-    title="Quản lý cửa hàng"
-    intro="Mỗi hướng dẫn là một việc bạn làm hằng ngày trên trang người bán, gói gọn trong vài thao tác."
+    collection="manage-your-shop"
+    title={t('Quản lý cửa hàng')}
+    intro={t('Mỗi hướng dẫn là một việc bạn làm hằng ngày trên trang người bán, gói gọn trong vài thao tác.')}
   />
 )
 
 export const BlogHubPage = () => (
-  <HubPage collection="blog" title="Blog" intro="Kiến thức và mẹo nhỏ cho chủ quán bán hàng trong khu: giao hàng, thực đơn, giá bán và chăm sóc khách." />
+  <HubPage collection="blog" title="Blog" intro={t('Kiến thức và mẹo nhỏ cho chủ quán bán hàng trong khu: giao hàng, thực đơn, giá bán và chăm sóc khách.')} />
 )

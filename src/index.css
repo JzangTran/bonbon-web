@@ -1,57 +1,19 @@
 @import "tailwindcss";
-@import "@fontsource/be-vietnam-pro/vietnamese-400.css";
-@import "@fontsource/be-vietnam-pro/latin-400.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-500.css";
-@import "@fontsource/be-vietnam-pro/latin-500.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-600.css";
-@import "@fontsource/be-vietnam-pro/latin-600.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-700.css";
-@import "@fontsource/be-vietnam-pro/latin-700.css";
-@import "@fontsource/be-vietnam-pro/vietnamese-800.css";
-@import "@fontsource/be-vietnam-pro/latin-800.css";
+/* Inter, the font of app.gitbook.com; the variable file carries every weight and the Vietnamese letters */
+@import "@fontsource-variable/inter";
 @import "./shared/ui/tokens.css";
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Breakpoints of the workspace shell that grow with the chosen text size. Media queries measure rem against the browser's own
- * size, not the page's, so larger text would leave the side columns at their wide-screen layout; these two variants move the
- * thresholds with the size instead: wsnav (left menu beside the work area: 768 px at 100 %) and wspanel (right panel: 1280 px).
- */
+/* Breakpoints of the workspace shell: wsnav puts the left menu beside the work area, wspanel shows the right panel. */
 @custom-variant wsnav {
   @media (min-width: 48rem) {
-    :root:not([data-text-scale]) &,
-    :root[data-text-scale="normal"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 60rem) {
-    :root[data-text-scale="large"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 72rem) {
-    :root[data-text-scale="xlarge"] & {
-      @slot;
-    }
+    @slot;
   }
 }
 @custom-variant wspanel {
   @media (min-width: 80rem) {
-    :root:not([data-text-scale]) &,
-    :root[data-text-scale="normal"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 100rem) {
-    :root[data-text-scale="large"] & {
-      @slot;
-    }
-  }
-  @media (min-width: 120rem) {
-    :root[data-text-scale="xlarge"] & {
-      @slot;
-    }
+    @slot;
   }
 }
 
@@ -70,10 +32,6 @@
   td,
   th {
     font-variant-numeric: tabular-nums;
-  }
-  /* Pages keep an h1 for assistive tech, but the workspace shows the page name in the header breadcrumb only. */
-  .ws-content h1 {
-    @apply sr-only;
   }
   .ws-content > div {
     max-width: none;
@@ -186,4 +144,72 @@
 }
 .bb-sheet[data-state="closed"] {
   animation: bb-out 140ms ease-in;
+}
+
+/* Sign-in pages, after app.gitbook.com/join: the app shape (6px corners, 36px tall), white fields with a light outline. */
+.bb-auth [data-slot="button"] {
+  border-radius: 6px;
+}
+.bb-auth [data-slot="button"][data-size="default"],
+.bb-auth [data-slot="button"][data-size="lg"] {
+  height: 2.25rem;
+  font-size: 0.875rem;
+}
+.bb-auth [data-slot="input"] {
+  border-radius: 6px;
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px var(--grey-300);
+}
+.bb-auth [data-slot="input"]:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--primary);
+  outline: 3px solid color-mix(in oklab, var(--primary) 20%, transparent);
+  outline-offset: 0;
+}
+
+/* A blog post, after the gitbook.com customer stories: grey text, ink headings, call-outs as a large quote ruled in orange. */
+.bb-blog p:not([role='note']),
+.bb-blog li {
+  color: var(--muted-foreground);
+}
+.bb-blog h2 {
+  margin-top: 2rem;
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.bb-blog p[role='note'] {
+  margin-block: 1rem;
+  border-left: 1px solid var(--primary);
+  border-radius: 0;
+  background: none;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  color: var(--ink);
+  font-size: 1.25rem;
+  line-height: 2.125rem;
+  letter-spacing: -0.01em;
+}
+
+/* The page title in the workspace, as on the GitBook docs: large, under the small breadcrumb. Outside the layers so it wins over the
+   size each page set when its title was hidden. */
+.ws-content h1 {
+  font-size: 1.875rem;
+  line-height: 2.375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* A text link anywhere: its text keeps the colour around it, an orange underline marks it and thickens on hover. The thickness grows
+   downwards from a fixed offset, so the text never moves. */
+@utility text-link {
+  text-decoration-line: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-skip-ink: none;
+  transition: text-decoration-thickness 120ms ease;
+  &:hover,
+  &:focus-visible {
+    text-decoration-thickness: 3px;
+  }
 }

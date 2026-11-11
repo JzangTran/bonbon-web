@@ -4,7 +4,7 @@ import type { Article } from '../types'
 export const BLOG: Article[] = [
   {
     collection: 'blog',
-    slug: 'giao-hang-noi-khu-la-gi',
+    slug: 'what-is-in-area-delivery',
     title: 'Giao hàng nội khu là gì và vì sao hợp với quán nhỏ?',
     description: 'Giao hàng nội khu nghĩa là quán chỉ phục vụ khách trong một khu nhỏ như chung cư hay khu công nghiệp, tự mang món tới.',
     image: '/mock/pho.jpg',
@@ -25,7 +25,7 @@ export const BLOG: Article[] = [
   },
   {
     collection: 'blog',
-    slug: 'chup-anh-mon-an-bang-dien-thoai',
+    slug: 'food-photos-with-your-phone',
     title: 'Năm mẹo chụp ảnh món ăn bằng điện thoại',
     description: 'Ảnh món rõ, sáng và gọn giúp khách quyết định nhanh hơn. Năm mẹo đơn giản, không cần máy ảnh.',
     image: '/mock/banh-mi.jpg',
@@ -48,7 +48,7 @@ export const BLOG: Article[] = [
   },
   {
     collection: 'blog',
-    slug: 'dat-gia-va-phi-giao-hop-ly',
+    slug: 'pricing-and-delivery-fees',
     title: 'Đặt giá món và phí giao hàng sao cho hợp lý',
     description: 'Cách nghĩ đơn giản để đặt giá món, phí giao, mức miễn phí giao và đơn tối thiểu mà vẫn có lời.',
     image: '/mock/com.jpg',
@@ -68,7 +68,7 @@ export const BLOG: Article[] = [
   },
   {
     collection: 'blog',
-    slug: 'giu-khach-quen-bang-phan-hoi-tot',
+    slug: 'keep-regulars-with-good-replies',
     title: 'Giữ khách quen bằng cách phản hồi đánh giá',
     description: 'Phản hồi đánh giá nhanh và chân thành giúp quán giữ khách và tạo thiện cảm với người chưa từng đặt.',
     image: '/mock/tra-chanh.jpg',

@@ -1,20 +1,20 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type Review = components['schemas']['Review']
 export type ReviewPage = components['schemas']['ReviewPage']
 
 export const REVIEWS_KEY = ['reviews'] as const
-const PAGE_SIZE = 20
 
 /** The shop's own reviews, newest first; {@code unreplied} keeps the ones still waiting for an answer. */
-export function useSellerReviews(unreplied: boolean, page: number) {
+export function useSellerReviews(unreplied: boolean, page: number, size = 25) {
   return useQuery({
-    queryKey: [...REVIEWS_KEY, 'seller', unreplied, page],
+    queryKey: [...REVIEWS_KEY, 'seller', unreplied, page, size],
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const { data, error } = await api.GET('/api/merchant/reviews', { params: { query: { unreplied, page, size: PAGE_SIZE } } })
+      const { data, error } = await api.GET('/api/merchant/reviews', { params: { query: { unreplied, page, size } } })
       if (error || !data) throw error
       return data
     },
@@ -38,7 +38,7 @@ export function useReplyActions() {
       return result.data
     },
     onSuccess: (_data, vars) => {
-      toast.success(vars.existing ? 'Đã cập nhật phản hồi.' : 'Đã gửi phản hồi.')
+      toast.success(vars.existing ? t('Đã cập nhật phản hồi.') : t('Đã gửi phản hồi.'))
       void refresh()
     },
     onError,
@@ -49,7 +49,7 @@ export function useReplyActions() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success('Đã xoá phản hồi.')
+      toast.success(t('Đã xoá phản hồi.'))
       void refresh()
     },
     onError,
@@ -57,7 +57,7 @@ export function useReplyActions() {
   return { save, remove }
 }
 
-export type ModerationFilter = { vendorId?: string; hidden?: boolean; maxRating?: number; page: number }
+export type ModerationFilter = { vendorId?: string; hidden?: boolean; maxRating?: number; page: number; size?: number }
 
 /** Every review, hidden ones included, for the moderator. */
 export function useAdminReviews(filter: ModerationFilter, enabled: boolean) {
@@ -70,7 +70,7 @@ export function useAdminReviews(filter: ModerationFilter, enabled: boolean) {
         params: {
           query: {
             page: filter.page,
-            size: PAGE_SIZE,
+            size: filter.size ?? 25,
             ...(filter.vendorId ? { vendorId: filter.vendorId } : {}),
             ...(filter.hidden !== undefined ? { hidden: filter.hidden } : {}),
             ...(filter.maxRating ? { maxRating: filter.maxRating } : {}),
@@ -100,7 +100,7 @@ export function useModerationActions() {
       return result.data
     },
     onSuccess: () => {
-      toast.success('Đã ẩn.')
+      toast.success(t('Đã ẩn.'))
       void refresh()
     },
     onError: (error) => {
@@ -118,7 +118,7 @@ export function useModerationActions() {
       return result.data
     },
     onSuccess: () => {
-      toast.success('Đã khôi phục.')
+      toast.success(t('Đã khôi phục.'))
       void refresh()
     },
     onError: (error) => {

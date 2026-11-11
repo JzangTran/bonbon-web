@@ -16,10 +16,11 @@ import { AuthHero, FormError, FormSuccess } from '@/widgets/auth-shell'
 import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
 import { merchantPath } from '@/shared/config/sites'
+import { t } from '@/shared/i18n'
 
 const schema = z.object({
-  email: z.email('Email không hợp lệ'),
-  password: z.string().min(1, 'Vui lòng nhập mật khẩu').max(100, 'Mật khẩu tối đa 100 ký tự'),
+  email: z.email(t('Email không hợp lệ')),
+  password: z.string().min(1, t('Vui lòng nhập mật khẩu')).max(100, t('Mật khẩu tối đa 100 ký tự')),
 })
 type Values = z.infer<typeof schema>
 type LoginResponse = components['schemas']['LoginResponse']
@@ -33,17 +34,18 @@ export function SellerLoginPage() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null)
   const [resent, setResent] = useState(false)
-  const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '', password: '' } })
+  // the seller sign-up sends an email that already has an account here, with what to do next
+  const arrived = location.state as { email?: string; notice?: string } | null
+  const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: arrived?.email ?? '', password: '' } })
 
   const finish = (data: LoginResponse) => {
     if (data.deletionCancelled) {
-      toast.success('Việc xoá tài khoản đã được huỷ vì bạn đăng nhập lại.', { description: 'Tài khoản của bạn vẫn như cũ.', duration: 12_000 })
+      toast.success(t('Việc xoá tài khoản đã được huỷ vì bạn đăng nhập lại.'), { description: t('Tài khoản của bạn vẫn như cũ.'), duration: 12_000 })
     }
     const { tokens, user } = data
-    if (!tokens?.accessToken || !tokens.refreshToken || !user?.id) return
+    if (!tokens?.accessToken || !user?.id) return
     signIn({
       accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
       userId: user.id,
       email: user.email ?? '',
       name: user.name ?? '',
@@ -68,7 +70,7 @@ export function SellerLoginPage() {
     }
     const roles = (data.availableRoles ?? data.user?.availableRoles ?? []) as Role[]
     if (!roles.includes('SELLER')) {
-      setError('Tài khoản này là tài khoản khách hàng. Hãy dùng ứng dụng bonbon trên điện thoại để đặt món.')
+      setError(t('Tài khoản này là tài khoản khách hàng. Hãy dùng ứng dụng bonbon trên điện thoại để đặt món.'))
       return
     }
     if (data.needsRoleSelection && data.roleToken) {
@@ -94,21 +96,22 @@ export function SellerLoginPage() {
 
   return (
     <AuthHero
-      heading="Đăng nhập"
-      eyebrow="bonbon dành cho người bán"
-      headline="Bán hàng"
-      headlineSoft="ngay trong khu của bạn"
+      heading={t('Đăng nhập')}
+      eyebrow={t('bonbon dành cho người bán')}
+      headline={t('Bán hàng')}
+      headlineSoft={t('ngay trong khu của bạn')}
       points={SELLER_POINTS}
-      cardTitle="Đăng nhập"
+      cardTitle={t('Đăng nhập')}
       footer={
         <>
-          Bạn mới biết đến bonbon?{' '}
-          <Link to={merchantPath('/register')} className="font-medium text-primary hover:underline">
-            Đăng ký
+          {t('Bạn mới biết đến bonbon?')}{' '}
+          <Link to={merchantPath('/register')} className="text-link font-medium">
+            {t('Đăng ký')}
           </Link>
         </>
       }
     >
+      {arrived?.notice ? <FormSuccess message={arrived.notice} /> : null}
       <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="email" className="sr-only">
@@ -127,12 +130,12 @@ export function SellerLoginPage() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="password" className="sr-only">
-            Mật khẩu
+            {t('Mật khẩu')}
           </Label>
           <PasswordInput
             id="password"
             autoComplete="current-password"
-            placeholder="Mật khẩu"
+            placeholder={t('Mật khẩu')}
             className="h-11"
             aria-invalid={!!form.formState.errors.password}
             {...form.register('password')}
@@ -143,19 +146,19 @@ export function SellerLoginPage() {
         <FormError message={error} />
         {unverifiedEmail && !resent ? (
           <Button type="button" variant="outline" onClick={resend}>
-            Gửi lại email xác thực
+            {t('Gửi lại email xác thực')}
           </Button>
         ) : null}
-        {resent ? <FormSuccess message="Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết. Hãy kiểm tra hộp thư." /> : null}
-        <Button type="submit" size="lg" className="uppercase tracking-wide" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
+        {resent ? <FormSuccess message={t('Nếu tài khoản cần xác thực, chúng tôi đã gửi lại liên kết. Hãy kiểm tra hộp thư.')} /> : null}
+        <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? t('Đang đăng nhập…') : t('Đăng nhập')}
         </Button>
-        <Link to="/forgot-password" className="-mt-2 self-start text-xs text-primary hover:underline">
-          Quên mật khẩu
+        <Link to="/forgot-password" className="text-link -mt-2 self-start text-xs">
+          {t('Quên mật khẩu')}
         </Link>
       </form>
       <GoogleSignIn />
-      <LegalNote action="đăng nhập" />
+      <LegalNote action={t('đăng nhập')} />
     </AuthHero>
   )
 }

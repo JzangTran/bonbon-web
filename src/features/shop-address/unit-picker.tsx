@@ -4,6 +4,7 @@ import { useProvinces, useWards } from '@/entities/geo'
 import { problemMessage } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
+import { t } from '@/shared/i18n'
 
 type Tab = 'province' | 'ward'
 
@@ -82,16 +83,16 @@ export function UnitPicker({
           aria-describedby={describedBy}
           className="flex h-10 w-full items-center justify-between gap-2 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-left text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
         >
-          <span className={cn('truncate', !label && 'text-muted-foreground')}>{label || 'Chọn Tỉnh/Thành phố, Phường/Xã'}</span>
+          <span className={cn('truncate', !label && 'text-muted-foreground')}>{label || t('Chọn Tỉnh/Thành phố, Phường/Xã')}</span>
           <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-(--radix-popover-trigger-width) min-w-[18rem]">
-        <div role="tablist" aria-label="Cấp hành chính" className="flex border-b">
+        <div role="tablist" aria-label={t('Cấp hành chính')} className="flex border-b">
           {(
             [
-              ['province', 'Tỉnh/Thành phố'],
-              ['ward', 'Phường/Xã'],
+              ['province', t('Tỉnh/Thành phố')],
+              ['ward', t('Phường/Xã')],
             ] as const
           ).map(([value, text]) => (
             <button
@@ -116,21 +117,21 @@ export function UnitPicker({
         <div className="relative border-b">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
           <input
-            aria-label={tab === 'province' ? 'Tìm Tỉnh/Thành phố' : 'Tìm Phường/Xã'}
-            placeholder={tab === 'province' ? 'Tìm Tỉnh/Thành phố' : 'Tìm Phường/Xã'}
+            aria-label={tab === 'province' ? t('Tìm Tỉnh/Thành phố') : t('Tìm Phường/Xã')}
+            placeholder={tab === 'province' ? t('Tìm Tỉnh/Thành phố') : t('Tìm Phường/Xã')}
             value={query}
             maxLength={60}
             onChange={(e) => setQuery(e.target.value)}
             className="h-10 w-full bg-transparent pr-3 pl-9 text-sm outline-none"
           />
         </div>
-        <ul id={listId} role="listbox" aria-label={tab === 'province' ? 'Tỉnh/Thành phố' : 'Phường/Xã'} className="max-h-64 overflow-y-auto py-1">
-          {(tab === 'province' ? provinces : wards).isPending ? <li className="px-3 py-2 text-sm text-muted-foreground">Đang tải…</li> : null}
+        <ul id={listId} role="listbox" aria-label={tab === 'province' ? t('Tỉnh/Thành phố') : t('Phường/Xã')} className="max-h-64 overflow-y-auto py-1">
+          {(tab === 'province' ? provinces : wards).isPending ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Đang tải…')}</li> : null}
           {(tab === 'province' ? provinces : wards).isError ? (
             <li className="px-3 py-2 text-sm text-destructive">{problemMessage((tab === 'province' ? provinces : wards).error)}</li>
           ) : null}
           {items.length === 0 && !(tab === 'province' ? provinces : wards).isPending && !(tab === 'province' ? provinces : wards).isError ? (
-            <li className="px-3 py-2 text-sm text-muted-foreground">Không có kết quả.</li>
+            <li className="px-3 py-2 text-sm text-muted-foreground">{t('Không có kết quả.')}</li>
           ) : null}
           {items.map((item) => (
             <li key={item.code} role="option" aria-selected={item.code === selected}>

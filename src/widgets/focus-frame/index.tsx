@@ -4,7 +4,7 @@ import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { merchantPath } from '@/shared/config/sites'
-import { TextSizeControl } from '@/shared/ui/text-size-control'
+import { t } from '@/shared/i18n'
 
 type Props = {
   /** what the person is doing, shown in the bar next to the logo */
@@ -32,7 +32,7 @@ export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), 
         href="#main"
         className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
       >
-        Bỏ qua đến nội dung chính
+        {t('Bỏ qua đến nội dung chính')}
       </a>
       <header className="flex h-12 shrink-0 items-center justify-between gap-4 border-b bg-ws-header px-4 text-ink sm:px-5">
         <div className="flex min-w-0 items-center gap-3 sm:gap-4">
@@ -41,10 +41,9 @@ export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), 
           <span className="truncate font-semibold">{title}</span>
         </div>
         <div className="flex items-center gap-1">
-        <TextSizeControl className="[&>span]:hidden sm:[&>span]:inline [&_button]:size-7" />
         {exitTo ? (
           <Link to={exitTo} className={barButton}>
-            Thoát
+            {t('Thoát')}
           </Link>
         ) : (
           <button
@@ -55,7 +54,7 @@ export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), 
               navigate(loginPath, { replace: true })
             }}
           >
-            Đăng xuất
+            {t('Đăng xuất')}
           </button>
         )}
         </div>

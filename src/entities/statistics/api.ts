@@ -9,9 +9,10 @@ export type StatsGranularity = 'day' | 'week' | 'month'
 export const STATS_KEY = ['merchant', 'stats'] as const
 
 /** Both ends are Vietnam-time days and inclusive; the server fills every period of the range, empty ones as zero. */
-export function useRevenueStats(range: { from: string; to: string }, granularity: StatsGranularity) {
+export function useRevenueStats(range: { from: string; to: string }, granularity: StatsGranularity, enabled = true) {
   return useQuery({
     queryKey: [...STATS_KEY, 'revenue', range, granularity],
+    enabled,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/merchant/stats/revenue', { params: { query: { ...range, granularity } } })

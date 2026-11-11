@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, problemMessage, type components } from '@/shared/api'
+import { t } from '@/shared/i18n'
 
 export type HelpArticle = components['schemas']['HelpArticleSummary']
 export type AdminHelpArticle = components['schemas']['AdminHelpArticle']
@@ -9,7 +10,7 @@ export type HelpStatus = 'DRAFT' | 'PUBLISHED'
 
 export const HELP_KEY = ['help'] as const
 
-export const AUDIENCE_LABEL: Record<string, string> = { ALL: 'Mọi người', CUSTOMER: 'Khách', SELLER: 'Người bán' }
+export const AUDIENCE_LABEL: Record<string, string> = { ALL: t('Mọi người'), CUSTOMER: t('Khách'), SELLER: t('Người bán') }
 
 /** What a signed-in seller (or a guest) can read: published articles meant for them. */
 export function useHelpArticles(q: string) {
@@ -37,13 +38,13 @@ export function useHelpArticle(id: string | undefined) {
   })
 }
 
-export function useAdminHelpArticles(status: HelpStatus | 'ALL_STATUSES', q: string, page: number) {
+export function useAdminHelpArticles(status: HelpStatus | 'ALL_STATUSES', q: string, page: number, size = 25) {
   return useQuery({
-    queryKey: [...HELP_KEY, 'admin', status, q, page],
+    queryKey: [...HELP_KEY, 'admin', status, q, page, size],
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/help-articles', {
-        params: { query: { ...(status === 'ALL_STATUSES' ? {} : { status }), ...(q.trim() ? { q: q.trim() } : {}), page, size: 20 } },
+        params: { query: { ...(status === 'ALL_STATUSES' ? {} : { status }), ...(q.trim() ? { q: q.trim() } : {}), page, size } },
       })
       if (error || !data) throw error
       return data
@@ -66,7 +67,7 @@ export function useSaveHelpArticle() {
       return result.data
     },
     onSuccess: (_, { id }) => {
-      toast.success(id ? 'Đã lưu bài.' : 'Đã tạo bài.')
+      toast.success(id ? t('Đã lưu bài.') : t('Đã tạo bài.'))
       void queryClient.invalidateQueries({ queryKey: HELP_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),
@@ -81,7 +82,7 @@ export function useDeleteHelpArticle() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success('Đã xoá bài.')
+      toast.success(t('Đã xoá bài.'))
       void queryClient.invalidateQueries({ queryKey: HELP_KEY })
     },
     onError: (error) => toast.error(problemMessage(error)),

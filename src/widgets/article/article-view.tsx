@@ -1,9 +1,12 @@
+import { CheckIcon, LinkIcon, MailIcon } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { headingsOf, type Block, type Heading } from '@/entities/article'
+import { formatDate } from '@/shared/lib/format'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { Breadcrumb, TagList } from './parts'
+import { t } from '@/shared/i18n'
 
 /** Bold text written as **like this**. */
 function Inline({ text }: { text: string }) {
@@ -120,7 +123,7 @@ export function Toc({ headings }: { headings: Heading[] }) {
             href={`#${h.id}`}
             aria-current={active === h.id ? 'location' : undefined}
             className={cn(
-              'block rounded-sm py-1.5 pr-2 leading-5 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring',
+              'block rounded-md py-1.5 pr-2 leading-5 text-muted-foreground outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring',
               h.level === 3 ? 'pl-6' : 'pl-3',
               active === h.id && 'font-medium text-primary',
             )}
@@ -134,13 +137,13 @@ export function Toc({ headings }: { headings: Heading[] }) {
   return (
     <>
       <details className="rounded-lg bg-card lg:hidden">
-        <summary className="cursor-pointer list-none px-4 py-3 text-[0.9375rem] font-semibold marker:hidden">Trong bài này</summary>
-        <nav aria-label="Trong bài này" className="px-2 pb-3">
+        <summary className="cursor-pointer list-none px-4 py-3 text-[0.9375rem] font-semibold marker:hidden">{t('Trong bài này')}</summary>
+        <nav aria-label={t('Trong bài này')} className="px-2 pb-3">
           {list}
         </nav>
       </details>
-      <nav aria-label="Trong bài này" className="sticky top-6 hidden max-h-[calc(100svh-3rem)] overflow-y-auto lg:block">
-        <p className="mb-2 pl-3 text-sm font-semibold text-foreground">Trong bài này</p>
+      <nav aria-label={t('Trong bài này')} className="sticky top-6 hidden max-h-[calc(100svh-3rem)] overflow-y-auto lg:block">
+        <p className="mb-2 pl-3 text-sm font-semibold text-foreground">{t('Trong bài này')}</p>
         {list}
       </nav>
     </>
@@ -153,18 +156,18 @@ export function Toc({ headings }: { headings: Heading[] }) {
  */
 export function DocsSidebar({ groups, current }: { groups: { title: string; items: { label: string; to: string }[] }[]; current: string }) {
   return (
-    <nav aria-label="Mục lục hướng dẫn" className="sticky top-24 flex max-h-[calc(100svh-7rem)] flex-col gap-6 overflow-y-auto pr-2">
+    <nav aria-label={t('Mục lục hướng dẫn')} className="sticky top-24 flex max-h-[calc(100svh-7rem)] flex-col gap-6 overflow-y-auto pr-2">
       {groups.map((g) => (
         <div key={g.title} className="flex flex-col gap-0.5">
-          <p className="mb-1 px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">{g.title}</p>
+          <p className="mb-1 px-3 text-caption font-medium tracking-wide text-muted-foreground uppercase">{g.title}</p>
           {g.items.map((item) => (
             <Link
               key={item.to}
               to={item.to}
               aria-current={item.to === current ? 'page' : undefined}
               className={cn(
-                'rounded-full px-3 py-1.5 text-[0.9375rem] leading-5 text-foreground/80 outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring',
-                item.to === current && 'font-medium text-primary hover:bg-transparent',
+                'rounded-md px-3 py-1.5 text-ui leading-5 text-muted-foreground outline-none transition-colors hover:bg-grey-100 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring',
+                item.to === current && 'font-medium text-primary',
               )}
             >
               {item.label}
@@ -239,6 +242,118 @@ export function ArticleView({
           </aside>
         </div>
         </div>
+      </main>
+    </ContentPage>
+  )
+}
+
+/** Share buttons as on gitbook.com: round outlined icons. Facebook, email, and copying the address. */
+function ShareRow({ title, url }: { title: string; url: string }) {
+  const [copied, setCopied] = useState(false)
+  const round = 'flex size-10 items-center justify-center rounded-full border border-grey-300 text-ink outline-none transition-colors hover:bg-grey-50 focus-visible:ring-2 focus-visible:ring-ring'
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-h3 font-medium">{t('Chia sẻ')}</p>
+      <div className="flex gap-2">
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label={t('Chia sẻ lên Facebook')} className={round}>
+          <FacebookGlyph />
+        </a>
+        <a href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`} aria-label={t('Gửi qua email')} className={round}>
+          <MailIcon className="size-4" aria-hidden="true" />
+        </a>
+        <button
+          type="button"
+          aria-label={copied ? t('Đã chép đường dẫn') : t('Chép đường dẫn')}
+          onClick={() => {
+            void navigator.clipboard?.writeText(url).then(() => {
+              setCopied(true)
+              setTimeout(() => setCopied(false), 2000)
+            })
+          }}
+          className={round}
+        >
+          {copied ? <CheckIcon className="size-4 text-primary" aria-hidden="true" /> : <LinkIcon className="size-4" aria-hidden="true" />}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function FacebookGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+      <path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.5V4.4c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.3H8v3h2.6V21h2.9Z" />
+    </svg>
+  )
+}
+
+/**
+ * A blog post, after the customer stories of gitbook.com: a small orange label with a link back to all posts, the title and its
+ * line, a wide picture, the text in a narrow grey column with orange-ruled call-outs; beside it a sticky column with who wrote it,
+ * the headings and the share buttons; more posts at the end.
+ */
+export function BlogPostView({
+  title,
+  description,
+  image,
+  imageAlt,
+  updated,
+  blocks,
+  tags,
+  allPath,
+  url,
+  more,
+}: {
+  title: string
+  description: string
+  image: string
+  imageAlt: string
+  updated: string
+  blocks: Block[]
+  tags: string[]
+  allPath: string
+  url: string
+  more?: ReactNode
+}) {
+  const headings = headingsOf(blocks)
+  return (
+    <ContentPage>
+      <main id="main" className="mx-auto w-full max-w-[1200px] px-4 pt-10 pb-24 sm:px-6 lg:pt-16">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
+          <article className="min-w-0">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">Blog</span>
+              <Link to={allPath} className="text-link text-ui text-ink">
+                {t('Xem tất cả bài viết')}
+              </Link>
+            </div>
+            <h1 className="mt-5 text-[2rem] leading-[2.5rem] font-medium tracking-[-0.02em] sm:text-[2.375rem] sm:leading-[2.875rem]">{title}</h1>
+            <p className="mt-2 text-[1.25rem] leading-7 tracking-[-0.01em] text-ink">{description}</p>
+            <img src={image} alt={imageAlt} decoding="async" className="mt-8 aspect-[16/9] w-full rounded-xl bg-image-slot object-cover" />
+            <div className="bb-blog mt-10">
+              <ArticleBody blocks={blocks} />
+            </div>
+            {tags.length > 0 ? (
+              <footer className="mt-12">
+                <TagList tags={tags} />
+              </footer>
+            ) : null}
+          </article>
+          <aside className="flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+            <div className="flex flex-col items-center gap-1 rounded-xl border border-grey-200 bg-grey-50 p-6 text-center">
+              <img src="/brand/bonbon-mark-color.svg" alt="" className="mb-3 size-16 rounded-full bg-white p-2" />
+              <p className="text-body font-medium">{t('Đội ngũ bonbon')}</p>
+              <p className="text-ui text-muted-foreground">{t('Cập nhật ngày ')}{formatDate(updated)}</p>
+            </div>
+            {headings.length > 0 ? (
+              <div className="rounded-xl border border-grey-200 p-5">
+                <Toc headings={headings} />
+              </div>
+            ) : null}
+            <ShareRow title={title} url={url} />
+          </aside>
+        </div>
+        {more}
       </main>
     </ContentPage>
   )

@@ -5,7 +5,6 @@ import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatVnd } from '@/shared/lib/format'
 import { useNow } from '@/shared/lib/use-now'
 import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { EmptyState } from '@/shared/ui/empty-state'
@@ -13,48 +12,50 @@ import { FilterChips } from '@/shared/ui/filter-chips'
 import { FormError } from '@/widgets/auth-shell'
 import { OrderCaseTabs } from '@/widgets/seller-tabs'
 import { merchantPath } from '@/shared/config/sites'
+import { Pagination } from '@/shared/ui/pagination'
+import { usePaging } from '@/shared/lib/use-paging'
+import { t } from '@/shared/i18n'
 
 const TABS: { id: CaseStatus; label: string }[] = [
-  { id: 'AWAITING_SHOP', label: 'Chờ quán trả lời' },
-  { id: 'OPEN', label: 'Chờ quản trị' },
-  { id: 'UPHELD', label: 'Đã chấp nhận' },
-  { id: 'DISMISSED', label: 'Đã bác bỏ' },
+  { id: 'AWAITING_SHOP', label: t('Chờ quán trả lời') },
+  { id: 'OPEN', label: t('Chờ quản trị') },
+  { id: 'UPHELD', label: t('Đã chấp nhận') },
+  { id: 'DISMISSED', label: t('Đã bác bỏ') },
 ]
 
 /** What customers reported about this shop's delivered orders (respond-to-order-case.md). */
 export function SellerOrderCasesPage() {
   const [tab, setTab] = useState<CaseStatus>('AWAITING_SHOP')
-  const [page, setPage] = useState(0)
-  const cases = useShopCases(tab, page)
+  const paging = usePaging()
+  const cases = useShopCases(tab, paging.page, paging.size)
   const now = useNow(60_000)
   const data = cases.data
   const items = data?.items ?? []
   const total = data?.total ?? 0
-  const size = data?.size ?? 20
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex max-w-4xl flex-col gap-10">
       <OrderCaseTabs />
       <div>
-        <h1 className="text-2xl font-semibold">Khiếu nại của khách</h1>
+        <h1 className="text-2xl font-semibold">{t('Khiếu nại của khách')}</h1>
         <p className="text-sm text-muted-foreground">
-          Khách báo chưa nhận được hàng, thiếu món, sai món hoặc chất lượng. Bạn có 12 giờ để chấp nhận (khách được hoàn tiền) hoặc phản đối (quản trị viên quyết định). Không trả lời kịp cũng chuyển cho quản trị viên.
+          {t('Khách báo chưa nhận được hàng, thiếu món, sai món hoặc chất lượng. Bạn có 12 giờ để chấp nhận (khách được hoàn tiền) hoặc phản đối (quản trị viên quyết định). Không trả lời kịp cũng chuyển cho quản trị viên.')}
         </p>
       </div>
 
       <FilterChips
-        label="Trạng thái khiếu nại"
-        chips={TABS.map((t) => ({ id: t.id, label: t.id === tab && total > 0 ? `${t.label} (${total})` : t.label }))}
+        label={t('Trạng thái khiếu nại')}
+        chips={TABS.map((tItem) => ({ id: tItem.id, label: tItem.id === tab && total > 0 ? `${tItem.label} (${total})` : tItem.label }))}
         value={tab}
         onChange={(id) => {
           setTab(id)
-          setPage(0)
+          paging.reset()
         }}
       />
 
       {cases.isError ? <FormError message={problemMessage(cases.error)} /> : null}
       {cases.isPending ? <Skeleton className="h-32" /> : null}
-      {data && items.length === 0 ? <EmptyState title="Không có khiếu nại nào ở mục này." /> : null}
+      {data && items.length === 0 ? <EmptyState mascot="all-clear" title={t('Không có khiếu nại nào ở mục này.')} /> : null}
 
       <ul className="flex flex-col gap-3">
         {items.map((item) => {
@@ -66,15 +67,15 @@ export function SellerOrderCasesPage() {
                 <Card className="gap-2 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-semibold">Đơn #{item.orderNumber}</span>
+                      <span className="font-semibold">{t('Đơn #')}{item.orderNumber}</span>
                       <Badge variant="outline">{CASE_TYPE_LABEL[item.type ?? ''] ?? item.type}</Badge>
                       <Badge className={status.className}>{status.label}</Badge>
                     </div>
                     <span className="text-lg font-semibold tabular-nums">{formatVnd(item.shopBears)}</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Khách được hoàn {formatVnd(item.refundAmount)}; quán chịu {formatVnd(item.shopBears)} · {formatDateTime(item.openedAt)}
-                    {hoursLeft !== null ? ` · còn khoảng ${hoursLeft} giờ để trả lời` : ''}
+                    {t('Khách được hoàn ')}{formatVnd(item.refundAmount)}{t('; quán chịu ')}{formatVnd(item.shopBears)} · {formatDateTime(item.openedAt)}
+                    {hoursLeft !== null ? t(' · còn khoảng {v0} giờ để trả lời', { v0: hoursLeft }) : ''}
                   </p>
                 </Card>
               </Link>
@@ -83,19 +84,7 @@ export function SellerOrderCasesPage() {
         })}
       </ul>
 
-      {total > size ? (
-        <div className="flex items-center justify-between">
-          <Button variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}>
-            Trang trước
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Trang {page + 1} / {Math.ceil(total / size)}
-          </span>
-          <Button variant="outline" disabled={(page + 1) * size >= total} onClick={() => setPage(page + 1)}>
-            Trang sau
-          </Button>
-        </div>
-      ) : null}
+      <Pagination paging={paging} total={total} />
     </div>
   )
 }

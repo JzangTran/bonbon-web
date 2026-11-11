@@ -26,14 +26,14 @@ export function usePlatformOverview(range: Range, granularity: StatsGranularity,
   })
 }
 
-export function useRevenueByMerchant(range: Range, sort: MerchantSort, q: string, page: number, enabled: boolean) {
+export function useRevenueByMerchant(range: Range, sort: MerchantSort, q: string, page: number, size: number, enabled: boolean) {
   return useQuery({
-    queryKey: [...PLATFORM_STATS_KEY, 'by-merchant', range, sort, q, page],
+    queryKey: [...PLATFORM_STATS_KEY, 'by-merchant', range, sort, q, page, size],
     placeholderData: keepPreviousData,
     enabled,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/admin/stats/revenue-by-merchant', {
-        params: { query: { ...range, sort, q: q.trim() || undefined, page, size: 20 } },
+        params: { query: { ...range, sort, q: q.trim() || undefined, page, size } },
       })
       if (error || !data) throw error
       return data

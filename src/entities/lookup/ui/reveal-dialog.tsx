@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { REASON_LABEL, type RevealReason } from '../api'
 import { problemMessage } from '@/shared/api'
@@ -17,11 +18,11 @@ export function RevealDialog({ pending, error, onSubmit, onClose }: { pending: b
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Xem thông tin liên hệ đầy đủ</DialogTitle>
-          <DialogDescription>Chọn lý do. Việc xem được ghi lại cùng tên bạn và lý do này.</DialogDescription>
+          <DialogTitle>{t('Xem thông tin liên hệ đầy đủ')}</DialogTitle>
+          <DialogDescription>{t('Chọn lý do. Việc xem được ghi lại cùng tên bạn và lý do này.')}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          <div role="radiogroup" aria-label="Lý do" className="flex flex-wrap gap-2">
+          <div role="radiogroup" aria-label={t('Lý do')} className="flex flex-wrap gap-2">
             {(Object.keys(REASON_LABEL) as RevealReason[]).map((r) => (
               <Button key={r} type="button" role="radio" aria-checked={reason === r} size="sm" variant={reason === r ? 'default' : 'outline'} onClick={() => setReason(r)}>
                 {REASON_LABEL[r]}
@@ -29,17 +30,17 @@ export function RevealDialog({ pending, error, onSubmit, onClose }: { pending: b
             ))}
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="reveal-note">Ghi chú{needsNote ? ' (bắt buộc)' : ''}</Label>
+            <Label htmlFor="reveal-note">{t('Ghi chú')}{needsNote ? t(' (bắt buộc)') : ''}</Label>
             <Textarea id="reveal-note" rows={3} maxLength={300} value={note} onChange={(e) => setNote(e.target.value)} />
           </div>
           {error ? <FormError message={problemMessage(error)} /> : null}
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Huỷ</Button>
+            <Button variant="outline">{t('Huỷ')}</Button>
           </DialogClose>
           <Button disabled={pending || (needsNote && !note.trim())} onClick={() => onSubmit({ reason, note })}>
-            Xem đầy đủ
+            {t('Xem đầy đủ')}
           </Button>
         </DialogFooter>
       </DialogContent>

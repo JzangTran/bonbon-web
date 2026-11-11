@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { TriangleAlertIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -24,37 +25,37 @@ type Body = {
 
 /** Step 3 · Thuế & nhận tiền: business type, tax code, invoice emails, licence for a household, payout account. */
 export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }) {
-  const t = shop.tax
-  const [type, setType] = useState<'INDIVIDUAL' | 'HOUSEHOLD' | undefined>(t?.businessType as 'INDIVIDUAL' | 'HOUSEHOLD' | undefined)
-  const [businessName, setBusinessName] = useState(t?.businessName ?? '')
-  const [businessAddress, setBusinessAddress] = useState(t?.businessAddress ?? '')
-  const [taxCode, setTaxCode] = useState(t?.taxCode ?? '')
-  const [emails, setEmails] = useState<string[]>(t?.invoiceEmails?.length ? t.invoiceEmails : [''])
-  const [bankName, setBankName] = useState(t?.payout?.bankName ?? '')
+  const tItem = shop.tax
+  const [type, setType] = useState<'INDIVIDUAL' | 'HOUSEHOLD' | undefined>(tItem?.businessType as 'INDIVIDUAL' | 'HOUSEHOLD' | undefined)
+  const [businessName, setBusinessName] = useState(tItem?.businessName ?? '')
+  const [businessAddress, setBusinessAddress] = useState(tItem?.businessAddress ?? '')
+  const [taxCode, setTaxCode] = useState(tItem?.taxCode ?? '')
+  const [emails, setEmails] = useState<string[]>(tItem?.invoiceEmails?.length ? tItem.invoiceEmails : [''])
+  const [bankName, setBankName] = useState(tItem?.payout?.bankName ?? '')
   const [accountNumber, setAccountNumber] = useState('')
-  const [holder, setHolder] = useState(t?.payout?.accountHolderName ?? '')
+  const [holder, setHolder] = useState(tItem?.payout?.accountHolderName ?? '')
   const save = useStep((body: Body) => api.PUT('/api/merchant/shop/steps/3', { body }))
-  const accountSaved = !!t?.payout?.accountLast4
+  const accountSaved = !!tItem?.payout?.accountLast4
 
   const problems = (strict: boolean): Errors => {
     const e: Errors = {}
-    if (strict && type === undefined) e.businessType = 'Hãy chọn loại hình kinh doanh.'
-    if (type === 'HOUSEHOLD' && (strict || businessName.trim() !== '')) requiredText(e, 'businessName', businessName, 'tên hộ kinh doanh', 200)
-    if (strict || businessAddress.trim() !== '') requiredText(e, 'businessAddress', businessAddress, 'địa chỉ đăng ký kinh doanh', 300)
+    if (strict && type === undefined) e.businessType = t('Hãy chọn loại hình kinh doanh.')
+    if (type === 'HOUSEHOLD' && (strict || businessName.trim() !== '')) requiredText(e, 'businessName', businessName, t('tên hộ kinh doanh'), 200)
+    if (strict || businessAddress.trim() !== '') requiredText(e, 'businessAddress', businessAddress, t('địa chỉ đăng ký kinh doanh'), 300)
     const code = taxCode.trim()
-    if (strict && code === '') e.taxCode = 'Hãy nhập mã số thuế.'
-    else if (code !== '' && !TAX_CODE.test(code)) e.taxCode = 'Mã số thuế gồm 10 số, 10 số kèm -001 hoặc 12 số.'
+    if (strict && code === '') e.taxCode = t('Hãy nhập mã số thuế.')
+    else if (code !== '' && !TAX_CODE.test(code)) e.taxCode = t('Mã số thuế gồm 10 số, 10 số kèm -001 hoặc 12 số.')
     const typed = emails.map((x) => x.trim()).filter(Boolean)
-    if (strict && typed.length === 0) e.invoiceEmails = 'Hãy nhập ít nhất một email nhận hoá đơn.'
+    if (strict && typed.length === 0) e.invoiceEmails = t('Hãy nhập ít nhất một email nhận hoá đơn.')
     emails.forEach((x, i) => {
-      if (x.trim() !== '' && !isEmail(x.trim())) e[`invoiceEmails[${i}]`] = 'Email không hợp lệ.'
+      if (x.trim() !== '' && !isEmail(x.trim())) e[`invoiceEmails[${i}]`] = t('Email không hợp lệ.')
     })
-    if (strict || bankName.trim() !== '') requiredText(e, 'bankName', bankName, 'tên ngân hàng', 100)
+    if (strict || bankName.trim() !== '') requiredText(e, 'bankName', bankName, t('tên ngân hàng'), 100)
     const account = accountNumber.replace(/\s/g, '')
-    if (strict && account === '' && !accountSaved) e.accountNumber = 'Hãy nhập số tài khoản.'
-    else if (account !== '' && !BANK_ACCOUNT.test(account)) e.accountNumber = 'Số tài khoản gồm 6–19 chữ số.'
-    if (strict || holder.trim() !== '') requiredText(e, 'accountHolderName', holder, 'tên chủ tài khoản', 100)
-    if (strict && type === 'HOUSEHOLD' && !t?.businessLicenseUrl) e.businessLicense = 'Hãy tải giấy phép kinh doanh.'
+    if (strict && account === '' && !accountSaved) e.accountNumber = t('Hãy nhập số tài khoản.')
+    else if (account !== '' && !BANK_ACCOUNT.test(account)) e.accountNumber = t('Số tài khoản gồm 6–19 chữ số.')
+    if (strict || holder.trim() !== '') requiredText(e, 'accountHolderName', holder, t('tên chủ tài khoản'), 100)
+    if (strict && type === 'HOUSEHOLD' && !tItem?.businessLicenseUrl) e.businessLicense = t('Hãy tải giấy phép kinh doanh.')
     return e
   }
 
@@ -75,21 +76,21 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         onSuccess: () => {
           setAccountNumber('')
           if (andNext) onNext()
-          else toast.success('Đã lưu nháp.')
+          else toast.success(t('Đã lưu nháp.'))
         },
       },
     )
   }
-  const mismatch = t?.payout?.holderMatchesIdentity === false
+  const mismatch = tItem?.payout?.holderMatchesIdentity === false
 
   return (
-    <StepCard title="3 · Thuế & tài khoản nhận tiền" footer={<SaveButtons pending={save.isPending} onSave={submit} />}>
-      <FormRow label="Loại hình kinh doanh" required error={save.errors.businessType}>
-        <div role="radiogroup" aria-label="Loại hình kinh doanh" className="flex flex-wrap gap-4">
+    <StepCard title={t('3 · Thuế & tài khoản nhận tiền')} footer={<SaveButtons pending={save.isPending} onSave={submit} />}>
+      <FormRow label={t('Loại hình kinh doanh')} required error={save.errors.businessType}>
+        <div role="radiogroup" aria-label={t('Loại hình kinh doanh')} className="flex flex-wrap gap-4">
           {(
             [
-              ['INDIVIDUAL', 'Cá nhân'],
-              ['HOUSEHOLD', 'Hộ kinh doanh'],
+              ['INDIVIDUAL', t('Cá nhân')],
+              ['HOUSEHOLD', t('Hộ kinh doanh')],
             ] as const
           ).map(([value, label]) => (
             <label key={value} className="flex min-h-9 items-center gap-2 text-sm">
@@ -99,31 +100,31 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         </div>
       </FormRow>
       {type === 'HOUSEHOLD' ? (
-        <Field id="tax-bname" label="Tên hộ kinh doanh" required error={save.errors.businessName}>
+        <Field id="tax-bname" label={t('Tên hộ kinh doanh')} required error={save.errors.businessName}>
           <Input id="tax-bname" maxLength={200} value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
         </Field>
       ) : null}
-      <Field id="tax-address" label="Địa chỉ đăng ký kinh doanh" required error={save.errors.businessAddress}>
+      <Field id="tax-address" label={t('Địa chỉ đăng ký kinh doanh')} required error={save.errors.businessAddress}>
         <Input id="tax-address" maxLength={300} value={businessAddress} onChange={(e) => setBusinessAddress(e.target.value)} />
       </Field>
-      <Field id="tax-code" label="Mã số thuế" required hint="10 số, 10 số kèm mã chi nhánh (-001), hoặc 12 số CCCD." error={save.errors.taxCode}>
+      <Field id="tax-code" label={t('Mã số thuế')} required hint={t('10 số, 10 số kèm mã chi nhánh (-001), hoặc 12 số CCCD.')} error={save.errors.taxCode}>
         <Input id="tax-code" inputMode="numeric" maxLength={14} value={taxCode} onChange={(e) => setTaxCode(e.target.value)} />
       </Field>
-      <FormRow label="Email nhận hoá đơn điện tử (tối đa 5)" required error={save.errors.invoiceEmails}>
+      <FormRow label={t('Email nhận hoá đơn điện tử (tối đa 5)')} required error={save.errors.invoiceEmails}>
         {emails.map((value, i) => (
           <div key={i} className="flex flex-col gap-1">
             <div className="flex gap-2">
               <Input
                 type="email"
                 showCount
-                aria-label={`Email hoá đơn ${i + 1}`}
+                aria-label={t('Email hoá đơn {v0}', { v0: i + 1 })}
                 aria-invalid={!!save.errors[`invoiceEmails[${i}]`]}
                 value={value}
                 onChange={(e) => setEmails(emails.map((x, j) => (j === i ? e.target.value : x)))}
               />
               {emails.length > 1 ? (
                 <Button type="button" variant="ghost" onClick={() => setEmails(emails.filter((_, j) => j !== i))}>
-                  Xoá
+                  {t('Xoá')}
                 </Button>
               ) : null}
             </div>
@@ -136,41 +137,41 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         ))}
         {emails.length < 5 ? (
           <Button type="button" variant="outline" size="sm" className="self-start" onClick={() => setEmails([...emails, ''])}>
-            Thêm email
+            {t('Thêm email')}
           </Button>
         ) : null}
       </FormRow>
       {type === 'HOUSEHOLD' ? (
         <UploadField
-          label="Giấy phép kinh doanh"
+          label={t('Giấy phép kinh doanh')}
           required
-          hint="Ảnh hoặc PDF, tối đa 10 MB."
+          hint={t('Ảnh hoặc PDF, tối đa 10 MB.')}
           kind="business-license"
           accept="image/jpeg,image/png,image/webp,application/pdf"
           maxMb={10}
-          previewUrl={t?.businessLicenseUrl}
+          previewUrl={tItem?.businessLicenseUrl}
           error={save.errors.businessLicense}
         />
       ) : null}
-      <p className="border-t pt-4 text-sm font-medium">Tài khoản nhận tiền</p>
-      <Field id="pay-bank" label="Ngân hàng" required error={save.errors.bankName}>
+      <p className="border-t pt-4 text-sm font-medium">{t('Tài khoản nhận tiền')}</p>
+      <Field id="pay-bank" label={t('Ngân hàng')} required error={save.errors.bankName}>
         <Input id="pay-bank" maxLength={100} value={bankName} onChange={(e) => setBankName(e.target.value)} />
       </Field>
       <Field
         id="pay-number"
-        label="Số tài khoản"
+        label={t('Số tài khoản')}
         required
-        hint={t?.payout?.accountLast4 ? `Đã lưu ••••${t.payout.accountLast4}; để trống để giữ nguyên.` : undefined}
+        hint={tItem?.payout?.accountLast4 ? t('Đã lưu ••••{v0}; để trống để giữ nguyên.', { v0: tItem.payout.accountLast4 }) : undefined}
         error={save.errors.accountNumber}
       >
         <Input id="pay-number" inputMode="numeric" autoComplete="off" maxLength={24} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
       </Field>
-      <Field id="pay-holder" label="Chủ tài khoản" required hint="Phải là chủ cửa hàng, trùng tên trên giấy tờ ở bước 4." error={save.errors.accountHolderName}>
+      <Field id="pay-holder" label={t('Chủ tài khoản')} required hint={t('Phải là chủ cửa hàng, trùng tên trên giấy tờ ở bước 4.')} error={save.errors.accountHolderName}>
         <Input id="pay-holder" maxLength={100} value={holder} onChange={(e) => setHolder(e.target.value)} />
       </Field>
       {mismatch ? (
         <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-sm text-warning-fg">
-          <TriangleAlertIcon className="size-4 shrink-0" /> Tên chủ tài khoản khác tên trên giấy tờ; quản trị viên sẽ kiểm tra kỹ hơn.
+          <TriangleAlertIcon className="size-4 shrink-0" />{t(' Tên chủ tài khoản khác tên trên giấy tờ; quản trị viên sẽ kiểm tra kỹ hơn.')}
         </p>
       ) : null}
       {save.isError ? <FormError message={problemMessage(save.error)} /> : null}

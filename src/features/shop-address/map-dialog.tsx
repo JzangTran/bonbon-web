@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { CrosshairIcon, MapPinIcon, MinusIcon, PlusIcon, XIcon } from 'lucide-react'
@@ -50,8 +51,8 @@ export function MapDialog({
   const suggestions = useSuggestions(debounced)
 
   useEffect(() => {
-    const t = setTimeout(() => setDebounced(text.trim()), 300)
-    return () => clearTimeout(t)
+    const tItem = setTimeout(() => setDebounced(text.trim()), 300)
+    return () => clearTimeout(tItem)
   }, [text])
 
   /** The address under a point; a failure only means there is no address to show, the point itself is still usable. */
@@ -134,7 +135,7 @@ export function MapDialog({
 
   const useMyLocation = () => {
     if (!navigator.geolocation) {
-      toast.error('Trình duyệt này không cho định vị.')
+      toast.error(t('Trình duyệt này không cho định vị.'))
       return
     }
     navigator.geolocation.getCurrentPosition(
@@ -142,7 +143,7 @@ export function MapDialog({
         moveTo(round(pos.coords.latitude), round(pos.coords.longitude), 18)
         resolve(pos.coords.latitude, pos.coords.longitude)
       },
-      () => toast.error('Không lấy được vị trí của bạn. Hãy cho phép định vị trong trình duyệt, hoặc kéo bản đồ.'),
+      () => toast.error(t('Không lấy được vị trí của bạn. Hãy cho phép định vị trong trình duyệt, hoặc kéo bản đồ.')),
       { enableHighAccuracy: true, timeout: 10_000 },
     )
   }
@@ -168,14 +169,14 @@ export function MapDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false} className="max-h-[calc(100svh-2rem)] gap-0 overflow-hidden p-0 sm:max-w-3xl">
         <DialogHeader className="flex-row items-center justify-between gap-3 border-b px-4 py-3">
-          <DialogTitle className="text-base font-semibold">Chọn địa điểm</DialogTitle>
-          <DialogDescription className="sr-only">Kéo bản đồ để đưa ghim tới đúng vị trí cửa hàng.</DialogDescription>
+          <DialogTitle className="text-base font-semibold">{t('Chọn địa điểm')}</DialogTitle>
+          <DialogDescription className="sr-only">{t('Kéo bản đồ để đưa ghim tới đúng vị trí cửa hàng.')}</DialogDescription>
           <div className="flex items-center gap-2">
             <Button type="button" variant="outline" size="sm" onClick={useMyLocation}>
-              <CrosshairIcon /> Định vị địa điểm của tôi
+              <CrosshairIcon />{t(' Định vị địa điểm của tôi')}
             </Button>
             <DialogClose asChild>
-              <Button type="button" variant="ghost" size="icon-sm" aria-label="Đóng">
+              <Button type="button" variant="ghost" size="icon-sm" aria-label={t('Đóng')}>
                 <XIcon />
               </Button>
             </DialogClose>
@@ -183,7 +184,7 @@ export function MapDialog({
         </DialogHeader>
 
         <div className="relative h-[min(60svh,28rem)] bg-image-slot">
-          <div ref={setContainer} className="absolute inset-0" role="application" aria-label="Bản đồ chọn vị trí cửa hàng" />
+          <div ref={setContainer} className="absolute inset-0" role="application" aria-label={t('Bản đồ chọn vị trí cửa hàng')} />
 
           <div className="pointer-events-none absolute inset-0 z-[500] flex items-center justify-center" aria-hidden="true">
             <MapPinIcon className="size-10 -translate-y-5 fill-primary text-white drop-shadow-md" strokeWidth={1.5} />
@@ -193,8 +194,8 @@ export function MapDialog({
             <Input
               role="combobox"
               aria-expanded={focusSearch && debounced.length >= 3}
-              aria-label="Nhập vị trí"
-              placeholder="Nhập vị trí"
+              aria-label={t('Nhập vị trí')}
+              placeholder={t('Nhập vị trí')}
               autoComplete="off"
               maxLength={200}
               value={text}
@@ -204,10 +205,10 @@ export function MapDialog({
               className="shadow-float"
             />
             {focusSearch && debounced.length >= 3 ? (
-              <ul role="listbox" aria-label="Gợi ý địa chỉ" className="mt-1 max-h-60 overflow-y-auto rounded-sm border bg-popover shadow-float">
-                {suggestions.isPending ? <li className="px-3 py-2 text-sm text-muted-foreground">Đang tìm…</li> : null}
+              <ul role="listbox" aria-label={t('Gợi ý địa chỉ')} className="mt-1 max-h-60 overflow-y-auto rounded-sm border bg-popover shadow-float">
+                {suggestions.isPending ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Đang tìm…')}</li> : null}
                 {suggestions.isError ? <li className="px-3 py-2 text-sm text-destructive">{problemMessage(suggestions.error)}</li> : null}
-                {suggestions.data?.length === 0 ? <li className="px-3 py-2 text-sm text-muted-foreground">Không tìm thấy địa chỉ phù hợp.</li> : null}
+                {suggestions.data?.length === 0 ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Không tìm thấy địa chỉ phù hợp.')}</li> : null}
                 {suggestions.data?.map((s) => (
                   <li key={s.placeId} role="option" aria-selected={false}>
                     <button
@@ -226,10 +227,10 @@ export function MapDialog({
           </div>
 
           <div className="absolute right-3 bottom-8 z-[600] flex flex-col overflow-hidden rounded-sm border bg-card shadow-float">
-            <button type="button" aria-label="Phóng to" onClick={() => mapRef.current?.zoomIn()} className="flex size-9 items-center justify-center border-b hover:bg-ws-fill">
+            <button type="button" aria-label={t('Phóng to')} onClick={() => mapRef.current?.zoomIn()} className="flex size-9 items-center justify-center border-b hover:bg-ws-fill">
               <PlusIcon className="size-4" />
             </button>
-            <button type="button" aria-label="Thu nhỏ" onClick={() => mapRef.current?.zoomOut()} className="flex size-9 items-center justify-center hover:bg-ws-fill">
+            <button type="button" aria-label={t('Thu nhỏ')} onClick={() => mapRef.current?.zoomOut()} className="flex size-9 items-center justify-center hover:bg-ws-fill">
               <MinusIcon className="size-4" />
             </button>
           </div>
@@ -237,10 +238,10 @@ export function MapDialog({
 
         <DialogFooter className="m-0 flex-col items-stretch gap-2 rounded-none sm:flex-row sm:items-center sm:justify-between">
           <p role="status" className="min-h-5 text-xs text-muted-foreground">
-            {resolving ? 'Đang xác định địa chỉ…' : note ?? (place?.formattedAddress ? place.formattedAddress : `Vị trí: ${centre.lat.toFixed(5)}, ${centre.lng.toFixed(5)}`)}
+            {resolving ? t('Đang xác định địa chỉ…') : note ?? (place?.formattedAddress ? place.formattedAddress : t('Vị trí: {v0}, {v1}', { v0: centre.lat.toFixed(5), v1: centre.lng.toFixed(5) }))}
           </p>
           <Button type="button" disabled={resolving} onClick={() => onConfirm({ lat: centre.lat, lng: centre.lng, place })}>
-            Xác nhận
+            {t('Xác nhận')}
           </Button>
         </DialogFooter>
       </DialogContent>

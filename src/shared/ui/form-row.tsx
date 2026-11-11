@@ -1,3 +1,4 @@
+import { t } from '@/shared/i18n'
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react'
 import { cn } from '@/shared/lib/utils'
 import { Input } from './input'
@@ -35,7 +36,7 @@ export function FormRow({ label, htmlFor, required, hint, error, children, class
           {required ? (
             <>
               <span aria-hidden="true" className="mr-0.5 text-destructive">*</span>
-              <span className="sr-only">(bắt buộc) </span>
+              <span className="sr-only">{t('(bắt buộc) ')}</span>
             </>
           ) : null}
           {label}
