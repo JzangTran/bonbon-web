@@ -1,15 +1,15 @@
-import type { ReactNode } from 'react'
-import { ArrowRightIcon, BookOpenIcon, MenuIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { ArrowRightIcon, BookOpenIcon, ChevronDownIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
 import { Lockup } from '@/shared/ui/brand'
 import { siteButton, siteButtonSolid } from './buttons'
 import { SITE, siteUrl, type Site, legalUrl } from '@/shared/config/sites'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { OrangeRibbon } from '@/shared/ui/orange-ribbon'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { MegaMenu, barItemClass } from './resources-menu'
+import { MobileMenu, type MobileMenuItem } from './mobile-menu'
 import { MENUS, type MenuKey, type ResourceLink } from './resources'
 import { articlesOf } from '@/entities/article'
 import { t, tx } from '@/shared/i18n'
@@ -86,8 +86,50 @@ export function SiteHeader() {
       </a>
     )
 
+  const [menuOpen, setMenuOpen] = useState(false)
+  const mobileItems: MobileMenuItem[] = NAV.map((item) =>
+    'menu' in item
+      ? { kind: 'group', label: item.label, columns: [...MENUS[item.menu].columns], current: current(item) }
+      : {
+          kind: 'link',
+          label: item.label,
+          current: current(item),
+          render: (className, onClick) =>
+            'site' in item ? (
+              <a href={target(item).href} className={className} onClick={onClick}>
+                {item.label}
+              </a>
+            ) : (
+              <PublicLink to={item.to} className={className} onClick={onClick}>
+                {item.label}
+              </PublicLink>
+            ),
+        },
+  )
+  const mobileActions = area ? (
+    <a href={area.href} className={cn(siteButtonSolid, 'col-span-2')}>
+      {area.label}
+    </a>
+  ) : (
+    <>
+      <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'bg-muted text-ink hover:bg-border')}>
+        {t('Mở quán')}
+      </a>
+      <a href={siteUrl('public') + '#get-app'} className={siteButtonSolid} onClick={() => setMenuOpen(false)}>
+        <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
+        {t('Tải app')}
+      </a>
+    </>
+  )
+
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75">
+    // while the phone menu is open the bar is the same solid white as the menu under it, one surface
+    <header
+      className={cn(
+        'sticky top-0 z-50 transition-colors duration-200',
+        menuOpen ? 'bg-white' : 'bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75',
+      )}
+    >
       <Wrap>
         <div className="flex h-16 items-center justify-between gap-x-4">
           <a href={siteUrl('public')} className="flex shrink-0 items-center">
@@ -127,37 +169,7 @@ export function SiteHeader() {
               </a>
               </>
             )}
-            <DropdownMenu>
-              <DropdownMenuTrigger aria-label={t('Mở menu')} className="flex size-10 items-center justify-center rounded-full text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring lg:hidden">
-                <MenuIcon className="size-6" aria-hidden="true" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-64 rounded-lg">
-                {NAV.map((item) =>
-                  'menu' in item ? (
-                    <div key={item.label}>
-                      {MENUS[item.menu].columns.map((col) => (
-                        <div key={col.label}>
-                          <DropdownMenuLabel>{col.label}</DropdownMenuLabel>
-                          {col.links.map((l) => (
-                            <DropdownMenuItem key={l.label} asChild className="cursor-pointer pl-6">
-                              {resourceLink(l, '', () => {})}
-                            </DropdownMenuItem>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
-                      {'site' in item ? <a href={target(item).href}>{item.label}</a> : <PublicLink to={item.to}>{item.label}</PublicLink>}
-                    </DropdownMenuItem>
-                  ),
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="cursor-pointer text-base font-semibold text-primary">
-                  <a href={area ? area.href : siteUrl('public') + '#get-app'}>{area ? area.label : t('Tải app')}</a>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <MobileMenu items={mobileItems} renderLink={resourceLink} actions={mobileActions} open={menuOpen} onOpenChange={setMenuOpen} />
           </div>
         </div>
       </Wrap>
@@ -228,10 +240,28 @@ function FooterAnchor({ link }: { link: FooterLink }) {
  */
 export function SiteFooter() {
   return (
-    <footer className="bg-beige-50 pt-24 pb-12">
-      <Wrap className="flex flex-col gap-16">
+    <footer className="bg-beige-50 pt-12 pb-10 sm:pt-24 sm:pb-12">
+      <Wrap className="flex flex-col gap-10 sm:gap-16">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
-          <div className="flex flex-col gap-12">
+          {/* on a phone: one tap-to-open row per column instead of a page of links */}
+          <div className="flex flex-col divide-y divide-grey-200 border-y border-grey-200 sm:hidden">
+            {footerGroups().flatMap((group) => group.columns).map((col) => (
+              <details key={col.label} className="group">
+                <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-body font-medium text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                  {col.label}
+                  <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden="true" />
+                </summary>
+                <ul className="flex flex-col gap-3 pb-4">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <FooterAnchor link={link} />
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))}
+          </div>
+          <div className="hidden flex-col gap-12 sm:flex">
             {footerGroups().map((group) => (
               <section key={group.title} className="flex flex-col gap-5">
                 <h2 className="text-h3 font-medium text-ink">{group.title}</h2>
