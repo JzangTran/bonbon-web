@@ -1,6 +1,7 @@
 import { t } from '@/shared/i18n'
 import { PhoneIcon } from 'lucide-react'
-import { OrderStatusBadge, useShopOrder, type OrderStatus } from '@/entities/order'
+import { OrderStatusBadge, useOrderAction, useShopOrder, type OrderStatus } from '@/entities/order'
+import { Button } from '@/shared/ui/button'
 import { problemMessage } from '@/shared/api'
 import { formatDateTime, formatVnd } from '@/shared/lib/format'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
@@ -95,9 +96,14 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
               </dl>
               <p className="text-sm text-muted-foreground">
                 {data.paymentMethod === 'COD'
-                  ? `Thu tiền mặt khi giao · ${data.paymentStatus === 'PAID' ? t('đã thu tiền') : t('chưa thu')}`
-                  : t('Khách đã thanh toán qua MoMo · không thu tiền khi giao')}
+                  ? `${t('Thu tiền mặt khi giao')} · ${data.paymentStatus === 'PAID' ? t('đã thu tiền') : t('chưa thu')}`
+                  : data.paymentMethod === 'BANK_TRANSFER'
+                    ? `${t('Khách chuyển khoản vào tài khoản của quán')} · ${data.paymentStatus === 'PAID' ? t('đã nhận tiền') : t('chưa nhận tiền')}`
+                    : t('Khách đã thanh toán qua MoMo · không thu tiền khi giao')}
               </p>
+              {data.paymentMethod === 'BANK_TRANSFER' && data.paymentStatus !== 'PAID' ? (
+                <TransferReceived id={data.id!} message={`BONBON${data.number}`} />
+              ) : null}
             </section>
 
             <section className="flex flex-col gap-2">
@@ -131,4 +137,22 @@ const STATUS_LABELS: Record<string, string> = {
   REJECTED: t('Quán từ chối'),
   CANCELLED: t('Đã huỷ'),
   NOT_DELIVERED: t('Giao không thành công'),
+}
+
+/** A bank transfer goes straight to the shop's account: the shop checks its bank for the message, then marks it received. */
+function TransferReceived({ id, message }: { id: string; message: string }) {
+  const action = useOrderAction(id)
+  const ask = () => {
+    if (window.confirm(t('Chỉ xác nhận khi tài khoản của quán đã nhận khoản chuyển có nội dung {v0}.', { v0: message }))) {
+      action.mutate({ kind: 'transferReceived' })
+    }
+  }
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <span className="text-sm text-muted-foreground">{t('Nội dung chuyển khoản: {v0}', { v0: message })}</span>
+      <Button variant="outline" size="sm" disabled={action.isPending} onClick={ask}>
+        {t('Đã nhận tiền')}
+      </Button>
+    </div>
+  )
 }
