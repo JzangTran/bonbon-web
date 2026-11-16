@@ -11,6 +11,7 @@ import { Label } from '@/shared/ui/label'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
 import { FormError } from '@/widgets/auth-shell'
+import { ReportDialog, type ReportTarget } from '@/features/report-content'
 import { Pagination } from '@/shared/ui/pagination'
 import { usePaging } from '@/shared/lib/use-paging'
 import { t } from '@/shared/i18n'
@@ -28,6 +29,7 @@ export function SellerReviewsPage() {
   const { save, remove } = useReplyActions()
   const now = useNow(60_000)
   const [target, setTarget] = useState<Review | null>(null)
+  const [reporting, setReporting] = useState<ReportTarget | null>(null)
   const [text, setText] = useState('')
   const [deleting, setDeleting] = useState<Review | null>(null)
   const data = reviews.data
@@ -147,6 +149,9 @@ export function SellerReviewsPage() {
                     </>
                   ) : null}
                   {reply && !reply.hidden && !open ? <span className="text-xs text-muted-foreground">{t('Đã quá 24 giờ, không sửa hoặc xoá được phản hồi.')}</span> : null}
+                  <Button variant="ghost" size="sm" className="ml-auto text-muted-foreground" onClick={() => setReporting({ type: 'REVIEW', id: review.id ?? '' })}>
+                    {t('Báo cáo đánh giá')}
+                  </Button>
                 </div>
               </Card>
             </li>
@@ -155,6 +160,8 @@ export function SellerReviewsPage() {
       </ul>
 
       <Pagination paging={paging} total={total} />
+
+      <ReportDialog target={reporting} open={!!reporting} onOpenChange={(o) => !o && setReporting(null)} />
 
       <Dialog open={deleting !== null} onOpenChange={(open) => (open ? undefined : setDeleting(null))}>
         <DialogContent>

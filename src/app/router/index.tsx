@@ -376,6 +376,14 @@ const routes: RouteObject[] = [
             lazy: () => import('@/pages/admin/conversation').then((m) => ({ Component: m.AdminConversationPage })),
           },
           {
+            path: 'reports',
+            lazy: () => import('@/pages/admin/reports').then((m) => ({ Component: m.AdminReportsPage })),
+          },
+          {
+            path: 'reports/:id',
+            lazy: () => import('@/pages/admin/report-detail').then((m) => ({ Component: m.AdminReportDetailPage })),
+          },
+          {
             path: 'help-articles',
             lazy: () => import('@/pages/admin/help-articles').then((m) => ({ Component: m.AdminHelpArticlesPage })),
           },

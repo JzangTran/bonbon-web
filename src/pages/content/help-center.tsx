@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { HelpAsk } from './help-ask'
 import { ArrowRightIcon, CheckIcon, SearchIcon } from 'lucide-react'
 import { useDeferredValue, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
@@ -87,6 +88,7 @@ export function HelpCenterPage() {
         {articles.isPending ? <Skeleton className="h-48 rounded-xl" /> : null}
         {articles.data?.items?.length === 0 ? <p className="text-muted-foreground">{t('Không có bài nào phù hợp. Thử từ khoá khác.')}</p> : null}
         <ul className="grid gap-3 sm:grid-cols-2">{articles.data?.items?.map((a) => <HelpRow key={a.id} article={a} />)}</ul>
+        <HelpAsk />
         <Link to={helpPath('/contact')} className="group flex items-center justify-between gap-4 rounded-xl bg-accent p-5 outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <span className="flex flex-col gap-1">
             <span className="text-body font-medium">{t('Chưa thấy câu trả lời?')}</span>

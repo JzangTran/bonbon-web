@@ -1,10 +1,23 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowLeftIcon, ImageIcon, SendIcon, XIcon } from 'lucide-react'
+import { ArrowLeftIcon, BanIcon, BotIcon, ImageIcon, SendIcon, XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { toast } from 'sonner'
 
-import { CHAT_KEY, MessageList, useConversations, useMarkRead, useSendMessage, useThread, type ChatMessage, type Conversation } from '@/entities/chat'
+import {
+  CHAT_KEY,
+  MessageList,
+  useAutoReply,
+  useBlockConversation,
+  useConversations,
+  useMarkRead,
+  useSaveAutoReply,
+  useSendMessage,
+  useThread,
+  type ChatMessage,
+  type Conversation,
+} from '@/entities/chat'
+import { ReportDialog, type ReportTarget } from '@/features/report-content'
 import { useOrderSocket } from '@/entities/order'
 import { useSession } from '@/entities/session'
 import { acceptUploads } from '@/shared/lib/upload'
@@ -46,6 +59,8 @@ export function SellerChatPage() {
         </p>
       </div>
 
+      <AutoReplyCard />
+
       {conversations.isError ? <FormError message={problemMessage(conversations.error)} /> : null}
 
       <div className="grid gap-4 md:grid-cols-[320px_1fr]">
@@ -76,7 +91,7 @@ export function SellerChatPage() {
 
         <div className={cn(selected ? '' : 'hidden md:block')}>
           {selected ? (
-            <Thread key={selected} conversationId={selected} live={live} onBack={() => setParams({})} />
+            <Thread key={selected} conversationId={selected} conversation={items.find((c) => c.id === selected)} live={live} onBack={() => setParams({})} />
           ) : (
             <Card className="hidden p-6 text-sm text-muted-foreground md:block">{t('Chọn một cuộc trò chuyện để xem và trả lời.')}</Card>
           )}
@@ -92,7 +107,10 @@ function ConversationRow({ conversation: c, active, onOpen }: { conversation: Co
     <button type="button" onClick={onOpen} className="block w-full rounded-sm text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
       <Card className={cn('gap-1 p-3 transition-colors hover:bg-accent', active && 'border-primary')}>
         <div className="flex items-center justify-between gap-2">
-          <span className={cn('truncate', c.unread ? 'font-semibold' : '')}>{c.customerName}</span>
+          <span className={cn('truncate', c.unread ? 'font-semibold' : '')}>
+            {c.customerName}
+            {c.blockedByMe ? <span className="ml-2 text-xs font-normal text-muted-foreground">{t('· đã chặn')}</span> : null}
+          </span>
           <span className="shrink-0 text-xs text-muted-foreground">{formatRelative(last?.sentAt)}</span>
         </div>
         <div className="flex items-center justify-between gap-2">
@@ -107,8 +125,13 @@ function ConversationRow({ conversation: c, active, onOpen }: { conversation: Co
   )
 }
 
-function Thread({ conversationId, live, onBack }: { conversationId: string; live: boolean; onBack: () => void }) {
+function Thread({ conversationId, conversation, live, onBack }: { conversationId: string; conversation?: Conversation; live: boolean; onBack: () => void }) {
   const thread = useThread(conversationId, live)
+  const block = useBlockConversation(conversationId)
+  const [reporting, setReporting] = useState<ReportTarget | null>(null)
+  const blockedByMe = !!conversation?.blockedByMe
+  const blockedByOther = !!conversation?.blockedByOther
+  const closed = blockedByMe || blockedByOther
   const markRead = useMarkRead()
   const send = useSendMessage(conversationId)
   const [text, setText] = useState('')
@@ -146,7 +169,20 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
         <Button variant="ghost" size="icon" className="md:hidden" onClick={onBack} aria-label={t('Quay lại danh sách')}>
           <ArrowLeftIcon />
         </Button>
-        <span className="font-semibold">{t('Cuộc trò chuyện')}</span>
+        <span className="flex-1 truncate font-semibold">{conversation?.customerName ?? t('Cuộc trò chuyện')}</span>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={block.isPending}
+          onClick={() => {
+            if (blockedByMe || window.confirm(t('Chặn khách này? Khách sẽ không nhắn được cho quán nữa. Đơn hàng không bị ảnh hưởng và bạn có thể bỏ chặn bất cứ lúc nào.'))) {
+              block.mutate(!blockedByMe)
+            }
+          }}
+        >
+          <BanIcon />
+          {blockedByMe ? t('Bỏ chặn') : t('Chặn')}
+        </Button>
       </div>
       <div className="flex-1 overflow-y-auto p-3">
         {thread.isError ? <FormError message={problemMessage(thread.error)} /> : null}
@@ -158,9 +194,15 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
             </Button>
           </div>
         ) : null}
-        <MessageList messages={messages} onReply={setReplyTo} />
+        <MessageList messages={messages} onReply={closed ? undefined : setReplyTo} onReport={(m) => setReporting({ type: 'MESSAGE', id: m.id ?? '' })} />
         <div ref={bottom} />
       </div>
+      <ReportDialog target={reporting} open={!!reporting} onOpenChange={(open) => !open && setReporting(null)} />
+      {closed ? (
+        <p className="border-t bg-muted/50 p-3 text-sm text-muted-foreground">
+          {blockedByMe ? t('Bạn đã chặn khách này. Bỏ chặn để nhắn tiếp.') : t('Khách đã đóng cuộc trò chuyện này. Đơn hàng của khách vẫn đến bình thường.')}
+        </p>
+      ) : (
       <div className="flex flex-col gap-2 border-t p-3">
         {replyTo ? (
           <div className="flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1 text-xs">
@@ -212,6 +254,59 @@ function Thread({ conversationId, live, onBack }: { conversationId: string; live
           </Button>
         </div>
       </div>
+      )}
+    </Card>
+  )
+}
+
+/** The one message the shop sends by itself when a customer writes and nobody has answered yet (configure-auto-reply.md). */
+function AutoReplyCard() {
+  const current = useAutoReply()
+  const save = useSaveAutoReply()
+  const [draft, setDraft] = useState<string | null>(null)
+  if (!current.data) return null
+  const message = draft ?? current.data.message ?? ''
+  const changed = draft !== null && draft.trim() !== (current.data.message ?? '')
+  return (
+    <Card className="gap-3 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <BotIcon className="size-4 text-muted-foreground" />
+          <div>
+            <p className="font-medium">{t('Trả lời tự động')}</p>
+            <p className="text-xs text-muted-foreground">{t('Gửi một lần khi khách nhắn mà quán chưa trả lời. Khách thấy nhãn "Trả lời tự động".')}</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={!!current.data.enabled}
+          aria-label={t('Bật trả lời tự động')}
+          disabled={save.isPending}
+          onClick={() => save.mutate({ enabled: !current.data?.enabled })}
+          className={cn(
+            'relative h-6 w-11 shrink-0 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-50',
+            current.data.enabled ? 'bg-primary' : 'bg-grey-300',
+          )}
+        >
+          <span className={cn('absolute top-0.5 left-0.5 size-5 rounded-full bg-white shadow transition-transform', current.data.enabled && 'translate-x-5')} />
+        </button>
+      </div>
+      {current.data.enabled ? (
+        <div className="flex flex-col gap-2">
+          <Textarea value={message} maxLength={1000} rows={2} onChange={(e) => setDraft(e.target.value)} aria-label={t('Nội dung trả lời tự động')} />
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs text-muted-foreground">{message.length}/1000</span>
+            <Button
+              size="sm"
+              disabled={!changed || !message.trim() || save.isPending}
+              onClick={() => save.mutate({ message: message.trim() }, { onSuccess: () => { setDraft(null); toast.success(t('Đã lưu tin trả lời tự động.')) } })}
+            >
+              {t('Lưu')}
+            </Button>
+          </div>
+        </div>
+      ) : null}
     </Card>
   )
 }
