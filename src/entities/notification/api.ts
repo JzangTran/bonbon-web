@@ -6,9 +6,11 @@ export type AppNotification = components['schemas']['NotificationItem']
 export const NOTIFICATIONS_KEY = ['notifications'] as const
 
 /** The signed-in person's in-app notifications, newest first, with the total of unread ones. Polled: the feed is a side panel, not a page. */
-export function useNotifications(size = 20) {
+/** `enabled: false` for a seller-team session: notifications belong to the person, which a main account or member is not. */
+export function useNotifications(size = 20, enabled = true) {
   return useQuery({
     queryKey: [...NOTIFICATIONS_KEY, size],
+    enabled,
     refetchInterval: 30_000,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/notifications', { params: { query: { size } } })

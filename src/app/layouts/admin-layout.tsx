@@ -42,6 +42,7 @@ const OPERATIONS: NavParent[] = [
     children: [
       { to: consolePath('/support-tickets'), label: t('Phiếu hỗ trợ') },
       { to: consolePath('/contact-requests'), label: t('Yêu cầu liên hệ') },
+      { to: consolePath('/data-requests'), label: t('Yêu cầu về dữ liệu') },
       { to: consolePath('/lookup'), label: t('Tra cứu đơn và tài khoản') },
     ],
   },

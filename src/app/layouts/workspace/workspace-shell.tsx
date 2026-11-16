@@ -67,7 +67,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
   const allNav = spaces.flatMap((s) => s.nav)
   const allExtras = spaces.flatMap((s) => s.extras ?? [])
   const { setPanelHost, setTabsHost, custom } = useSlotHosts()
-  const notifications = useNotifications()
+  const notifications = useNotifications(20, !session?.team)
   const unread = notifications.data?.unread ?? 0
 
   const wideNav = useMediaQuery('(min-width: 768px)')
@@ -132,7 +132,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
 
         <div className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3">
           {headerExtra}
-          <button
+          {session?.team ? null : (<button
             type="button"
             aria-label={unread > 0 ? t('Thông báo, {v0} chưa đọc', { v0: unread }) : t('Thông báo')}
             onClick={() => setBellOpen(true)}
@@ -144,7 +144,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
                 {unread > 99 ? '99+' : unread}
               </span>
             ) : null}
-          </button>
+          </button>)}
           {!widePanel ? (
             <button
               type="button"
@@ -263,7 +263,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           >
             <div className="wspanel:border-l wspanel:border-grey-200 wspanel:pl-5">
               <div ref={setPanelHost} className="flex flex-col gap-8 empty:hidden" />
-              {!custom ? <NotificationFeed orderPath={orderPath} /> : null}
+              {!custom && !session?.team ? <NotificationFeed orderPath={orderPath} /> : null}
             </div>
           </aside>
         ) : null}

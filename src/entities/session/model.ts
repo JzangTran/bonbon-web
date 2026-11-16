@@ -2,8 +2,20 @@ import { createContext } from 'react'
 
 export type Role = 'CUSTOMER' | 'SELLER' | 'ADMIN'
 
+/** A main account or member session (seller-team): who signed in, the shop open now (null = team console) and the shops to switch to. */
+export type TeamSession = {
+  kind: 'MAIN_ACCOUNT' | 'MEMBER'
+  login: string
+  displayName: string
+  shopId: string | null
+  shopName: string | null
+  shops: { vendorId: string; name: string; status: string }[]
+}
+
 /** Who is signed in. Lives in memory only: the access token is short-lived and the refresh token is in an HttpOnly cookie. */
 export type Session = {
+  /** Only for a main account or member. */
+  team?: TeamSession
   userId: string
   email: string
   name: string
@@ -14,6 +26,7 @@ export type Session = {
 }
 
 export type SignInInput = {
+  team?: TeamSession
   accessToken: string
   userId: string
   email: string
@@ -60,6 +73,21 @@ export function toSession(input: SignInInput): Session {
     availableRoles: input.availableRoles ?? [input.role],
     permissions: permissionsOf(input.accessToken),
     accessToken: input.accessToken,
+    team: input.team,
+  }
+}
+
+/** The `team` part of a server user summary, as the session keeps it. */
+export function teamOf(raw: unknown): TeamSession | undefined {
+  const t = raw as Partial<TeamSession> & { shops?: { vendorId?: string; name?: string; status?: string }[] } | null | undefined
+  if (!t?.kind) return undefined
+  return {
+    kind: t.kind,
+    login: t.login ?? '',
+    displayName: t.displayName ?? '',
+    shopId: t.shopId ?? null,
+    shopName: t.shopName ?? null,
+    shops: (t.shops ?? []).map((s) => ({ vendorId: s.vendorId ?? '', name: s.name ?? '', status: s.status ?? '' })),
   }
 }
 
