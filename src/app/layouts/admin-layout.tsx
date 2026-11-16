@@ -32,6 +32,7 @@ const OPERATIONS: NavParent[] = [
       { to: consolePath('/order-cases'), label: t('Khiếu nại đơn hàng') },
       { to: consolePath('/penalties'), label: t('Điểm phạt các quán') },
       { to: consolePath('/reviews'), label: t('Kiểm duyệt đánh giá') },
+      { to: consolePath('/reports'), label: t('Báo cáo vi phạm') },
     ],
   },
   {

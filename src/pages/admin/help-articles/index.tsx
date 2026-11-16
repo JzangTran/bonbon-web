@@ -1,4 +1,5 @@
 import { PlusIcon } from 'lucide-react'
+import { useUnansweredQuestions } from '@/entities/report'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
@@ -114,6 +115,8 @@ export function AdminHelpArticlesPage() {
 
       <Pagination paging={paging} total={total} />
 
+      <UnansweredQuestions />
+
       <Dialog open={!!deleting} onOpenChange={(open) => !open && setDeleting(null)}>
         <DialogContent>
           <DialogHeader>
@@ -220,5 +223,33 @@ function ArticleEditor({ initial }: { initial: { id: string | null; draft: HelpD
           </Button>
         </SubPageActions>
     </SubPage>
+  )
+}
+
+/** What people asked the help-center chatbot in the last 30 days that no article answered: the articles or keywords to write next. */
+function UnansweredQuestions() {
+  const questions = useUnansweredQuestions(true)
+  const items = questions.data ?? []
+  return (
+    <section className="flex flex-col gap-3" aria-labelledby="unanswered">
+      <div>
+        <h2 id="unanswered" className="text-lg font-semibold">{t('Câu hỏi chưa có câu trả lời')}</h2>
+        <p className="text-sm text-muted-foreground">
+          {t('Câu hỏi gửi trợ lý tự động trong 30 ngày qua mà không khớp bài nào. Viết thêm bài hoặc thêm từ khoá vào bài sẵn có để trả lời được.')}
+        </p>
+      </div>
+      {questions.isPending ? <Skeleton className="h-20" /> : null}
+      {questions.data && items.length === 0 ? <p className="text-sm text-muted-foreground">{t('Chưa có câu hỏi nào bị bỏ lỡ.')}</p> : null}
+      <ul className="flex flex-col divide-y rounded-md border">
+        {items.map((q) => (
+          <li key={q.question} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+            <span className="min-w-0 flex-1 truncate">{q.question}</span>
+            <span className="shrink-0 text-muted-foreground">
+              {t('{v0} lần · {v1}', { v0: q.times ?? 1, v1: q.audience === 'SELLER' ? t('người bán') : t('khách') })}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
