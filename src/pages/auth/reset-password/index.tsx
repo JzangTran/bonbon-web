@@ -1,12 +1,14 @@
 import { t } from '@/shared/i18n'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { PasswordStrength } from '@/shared/ui/password-strength'
+import { passwordProblem } from '@/shared/lib/validate'
 import { Label } from '@/shared/ui/label'
 import { AuthShell, FormError, FormSuccess } from '@/widgets/auth-shell'
 import { siteUrl } from '@/shared/config/sites'
@@ -17,6 +19,11 @@ const schema = z
     confirmPassword: z.string().max(100),
   })
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: t('Mật khẩu nhập lại không khớp') })
+  // the account's email and name are only known to the server, which also refuses a password containing them
+  .superRefine((v, ctx) => {
+    const problem = passwordProblem(v.newPassword)
+    if (problem) ctx.addIssue({ code: 'custom', path: ['newPassword'], message: problem })
+  })
 type Values = z.infer<typeof schema>
 
 /**
@@ -30,6 +37,7 @@ export function SetPasswordPage({ mode }: { mode: 'reset' | 'initial' }) {
   const [done, setDone] = useState(false)
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { newPassword: '', confirmPassword: '' } })
   const errors = form.formState.errors
+  const typed = useWatch({ control: form.control, name: 'newPassword' })
 
   const onSubmit = form.handleSubmit(async ({ newPassword }) => {
     setError(null)
@@ -55,12 +63,12 @@ export function SetPasswordPage({ mode }: { mode: 'reset' | 'initial' }) {
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           <div className="flex flex-col gap-2">
             <Label htmlFor="newPassword">{t('Mật khẩu mới')}</Label>
-            <Input id="newPassword" type="password" autoComplete="new-password" aria-invalid={!!errors.newPassword} {...form.register('newPassword')} />
-            {errors.newPassword ? <p role="alert" className="text-sm text-destructive">{errors.newPassword.message}</p> : null}
+            <Input id="newPassword" type="password" autoComplete="new-password" maxLength={100} aria-invalid={!!errors.newPassword} {...form.register('newPassword')} />
+            {errors.newPassword ? <p role="alert" className="text-sm text-destructive">{errors.newPassword.message}</p> : <PasswordStrength password={typed} />}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="confirmPassword">{t('Nhập lại mật khẩu')}</Label>
-            <Input id="confirmPassword" type="password" autoComplete="new-password" aria-invalid={!!errors.confirmPassword} {...form.register('confirmPassword')} />
+            <Input id="confirmPassword" type="password" autoComplete="new-password" maxLength={100} aria-invalid={!!errors.confirmPassword} {...form.register('confirmPassword')} />
             {errors.confirmPassword ? <p role="alert" className="text-sm text-destructive">{errors.confirmPassword.message}</p> : null}
           </div>
           <FormError message={error} />

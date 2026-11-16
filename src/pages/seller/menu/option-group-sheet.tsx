@@ -95,12 +95,12 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <Label htmlFor="group-min">{t('Chọn tối thiểu')}</Label>
-              <Input id="group-min" inputMode="numeric" className="tabular-nums" value={min} onChange={(e) => setMin(e.target.value)} />
+              <Input id="group-min" inputMode="numeric" maxLength={2} className="tabular-nums" value={min} onChange={(e) => setMin(e.target.value.replace(/\D/g, ''))} />
               <p className="text-xs text-muted-foreground">{t('0 = khách có thể bỏ qua')}</p>
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="group-max">{t('Chọn tối đa')}</Label>
-              <Input id="group-max" inputMode="numeric" className="tabular-nums" value={max} onChange={(e) => setMax(e.target.value)} />
+              <Input id="group-max" inputMode="numeric" maxLength={2} className="tabular-nums" value={max} onChange={(e) => setMax(e.target.value.replace(/\D/g, ''))} />
               <p className="text-xs text-muted-foreground">{t('1 = chọn một')}</p>
             </div>
           </div>
@@ -123,7 +123,8 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
                     className="w-28 tabular-nums"
                     placeholder="+ ₫"
                     value={row.priceDelta}
-                    onChange={(e) => update(row.key, { priceDelta: e.target.value })}
+                    maxLength={7}
+                    onChange={(e) => update(row.key, { priceDelta: e.target.value.replace(/\D/g, '') })}
                   />
                   <Button
                     type="button"

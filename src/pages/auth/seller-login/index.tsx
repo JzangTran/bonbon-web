@@ -17,6 +17,7 @@ import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
 import { merchantPath } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
+import { QrLogin } from './qr-login'
 
 const schema = z.object({
   email: z.email(t('Email không hợp lệ')),
@@ -158,6 +159,7 @@ export function SellerLoginPage() {
         </Link>
       </form>
       <GoogleSignIn />
+      <QrLogin onSignedIn={finish} />
       <LegalNote action={t('đăng nhập')} />
     </AuthHero>
   )

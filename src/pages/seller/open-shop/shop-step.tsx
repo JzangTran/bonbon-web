@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import type { ShopApplication } from '@/entities/shop'
 import { ShopAddressFields, validateShopAddress, type ShopAddressValue } from '@/features/shop-address'
 import { api, problemMessage } from '@/shared/api'
-import { VN_PHONE, compactPhone, isEmail, requiredText, type Errors } from '@/shared/lib/validate'
+import { compactPhone, isEmail, isVnPhone, requiredText, type Errors } from '@/shared/lib/validate'
 import { Input } from '@/shared/ui/input'
 import { FormError } from '@/widgets/auth-shell'
 import { Field, SaveButtons, StepCard } from './step-kit'
@@ -42,7 +42,7 @@ export function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: 
     if (strict || name.trim() !== '') requiredText(e, 'name', name, t('tên cửa hàng'), 100)
     const p = compactPhone(phone)
     if (strict && p === '') e.phone = t('Hãy nhập số điện thoại cửa hàng.')
-    else if (p !== '' && !VN_PHONE.test(p)) e.phone = t('Số điện thoại Việt Nam không hợp lệ, ví dụ 0912345678 hoặc +84912345678.')
+    else if (p !== '' && !isVnPhone(p, 'any')) e.phone = t('Số điện thoại không hợp lệ: số di động hoặc số bàn có mã vùng, ví dụ 0912345678 hay 02838123456.')
     if (strict && email.trim() === '') e.email = t('Hãy nhập email cửa hàng.')
     else if (email.trim() !== '' && !isEmail(email.trim())) e.email = t('Email không hợp lệ.')
     return { ...e, ...validateShopAddress(address, strict) }
@@ -75,7 +75,7 @@ export function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         <Input id="shop-phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={15} placeholder="0912345678" value={phone} onChange={(e) => setPhone(e.target.value)} />
       </Field>
       <Field id="shop-email" label={t('Email cửa hàng')} required error={save.errors.email}>
-        <Input id="shop-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input id="shop-email" type="email" autoComplete="email" maxLength={255} value={email} onChange={(e) => setEmail(e.target.value)} />
       </Field>
       {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
     </StepCard>

@@ -152,6 +152,9 @@ function VoucherForm({ onDone }: { onDone: () => void }) {
     const amount = whole(value)
     if (!amount) return setProblem(t('Mức giảm phải là số nguyên lớn hơn 0.'))
     if (type === 'PERCENT' && amount > 100) return setProblem(t('Mức giảm phần trăm tối đa là 100%.'))
+    if (amount > 10_000_000 || (whole(maxDiscount) ?? 0) > 10_000_000 || (whole(minOrder) ?? 0) > 10_000_000) return setProblem(t('Số tiền tối đa là 10.000.000 ₫.'))
+    if ((whole(perCustomer) ?? 0) > 1000) return setProblem(t('Mỗi khách dùng tối đa 1.000 lượt.'))
+    if (whole(limit) !== undefined && whole(perCustomer) !== undefined && (whole(perCustomer) ?? 0) > (whole(limit) ?? 0)) return setProblem(t('Lượt mỗi khách không được lớn hơn tổng lượt dùng.'))
     if (new Date(to) <= new Date(from)) return setProblem(t('Ngày kết thúc phải sau ngày bắt đầu.'))
     save.mutate()
   }
@@ -165,7 +168,7 @@ function VoucherForm({ onDone }: { onDone: () => void }) {
       <CardContent>
         <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2" noValidate>
           <Field id="voucher-code" label={t('Mã voucher')}>
-            <Input id="voucher-code" className="uppercase" maxLength={20} placeholder="SALE20" value={code} onChange={(e) => setCode(e.target.value)} />
+            <Input id="voucher-code" maxLength={20} autoComplete="off" spellCheck={false} placeholder="SALE20" value={code} onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, ''))} />
           </Field>
           <Field id="voucher-type" label={t('Loại giảm')}>
             <select
@@ -179,15 +182,15 @@ function VoucherForm({ onDone }: { onDone: () => void }) {
             </select>
           </Field>
           <Field id="voucher-value" label={type === 'PERCENT' ? t('Mức giảm (%)') : t('Mức giảm (₫)')}>
-            <Input id="voucher-value" inputMode="numeric" value={value} onChange={(e) => setValue(e.target.value)} />
+            <Input id="voucher-value" inputMode="numeric" maxLength={type === 'PERCENT' ? 3 : 8} value={value} onChange={(e) => setValue(e.target.value.replace(/\D/g, ''))} />
           </Field>
           {type === 'PERCENT' ? (
             <Field id="voucher-max" label={t('Giảm tối đa (₫, không bắt buộc)')}>
-              <Input id="voucher-max" inputMode="numeric" value={maxDiscount} onChange={(e) => setMaxDiscount(e.target.value)} />
+              <Input id="voucher-max" inputMode="numeric" maxLength={8} value={maxDiscount} onChange={(e) => setMaxDiscount(e.target.value.replace(/\D/g, ''))} />
             </Field>
           ) : null}
           <Field id="voucher-min" label={t('Đơn tối thiểu (₫, không bắt buộc)')}>
-            <Input id="voucher-min" inputMode="numeric" value={minOrder} onChange={(e) => setMinOrder(e.target.value)} />
+            <Input id="voucher-min" inputMode="numeric" maxLength={8} value={minOrder} onChange={(e) => setMinOrder(e.target.value.replace(/\D/g, ''))} />
           </Field>
           <Field id="voucher-from" label={t('Bắt đầu')}>
             <Input id="voucher-from" type="datetime-local" value={from} onChange={(e) => setFrom(e.target.value)} />
@@ -196,10 +199,10 @@ function VoucherForm({ onDone }: { onDone: () => void }) {
             <Input id="voucher-to" type="datetime-local" value={to} onChange={(e) => setTo(e.target.value)} />
           </Field>
           <Field id="voucher-limit" label={t('Tổng lượt dùng (bỏ trống là không giới hạn)')}>
-            <Input id="voucher-limit" inputMode="numeric" value={limit} onChange={(e) => setLimit(e.target.value)} />
+            <Input id="voucher-limit" inputMode="numeric" maxLength={8} value={limit} onChange={(e) => setLimit(e.target.value.replace(/\D/g, ''))} />
           </Field>
           <Field id="voucher-per-customer" label={t('Lượt mỗi khách (bỏ trống là không giới hạn)')}>
-            <Input id="voucher-per-customer" inputMode="numeric" value={perCustomer} onChange={(e) => setPerCustomer(e.target.value)} />
+            <Input id="voucher-per-customer" inputMode="numeric" maxLength={4} value={perCustomer} onChange={(e) => setPerCustomer(e.target.value.replace(/\D/g, ''))} />
           </Field>
           <div className="flex flex-col gap-3 sm:col-span-2">
             <FormError message={problem} />

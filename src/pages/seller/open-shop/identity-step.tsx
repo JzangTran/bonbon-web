@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import type { ShopApplication } from '@/entities/shop'
 import { api, problemMessage } from '@/shared/api'
-import { requiredText, type Errors } from '@/shared/lib/validate'
+import { idNumberProblem, isPersonName, requiredText, type Errors } from '@/shared/lib/validate'
 import { FormRow } from '@/shared/ui/form-row'
 import { Input } from '@/shared/ui/input'
 import { FormError } from '@/widgets/auth-shell'
@@ -53,7 +53,12 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
     const valid = docType === 'CCCD' ? /^\d{12}$/.test(n) : /^(\d{9}|\d{12})$/.test(n)
     if (strict && n === '' && !numberSaved) e.docNumber = t('Hãy nhập số giấy tờ.')
     else if (n !== '' && !valid) e.docNumber = docType === 'CCCD' ? t('CCCD gồm 12 chữ số.') : t('CMND gồm 9 hoặc 12 chữ số.')
+    else if (n !== '' && docType) {
+      const wrong = idNumberProblem(docType, n)
+      if (wrong) e.docNumber = wrong
+    }
     if (strict || fullName.trim() !== '') requiredText(e, 'fullName', fullName, t('họ tên như trên giấy tờ'), 100)
+    if (!e.fullName && fullName.trim() !== '' && !isPersonName(fullName)) e.fullName = t('Họ tên ghi đúng như trên giấy tờ, chỉ gồm chữ cái và khoảng trắng.')
     if (strict && !id?.frontPhotoUrl) e.frontPhoto = t('Hãy tải ảnh mặt trước giấy tờ.')
     if (strict && !id?.selfiePhotoUrl) e.selfiePhoto = t('Hãy tải ảnh bạn cầm giấy tờ.')
     if (strict && !accurate) e.accuracyConfirmed = t('Hãy xác nhận cam kết thông tin chính xác.')
@@ -105,10 +110,10 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         hint={id?.docNumberLast4 ? t('Đã lưu ••••{v0}; để trống để giữ nguyên.', { v0: id.docNumberLast4 }) : t('CCCD 12 số, CMND 9 hoặc 12 số.')}
         error={save.errors.docNumber}
       >
-        <Input id="id-number" inputMode="numeric" autoComplete="off" maxLength={14} value={docNumber} onChange={(e) => setDocNumber(e.target.value)} />
+        <Input id="id-number" inputMode="numeric" autoComplete="off" maxLength={12} value={docNumber} onChange={(e) => setDocNumber(e.target.value.replace(/\D/g, ''))} />
       </Field>
       <Field id="id-name" label={t('Họ tên như trên giấy tờ')} required error={save.errors.fullName}>
-        <Input id="id-name" maxLength={100} value={fullName} onChange={(e) => setFullName(e.target.value)} />
+        <Input id="id-name" maxLength={100} autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
       </Field>
       <UploadField
         label={t('Ảnh mặt trước giấy tờ')}

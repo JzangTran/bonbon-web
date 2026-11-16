@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { FormRow } from '@/shared/ui/form-row'
-import { VN_PHONE, compactPhone, isEmail, requiredText, type Errors } from '@/shared/lib/validate'
+import { compactPhone, isEmail, isVnPhone, requiredText, type Errors } from '@/shared/lib/validate'
 import { DangerLinkCard } from '@/shared/ui/danger-link-card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
@@ -65,7 +65,7 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
     requiredText(found, 'name', name, t('tên cửa hàng'), 100)
     const p = compactPhone(phone)
     if (p === '') found.phone = t('Hãy nhập số điện thoại cửa hàng.')
-    else if (!VN_PHONE.test(p)) found.phone = t('Số điện thoại Việt Nam không hợp lệ, ví dụ 0912345678 hoặc +84912345678.')
+    else if (!isVnPhone(p, 'any')) found.phone = t('Số điện thoại không hợp lệ: số di động hoặc số bàn có mã vùng, ví dụ 0912345678 hay 02838123456.')
     if (!isEmail(email.trim())) found.email = t('Email không hợp lệ.')
     Object.assign(found, validateShopAddress(address, true))
     setProblems(found)
@@ -108,7 +108,7 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
             <Input id="info-phone" type="tel" inputMode="tel" maxLength={15} placeholder="0912345678" value={phone} onChange={(e) => setPhone(e.target.value)} />
           </FormRow>
           <FormRow label="Email" required htmlFor="info-email" error={errors.email}>
-            <Input id="info-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input id="info-email" type="email" autoComplete="email" maxLength={255} value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormRow>
           <Button type="submit" className="self-end" disabled={disabled}>
             {t('Lưu thông tin')}
