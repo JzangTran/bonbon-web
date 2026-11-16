@@ -2387,4 +2387,6 @@ export const EN: Record<string, string> = {
   "Đã nhận tiền": "Mark as received",
   "Chỉ xác nhận khi tài khoản của quán đã nhận khoản chuyển có nội dung {v0}.": "Only confirm once the shop's account has received a transfer with the message {v0}.",
   "Nội dung chuyển khoản: {v0}": "Transfer message: {v0}",
+  "Một đơn hàng, bốn bước rõ ràng": "One order, four clear steps",
+  "Đóng menu": "Close menu",
 }
