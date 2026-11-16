@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
 import { useSession } from '@/entities/session'
@@ -15,13 +15,14 @@ import { FormError, FormSuccess } from '@/widgets/auth-shell'
 import { merchantPath } from '@/shared/config/sites'
 import { PageTabs } from '@/shared/ui/workspace-slots'
 import { t } from '@/shared/i18n'
+import { compactPhone, isPersonName, isVnPhone, passwordProblem } from '@/shared/lib/validate'
+import { PasswordStrength } from '@/shared/ui/password-strength'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 
-const VN_MOBILE = /^(0|\+84)(3|5|7|8|9)\d{8}$/
-
 const profileSchema = z.object({
-  name: z.string().trim().min(1, t('Vui lòng nhập họ tên')).max(100),
-  phone: z.string().trim().max(30).refine((v) => v === '' || VN_MOBILE.test(v), t('Số điện thoại di động Việt Nam không hợp lệ')),
+  name: z.string().trim().min(1, t('Vui lòng nhập họ tên')).max(100).refine(isPersonName, t('Họ tên chỉ gồm chữ cái và khoảng trắng')),
+  // the phone is sent without the spaces people type to read it
+  phone: z.string().transform(compactPhone).refine((v) => v === '' || isVnPhone(v, 'mobile'), t('Số điện thoại di động Việt Nam không hợp lệ, ví dụ 0912345678')),
 })
 
 const passwordSchema = z
@@ -31,6 +32,7 @@ const passwordSchema = z
     confirmPassword: z.string().max(100),
   })
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: t('Mật khẩu nhập lại không khớp') })
+  .refine((v) => v.newPassword === '' || v.newPassword !== v.currentPassword, { path: ['newPassword'], message: t('Mật khẩu mới phải khác mật khẩu hiện tại.') })
 
 type Tab = 'profile' | 'security' | 'delete'
 
@@ -130,12 +132,12 @@ function ProfileCard() {
         <form onSubmit={form.handleSubmit((v) => save.mutate(v))} className="flex flex-col gap-4" noValidate>
           <div className="flex flex-col gap-2">
             <Label htmlFor="profile-name">{t('Họ tên')}</Label>
-            <Input id="profile-name" aria-invalid={!!errors.name} {...form.register('name')} />
+            <Input id="profile-name" autoComplete="name" maxLength={100} aria-invalid={!!errors.name} {...form.register('name')} />
             {errors.name ? <p role="alert" className="text-sm text-destructive">{errors.name.message}</p> : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="profile-phone">{t('Số điện thoại')}</Label>
-            <Input id="profile-phone" inputMode="tel" placeholder="0912345678" aria-invalid={!!errors.phone} {...form.register('phone')} />
+            <Input id="profile-phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={15} placeholder="0912345678" aria-invalid={!!errors.phone} {...form.register('phone')} />
             {errors.phone ? <p role="alert" className="text-sm text-destructive">{errors.phone.message}</p> : null}
           </div>
           {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
@@ -158,8 +160,14 @@ function PasswordCard() {
     defaultValues: { currentPassword: '', newPassword: '', confirmPassword: '' },
   })
   const errors = form.formState.errors
+  const typedNew = useWatch({ control: form.control, name: 'newPassword' })
 
   const onSubmit = form.handleSubmit(async ({ currentPassword, newPassword }) => {
+    const weak = passwordProblem(newPassword, session?.email, session?.name)
+    if (weak) {
+      form.setError('newPassword', { message: weak })
+      return
+    }
     setError(null)
     setDone(false)
     const { data, error: problem } = await api.POST('/api/account/change-password', { body: { currentPassword, newPassword } })
@@ -190,10 +198,15 @@ function PasswordCard() {
                 id={field}
                 type="password"
                 autoComplete={field === 'currentPassword' ? 'current-password' : 'new-password'}
+                maxLength={100}
                 aria-invalid={!!errors[field]}
                 {...form.register(field)}
               />
-              {errors[field] ? <p role="alert" className="text-sm text-destructive">{errors[field]?.message}</p> : null}
+              {errors[field] ? (
+                <p role="alert" className="text-sm text-destructive">{errors[field]?.message}</p>
+              ) : field === 'newPassword' ? (
+                <PasswordStrength password={typedNew} email={session?.email} name={session?.name} />
+              ) : null}
             </div>
           ))}
           <FormError message={error} />

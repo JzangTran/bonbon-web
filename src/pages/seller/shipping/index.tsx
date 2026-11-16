@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { parseAmount, useApplyShop, useShop, type ShopApplication } from '@/entities/shop'
 import { OpeningHoursEditor, toEditorWindows, type OpeningWindow } from '@/features/opening-hours-editor'
 import { api, problemMessage, type components } from '@/shared/api'
@@ -87,6 +88,11 @@ function ShippingCard({ shop }: { shop: ShopApplication }) {
           className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault()
+            // the same limits the server applies, said before the request
+            const km = Number(radius)
+            if (!/^\d{1,2}(\.\d)?$/.test(radius.trim()) || km < 0.1) return toast.error(t('Bán kính từ 0,1 km, tối đa một chữ số sau dấu phẩy.'))
+            if (shop.maxDeliveryRadiusKm !== undefined && km > shop.maxDeliveryRadiusKm) return toast.error(t('Bán kính tối đa {v0} km.', { v0: shop.maxDeliveryRadiusKm }))
+            if ((parseAmount(fee) ?? 0) > 1_000_000) return toast.error(t('Phí giao tối đa 1.000.000 ₫.'))
             save.mutate({
               deliveryRadiusKm: parseAmount(radius),
               deliveryFee: parseAmount(fee),
@@ -100,22 +106,22 @@ function ShippingCard({ shop }: { shop: ShopApplication }) {
           <div className="flex flex-wrap gap-4">
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="sh-radius">{t('Bán kính giao (km)')}</Label>
-              <Input id="sh-radius" inputMode="decimal" value={radius} onChange={(e) => setRadius(e.target.value)} />
+              <Input id="sh-radius" inputMode="decimal" maxLength={4} value={radius} onChange={(e) => setRadius(e.target.value.replace(',', '.').replace(/[^\d.]/g, ''))} />
               <p className="text-xs text-muted-foreground">{t('Tối đa ')}{shop.maxDeliveryRadiusKm} km.</p>
             </div>
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="sh-fee">{t('Phí giao hàng (₫)')}</Label>
-              <Input id="sh-fee" inputMode="numeric" value={fee} onChange={(e) => setFee(e.target.value)} />
+              <Input id="sh-fee" inputMode="numeric" maxLength={7} value={fee} onChange={(e) => setFee(e.target.value.replace(/\D/g, ''))} />
             </div>
           </div>
           <div className="flex flex-wrap gap-4">
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="sh-free">{t('Miễn phí giao từ (₫, để trống = không áp dụng)')}</Label>
-              <Input id="sh-free" inputMode="numeric" value={free} onChange={(e) => setFree(e.target.value)} />
+              <Input id="sh-free" inputMode="numeric" maxLength={9} value={free} onChange={(e) => setFree(e.target.value.replace(/\D/g, ''))} />
             </div>
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="sh-min">{t('Đơn tối thiểu (₫, để trống = không áp dụng)')}</Label>
-              <Input id="sh-min" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} />
+              <Input id="sh-min" inputMode="numeric" maxLength={9} value={min} onChange={(e) => setMin(e.target.value.replace(/\D/g, ''))} />
             </div>
           </div>
           <Button type="submit" className="self-end" disabled={save.isPending || shop.status !== 'APPROVED'}>

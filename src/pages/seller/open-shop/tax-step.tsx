@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import type { ShopApplication } from '@/entities/shop'
 import { api, problemMessage } from '@/shared/api'
-import { BANK_ACCOUNT, TAX_CODE, isEmail, requiredText, type Errors } from '@/shared/lib/validate'
+import { BANK_ACCOUNT, TAX_CODE, idNumberProblem, isEmail, isPersonName, requiredText, type Errors } from '@/shared/lib/validate'
+import { BankPicker } from '@/entities/bank'
 import { Button } from '@/shared/ui/button'
 import { FormRow } from '@/shared/ui/form-row'
 import { Input } from '@/shared/ui/input'
@@ -45,16 +46,22 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
     const code = taxCode.trim()
     if (strict && code === '') e.taxCode = t('Hãy nhập mã số thuế.')
     else if (code !== '' && !TAX_CODE.test(code)) e.taxCode = t('Mã số thuế gồm 10 số, 10 số kèm -001 hoặc 12 số.')
+    // since 1 July 2025 a person's tax code is their 12-digit CCCD number, so it follows the same structure
+    else if (code.length === 12) {
+      const wrong = idNumberProblem('CCCD', code)
+      if (wrong) e.taxCode = t('Mã số thuế 12 số là số CCCD: {v0}', { v0: wrong })
+    }
     const typed = emails.map((x) => x.trim()).filter(Boolean)
     if (strict && typed.length === 0) e.invoiceEmails = t('Hãy nhập ít nhất một email nhận hoá đơn.')
     emails.forEach((x, i) => {
       if (x.trim() !== '' && !isEmail(x.trim())) e[`invoiceEmails[${i}]`] = t('Email không hợp lệ.')
     })
-    if (strict || bankName.trim() !== '') requiredText(e, 'bankName', bankName, t('tên ngân hàng'), 100)
+    if (strict && bankName.trim() === '') e.bankName = t('Hãy chọn ngân hàng.')
     const account = accountNumber.replace(/\s/g, '')
     if (strict && account === '' && !accountSaved) e.accountNumber = t('Hãy nhập số tài khoản.')
     else if (account !== '' && !BANK_ACCOUNT.test(account)) e.accountNumber = t('Số tài khoản gồm 6–19 chữ số.')
     if (strict || holder.trim() !== '') requiredText(e, 'accountHolderName', holder, t('tên chủ tài khoản'), 100)
+    if (!e.accountHolderName && holder.trim() !== '' && !isPersonName(holder)) e.accountHolderName = t('Tên chủ tài khoản chỉ gồm chữ cái và khoảng trắng.')
     if (strict && type === 'HOUSEHOLD' && !tItem?.businessLicenseUrl) e.businessLicense = t('Hãy tải giấy phép kinh doanh.')
     return e
   }
@@ -155,7 +162,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
       ) : null}
       <p className="border-t pt-4 text-sm font-medium">{t('Tài khoản nhận tiền')}</p>
       <Field id="pay-bank" label={t('Ngân hàng')} required error={save.errors.bankName}>
-        <Input id="pay-bank" maxLength={100} value={bankName} onChange={(e) => setBankName(e.target.value)} />
+        <BankPicker id="pay-bank" value={bankName} onChange={setBankName} invalid={!!save.errors.bankName} />
       </Field>
       <Field
         id="pay-number"
@@ -164,10 +171,10 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         hint={tItem?.payout?.accountLast4 ? t('Đã lưu ••••{v0}; để trống để giữ nguyên.', { v0: tItem.payout.accountLast4 }) : undefined}
         error={save.errors.accountNumber}
       >
-        <Input id="pay-number" inputMode="numeric" autoComplete="off" maxLength={24} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+        <Input id="pay-number" inputMode="numeric" autoComplete="off" maxLength={19} placeholder={t('6–19 chữ số')} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))} />
       </Field>
       <Field id="pay-holder" label={t('Chủ tài khoản')} required hint={t('Phải là chủ cửa hàng, trùng tên trên giấy tờ ở bước 4.')} error={save.errors.accountHolderName}>
-        <Input id="pay-holder" maxLength={100} value={holder} onChange={(e) => setHolder(e.target.value)} />
+        <Input id="pay-holder" maxLength={100} autoComplete="off" value={holder} onChange={(e) => setHolder(e.target.value)} />
       </Field>
       {mismatch ? (
         <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-sm text-warning-fg">

@@ -13,19 +13,26 @@ import { Captcha } from '@/shared/ui/captcha'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { PasswordInput } from '@/shared/ui/password-input'
+import { PasswordStrength } from '@/shared/ui/password-strength'
+import { isEmail, isPersonName, passwordProblem } from '@/shared/lib/validate'
 import { AuthHero, AuthStepPage, FormError, FormSuccess, SuccessMark } from '@/widgets/auth-shell'
 import { LegalNote } from '@/widgets/auth-shell/legal-note'
 import { SELLER_POINTS } from '@/widgets/auth-shell/seller-points'
 import { merchantPath, legalUrl } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
 
-const schema = z.object({
-  name: z.string().trim().min(1, t('Vui lòng nhập họ tên')).max(100, t('Tối đa 100 ký tự')),
-  email: z.email(t('Email không hợp lệ')).max(255),
-  password: z.string().min(8, t('Mật khẩu tối thiểu 8 ký tự')).max(100, t('Tối đa 100 ký tự')),
-  acceptTerms: z.boolean().refine((v) => v, t('Bạn cần đồng ý để tiếp tục')),
-  marketing: z.boolean(),
-})
+const schema = z
+  .object({
+    name: z.string().trim().min(1, t('Vui lòng nhập họ tên')).max(100, t('Tối đa 100 ký tự')).refine(isPersonName, t('Họ tên chỉ gồm chữ cái và khoảng trắng')),
+    email: z.string().trim().max(255).refine(isEmail, t('Email không hợp lệ')),
+    password: z.string().min(8, t('Mật khẩu tối thiểu 8 ký tự')).max(100, t('Tối đa 100 ký tự')),
+    acceptTerms: z.boolean().refine((v) => v, t('Bạn cần đồng ý để tiếp tục')),
+    marketing: z.boolean(),
+  })
+  .superRefine((v, ctx) => {
+    const problem = passwordProblem(v.password, v.email, v.name)
+    if (problem) ctx.addIssue({ code: 'custom', path: ['password'], message: problem })
+  })
 type Values = z.infer<typeof schema>
 
 const STEPS = [{ label: t('Nhập email') }, { label: t('Tạo mật khẩu') }, { label: t('Xác thực email') }]
@@ -64,6 +71,7 @@ export function SellerRegisterPage() {
   const errors = form.formState.errors
   const email = useWatch({ control: form.control, name: 'email' })
   const password = useWatch({ control: form.control, name: 'password' })
+  const name = useWatch({ control: form.control, name: 'name' })
 
   const toStepTwo = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -138,7 +146,7 @@ export function SellerRegisterPage() {
             <Label htmlFor="email" className="sr-only">
               Email
             </Label>
-            <Input id="email" type="email" autoComplete="email" placeholder="Email" className="h-11" aria-invalid={!!errors.email} {...form.register('email')} />
+            <Input id="email" type="email" autoComplete="email" maxLength={255} placeholder="Email" className="h-11" aria-invalid={!!errors.email} {...form.register('email')} />
             {errors.email ? <p role="alert" className="text-sm text-destructive">{errors.email.message}</p> : null}
           </div>
           <FormError message={error} />
@@ -168,7 +176,7 @@ export function SellerRegisterPage() {
       <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="name">{t('Họ tên')}</Label>
-          <Input id="name" autoComplete="name" className="h-11" aria-invalid={!!errors.name} {...form.register('name')} />
+          <Input id="name" autoComplete="name" maxLength={100} className="h-11" aria-invalid={!!errors.name} {...form.register('name')} />
           {errors.name ? <p role="alert" className="text-sm text-destructive">{errors.name.message}</p> : null}
         </div>
         <div className="flex flex-col gap-1.5">
@@ -181,9 +189,10 @@ export function SellerRegisterPage() {
             </li>
             <li className="flex items-center gap-1.5 text-muted-foreground">
               <CircleIcon className="size-3.5 opacity-0" />
-              {t('Nên có cả chữ hoa, chữ thường và số')}
+              {t('Không dùng mật khẩu phổ biến, dãy liên tiếp hay email, họ tên của bạn')}
             </li>
           </ul>
+          <PasswordStrength password={password} email={email} name={name} />
         </div>
 
         <label className="flex items-start gap-2 text-sm">
