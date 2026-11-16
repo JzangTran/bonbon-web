@@ -52,7 +52,7 @@ export function AdminLookupOrderPage() {
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-2xl font-semibold">{t('Đơn #')}{o.number}</h1>
             <OrderStatusBadge status={(o.status ?? 'PLACED') as OrderStatus} />
-            <Badge variant="outline">{o.paymentMethod === 'COD' ? t('Tiền mặt') : 'MoMo'}</Badge>
+            <Badge variant="outline">{o.paymentMethod === 'COD' ? t('Tiền mặt') : o.paymentMethod === 'BANK_TRANSFER' ? t('Chuyển khoản') : 'MoMo'}</Badge>
           </div>
 
           <Card className="gap-2 p-4 text-sm">
