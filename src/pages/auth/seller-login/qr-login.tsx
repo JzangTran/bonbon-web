@@ -67,7 +67,6 @@ function QrPanel({ onSignedIn }: { onSignedIn: (data: LoginResponse) => void }) 
     // the first code is asked for as soon as the dialog opens, once (StrictMode runs effects twice in development)
     if (firstStarted.current) return
     firstStarted.current = true
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void start()
   }, [start])
 
