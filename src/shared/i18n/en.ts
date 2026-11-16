@@ -2390,4 +2390,13 @@ export const EN: Record<string, string> = {
   "Yêu cầu đăng nhập đã bị từ chối trên điện thoại.": "The sign-in was declined on the phone.",
   "Mã đã hết hạn.": "The code has expired.",
   "Tạo mã mới": "New code",
+  "Thu tiền mặt khi giao": "Collect cash on delivery",
+  "Khách chuyển khoản vào tài khoản của quán": "The customer pays by bank transfer to the shop's account",
+  "đã nhận tiền": "received",
+  "chưa nhận tiền": "not received yet",
+  "Đã nhận tiền": "Mark as received",
+  "Chỉ xác nhận khi tài khoản của quán đã nhận khoản chuyển có nội dung {v0}.": "Only confirm once the shop's account has received a transfer with the message {v0}.",
+  "Nội dung chuyển khoản: {v0}": "Transfer message: {v0}",
+  "Một đơn hàng, bốn bước rõ ràng": "One order, four clear steps",
+  "Đóng menu": "Close menu",
 }
