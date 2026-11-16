@@ -7,9 +7,10 @@ export type ShopStatus = 'NONE' | 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' 
 export const SHOP_QUERY_KEY = ['merchant', 'shop'] as const
 
 /** The seller's own shop (application while not approved): status, per-step completeness and all saved data. */
-export function useShop() {
+export function useShop(enabled = true) {
   return useQuery({
     queryKey: SHOP_QUERY_KEY,
+    enabled,
     queryFn: async () => {
       const { data, error } = await api.GET('/api/merchant/shop')
       if (error || !data) throw error

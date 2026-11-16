@@ -151,6 +151,18 @@ const routes: RouteObject[] = [
             lazy: () => import('@/pages/seller/category-cases').then((m) => ({ Component: m.SellerCategoryCasesPage })),
           },
           {
+            path: 'team',
+            lazy: () => import('@/pages/seller/team').then((m) => ({ Component: m.SellerTeamMembersPage })),
+          },
+          {
+            path: 'team/roles',
+            lazy: () => import('@/pages/seller/team').then((m) => ({ Component: m.SellerTeamRolesPage })),
+          },
+          {
+            path: 'team/shops',
+            lazy: () => import('@/pages/seller/team').then((m) => ({ Component: m.SellerTeamShopsPage })),
+          },
+          {
             path: 'account',
             lazy: () => import('@/pages/seller/account').then((m) => ({ Component: m.SellerAccountPage })),
           },
@@ -378,6 +390,10 @@ const routes: RouteObject[] = [
           {
             path: 'reports',
             lazy: () => import('@/pages/admin/reports').then((m) => ({ Component: m.AdminReportsPage })),
+          },
+          {
+            path: 'data-requests',
+            lazy: () => import('@/pages/admin/data-requests').then((m) => ({ Component: m.AdminDataRequestsPage })),
           },
           {
             path: 'reports/:id',

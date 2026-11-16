@@ -18,6 +18,8 @@ import { t } from '@/shared/i18n'
 import { compactPhone, isPersonName, isVnPhone, passwordProblem } from '@/shared/lib/validate'
 import { PasswordStrength } from '@/shared/ui/password-strength'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
+import { MainAccountTab } from './main-account-tab'
+import { PrivacyTab } from './privacy-tab'
 
 const profileSchema = z.object({
   name: z.string().trim().min(1, t('Vui lòng nhập họ tên')).max(100).refine(isPersonName, t('Họ tên chỉ gồm chữ cái và khoảng trắng')),
@@ -34,9 +36,9 @@ const passwordSchema = z
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: t('Mật khẩu nhập lại không khớp') })
   .refine((v) => v.newPassword === '' || v.newPassword !== v.currentPassword, { path: ['newPassword'], message: t('Mật khẩu mới phải khác mật khẩu hiện tại.') })
 
-type Tab = 'profile' | 'security' | 'delete'
+type Tab = 'profile' | 'security' | 'team' | 'privacy' | 'delete'
 
-/** The person's account in three tabs, one job each: who they are, how they sign in (password, devices), and leaving. */
+/** The person's account, one job a tab: who they are, how they sign in, the main account and its links, their personal data, and leaving. */
 export function SellerAccountPage() {
   const profile = useProfile()
   const [tab, setTab] = useState<Tab>('profile')
@@ -49,6 +51,8 @@ export function SellerAccountPage() {
         tabs={[
           { id: 'profile', label: t('Thông tin cá nhân') },
           { id: 'security', label: t('Đăng nhập và bảo mật') },
+          { id: 'team', label: t('Tài khoản chính') },
+          { id: 'privacy', label: t('Quyền riêng tư') },
           { id: 'delete', label: t('Xoá tài khoản') },
         ]}
         value={tab}
@@ -67,6 +71,8 @@ export function SellerAccountPage() {
           <SessionsCard hasPassword={hasPassword} />
         </div>
       ) : null}
+      {tab === 'team' ? <MainAccountTab /> : null}
+      {tab === 'privacy' ? <PrivacyTab /> : null}
       {tab === 'delete' ? (
         <DangerLinkCard
           title={t('Xoá tài khoản')}

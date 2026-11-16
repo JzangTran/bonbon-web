@@ -3,6 +3,7 @@ import { problemMessage } from '@/shared/api'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { t } from '@/shared/i18n'
+import { SepayCard } from './sepay-card'
 
 /**
  * The account bonbon pays the shop's balance into (settlement). Read-only: the number is shown masked and changing it
@@ -34,6 +35,7 @@ export function SellerBankAccountPage() {
       <p className="text-sm text-muted-foreground">
         {t('Số dư của cửa hàng được chuyển vào tài khoản này. Hiện chưa đổi được tài khoản trên trang này; nếu cần đổi, hãy gửi yêu cầu qua mục Liên hệ hỗ trợ trong menu tài khoản.')}
       </p>
+      <SepayCard />
     </div>
   )
 }

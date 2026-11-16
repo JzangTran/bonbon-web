@@ -1,6 +1,8 @@
-import { ClipboardListIcon, LifeBuoyIcon, MessageCircleIcon, SettingsIcon, ShoppingBagIcon, StoreIcon, TicketPercentIcon, UserRoundIcon, UtensilsIcon, WalletIcon } from 'lucide-react'
+import { ClipboardListIcon, LifeBuoyIcon, MessageCircleIcon, SettingsIcon, ShieldCheckIcon, ShoppingBagIcon, StoreIcon, TicketPercentIcon, UserRoundIcon, UsersRoundIcon, UtensilsIcon, WalletIcon } from 'lucide-react'
 import { Navigate, useLocation } from 'react-router'
+import { useSession, type Session } from '@/entities/session'
 import { shopStatus, useShop } from '@/entities/shop'
+import { TeamSwitcher } from './team-switcher'
 import { AcceptingOrdersSwitch } from '@/features/accepting-orders'
 import { SellingFocusToggle, useSellingFocus } from '@/features/selling-focus'
 import { WorkspaceShell, type AccountLink, type ExtraPage, type FooterLink, type NavParent, type Space } from './workspace'
@@ -90,6 +92,40 @@ const SETTINGS_NAV: NavParent[] = [
   },
 ]
 
+/** The team console of a main account (seller-team): members, roles, linked shops. */
+const TEAM_NAV: NavParent[] = [
+  { key: 'members', label: t('Thành viên'), icon: UsersRoundIcon, to: merchantPath('/team') },
+  { key: 'roles', label: t('Vai trò và quyền'), icon: ShieldCheckIcon, to: merchantPath('/team/roles') },
+  { key: 'shops', label: t('Cửa hàng liên kết'), icon: StoreIcon, to: merchantPath('/team/shops') },
+]
+const TEAM_SPACE: Space = { key: 'team', label: t('Quản lý nhóm'), icon: UsersRoundIcon, nav: TEAM_NAV }
+
+/** What each page needs; a member only sees the pages its role on this shop opens. */
+const NEEDS: Record<string, string> = {
+  [merchantPath('/orders')]: 'order:read',
+  [merchantPath('/orders/cancelled')]: 'order:read',
+  [merchantPath('/order-cases')]: 'order:read',
+  [merchantPath('/menu')]: 'vendor:read',
+  [merchantPath('/menu/new')]: 'vendor:write',
+  [merchantPath('/vouchers')]: 'voucher:read',
+  [merchantPath('/chat')]: 'conversation:read',
+  [merchantPath('/reviews')]: 'vendor:read',
+  [merchantPath('/statistics')]: 'stats:read',
+  [merchantPath('/earnings')]: 'earnings:read',
+  [merchantPath('/shop')]: 'vendor:read',
+  [merchantPath('/shipping')]: 'vendor:read',
+  [merchantPath('/bank-account')]: 'vendor:read',
+}
+/** The person's own pages: a main account or member is not that person, so they are hidden (the server refuses them too). */
+const PERSONAL = [merchantPath('/account'), merchantPath('/notification-settings'), merchantPath('/support-tickets')]
+
+function forTeam(nav: NavParent[], session: Session): NavParent[] {
+  const can = (to: string) => !PERSONAL.includes(to) && (!NEEDS[to] || session.permissions.has(NEEDS[to]))
+  return nav
+    .map((p) => (p.children ? { ...p, children: p.children.filter((c) => can(c.to)) } : p))
+    .filter((p) => (p.children ? p.children.length > 0 : !p.to || can(p.to)))
+}
+
 const SPACES: Space[] = [
   { key: 'selling', label: t('Kênh bán hàng'), icon: ShoppingBagIcon, nav: SELLING_NAV, extras: SELLING_EXTRAS },
   { key: 'settings', label: t('Cài đặt'), icon: SettingsIcon, nav: SETTINGS_NAV, extras: [{ to: merchantPath('/support-tickets/new'), label: t('Gửi phiếu hỗ trợ'), under: merchantPath('/support-tickets') }] },
@@ -136,12 +172,53 @@ const SETUP_NAV: NavParent[] = [
 
 /** The seller area: until the shop is approved, everything leads to the open-shop page. */
 export function SellerLayout() {
-  const shop = useShop()
+  const { session } = useSession()
+  const team = session?.team
   const { pathname } = useLocation()
-  const status = shopStatus(shop.data)
+  // a team session knows its shop's status from the sign-in; the shop record needs vendor:read, which a member may not have
+  const shop = useShop(!team)
+  const teamShop = team?.shops.find((s) => s.vendorId === team.shopId)
+  const status = team ? (teamShop?.status as ReturnType<typeof shopStatus>) : shopStatus(shop.data)
   const approved = status === 'APPROVED'
+  const sellingFocus = useSellingFocus()
+  const focus = sellingFocus && approved && !team
+
+  if (team && session) {
+    const console = team.shopId === null
+    const inTeam = pathname === merchantPath('/team') || pathname.startsWith(merchantPath('/team/'))
+    if (console && !inTeam) return <Navigate to={merchantPath('/team')} replace />
+    if (!console && team.kind === 'MEMBER' && inTeam) return <Navigate to={merchantPath()} replace />
+    const selling = forTeam(SELLING_NAV, session)
+    const settings = forTeam(SETTINGS_NAV, session)
+    // the dashboard reads everything; a member starts on the first page its role opens
+    const firstPage = selling[0]?.to ?? selling[0]?.children?.[0]?.to ?? settings[0]?.children?.[0]?.to
+    if (!console && team.kind === 'MEMBER' && pathname === merchantPath() && firstPage) return <Navigate to={firstPage} replace />
+    const spaces: Space[] = console
+      ? [TEAM_SPACE]
+      : [
+          { key: 'selling', label: t('Kênh bán hàng'), icon: ShoppingBagIcon, nav: selling, extras: SELLING_EXTRAS },
+          ...(settings.length ? [{ key: 'settings', label: t('Cài đặt'), icon: SettingsIcon, nav: settings }] : []),
+          ...(team.kind === 'MAIN_ACCOUNT' ? [TEAM_SPACE] : []),
+        ]
+    return (
+      <WorkspaceShell
+        area={team.kind === 'MAIN_ACCOUNT' ? t('Tài khoản chính') : t('Kênh người bán')}
+        homePath={console ? merchantPath('/team') : merchantPath()}
+        spaces={spaces}
+        account={[]}
+        footerLinks={FOOTER}
+        loginPath={merchantPath('/login')}
+        headerExtra={
+          <>
+            <TeamSwitcher />
+            {!console && approved && session.permissions.has('vendor:write') ? <AcceptingOrdersSwitch /> : null}
+          </>
+        }
+        orderPath={() => merchantPath('/orders')}
+      />
+    )
+  }
   const closing = status === 'CLOSING' || status === 'CLOSED'
-  const focus = useSellingFocus() && approved
 
   if (shop.data && closing && !WHILE_CLOSING.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
     return <Navigate to={merchantPath('/closing')} replace />

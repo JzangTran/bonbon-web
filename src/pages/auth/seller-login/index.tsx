@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { useSession, type Role } from '@/entities/session'
+import { teamOf, useSession, type Role } from '@/entities/session'
 import { GoogleSignIn } from '@/features/google-sign-in'
 import { api, problemCode, problemMessage, type components } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
@@ -19,8 +19,15 @@ import { merchantPath } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
 import { QrLogin } from './qr-login'
 
+/** A main account signs in as `name:main`, a member as `name:code` (seller-team); everyone else with an email. */
+const TEAM_LOGIN = /^[a-z0-9._-]{2,40}:[a-z0-9._-]{2,40}$/
+const isTeamLogin = (v: string) => TEAM_LOGIN.test(v.trim().toLowerCase())
+
 const schema = z.object({
-  email: z.email(t('Email không hợp lệ')),
+  email: z
+    .string()
+    .trim()
+    .refine((v) => isTeamLogin(v) || z.email().safeParse(v).success, t('Nhập email, hoặc tên đăng nhập nhóm dạng tên:main / tên:mã')),
   password: z.string().min(1, t('Vui lòng nhập mật khẩu')).max(100, t('Mật khẩu tối đa 100 ký tự')),
 })
 type Values = z.infer<typeof schema>
@@ -52,6 +59,7 @@ export function SellerLoginPage() {
       name: user.name ?? '',
       role: 'SELLER',
       availableRoles: (user.availableRoles ?? []) as Role[],
+      team: teamOf((user as { team?: unknown }).team),
     })
     const from = (location.state as { from?: string } | null)?.from
     navigate(from && from.startsWith(merchantPath()) ? from : merchantPath(), { replace: true })
@@ -60,6 +68,18 @@ export function SellerLoginPage() {
   const onSubmit = form.handleSubmit(async (values) => {
     setError(null)
     setUnverifiedEmail(null)
+    if (isTeamLogin(values.email)) {
+      const { data: team, error: teamProblem } = await api.POST('/api/seller-team/login', {
+        body: { login: values.email.trim().toLowerCase(), password: values.password, captchaToken: captchaToken ?? undefined },
+      })
+      if (teamProblem || !team) {
+        if (problemCode(teamProblem) === 'CAPTCHA_REQUIRED') setNeedsCaptcha(true)
+        setError(problemMessage(teamProblem))
+        return
+      }
+      finish(team)
+      return
+    }
     const { data, error: problem } = await api.POST('/api/auth/login', {
       body: { ...values, captchaToken: captchaToken ?? undefined },
     })
@@ -116,18 +136,26 @@ export function SellerLoginPage() {
       <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="email" className="sr-only">
-            Email
+            {t('Email hoặc tên đăng nhập nhóm')}
           </Label>
           <Input
             id="email"
-            type="email"
-            autoComplete="email"
-            placeholder="Email"
+            type="text"
+            inputMode="email"
+            autoCapitalize="none"
+            spellCheck={false}
+            autoComplete="username"
+            placeholder={t('Email hoặc tên:main')}
+            aria-describedby="login-hint"
             className="h-11"
             aria-invalid={!!form.formState.errors.email}
             {...form.register('email')}
           />
-          {form.formState.errors.email ? <p role="alert" className="text-sm text-destructive">{form.formState.errors.email.message}</p> : null}
+          {form.formState.errors.email ? (
+            <p role="alert" className="text-sm text-destructive">{form.formState.errors.email.message}</p>
+          ) : (
+            <p id="login-hint" className="text-xs text-muted-foreground">{t('Tài khoản chính: tên:main. Thành viên: tên:mã do chủ cấp.')}</p>
+          )}
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="password" className="sr-only">

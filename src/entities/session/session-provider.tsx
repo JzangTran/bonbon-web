@@ -7,6 +7,7 @@ import {
   SessionContext,
   setSignInHint,
   SIGN_IN_HINT_KEY,
+  teamOf,
   toSession,
   type Role,
   type Session,
@@ -35,6 +36,7 @@ async function renew(): Promise<Renewed> {
           name: u.name ?? '',
           role: (u.activeRole ?? data.role) as Role,
           availableRoles: (u.availableRoles ?? []) as Role[],
+          team: teamOf((u as { team?: unknown }).team),
         }),
       }
     } catch {
@@ -57,8 +59,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       current.current = next
       setSignInHint(!!next)
       // Cached server data belongs to whoever fetched it: another user or role must never see it.
-      // New tokens for the same user and role (refresh, password change) keep the cache.
-      if (previous?.userId !== next?.userId || previous?.role !== next?.role) {
+      // New tokens for the same user and role (refresh, password change) keep the cache; a team session opening another shop does not.
+      if (previous?.userId !== next?.userId || previous?.role !== next?.role || previous?.team?.shopId !== next?.team?.shopId) {
         queryClient.clear()
       }
       setSession(next)
