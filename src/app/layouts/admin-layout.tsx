@@ -88,7 +88,10 @@ const SETTINGS: NavParent[] = [
     key: 'access',
     label: t('Truy cập'),
     icon: UsersIcon,
-    children: [{ to: consolePath('/admins'), label: t('Quản trị viên') }],
+    children: [
+      { to: consolePath('/admins'), label: t('Quản trị viên') },
+      { to: consolePath('/developer-access'), label: t('Truy cập API') },
+    ],
   },
 ]
 

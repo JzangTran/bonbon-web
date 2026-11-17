@@ -6,7 +6,7 @@ import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 import { RouteError } from './route-error'
 import { SmallScreenGate } from './small-screen-gate'
-import { PATH_MODE, SITE, consolePath, helpPath, merchantPath, opsPath, siteUrl } from '@/shared/config/sites'
+import { PATH_MODE, SITE, consolePath, developersPath, helpPath, merchantPath, opsPath, siteUrl } from '@/shared/config/sites'
 
 // One build, five hosts (see shared/config/sites.ts): each host gets its own pages, and the shared ones (email links, legal texts,
 // payment return) work on all of them. Without subdomains (development, previews) every page lives on the one host.
@@ -15,9 +15,10 @@ const showMerchant = SITE === 'merchant' || PATH_MODE
 const showHelp = SITE === 'help' || PATH_MODE
 const showConsole = SITE === 'console' || PATH_MODE
 const showOps = SITE === 'ops' || PATH_MODE
+const showDevelopers = SITE === 'developers' || PATH_MODE
 
 /** Sends an old prefixed address to the same page on its subdomain: /merchant/orders?x=1 → merchant.<host>/orders?x=1. */
-function ToSubdomain({ site, keepPrefix = false }: { site: 'merchant' | 'help' | 'console' | 'ops'; keepPrefix?: boolean }) {
+function ToSubdomain({ site, keepPrefix = false }: { site: 'merchant' | 'help' | 'console' | 'ops' | 'developers'; keepPrefix?: boolean }) {
   const { pathname, search, hash } = window.location
   const rest = keepPrefix ? pathname : pathname.slice(site.length + 1) || '/'
   window.location.replace(siteUrl(site, rest) + search + hash)
@@ -69,6 +70,18 @@ const routes: RouteObject[] = [
   {
     path: consolePath('/login'),
     lazy: () => import('@/pages/auth/admin-login').then((m) => ({ Component: () => <m.AdminLoginPage area="console" /> })),
+  },
+  ] : []),
+  // The developer portal (developers.*): open front page, access request and sign-in; the reference needs an approved account.
+  ...(showDevelopers ? [
+  { path: developersPath(), lazy: () => import('@/pages/developers').then((m) => ({ Component: m.DevelopersHomePage })) },
+  { path: developersPath('/request'), lazy: () => import('@/pages/developers').then((m) => ({ Component: m.DeveloperRequestPage })) },
+  { path: developersPath('/login'), lazy: () => import('@/pages/developers').then((m) => ({ Component: m.DeveloperLoginPage })) },
+  {
+    element: <RequireRole role="DEVELOPER" loginPath={developersPath('/login')} />,
+    children: [
+      { path: developersPath('/reference'), lazy: () => import('@/pages/developers').then((m) => ({ Component: m.DeveloperReferencePage })) },
+    ],
   },
   ] : []),
   ...(showOps ? [
@@ -400,6 +413,10 @@ const routes: RouteObject[] = [
             lazy: () => import('@/pages/admin/reports').then((m) => ({ Component: m.AdminReportsPage })),
           },
           {
+            path: 'developer-access',
+            lazy: () => import('@/pages/admin/developer-access').then((m) => ({ Component: m.AdminDeveloperAccessPage })),
+          },
+          {
             path: 'data-requests',
             lazy: () => import('@/pages/admin/data-requests').then((m) => ({ Component: m.AdminDataRequestsPage })),
           },
@@ -465,7 +482,7 @@ const routes: RouteObject[] = [
     : []),
   // With subdomains, the old one-host addresses (bonbon.vn/merchant/orders, saved links, old emails) move to their own host.
   ...(SITE === 'public' && !PATH_MODE
-    ? (['merchant', 'help', 'console', 'ops'] as const).map((site) => ({ path: `/${site}/*`, element: <ToSubdomain site={site} /> }))
+    ? (['merchant', 'help', 'console', 'ops', 'developers'] as const).map((site) => ({ path: `/${site}/*`, element: <ToSubdomain site={site} /> }))
     : []),
   ...(SITE === 'public' && !PATH_MODE ? [{ path: '/focus/*', element: <ToSubdomain site="merchant" keepPrefix /> }] : []),
   {

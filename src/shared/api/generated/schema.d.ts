@@ -2300,6 +2300,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/developer/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Đăng nhập trang dành cho lập trình viên
+         * @description Chỉ tài khoản đã được duyệt. Token có quyền `api-docs:read` để đọc `GET /v3/api-docs`.
+         *
+         *     **Không cần đăng nhập.**
+         */
+        post: operations["developerLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/developer/access-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Xin truy cập tài liệu API
+         * @description Gửi đội ngũ phát triển. Không ai tự đăng ký được: quản trị viên duyệt rồi mới đăng nhập được trang dành cho lập trình viên. Ba yêu cầu một ngày mỗi địa chỉ IP.
+         *
+         *     **Không cần đăng nhập.**
+         */
+        post: operations["requestDeveloperAccess"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/conversations/{id}/read": {
         parameters: {
             query?: never;
@@ -3596,6 +3640,72 @@ export interface paths {
          *     **Cần đăng nhập**, quyền `dish:moderate`.
          */
         post: operations["flagDishCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/developer-access-requests/{id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Thu hồi quyền truy cập API
+         * @description Bỏ vai trò lập trình viên và đăng xuất mọi phiên của tài khoản; vai trò khách hoặc người bán vẫn giữ.
+         *
+         *     **Cần đăng nhập**, quyền `developer-access:decide`.
+         */
+        post: operations["revokeDeveloperAccess"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/developer-access-requests/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Từ chối yêu cầu truy cập API
+         * @description Người gửi nhận email kèm lý do.
+         *
+         *     **Cần đăng nhập**, quyền `developer-access:decide`.
+         */
+        post: operations["rejectDeveloperAccess"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/developer-access-requests/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Duyệt yêu cầu truy cập API
+         * @description Email mới thì tạo tài khoản và gửi liên kết đặt mật khẩu; email đã có tài khoản khách hoặc người bán thì thêm vai trò lập trình viên. Người gửi nhận email báo kết quả.
+         *
+         *     **Cần đăng nhập**, quyền `developer-access:decide`.
+         */
+        post: operations["approveDeveloperAccess"];
         delete?: never;
         options?: never;
         head?: never;
@@ -6150,6 +6260,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/developer-access-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Yêu cầu truy cập API
+         * @description Mặc định các yêu cầu đang chờ, mới nhất trước.
+         *
+         *     **Cần đăng nhập**, quyền `developer-access:decide`.
+         */
+        get: operations["listDeveloperAccessRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/data-requests": {
         parameters: {
             query?: never;
@@ -7413,7 +7545,7 @@ export interface components {
             /** Format: int64 */
             expiresIn?: number;
             /** @enum {string} */
-            role?: "CUSTOMER" | "SELLER" | "ADMIN";
+            role?: "CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER";
             user?: components["schemas"]["UserSummary"];
         };
         UserSummary: {
@@ -7425,8 +7557,8 @@ export interface components {
             email?: string;
             name?: string;
             /** @enum {string} */
-            activeRole?: "CUSTOMER" | "SELLER" | "ADMIN";
-            availableRoles?: ("CUSTOMER" | "SELLER" | "ADMIN")[];
+            activeRole?: "CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER";
+            availableRoles?: ("CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER")[];
             /** @description Chỉ có với phiên của tài khoản chính hoặc thành viên: ai đăng nhập, cửa hàng đang làm việc và các cửa hàng được chọn. */
             team?: components["schemas"]["TeamSession"];
         };
@@ -7541,7 +7673,7 @@ export interface components {
         };
         LoginResponse: {
             needsRoleSelection?: boolean;
-            availableRoles?: ("CUSTOMER" | "SELLER" | "ADMIN")[];
+            availableRoles?: ("CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER")[];
             roleToken?: string;
             tokens?: components["schemas"]["TokenResponse"];
             user?: components["schemas"]["UserSummary"];
@@ -8389,6 +8521,31 @@ export interface components {
             /** Format: double */
             durationMinutes?: number;
         };
+        DeveloperLogin: {
+            email: string;
+            password: string;
+            captchaToken?: string;
+        };
+        /** @description Gửi đội ngũ phát triển; quản trị viên duyệt rồi mới vào được trang tài liệu API. */
+        DeveloperAccessRequestCreate: {
+            name: string;
+            email: string;
+            /** @description Công ty hoặc nhóm, không bắt buộc. */
+            company?: string;
+            /** @description Trang web hoặc kho mã, không bắt buộc; phải bắt đầu bằng https://. */
+            website?: string;
+            /** @description Bạn định dùng API để làm gì, 20–1000 ký tự. */
+            purpose: string;
+            captchaToken?: string;
+        };
+        DeveloperAccessRequestReceived: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            status?: string;
+        };
         /** @description Tin nhắn mới nhất của cuộc trò chuyện, để hiện xem trước. */
         ConversationLastMessage: {
             /** @description Chữ của tin nhắn; rỗng nếu chỉ có ảnh. */
@@ -8431,7 +8588,7 @@ export interface components {
         };
         RoleRequest: {
             /** @enum {string} */
-            role: "CUSTOMER" | "SELLER" | "ADMIN";
+            role: "CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER";
             roleToken?: string;
         };
         SetPassword: {
@@ -8450,7 +8607,7 @@ export interface components {
             password?: string;
             name?: string;
             /** @enum {string} */
-            role: "CUSTOMER" | "SELLER" | "ADMIN";
+            role: "CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER";
             acceptedDocumentIds?: string[];
             marketingConsent?: boolean;
             captchaToken?: string;
@@ -8533,7 +8690,7 @@ export interface components {
             provider: "GOOGLE" | "FACEBOOK";
             token: string;
             /** @enum {string} */
-            role?: "CUSTOMER" | "SELLER" | "ADMIN";
+            role?: "CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER";
             acceptedDocumentIds?: string[];
             marketingConsent?: boolean;
             password?: string;
@@ -9309,6 +9466,10 @@ export interface components {
              */
             deadlineAt?: string;
         };
+        DeveloperAccessReject: {
+            /** @description Người gửi đọc được lý do, 1–500 ký tự. */
+            reason: string;
+        };
         RevealedCustomerContact: {
             email?: string;
             phone?: string;
@@ -9374,7 +9535,7 @@ export interface components {
             email?: string;
             name?: string;
             /** @enum {string} */
-            role?: "CUSTOMER" | "SELLER" | "ADMIN";
+            role?: "CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER";
         };
         /** @description MoMo: the phone number of the MoMo wallet. */
         LinkPaymentMethodRequest: {
@@ -9602,7 +9763,7 @@ export interface components {
             phone?: string;
             avatarUrl?: string;
             hasPassword?: boolean;
-            roles?: ("CUSTOMER" | "SELLER" | "ADMIN")[];
+            roles?: ("CUSTOMER" | "SELLER" | "ADMIN" | "DEVELOPER")[];
         };
         AddressUpdateRequest: {
             label?: string;
@@ -11810,6 +11971,47 @@ export interface components {
              * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
              */
             lastAskedAt?: string;
+        };
+        AdminDeveloperAccessPage: {
+            items?: components["schemas"]["AdminDeveloperAccessRequest"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            total?: number;
+        };
+        /** @description `status`: PENDING, APPROVED, REJECTED, REVOKED. */
+        AdminDeveloperAccessRequest: {
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            id?: string;
+            name?: string;
+            email?: string;
+            company?: string;
+            website?: string;
+            purpose?: string;
+            status?: string;
+            reason?: string;
+            /**
+             * Format: uuid
+             * @description UUID.
+             */
+            userId?: string;
+            /** @description Với yêu cầu đang chờ: email đã có tài khoản bonbon (khách hoặc người bán), duyệt sẽ thêm vai trò vào tài khoản đó. */
+            existingAccount?: boolean;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            decidedAt?: string;
         };
         AdminDataRequest: {
             /**
@@ -21320,6 +21522,128 @@ export interface operations {
             };
         };
     };
+    developerLogin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeveloperLogin"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             *     - `CAPTCHA_REQUIRED`: Sai nhiều lần liên tiếp: gửi lại kèm `captchaToken`.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INVALID_CREDENTIALS`: Sai email hoặc mật khẩu, hoặc tài khoản chưa được duyệt (không nói cái nào). */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    requestDeveloperAccess: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeveloperAccessRequestCreate"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeveloperAccessRequestReceived"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             *     - `CAPTCHA_REQUIRED`: Thiếu hoặc sai mã reCAPTCHA.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /**
+             * @description - `REQUEST_PENDING`: Email này đã có yêu cầu đang chờ duyệt.
+             *     - `ALREADY_DEVELOPER`: Email này đã được cấp quyền.
+             */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `TOO_MANY_REQUESTS`: Đã gửi 3 yêu cầu hôm nay. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
     markConversationRead: {
         parameters: {
             query?: never;
@@ -26009,6 +26333,248 @@ export interface operations {
             /**
              * @description - `DISH_ARCHIVED`: Món đã bị xoá khỏi thực đơn.
              *     - `CASE_OPEN`: Món đang có một vụ chưa đóng.
+             */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    revokeDeveloperAccess: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeveloperAccessReject"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `developer-access:decide`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `ACCESS_REQUEST_NOT_FOUND`: Không có yêu cầu này. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `NOT_APPROVED`: Yêu cầu chưa được duyệt. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    rejectDeveloperAccess: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeveloperAccessReject"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `developer-access:decide`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `ACCESS_REQUEST_NOT_FOUND`: Không có yêu cầu này. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `ACCESS_REQUEST_DECIDED`: Yêu cầu đã được xử lý. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    approveDeveloperAccess: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `developer-access:decide`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `ACCESS_REQUEST_NOT_FOUND`: Không có yêu cầu này. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /**
+             * @description - `ACCESS_REQUEST_DECIDED`: Yêu cầu đã được xử lý.
+             *     - `ADMIN_ACCOUNT`: Email là tài khoản quản trị.
              */
             409: {
                 headers: {
@@ -34311,6 +34877,70 @@ export interface operations {
                 };
             };
             /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `help-center:write`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    listDeveloperAccessRequests: {
+        parameters: {
+            query?: {
+                status?: string;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDeveloperAccessPage"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             *     - `INVALID_STATUS`: `status` không phải PENDING, APPROVED, REJECTED, REVOKED hoặc ALL.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `developer-access:decide`. */
             403: {
                 headers: {
                     [name: string]: unknown;
