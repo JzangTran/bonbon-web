@@ -1,4 +1,4 @@
-import { API_REFERENCE_URL, OPENAPI_URL } from '@/shared/config/env'
+import { siteUrl } from '@/shared/config/sites'
 import { tx } from '@/shared/i18n'
 import { buttonClass } from '@/shared/ui/button'
 import { C, Code, DataTable, List, P, Principle } from '../doc'
@@ -6,11 +6,11 @@ import type { ResourceDoc } from '../doc'
 
 const referenceLinks = (
   <div className="flex flex-wrap gap-2">
-    <a href={API_REFERENCE_URL} target="_blank" rel="noreferrer" className={buttonClass()}>
-      {tx('Mở tài liệu API', 'Open the API reference')}
+    <a href={siteUrl('developers')} className={buttonClass()}>
+      {tx('Trang dành cho lập trình viên', 'Developer portal')}
     </a>
-    <a href={OPENAPI_URL} target="_blank" rel="noreferrer" className={buttonClass({ variant: 'secondary' })}>
-      {tx('Tải OpenAPI JSON', 'Download OpenAPI JSON')}
+    <a href={siteUrl('developers', '/request')} className={buttonClass({ variant: 'secondary' })}>
+      {tx('Xin quyền truy cập API', 'Request API access')}
     </a>
   </div>
 )

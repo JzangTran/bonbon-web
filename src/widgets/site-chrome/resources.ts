@@ -1,5 +1,4 @@
 import { articlePath, articlesOf, COLLECTION_BASE, type Article } from '@/entities/article'
-import { API_REFERENCE_URL } from '@/shared/config/env'
 import { legalUrl, siteUrl } from '@/shared/config/sites'
 import { t, tx } from '@/shared/i18n'
 
@@ -22,7 +21,7 @@ export const RESOURCE_COLUMNS: ResourceColumn[] = [
     label: tx('Nhà phát triển', 'Developers'),
     links: [
       { label: tx('Tổng quan API', 'API overview'), to: '/resources/developers/get-started/overview' },
-      { label: tx('Tài liệu API', 'API reference'), href: API_REFERENCE_URL, external: true },
+      { label: tx('Tài liệu API', 'API reference'), href: siteUrl('developers'), external: true },
       { label: tx('Xác thực', 'Authentication'), to: '/resources/developers/get-started/authentication' },
       { label: tx('Mã lỗi', 'Errors'), to: '/resources/developers/api/errors' },
     ],

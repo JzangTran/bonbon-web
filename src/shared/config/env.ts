@@ -10,6 +10,5 @@ export const env = {
   playStoreUrl: import.meta.env.VITE_PLAY_STORE_URL ?? '',
 } as const
 
-/** The interactive API reference (Scalar) and the OpenAPI document, served by the backend next to /api. */
-export const API_REFERENCE_URL = `${env.apiUrl}/scalar`
+/** The OpenAPI document, served by the backend next to /api; outside development only an approved developer may read it. */
 export const OPENAPI_URL = `${env.apiUrl}/v3/api-docs`

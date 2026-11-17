@@ -5,14 +5,15 @@
  *   help.bonbon.com      help center
  *   console.bonbon.com   administrators: shops, areas, categories, money, cases, content
  *   ops.bonbon.com       administrators: infrastructure (system status, app configuration)
+ *   developers.bonbon.com approved developers: the API reference (access is granted by an administrator)
  * On the four subdomains the page paths have no prefix (merchant.bonbon.com/orders). Anywhere else (localhost, a preview deployment)
  * everything lives on one host and the pages keep a prefix (/merchant/orders, /console/shops, /ops, /help), unless the build sets
  * VITE_SUBDOMAINS=true, which keeps them off the public host.
  */
-export type Site = 'public' | 'merchant' | 'help' | 'console' | 'ops'
+export type Site = 'public' | 'merchant' | 'help' | 'console' | 'ops' | 'developers'
 
 type Subdomain = Exclude<Site, 'public'>
-const SUBDOMAINS_LIST: readonly Subdomain[] = ['merchant', 'help', 'console', 'ops']
+const SUBDOMAINS_LIST: readonly Subdomain[] = ['merchant', 'help', 'console', 'ops', 'developers']
 
 const labels = window.location.hostname.split('.')
 const first = labels[0] as Subdomain
@@ -46,6 +47,9 @@ export const opsPath = (rest = ''): string => prefixed('ops', rest)
 
 /** A route inside the help center. */
 export const helpPath = (rest = ''): string => prefixed('help', rest)
+
+/** A route inside the developer portal. */
+export const developersPath = (rest = ''): string => prefixed('developers', rest)
 
 /**
  * Where a page of `site` lives, from wherever the person is now: a plain path when it is the same site (or all sites share the host),

@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-export type Role = 'CUSTOMER' | 'SELLER' | 'ADMIN'
+export type Role = 'CUSTOMER' | 'SELLER' | 'ADMIN' | 'DEVELOPER'
 
 /** A main account or member session (seller-team): who signed in, the shop open now (null = team console) and the shops to switch to. */
 export type TeamSession = {
