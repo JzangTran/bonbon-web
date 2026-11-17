@@ -2,7 +2,9 @@ import { t } from '@/shared/i18n'
 import { PhoneIcon } from 'lucide-react'
 import { OrderStatusBadge, useOrderAction, useShopOrder, type OrderStatus } from '@/entities/order'
 import { Button } from '@/shared/ui/button'
-import { problemMessage } from '@/shared/api'
+import { api, problemMessage } from '@/shared/api'
+import { useMenuMutation } from '@/entities/menu'
+import { useSession } from '@/entities/session'
 import { formatDateTime, formatVnd } from '@/shared/lib/format'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -12,8 +14,28 @@ import { countdown, useNow } from './use-now'
 
 const ACTORS: Record<string, string> = { CUSTOMER: t('Khách'), SHOP: t('Quán'), SYSTEM: t('Hệ thống'), ADMIN: t('Quản trị') }
 
+const OPEN: OrderStatus[] = ['PLACED', 'CONFIRMED', 'PREPARING']
+
+/**
+ * Found out while cooking that a dish has run out (DoorDash and Uber Eats let the kitchen say so from the live order): it is sold out
+ * for today, so no new order can include it; this order still needs a word with the customer.
+ */
+function SoldOutToday({ itemId, name }: { itemId: string; name: string }) {
+  const mark = useMenuMutation(
+    () => api.PATCH('/api/merchant/menu-items/{id}/status', { params: { path: { id: itemId } }, body: { status: 'SOLD_OUT', until: 'TODAY' } }),
+    t('Đã báo hết {v0} đến sáng mai. Nhắn khách để đổi món cho đơn này.', { v0: name }),
+  )
+  return (
+    <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" disabled={mark.isPending || mark.isSuccess} onClick={() => mark.mutate(undefined)}>
+      {mark.isSuccess ? t('Đã báo hết') : t('Báo hết món')}
+    </Button>
+  )
+}
+
 /** One order in full: contact, items with options and notes, totals, timeline, and the actions it allows. */
 export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => void }) {
+  const { session } = useSession()
+  const canEditMenu = session?.permissions.has('vendor:write') ?? false
   const order = useShopOrder(id)
   const now = useNow()
   const data = order.data
@@ -82,7 +104,10 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                       ) : null}
                       {line.note ? <p className="text-sm text-highlight-fg">{t('Ghi chú: ')}{line.note}</p> : null}
                     </div>
-                    <span className="tabular-nums">{formatVnd(line.lineTotal)}</span>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="tabular-nums">{formatVnd(line.lineTotal)}</span>
+                      {line.menuItemId && canEditMenu && status && OPEN.includes(status) ? <SoldOutToday itemId={line.menuItemId} name={line.name ?? ''} /> : null}
+                    </div>
                   </li>
                 ))}
               </ul>
