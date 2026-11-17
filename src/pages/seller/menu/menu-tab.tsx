@@ -1,4 +1,4 @@
-import { t } from '@/shared/i18n'
+import { intlLocale, t } from '@/shared/i18n'
 import { ArrowDownIcon, ArrowUpIcon, CheckIcon, PencilIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useMenuMutation, type Menu, type MenuItem, type MenuSection, type OptionGroups } from '@/entities/menu'
@@ -9,6 +9,7 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu'
 import { DishSheet } from './dish-sheet'
 
 type Editing = { item: MenuItem | null; sectionId: string }
@@ -221,6 +222,8 @@ function SectionCard({
   )
 }
 
+const formatTime = (iso: string) => new Date(iso).toLocaleTimeString(intlLocale, { hour: '2-digit', minute: '2-digit' })
+
 function DishRow({
   item,
   quick,
@@ -236,8 +239,8 @@ function DishRow({
   onMove: (by: -1 | 1) => void
   onEdit: () => void
 }) {
-  const toggle = useMenuMutation((status: 'AVAILABLE' | 'SOLD_OUT') =>
-    api.PATCH('/api/merchant/menu-items/{id}/status', { params: { path: { id: item.id! } }, body: { status } }),
+  const toggle = useMenuMutation(({ status, until }: { status: 'AVAILABLE' | 'SOLD_OUT'; until?: 'TODAY' }) =>
+    api.PATCH('/api/merchant/menu-items/{id}/status', { params: { path: { id: item.id! } }, body: { status, until } }),
   )
   const remove = useMenuMutation(
     () => api.DELETE('/api/merchant/menu-items/{id}', { params: { path: { id: item.id! } } }),
@@ -267,15 +270,35 @@ function DishRow({
         ) : null}
       </div>
       <span className="w-28 text-right font-semibold tabular-nums">{formatVnd(item.price)}</span>
-      <Button
-        variant={switchedOff ? 'secondary' : 'outline'}
-        size="sm"
-        aria-pressed={!switchedOff}
-        disabled={toggle.isPending}
-        onClick={() => toggle.mutate(switchedOff ? 'AVAILABLE' : 'SOLD_OUT')}
-      >
-        {switchedOff ? t('Đang hết món') : t('Đang bán')}
-      </Button>
+      {switchedOff ? (
+        <Button variant="secondary" size="sm" aria-pressed={false} disabled={toggle.isPending} onClick={() => toggle.mutate({ status: 'AVAILABLE' })}
+          title={t('Bấm để bán lại')}>
+          {item.soldOutUntil ? t('Hết đến {v0}', { v0: formatTime(item.soldOutUntil) }) : t('Đang hết món')}
+        </Button>
+      ) : (
+        // "hết hôm nay" comes back by itself the next morning (Uber Eats, GrabMerchant); "hết hẳn" waits for the seller
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" aria-pressed disabled={toggle.isPending}>
+              {t('Đang bán')}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => toggle.mutate({ status: 'SOLD_OUT', until: 'TODAY' })}>
+              <span className="flex flex-col">
+                <span>{t('Hết hôm nay')}</span>
+                <span className="text-xs text-muted-foreground">{t('Tự bán lại lúc 4 giờ sáng mai')}</span>
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => toggle.mutate({ status: 'SOLD_OUT' })}>
+              <span className="flex flex-col">
+                <span>{t('Hết đến khi bật lại')}</span>
+                <span className="text-xs text-muted-foreground">{t('Món nghỉ dài, ví dụ hết mùa')}</span>
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
       <div className={cn('flex items-center gap-1', quick && 'hidden')}>
         <Button variant="ghost" size="icon-sm" aria-label={t('Chuyển món lên')} disabled={!canUp} onClick={() => onMove(-1)}>
           <ArrowUpIcon />

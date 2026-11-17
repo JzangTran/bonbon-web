@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowLeftIcon, BanIcon, BotIcon, ImageIcon, SendIcon, XIcon } from 'lucide-react'
+import { ArrowLeftIcon, BanIcon, BotIcon, ImageIcon, SendIcon, Settings2Icon, XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { toast } from 'sonner'
@@ -28,6 +28,9 @@ import { Button } from '@/shared/ui/button'
 import { Card } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Textarea } from '@/shared/ui/textarea'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
+import { QuickReplyEditor, QuickReplyPicker } from './quick-replies'
+import { matchQuickReplies, useQuickReplies } from './quick-replies-api'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FormError } from '@/widgets/auth-shell'
 import { t } from '@/shared/i18n'
@@ -39,6 +42,8 @@ export function SellerChatPage() {
   const [params, setParams] = useSearchParams()
   const selected = params.get('c')
   const [page, setPage] = useState(0)
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const canWrite = session?.permissions.has('conversation:write') ?? false
   const socket = useOrderSocket(
     session?.accessToken ?? null,
     () => undefined,
@@ -52,14 +57,33 @@ export function SellerChatPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold">{t('Tin nhắn')}</h1>
-        <p className="text-sm text-muted-foreground">
-          {t('Khách nhắn hỏi về món, thời gian hoặc địa chỉ giao. Khách chỉ thấy "cửa hàng" trả lời, không thấy ai bên bạn viết. ')}{live ? t('Tin mới hiện ngay.') : t('Đang kiểm tra tin mới mỗi vài giây.')}
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">{t('Tin nhắn')}</h1>
+          <p className="text-sm text-muted-foreground">
+            {t('Khách nhắn hỏi về món, thời gian hoặc địa chỉ giao. Khách chỉ thấy "cửa hàng" trả lời, không thấy ai bên bạn viết. ')}{live ? t('Tin mới hiện ngay.') : t('Đang kiểm tra tin mới mỗi vài giây.')}
+          </p>
+        </div>
+        {/* settings stay one click away instead of pushing the inbox down (Intercom, Zendesk keep them out of the inbox) */}
+        {canWrite ? (
+          <Button variant="outline" size="sm" onClick={() => setSettingsOpen(true)}>
+            <Settings2Icon className="size-4" aria-hidden="true" />
+            {t('Cài đặt chat')}
+          </Button>
+        ) : null}
       </div>
-
-      <AutoReplyCard />
+      <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{t('Cài đặt chat')}</DialogTitle>
+            <DialogDescription>{t('Tin tự động gửi khi quán chưa trả lời, và tin mẫu để trả lời nhanh.')}</DialogDescription>
+          </DialogHeader>
+          <div className="flex max-h-[70vh] flex-col gap-6 overflow-y-auto">
+            <AutoReplyCard />
+            <QuickReplyEditor />
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {conversations.isError ? <FormError message={problemMessage(conversations.error)} /> : null}
 
@@ -135,6 +159,9 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
   const markRead = useMarkRead()
   const send = useSendMessage(conversationId)
   const [text, setText] = useState('')
+  const [pick, setPick] = useState(0)
+  const quickReplies = useQuickReplies()
+  const matches = matchQuickReplies(text, quickReplies.data)
   const [image, setImage] = useState<File | null>(null)
   const [replyTo, setReplyTo] = useState<ChatMessage | null>(null)
   const file = useRef<HTMLInputElement>(null)
@@ -236,19 +263,42 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
           <Button type="button" variant="outline" size="icon" onClick={() => file.current?.click()} aria-label={t('Đính kèm ảnh')}>
             <ImageIcon />
           </Button>
-          <Textarea
-            value={text}
-            maxLength={1000}
-            rows={2}
-            placeholder={t('Nhập tin nhắn…')}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault()
-                submit()
-              }
-            }}
-          />
+          <div className="relative min-w-0 flex-1">
+            {matches ? (
+              <div className="absolute right-0 bottom-full left-0 z-10">
+                <QuickReplyPicker matches={matches} active={pick} onPick={(r) => { setText(r.text ?? ''); setPick(0) }} />
+              </div>
+            ) : null}
+            <Textarea
+              value={text}
+              maxLength={1000}
+              rows={2}
+              placeholder={t('Nhập tin nhắn… Gõ / để chèn tin mẫu')}
+              onChange={(e) => {
+                setText(e.target.value)
+                setPick(0)
+              }}
+              onKeyDown={(e) => {
+                if (matches && matches.length) {
+                  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault()
+                    setPick((p) => (p + (e.key === 'ArrowDown' ? 1 : matches.length - 1)) % matches.length)
+                    return
+                  }
+                  if (e.key === 'Enter' || e.key === 'Tab') {
+                    e.preventDefault()
+                    setText(matches[Math.min(pick, matches.length - 1)].text ?? '')
+                    setPick(0)
+                    return
+                  }
+                }
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  submit()
+                }
+              }}
+            />
+          </div>
           <Button type="button" onClick={submit} disabled={send.isPending || (!text.trim() && !image)} aria-label={t('Gửi')}>
             <SendIcon />
           </Button>
@@ -268,7 +318,7 @@ function AutoReplyCard() {
   const message = draft ?? current.data.message ?? ''
   const changed = draft !== null && draft.trim() !== (current.data.message ?? '')
   return (
-    <Card className="gap-3 p-4">
+    <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <BotIcon className="size-4 text-muted-foreground" />
@@ -307,6 +357,6 @@ function AutoReplyCard() {
           </div>
         </div>
       ) : null}
-    </Card>
+    </section>
   )
 }
