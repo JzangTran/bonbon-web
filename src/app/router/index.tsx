@@ -6,7 +6,7 @@ import { SellerLayout } from '@/app/layouts/seller-layout'
 import { RequireRole } from './require-role'
 import { RouteError } from './route-error'
 import { SmallScreenGate } from './small-screen-gate'
-import { PATH_MODE, SITE, consolePath, helpPath, merchantPath, opsPath } from '@/shared/config/sites'
+import { PATH_MODE, SITE, consolePath, helpPath, merchantPath, opsPath, siteUrl } from '@/shared/config/sites'
 
 // One build, five hosts (see shared/config/sites.ts): each host gets its own pages, and the shared ones (email links, legal texts,
 // payment return) work on all of them. Without subdomains (development, previews) every page lives on the one host.
@@ -15,6 +15,14 @@ const showMerchant = SITE === 'merchant' || PATH_MODE
 const showHelp = SITE === 'help' || PATH_MODE
 const showConsole = SITE === 'console' || PATH_MODE
 const showOps = SITE === 'ops' || PATH_MODE
+
+/** Sends an old prefixed address to the same page on its subdomain: /merchant/orders?x=1 → merchant.<host>/orders?x=1. */
+function ToSubdomain({ site, keepPrefix = false }: { site: 'merchant' | 'help' | 'console' | 'ops'; keepPrefix?: boolean }) {
+  const { pathname, search, hash } = window.location
+  const rest = keepPrefix ? pathname : pathname.slice(site.length + 1) || '/'
+  window.location.replace(siteUrl(site, rest) + search + hash)
+  return null
+}
 
 const routes: RouteObject[] = [
   ...(showLanding ? [
@@ -455,6 +463,11 @@ const routes: RouteObject[] = [
   ...(import.meta.env.DEV
     ? [{ path: '/dev/ui', lazy: () => import('@/pages/dev/ui-kit').then((m) => ({ Component: m.UiKitPage })) }]
     : []),
+  // With subdomains, the old one-host addresses (bonbon.vn/merchant/orders, saved links, old emails) move to their own host.
+  ...(SITE === 'public' && !PATH_MODE
+    ? (['merchant', 'help', 'console', 'ops'] as const).map((site) => ({ path: `/${site}/*`, element: <ToSubdomain site={site} /> }))
+    : []),
+  ...(SITE === 'public' && !PATH_MODE ? [{ path: '/focus/*', element: <ToSubdomain site="merchant" keepPrefix /> }] : []),
   {
     path: '*',
     lazy: () => import('@/pages/not-found').then((m) => ({ Component: m.NotFoundPage })),
