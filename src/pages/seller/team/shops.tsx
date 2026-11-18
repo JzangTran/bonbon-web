@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LinkIcon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { api, problemMessage } from '@/shared/api'
 import { intlLocale, t } from '@/shared/i18n'
 import { isEmail } from '@/shared/lib/validate'
@@ -28,6 +28,7 @@ const date = (iso?: string | null) => (iso ? new Date(iso).toLocaleDateString(in
 
 /** The shops this main account manages and the requests on their way (link-shop.md). Both sides must agree; either can end it. */
 export function SellerTeamShopsPage() {
+  const feedback = useFeedback()
   const main = useMainAccount()
   const queryClient = useQueryClient()
   const [linking, setLinking] = useState(false)
@@ -38,9 +39,9 @@ export function SellerTeamShopsPage() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: TEAM_KEYS.me })
-      toast.success(t('Đã cập nhật liên kết.'))
+      feedback.success(t('Đã cập nhật liên kết cửa hàng. Thành viên thấy thay đổi ở lần đăng nhập tới.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const links = main.data?.links ?? []
   const active = links.filter((l) => l.status === 'AUTHORIZED' || l.status === 'PENDING_AUTHORIZATION')
@@ -104,6 +105,7 @@ export function SellerTeamShopsPage() {
 }
 
 function LinkDialog({ email, onClose }: { email: string; onClose: () => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [shopEmail, setShopEmail] = useState('')
   const [code, setCode] = useState('')
@@ -127,7 +129,7 @@ function LinkDialog({ email, onClose }: { email: string; onClose: () => void }) 
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: TEAM_KEYS.me })
-      toast.success(t('Đã gửi yêu cầu. Chủ cửa hàng cần đồng ý trong 7 ngày.'))
+      feedback.success(t('Đã gửi yêu cầu liên kết. Chủ cửa hàng cần đồng ý trong 7 ngày; quá hạn thì yêu cầu tự huỷ.'))
       onClose()
     },
     onError: (e) => setError(problemMessage(e)),

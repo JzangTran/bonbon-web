@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
-import { api, problemMessage } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api} from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
@@ -10,6 +10,7 @@ import { t } from '@/shared/i18n'
 
 /** The platform-wide delivery radius cap (set-delivery-radius-cap.md); applies to saves from now on. */
 export function RadiusCapForm() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const cap = useQuery({
     queryKey: ['admin', 'radius-cap'],
@@ -29,9 +30,9 @@ export function RadiusCapForm() {
     onSuccess: (data) => {
       queryClient.setQueryData(['admin', 'radius-cap'], data)
       setValue(null)
-      toast.success(t('Đã cập nhật bán kính tối đa.'))
+      feedback.success(t('Đã cập nhật bán kính tối đa. Quán đang giao xa hơn mức này được giảm về mức mới.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const shown = value ?? (cap.data ? String(cap.data.maxRadiusKm) : '')
 

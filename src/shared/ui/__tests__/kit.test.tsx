@@ -212,3 +212,91 @@ describe('cn', () => {
     expect(cn('rounded-control', 'rounded-card')).toBe('rounded-card')
   })
 })
+
+describe('feedback ladder', () => {
+  it('splits one message into a title and what it means', async () => {
+    const { splitMessage } = await import('../feedback')
+    expect(splitMessage('Đã lưu nháp. Khách chưa thấy món này.')).toEqual({ title: 'Đã lưu nháp', body: 'Khách chưa thấy món này.' })
+    expect(splitMessage('Đã lưu.')).toEqual({ title: 'Đã lưu' })
+  })
+  it('shows a result in the page region and an error inside the dialog region', async () => {
+    const { FeedbackRegion, useFeedback } = await import('../feedback')
+    function Actions() {
+      const feedback = useFeedback()
+      return (
+        <>
+          <button onClick={() => feedback.success('Đã lưu món. Khách thấy thay đổi ngay.')}>ok</button>
+          <button onClick={() => feedback.error('Chưa lưu được món')}>fail</button>
+        </>
+      )
+    }
+    render(
+      <FeedbackRegion>
+        <div data-testid="page" />
+        <div data-testid="dialog">
+          <FeedbackRegion placement="bottom" errorsOnly>
+            <Actions />
+          </FeedbackRegion>
+        </div>
+      </FeedbackRegion>,
+    )
+    await userEvent.click(screen.getByText('ok'))
+    // a success leaves the dialog for the page: the dialog usually closes right after
+    const status = screen.getByRole('status')
+    expect(status).toHaveTextContent('Đã lưu món')
+    expect(status).toHaveTextContent('Khách thấy thay đổi ngay.')
+    expect(screen.getByTestId('dialog')).not.toContainElement(status)
+    await userEvent.click(screen.getByText('fail'))
+    expect(screen.getByTestId('dialog')).toContainElement(screen.getByRole('alert'))
+  })
+})
+
+describe('CopyButton', () => {
+  it('says it copied on the button itself', async () => {
+    const { CopyButton } = await import('../copy-button')
+    const user = userEvent.setup()
+    render(<CopyButton value="bb_key" label="Sao chép khoá" />)
+    await user.click(screen.getByRole('button', { name: /Sao chép/ }))
+    expect(await screen.findByText('Đã chép', { selector: 'span:not(.sr-only)' })).toBeInTheDocument()
+  })
+})
+
+describe('feedback carry-over', () => {
+  it('a message from a page that closes right after saving moves to the page underneath', async () => {
+    const { FeedbackHost, FeedbackRegion, useFeedback } = await import('../feedback')
+    function Form({ onDone }: { onDone: () => void }) {
+      const feedback = useFeedback()
+      return (
+        <button
+          onClick={() => {
+            feedback.success('Đã lưu món. Khách thấy thay đổi ngay.')
+            onDone()
+          }}
+        >
+          save
+        </button>
+      )
+    }
+    function Pages() {
+      const [open, setOpen] = useState(true)
+      return (
+        <FeedbackRegion>
+          <p>list</p>
+          {open ? (
+            <FeedbackRegion>
+              <Form onDone={() => setOpen(false)} />
+            </FeedbackRegion>
+          ) : null}
+        </FeedbackRegion>
+      )
+    }
+    render(
+      <FeedbackHost>
+        <Pages />
+      </FeedbackHost>,
+    )
+    await userEvent.click(screen.getByText('save'))
+    expect(screen.queryByText('save')).toBeNull()
+    expect(screen.getByRole('status')).toHaveTextContent('Đã lưu món')
+  })
+})

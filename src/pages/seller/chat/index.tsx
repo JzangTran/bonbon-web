@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ArrowLeftIcon, BanIcon, BotIcon, ImageIcon, SendIcon, Settings2Icon, XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 
 import {
   CHAT_KEY,
@@ -150,6 +150,7 @@ function ConversationRow({ conversation: c, active, onOpen }: { conversation: Co
 }
 
 function Thread({ conversationId, conversation, live, onBack }: { conversationId: string; conversation?: Conversation; live: boolean; onBack: () => void }) {
+  const feedback = useFeedback()
   const thread = useThread(conversationId, live)
   const block = useBlockConversation(conversationId)
   const [reporting, setReporting] = useState<ReportTarget | null>(null)
@@ -256,7 +257,7 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
             onChange={async (e) => {
               const picked = Array.from(e.target.files ?? []).slice(0, 1)
               e.target.value = ''
-              const [ok] = await acceptUploads(picked, { maxMb: 5 }, (m) => toast.error(m))
+              const [ok] = await acceptUploads(picked, { maxMb: 5 }, (m) => feedback.error(m))
               if (ok) setImage(ok)
             }}
           />
@@ -311,6 +312,7 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
 
 /** The one message the shop sends by itself when a customer writes and nobody has answered yet (configure-auto-reply.md). */
 function AutoReplyCard() {
+  const feedback = useFeedback()
   const current = useAutoReply()
   const save = useSaveAutoReply()
   const [draft, setDraft] = useState<string | null>(null)
@@ -350,7 +352,7 @@ function AutoReplyCard() {
             <Button
               size="sm"
               disabled={!changed || !message.trim() || save.isPending}
-              onClick={() => save.mutate({ message: message.trim() }, { onSuccess: () => { setDraft(null); toast.success(t('Đã lưu tin trả lời tự động.')) } })}
+              onClick={() => save.mutate({ message: message.trim() }, { onSuccess: () => { setDraft(null); feedback.success(t('Đã lưu tin trả lời tự động. Khách nhắn khi quán chưa trả lời sẽ nhận tin này.')) } })}
             >
               {t('Lưu')}
             </Button>

@@ -1,6 +1,6 @@
 import { TriangleAlertIcon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useAdminAppConfig, useSetMaintenance, useSetVersionPolicy, type AppPlatform, type AppVersionPolicy, type MaintenanceLevel, type MaintenanceStatus } from '@/entities/app-config'
 import { useSession } from '@/entities/session'
 import { useReauthGate } from '@/features/reauthenticate'
@@ -93,6 +93,7 @@ export function AdminAppConfigPage() {
 }
 
 function VersionCard({ platform, label, policy }: { platform: AppPlatform; label: string; policy: AppVersionPolicy | undefined }) {
+  const feedback = useFeedback()
   const save = useSetVersionPolicy()
   const gate = useReauthGate()
   const [min, setMin] = useState(policy?.minSupportedVersion ?? '')
@@ -114,7 +115,7 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
     const attempt = () =>
       save.mutate(body, {
         onSuccess: () => {
-          toast.success(t('Đã lưu cấu hình {v0}.', { v0: label }))
+          feedback.success(t('Đã lưu cấu hình {v0}.', { v0: label }))
           setReason('')
         },
         onError: (e) => {
@@ -197,6 +198,7 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
 }
 
 function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }) {
+  const feedback = useFeedback()
   const save = useSetMaintenance()
   const gate = useReauthGate()
   const [level, setLevel] = useState<MaintenanceLevel>((current?.level as MaintenanceLevel | undefined) ?? 'NONE')
@@ -220,7 +222,7 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
     const attempt = () =>
       save.mutate(body, {
         onSuccess: () => {
-          toast.success(level === 'NONE' ? t('Đã tắt chế độ bảo trì.') : t('Đã đặt chế độ bảo trì.'))
+          feedback.success(level === 'NONE' ? t('Đã tắt chế độ bảo trì. Người dùng dùng ứng dụng bình thường trở lại.') : t('Đã bật chế độ bảo trì. Người dùng thấy màn hình bảo trì cho tới khi bạn tắt.'))
           setReason('')
         },
         onError: (e) => {

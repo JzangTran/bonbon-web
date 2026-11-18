@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DownloadIcon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { api, problemMessage } from '@/shared/api'
 import { intlLocale, t } from '@/shared/i18n'
 import { Badge } from '@/shared/ui/badge'
@@ -26,6 +26,7 @@ const day = (iso?: string | null) => (iso ? new Date(iso).toLocaleDateString(int
  * privacy centers of Shopify, Google and Facebook: self-service first, a short form for the cases that need a person, and a history.
  */
 export function PrivacyTab() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const history = useQuery({
     queryKey: ['account', 'data-requests'],
@@ -44,9 +45,9 @@ export function PrivacyTab() {
     onSuccess: (data) => {
       void queryClient.invalidateQueries({ queryKey: ['account', 'data-requests'] })
       if (data.downloadUrl) window.location.assign(data.downloadUrl)
-      toast.success(t('Đã tạo tệp dữ liệu. Liên kết tải dùng được trong 7 ngày ở lịch sử bên dưới.'))
+      feedback.success(t('Đã tạo tệp dữ liệu. Liên kết tải nằm ở lịch sử bên dưới và dùng được trong 7 ngày.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const [type, setType] = useState<(typeof TYPES)[number]['id']>('CORRECT')
   const [details, setDetails] = useState('')
@@ -60,7 +61,7 @@ export function PrivacyTab() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['account', 'data-requests'] })
       setDetails('')
-      toast.success(t('Đã gửi yêu cầu. Bạn nhận phản hồi trong 2 ngày làm việc.'))
+      feedback.success(t('Đã gửi yêu cầu về dữ liệu. Bạn nhận phản hồi qua email trong 2 ngày làm việc.'))
     },
     onError: (e) => setFormError(problemMessage(e)),
   })

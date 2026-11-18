@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type TicketSummary = components['schemas']['SupportTicketSummary']
@@ -55,6 +55,7 @@ async function uploadAttachment(file: File): Promise<string> {
 
 /** Opens a ticket; images are uploaded first and their keys sent with it. */
 export function useOpenTicket() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (input: { subject: string; message: string; orderId?: string; images: File[] }) => {
@@ -66,13 +67,14 @@ export function useOpenTicket() {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã gửi phiếu. Chúng tôi sẽ trả lời sớm.'))
+      feedback.success(t('Đã gửi phiếu hỗ trợ. Bạn nhận thông báo khi đội hỗ trợ trả lời; theo dõi phiếu ở mục Yêu cầu hỗ trợ.'))
       void queryClient.invalidateQueries({ queryKey: TICKETS_KEY })
     },
   })
 }
 
 export function useReplyTicket(id: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (input: { body: string; images: File[] }) => {
@@ -82,11 +84,12 @@ export function useReplyTicket(id: string) {
       return data
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: TICKETS_KEY }),
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
 export function useCloseTicket(id: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async () => {
@@ -95,10 +98,10 @@ export function useCloseTicket(id: string) {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã đóng phiếu.'))
+      feedback.success(t('Đã đóng phiếu. Người dùng nhận thông báo và vẫn mở lại được nếu còn vấn đề.'))
       void queryClient.invalidateQueries({ queryKey: TICKETS_KEY })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
@@ -131,6 +134,7 @@ export function useAdminTicket(id: string, enabled: boolean) {
 }
 
 export function useAnswerTicket(id: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (body: string) => {
@@ -139,9 +143,9 @@ export function useAnswerTicket(id: string) {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã trả lời. Người dùng được báo.'))
+      feedback.success(t('Đã trả lời phiếu. Người dùng nhận thông báo; phiếu chuyển sang Chờ người dùng.'))
       void queryClient.invalidateQueries({ queryKey: TICKETS_KEY })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }

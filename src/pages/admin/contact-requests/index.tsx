@@ -1,7 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage } from '@/shared/api'
 import { consolePath } from '@/shared/config/sites'
@@ -100,6 +100,7 @@ export function AdminContactRequestsPage() {
 
 /** One request: what the person wrote, the answers already sent, and the answer box. */
 export function AdminContactRequestPage() {
+  const feedback = useFeedback()
   const { id } = useParams()
   const { session } = useSession()
   const queryClient = useQueryClient()
@@ -115,7 +116,7 @@ export function AdminContactRequestPage() {
   })
   const done = (message: string) => () => {
     void queryClient.invalidateQueries({ queryKey: KEY })
-    toast.success(message)
+    feedback.success(message)
   }
   const answer = useMutation({
     mutationFn: async () => {
@@ -125,7 +126,7 @@ export function AdminContactRequestPage() {
     },
     onSuccess: () => {
       setBody('')
-      done(t('Đã gửi câu trả lời qua email.'))()
+      done(t('Đã gửi câu trả lời qua email. Yêu cầu chuyển sang Đã trả lời; người gửi trả lời lại thì yêu cầu mở lại.'))()
     },
   })
   const close = useMutation({
@@ -134,7 +135,7 @@ export function AdminContactRequestPage() {
       if (error || !data) throw error
       return data
     },
-    onSuccess: done(t('Đã đóng yêu cầu.')),
+    onSuccess: done(t('Đã đóng yêu cầu. Yêu cầu chuyển sang Đã đóng; bạn vẫn xem lại được trong lịch sử.')),
   })
   const r = request.data
   const status = STATUS[r?.status ?? ''] ?? { label: r?.status ?? '', className: '' }

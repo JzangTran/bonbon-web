@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { api, problemMessage, type components } from '@/shared/api'
 import { formatDateTime, formatVnd } from '@/shared/lib/format'
 import { t } from '@/shared/i18n'
@@ -34,6 +34,7 @@ function describe(v: Voucher) {
 
 /** The shop's vouchers (manage-vouchers.md). The shop funds them; a voucher already used is switched off, never deleted. */
 export function SellerVouchersPage() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [adding, setAdding] = useState(false)
   const [now] = useState(() => Date.now())
@@ -51,7 +52,7 @@ export function SellerVouchersPage() {
       if (error) throw error
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: KEY }),
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
 
   return (
@@ -108,6 +109,7 @@ export function SellerVouchersPage() {
 }
 
 function VoucherForm({ onDone }: { onDone: () => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [code, setCode] = useState('')
   const [type, setType] = useState<'PERCENT' | 'FIXED'>('PERCENT')
@@ -138,7 +140,7 @@ function VoucherForm({ onDone }: { onDone: () => void }) {
       if (error) throw error
     },
     onSuccess: async () => {
-      toast.success(t('Đã tạo voucher.'))
+      feedback.success(t('Đã tạo voucher. Khách thấy voucher trên trang quán trong thời gian áp dụng; theo dõi lượt dùng ở danh sách bên dưới.'))
       await queryClient.invalidateQueries({ queryKey: KEY })
       onDone()
     },

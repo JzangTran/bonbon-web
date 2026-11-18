@@ -3,7 +3,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { CrosshairIcon, MapPinIcon, MinusIcon, PlusIcon, XIcon } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { firstPlace, placeOf, reverseGeocode, useSuggestions, type Place } from '@/entities/geo'
 import { problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
@@ -36,6 +36,7 @@ export function MapDialog({
   startQuery?: string
   onConfirm: (point: PickedPoint) => void
 }) {
+  const feedback = useFeedback()
   const [container, setContainer] = useState<HTMLDivElement | null>(null)
   const mapRef = useRef<L.Map | null>(null)
   const programmatic = useRef(false)
@@ -135,7 +136,7 @@ export function MapDialog({
 
   const useMyLocation = () => {
     if (!navigator.geolocation) {
-      toast.error(t('Trình duyệt này không cho định vị.'))
+      feedback.error(t('Trình duyệt này không cho định vị.'))
       return
     }
     navigator.geolocation.getCurrentPosition(
@@ -143,7 +144,7 @@ export function MapDialog({
         moveTo(round(pos.coords.latitude), round(pos.coords.longitude), 18)
         resolve(pos.coords.latitude, pos.coords.longitude)
       },
-      () => toast.error(t('Không lấy được vị trí của bạn. Hãy cho phép định vị trong trình duyệt, hoặc kéo bản đồ.')),
+      () => feedback.error(t('Không lấy được vị trí của bạn. Hãy cho phép định vị trong trình duyệt, hoặc kéo bản đồ.')),
       { enableHighAccuracy: true, timeout: 10_000 },
     )
   }

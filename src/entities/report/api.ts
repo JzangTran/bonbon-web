@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type ReportRow = components['schemas']['ReportRow']
@@ -71,6 +71,7 @@ export function useReport(id: string | undefined) {
 }
 
 export function useDecideReport(id: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (body: components['schemas']['ReportDecisionRequest']) => {
@@ -79,7 +80,7 @@ export function useDecideReport(id: string) {
       return data
     },
     onSuccess: async () => {
-      toast.success(t('Đã quyết định. Người báo cáo và người bị xử lý đã được báo.'))
+      feedback.success(t('Đã ghi quyết định. Người báo cáo và người bị xử lý nhận thông báo; báo cáo chuyển sang Đã xử lý.'))
       await queryClient.invalidateQueries({ queryKey: REPORTS_KEY })
     },
   })
@@ -99,9 +100,10 @@ export function useModerationTerms(enabled: boolean) {
 }
 
 export function useTermActions() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const done = () => void queryClient.invalidateQueries({ queryKey: TERMS_KEY })
-  const onError = (error: unknown) => toast.error(problemMessage(error))
+  const onError = (error: unknown) => feedback.error(error)
   const add = useMutation({
     mutationFn: async (term: string) => {
       const { data, error } = await api.POST('/api/admin/moderation-terms', { body: { term } })

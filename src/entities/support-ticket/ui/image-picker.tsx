@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { ImageIcon, XIcon } from 'lucide-react'
 import { useRef } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { acceptUploads } from '@/shared/lib/upload'
 import { Button } from '@/shared/ui/button'
 
@@ -9,6 +9,7 @@ const MAX = 3
 
 /** Up to three images to attach; the files are uploaded when the form is sent. */
 export function ImagePicker({ files, onChange }: { files: File[]; onChange: (files: File[]) => void }) {
+  const feedback = useFeedback()
   const input = useRef<HTMLInputElement>(null)
   return (
     <div className="flex flex-col gap-2">
@@ -21,7 +22,7 @@ export function ImagePicker({ files, onChange }: { files: File[]; onChange: (fil
         onChange={async (e) => {
           const picked = Array.from(e.target.files ?? [])
           e.target.value = ''
-          const ok = await acceptUploads(picked, { maxMb: 5 }, (m) => toast.error(m))
+          const ok = await acceptUploads(picked, { maxMb: 5 }, (m) => feedback.error(m))
           onChange([...files, ...ok].slice(0, MAX))
         }}
       />

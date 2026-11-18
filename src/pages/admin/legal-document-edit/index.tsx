@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import {
   LEGAL_STATUS,
   LEGAL_TYPES,
@@ -125,6 +125,7 @@ function Fields({
 }
 
 function Editor({ type }: { type: LegalDocumentType }) {
+  const feedback = useFeedback()
   const navigate = useNavigate()
   const create = useCreateLegalDraft()
   const [title, setTitle] = useState('')
@@ -154,7 +155,7 @@ function Editor({ type }: { type: LegalDocumentType }) {
                   { type, title: title.trim(), summary: summary.trim(), content, requiresReacceptance: reaccept },
                   {
                     onSuccess: (data) => {
-                      toast.success(t('Đã lưu bản nháp.'))
+                      feedback.success(t('Đã lưu bản nháp. Người dùng chưa thấy gì cho tới khi bạn đăng phiên bản.'))
                       navigate(consolePath(`/legal-documents/${data.version?.id}`), { replace: true })
                     },
                     onError: (e) => setError(problemMessage(e)),
@@ -217,6 +218,7 @@ function VersionView({ detail }: { detail: LegalDetail }) {
 }
 
 function DraftEditor({ detail }: { detail: LegalDetail }) {
+  const feedback = useFeedback()
   const v = detail.version!
   const navigate = useNavigate()
   const update = useUpdateLegalDraft(v.id!)
@@ -244,7 +246,7 @@ function DraftEditor({ detail }: { detail: LegalDetail }) {
                 setError(null)
                 update.mutate(
                   { title: title.trim(), summary: summary.trim(), content, requiresReacceptance: reaccept },
-                  { onSuccess: () => toast.success(t('Đã lưu bản nháp.')), onError: (e) => setError(problemMessage(e)) },
+                  { onSuccess: () => feedback.success(t('Đã lưu bản nháp. Người dùng chưa thấy gì cho tới khi bạn đăng phiên bản.')), onError: (e) => setError(problemMessage(e)) },
                 )
               }}
             >
@@ -260,6 +262,7 @@ function DraftEditor({ detail }: { detail: LegalDetail }) {
 }
 
 function PublishPanel({ id, reaccept, dirty, onDiscarded }: { id: string; reaccept: boolean; dirty: boolean; onDiscarded: () => void }) {
+  const feedback = useFeedback()
   const publish = usePublishLegal(id)
   const cancel = useCancelLegal(id)
   const [effectiveAt, setEffectiveAt] = useState('')
@@ -323,7 +326,7 @@ function PublishPanel({ id, reaccept, dirty, onDiscarded }: { id: string; reacce
                 setConfirm(false)
                 setError(null)
                 publish.mutate(effectiveAt ? new Date(effectiveAt).toISOString() : undefined, {
-                  onSuccess: () => toast.success(t('Đã đăng phiên bản.')),
+                  onSuccess: () => feedback.success(t('Đã đăng phiên bản. Người dùng được mời đồng ý ở lần mở ứng dụng tiếp theo.')),
                   onError: (e) => setError(problemMessage(e)),
                 })
               }}
@@ -338,6 +341,7 @@ function PublishPanel({ id, reaccept, dirty, onDiscarded }: { id: string; reacce
 }
 
 function CancelPanel({ id }: { id: string }) {
+  const feedback = useFeedback()
   const cancel = useCancelLegal(id)
   const [reason, setReason] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -359,7 +363,7 @@ function CancelPanel({ id }: { id: string }) {
             disabled={reason.trim() === '' || cancel.isPending}
             onClick={() => {
               if (window.confirm(t('Rút lại phiên bản này?'))) {
-                cancel.mutate(reason.trim(), { onSuccess: () => toast.success(t('Đã rút lại phiên bản.')), onError: (e) => setError(problemMessage(e)) })
+                cancel.mutate(reason.trim(), { onSuccess: () => feedback.success(t('Đã rút lại phiên bản. Phiên bản trước đó có hiệu lực trở lại.')), onError: (e) => setError(problemMessage(e)) })
               }
             }}
           >

@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CheckCircle2Icon, CopyIcon } from 'lucide-react'
+import { CopyButton } from '@/shared/ui/copy-button'
+import { CheckCircle2Icon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage } from '@/shared/api'
 import { intlLocale, t } from '@/shared/i18n'
@@ -28,18 +29,7 @@ function Copy({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex items-center gap-2">
       <code className="min-w-0 flex-1 truncate rounded-sm bg-muted px-2 py-1.5 text-xs">{value}</code>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() => {
-          void navigator.clipboard?.writeText(value)
-          toast.success(t('Đã sao chép.'))
-        }}
-        aria-label={label}
-      >
-        <CopyIcon className="size-4" aria-hidden="true" />
-      </Button>
+      <CopyButton value={value} label={label} iconOnly />
     </div>
   )
 }
@@ -49,6 +39,7 @@ function Copy({ value, label }: { value: string; label: string }) {
  * personal accounts among them), bonbon puts that in front of the order code in the VietQR content.
  */
 function SubAccount({ current, canEdit }: { current: string | null; canEdit: boolean }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [code, setCode] = useState(current ?? '')
   const [error, setError] = useState<string | null>(null)
@@ -61,7 +52,7 @@ function SubAccount({ current, canEdit }: { current: string | null; canEdit: boo
     onSuccess: (data) => {
       setCode(data.subAccount ?? '')
       queryClient.setQueryData(['merchant', 'sepay'], data)
-      toast.success(data.subAccount ? t('Đã lưu mã tài khoản ảo.') : t('Đã bỏ mã tài khoản ảo.'))
+      feedback.success(data.subAccount ? t('Đã lưu mã tài khoản ảo. Mã VietQR của đơn mới tự ghi nội dung SEVQR kèm mã này.') : t('Đã bỏ mã tài khoản ảo. Mã VietQR của đơn mới chỉ còn mã đơn.'))
     },
     onError: (e) => setError(problemMessage(e)),
   })
@@ -118,6 +109,7 @@ function SubAccount({ current, canEdit }: { current: string | null; canEdit: boo
  * transfers show what matched and why something did not, the way Stripe and Shopify show webhook deliveries.
  */
 export function SepayCard() {
+  const feedback = useFeedback()
   const { session } = useSession()
   const canEdit = session?.permissions.has('vendor:write') ?? false
   const queryClient = useQueryClient()
@@ -141,7 +133,7 @@ export function SepayCard() {
       setApiKey(data.apiKey ?? null)
       void queryClient.invalidateQueries({ queryKey: ['merchant', 'sepay'] })
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const disconnect = useMutation({
     mutationFn: async () => {
@@ -151,9 +143,9 @@ export function SepayCard() {
     onSuccess: () => {
       setApiKey(null)
       void queryClient.invalidateQueries({ queryKey: ['merchant', 'sepay'] })
-      toast.success(t('Đã ngắt. Bạn vẫn tự xác nhận được từng đơn.'))
+      feedback.success(t('Đã ngắt kết nối SePay. Đơn chuyển khoản không còn tự xác nhận; bạn đánh dấu đã nhận tiền cho từng đơn.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const s = status.data
 

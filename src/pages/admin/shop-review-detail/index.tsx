@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage, type components } from '@/shared/api'
 import { formatDateTime, formatRelative } from '@/shared/lib/format'
@@ -93,13 +93,14 @@ export function ShopReviewDetailPage() {
 }
 
 function DecisionPanel({ shop }: { shop: Detail }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [reason, setReason] = useState('')
   const [error, setError] = useState<string | null>(null)
   const done = async (message: string) => {
-    toast.success(message)
+    feedback.success(message)
     await queryClient.invalidateQueries({ queryKey: ['admin', 'shop-review'] })
     navigate(consolePath('/shop-review'))
   }

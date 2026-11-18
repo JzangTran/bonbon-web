@@ -1,6 +1,6 @@
 import { t } from '@/shared/i18n'
 import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { leaves, useCategoryTree, useDecideAppeal, type CategoryCase } from '@/entities/dish-category-case'
 import { problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
@@ -12,6 +12,7 @@ import { CategorySelect } from '@/shared/ui/category-select'
 
 /** Accept moves the dish to the category the shop asked for (or another one, explained in the reason); reject keeps the system's. The shop reads the reason. */
 export function DecideDialog({ kase, decision, onClose }: { kase: CategoryCase | null; decision: 'ACCEPT' | 'REJECT'; onClose: () => void }) {
+  const feedback = useFeedback()
   const tree = useCategoryTree()
   const options = useMemo(() => leaves(tree.data ?? []), [tree.data])
   const decide = useDecideAppeal()
@@ -59,7 +60,7 @@ export function DecideDialog({ kase, decision, onClose }: { kase: CategoryCase |
                 { id: kase?.id ?? '', decision, reason: reason.trim(), categoryId: accept && other ? other : undefined },
                 {
                   onSuccess: () => {
-                    toast.success(accept ? t('Đã chấp nhận kháng nghị. Quán đã được báo.') : t('Đã từ chối kháng nghị. Quán đã được báo.'))
+                    feedback.success(accept ? t('Đã chấp nhận kháng nghị. Quán nhận thông báo và món được bán lại.') : t('Đã từ chối kháng nghị. Quán nhận thông báo kèm lý do.'))
                     setReason('')
                     setOther('')
                     onClose()

@@ -1,8 +1,8 @@
 import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
-import { problemFieldErrors, problemMessage } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { problemFieldErrors} from '@/shared/api'
 import { SHOP_QUERY_KEY, type ShopApplication } from './api'
 
 /** Parses a typed amount ("12.500", "1,5"); an empty field is "not set". */
@@ -13,6 +13,7 @@ export const parseAmount = (s: string) => (s.trim() === '' ? undefined : Number(
  * the problem response are kept for the form. A new address sends the shop back to review, which the message says.
  */
 export function useApplyShop<T>(call: (input: T) => Promise<{ data?: ShopApplication; error?: unknown }>, success: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const mutation = useMutation({
@@ -24,11 +25,11 @@ export function useApplyShop<T>(call: (input: T) => Promise<{ data?: ShopApplica
     onSuccess: (data) => {
       setFieldErrors({})
       queryClient.setQueryData(SHOP_QUERY_KEY, data)
-      toast.success(data.status === 'PENDING' ? t('Đã lưu. Địa chỉ mới cần được duyệt lại.') : success)
+      feedback.success(data.status === 'PENDING' ? t('Đã lưu thông tin quán. Địa chỉ mới cần được duyệt lại; trong lúc chờ, quán vẫn bán ở địa chỉ cũ.') : success)
     },
     onError: (e) => {
       setFieldErrors(problemFieldErrors(e))
-      toast.error(problemMessage(e))
+      feedback.error(e)
     },
   })
   return { ...mutation, fieldErrors }

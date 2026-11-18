@@ -40,7 +40,7 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
     group
       ? api.PUT('/api/merchant/option-groups/{id}', { params: { path: { id: group.id! } }, body })
       : api.POST('/api/merchant/option-groups', { body }),
-    group ? t('Đã lưu nhóm lựa chọn.') : t('Đã thêm nhóm lựa chọn.'),
+    group ? t('Đã lưu nhóm lựa chọn. Món dùng nhóm này đổi theo ngay.') : t('Đã thêm nhóm lựa chọn. Gắn nhóm vào món để khách chọn được.'),
   )
 
   const update = (key: number, patch: Partial<Row>) => setRows((prev) => prev.map((r) => (r.key === key ? { ...r, ...patch } : r)))

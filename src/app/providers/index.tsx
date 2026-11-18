@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { FeedbackHost } from '@/shared/ui/feedback'
 import { useState, type ReactNode } from 'react'
 import { SessionProvider, useSession } from '@/entities/session'
 import { Toaster } from '@/shared/ui/sonner'
@@ -17,9 +18,11 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <MaintenanceGate />
-        {children}
-        <SignedInGates />
+        <FeedbackHost>
+          <MaintenanceGate />
+          {children}
+          <SignedInGates />
+        </FeedbackHost>
       </SessionProvider>
       <Toaster />
     </QueryClientProvider>

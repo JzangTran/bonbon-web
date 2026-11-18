@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { parseAmount, useApplyShop, useShop, type ShopApplication } from '@/entities/shop'
 import { OpeningHoursEditor, toEditorWindows, type OpeningWindow } from '@/features/opening-hours-editor'
 import { api, problemMessage, type components } from '@/shared/api'
@@ -33,7 +33,7 @@ export function SellerShippingPage() {
 function IntakeCard({ shop }: { shop: ShopApplication }) {
   const toggle = useApplyShop(
     (accepting: boolean) => api.PUT('/api/merchant/shop/accepting-orders', { body: { accepting } }),
-    t('Đã cập nhật trạng thái nhận đơn.'),
+    t('Đã cập nhật trạng thái nhận đơn. Khách thấy thay đổi trên trang quán ngay.'),
   )
   const accepting = shop.acceptingOrders ?? false
   return (
@@ -70,12 +70,13 @@ function IntakeCard({ shop }: { shop: ShopApplication }) {
 }
 
 function ShippingCard({ shop }: { shop: ShopApplication }) {
+  const feedback = useFeedback()
   const s = shop.shipping
   const [radius, setRadius] = useState(s?.deliveryRadiusKm?.toString() ?? '')
   const [fee, setFee] = useState(s?.deliveryFee?.toString() ?? '')
   const [free, setFree] = useState(s?.freeDeliveryThreshold?.toString() ?? '')
   const [min, setMin] = useState(s?.minOrderValue?.toString() ?? '')
-  const save = useApplyShop((body: Update) => api.PATCH('/api/merchant/shop', { body }), t('Đã lưu giao hàng.'))
+  const save = useApplyShop((body: Update) => api.PATCH('/api/merchant/shop', { body }), t('Đã lưu cài đặt giao hàng. Áp dụng cho đơn đặt sau khi lưu; đơn cũ giữ nguyên.'))
 
   return (
     <Card>
@@ -90,9 +91,9 @@ function ShippingCard({ shop }: { shop: ShopApplication }) {
             e.preventDefault()
             // the same limits the server applies, said before the request
             const km = Number(radius)
-            if (!/^\d{1,2}(\.\d)?$/.test(radius.trim()) || km < 0.1) return toast.error(t('Bán kính từ 0,1 km, tối đa một chữ số sau dấu phẩy.'))
-            if (shop.maxDeliveryRadiusKm !== undefined && km > shop.maxDeliveryRadiusKm) return toast.error(t('Bán kính tối đa {v0} km.', { v0: shop.maxDeliveryRadiusKm }))
-            if ((parseAmount(fee) ?? 0) > 1_000_000) return toast.error(t('Phí giao tối đa 1.000.000 ₫.'))
+            if (!/^\d{1,2}(\.\d)?$/.test(radius.trim()) || km < 0.1) return feedback.error(t('Bán kính từ 0,1 km, tối đa một chữ số sau dấu phẩy.'))
+            if (shop.maxDeliveryRadiusKm !== undefined && km > shop.maxDeliveryRadiusKm) return feedback.error(t('Bán kính tối đa {v0} km.', { v0: shop.maxDeliveryRadiusKm }))
+            if ((parseAmount(fee) ?? 0) > 1_000_000) return feedback.error(t('Phí giao tối đa 1.000.000 ₫.'))
             save.mutate({
               deliveryRadiusKm: parseAmount(radius),
               deliveryFee: parseAmount(fee),
@@ -137,7 +138,7 @@ function HoursCard({ shop }: { shop: ShopApplication }) {
   const [hours, setHours] = useState<OpeningWindow[]>(toEditorWindows(shop.shipping?.openingHours))
   const save = useApplyShop(
     (openingHours: OpeningWindow[]) => api.PUT('/api/merchant/shop/opening-hours', { body: { openingHours } }),
-    t('Đã lưu giờ mở cửa.'),
+    t('Đã lưu giờ mở cửa. Quán tự mở và đóng nhận đơn theo giờ mới.'),
   )
   return (
     <Card>

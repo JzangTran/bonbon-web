@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import {
   leaves,
   useAppealMyCase,
@@ -46,6 +46,7 @@ const STATUS: Record<string, { label: string; className: string }> = {
 
 /** Dishes an administrator found in the wrong category (view-category-violations.md, appeal-category-correction.md): fix, agree or appeal. */
 export function SellerCategoryCasesPage() {
+  const feedback = useFeedback()
   const [tab, setTab] = useState<CaseStatus | ''>('RESTRICTED')
   const paging = usePaging()
   const [acting, setActing] = useState<{ kase: CategoryCase; kind: 'resolve' | 'appeal' } | null>(null)
@@ -88,7 +89,7 @@ export function SellerCategoryCasesPage() {
             onResolve={() => setActing({ kase: c, kind: 'resolve' })}
             onAppeal={() => setActing({ kase: c, kind: 'appeal' })}
             onConfirm={() =>
-              confirm.mutate({ id: c.id ?? '' }, { onSuccess: () => toast.success(t('Đã đồng ý với ngành mới.')), onError: (e) => toast.error(problemMessage(e)) })
+              confirm.mutate({ id: c.id ?? '' }, { onSuccess: () => feedback.success(t('Đã đồng ý với ngành mới. Món chuyển sang ngành này và vẫn bán bình thường.')), onError: (e) => feedback.error(e) })
             }
           />
         ))}
@@ -169,6 +170,7 @@ function CaseItem({ c, busy, acting, onDone, onResolve, onAppeal, onConfirm }: {
 
 /** Fixing the category or appealing, right under the case instead of in a dialog. */
 function ActionForm({ kase, kind, onClose }: { kase: CategoryCase; kind: 'resolve' | 'appeal'; onClose: () => void }) {
+  const feedback = useFeedback()
   const tree = useCategoryTree()
   const options = useMemo(() => leaves(tree.data ?? []), [tree.data])
   const resolve = useResolveMyCase()
@@ -184,13 +186,13 @@ function ActionForm({ kase, kind, onClose }: { kase: CategoryCase; kind: 'resolv
     const id = kase.id ?? ''
     const done = (message: string) => ({
       onSuccess: () => {
-        toast.success(message)
+        feedback.success(message)
         onClose()
       },
       onError: (e: unknown) => setError(problemMessage(e)),
     })
     if (isResolve) resolve.mutate({ id, categoryId: category }, done(t('Đã sửa ngành. Món hiện lại khi tìm kiếm.')))
-    else appeal.mutate({ id, categoryId: category, note: note.trim() }, done(t('Đã gửi kháng nghị.')))
+    else appeal.mutate({ id, categoryId: category, note: note.trim() }, done(t('Đã gửi kháng nghị. Quản trị viên xem xét và bạn nhận thông báo kết quả.')))
   }
 
   return (

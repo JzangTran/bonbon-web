@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CheckIcon, MapPinIcon, PlusIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { SERVICE_AREAS_QUERY_KEY, useServiceAreas, type ServiceArea, type ServiceAreaInput } from '@/entities/service-area'
 import { useSession } from '@/entities/session'
 import { MapDialog } from '@/features/shop-address'
@@ -162,6 +162,7 @@ export function AdminServiceAreaEditPage() {
 
 /** The form of one area. The centre is chosen on the map; the rest is typed. */
 function AreaForm({ area }: { area: ServiceArea | null }) {
+  const feedback = useFeedback()
   const navigate = useNavigate()
   const onClose = () => navigate(consolePath('/service-areas'))
   const queryClient = useQueryClient()
@@ -183,7 +184,7 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: SERVICE_AREAS_QUERY_KEY })
-      toast.success(area ? t('Đã cập nhật khu vực.') : t('Đã thêm khu vực.'))
+      feedback.success(area ? t('Đã cập nhật khu vực. Danh sách quán và địa chỉ hợp lệ trong khu đổi theo ngay.') : t('Đã thêm khu vực. Quán và khách trong vùng này dùng được bonbon từ bây giờ.'))
       onClose()
     },
     onError: (e) => setErrors(problemFieldErrors(e)),

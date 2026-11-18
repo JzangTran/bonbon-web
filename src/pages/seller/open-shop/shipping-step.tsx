@@ -1,6 +1,6 @@
 import { intlLocale, t } from '@/shared/i18n'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import type { ShopApplication } from '@/entities/shop'
 import { OpeningHoursEditor, toEditorWindows, type OpeningWindow } from '@/features/opening-hours-editor'
 import { api, problemMessage } from '@/shared/api'
@@ -28,6 +28,7 @@ function money(e: Errors, field: string, value: number | undefined, label: strin
 
 /** Step 2 · Giao hàng và thời gian. */
 export function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }) {
+  const feedback = useFeedback()
   const s = shop.shipping
   const [hours, setHours] = useState<OpeningWindow[]>(toEditorWindows(s?.openingHours))
   const [radius, setRadius] = useState(s?.deliveryRadiusKm?.toString() ?? '')
@@ -58,7 +59,7 @@ export function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: 
     if (!save.check(problems(andNext))) return
     save.mutate(
       { openingHours: hours, deliveryRadiusKm: num(radius), deliveryFee: num(fee), freeDeliveryThreshold: num(free), minOrderValue: num(min) },
-      { onSuccess: () => (andNext ? onNext() : toast.success(t('Đã lưu nháp.'))) },
+      { onSuccess: () => (andNext ? onNext() : feedback.success(t('Đã lưu nháp. Bạn quay lại làm tiếp bất cứ lúc nào; hồ sơ chỉ gửi đi khi bạn bấm Gửi hồ sơ.'))) },
     )
   }
 

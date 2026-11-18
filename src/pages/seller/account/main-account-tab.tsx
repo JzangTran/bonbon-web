@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { api, problemCode, problemMessage } from '@/shared/api'
 import { intlLocale, t } from '@/shared/i18n'
 import { compactPhone, isEmail, isVnPhone, passwordProblem } from '@/shared/lib/validate'
@@ -95,6 +95,7 @@ function RegisterCard() {
 type Form = { accountName: string; email: string; phone: string; username: string; password: string; confirmPassword: string; code: string; currentPassword: string }
 
 function RegisterDialog({ onClose, onDone }: { onClose: () => void; onDone: () => void }) {
+  const feedback = useFeedback()
   const [f, setF] = useState<Form>({ accountName: '', email: '', phone: '', username: '', password: '', confirmPassword: '', code: '', currentPassword: '' })
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({})
   const [error, setError] = useState<string | null>(null)
@@ -132,7 +133,7 @@ function RegisterDialog({ onClose, onDone }: { onClose: () => void; onDone: () =
       return data
     },
     onSuccess: (data) => {
-      toast.success(t('Đã tạo {login}. Đăng xuất rồi đăng nhập bằng tên này để quản lý nhóm.').replace('{login}', data.login ?? ''))
+      feedback.success(t('Đã tạo {login}. Đăng xuất rồi đăng nhập bằng tên này để quản lý nhóm.').replace('{login}', data.login ?? ''))
       onDone()
     },
     onError: (e) => {
@@ -214,6 +215,7 @@ function RegisterDialog({ onClose, onDone }: { onClose: () => void; onDone: () =
 }
 
 function IncomingCard() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const incoming = useQuery({
     queryKey: ['account', 'link-requests'],
@@ -240,11 +242,11 @@ function IncomingCard() {
       refresh()
       setAskPassword(null)
       setPassword('')
-      toast.success(v.action === 'authorize' ? t('Đã đồng ý. Tài khoản chính quản lý được cửa hàng từ bây giờ.') : t('Đã cập nhật.'))
+      feedback.success(v.action === 'authorize' ? t('Đã đồng ý liên kết. Tài khoản chính quản lý được cửa hàng từ bây giờ; bạn thu hồi được bất cứ lúc nào.') : t('Đã cập nhật.'))
     },
     onError: (e, v) => {
       if (problemCode(e) === 'REAUTH_REQUIRED') setAskPassword(v.id)
-      else toast.error(problemMessage(e))
+      else feedback.error(e)
     },
   })
   const rows = incoming.data ?? []

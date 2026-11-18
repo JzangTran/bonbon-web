@@ -1,6 +1,5 @@
-import { CopyIcon } from 'lucide-react'
+import { CopyButton } from '@/shared/ui/copy-button'
 import { useState } from 'react'
-import { toast } from 'sonner'
 import { useCompleteRefund, useFailRefund, useRefunds, type RefundRow } from '@/entities/refund'
 import { useSession } from '@/entities/session'
 import { problemMessage } from '@/shared/api'
@@ -58,15 +57,6 @@ export function AdminRefundsPage() {
 
   if (!allowed) return <p className="text-muted-foreground">{t('Bạn không có quyền xử lý hoàn tiền.')}</p>
 
-  const copy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      toast.success(t('Đã sao chép.'))
-    } catch {
-      toast.error(t('Không sao chép được.'))
-    }
-  }
-
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
@@ -119,9 +109,7 @@ export function AdminRefundsPage() {
                     <dd className="col-span-2">{destination.bankName}</dd>
                     <dt className="text-muted-foreground">{t('Số tài khoản')}</dt>
                     <dd className="font-medium tabular-nums">{destination.accountNumber}</dd>
-                    <Button variant="ghost" size="icon-sm" aria-label={t('Sao chép số tài khoản')} onClick={() => void copy(destination.accountNumber ?? '')}>
-                      <CopyIcon />
-                    </Button>
+                    <CopyButton value={destination.accountNumber ?? ''} label={t('Sao chép số tài khoản')} iconOnly variant="ghost" />
                     <dt className="text-muted-foreground">{t('Chủ tài khoản')}</dt>
                     <dd className="col-span-2 font-medium">{destination.accountName}</dd>
                   </dl>

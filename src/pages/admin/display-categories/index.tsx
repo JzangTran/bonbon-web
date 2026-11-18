@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowDownIcon, ArrowUpIcon, PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
@@ -35,6 +35,7 @@ function leavesOf(nodes: Node[], path: string[] = [], out: { id: string; name: s
  * leaf categories of the tree, and a customer who picks it sees the shops with dishes in any of them.
  */
 export function AdminDisplayCategoriesPage() {
+  const feedback = useFeedback()
   const { session } = useSession()
   const queryClient = useQueryClient()
   const list = useQuery({
@@ -63,7 +64,7 @@ export function AdminDisplayCategoriesPage() {
       if (error) throw error
     },
     onSuccess: refresh,
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const remove = useMutation({
     mutationFn: async (id: string) => {
@@ -71,10 +72,10 @@ export function AdminDisplayCategoriesPage() {
       if (error) throw error
     },
     onSuccess: async () => {
-      toast.success(t('Đã xoá danh mục.'))
+      feedback.success(t('Đã xoá danh mục. Danh mục không còn hiện ở trang chủ ứng dụng khách.'))
       await refresh()
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const image = useMutation({
     mutationFn: async ({ id, file }: { id: string; file: File }) => {
@@ -88,10 +89,10 @@ export function AdminDisplayCategoriesPage() {
       if (error) throw error
     },
     onSuccess: async () => {
-      toast.success(t('Đã đổi ảnh.'))
+      feedback.success(t('Đã đổi ảnh danh mục. Ứng dụng khách hiện ảnh mới ở lần tải trang chủ tiếp theo.'))
       await refresh()
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
 
   if (!session?.permissions.has('category:write')) {
@@ -137,7 +138,7 @@ export function AdminDisplayCategoriesPage() {
                 pending={image.isPending && image.variables?.id === d.id}
                 onPick={async (file) => {
                   const problem = await checkUpload(file, { maxMb: 2 })
-                  if (problem) toast.error(problem)
+                  if (problem) feedback.error(problem)
                   else image.mutate({ id: d.id!, file })
                 }}
               />
@@ -192,6 +193,7 @@ export function AdminDisplayCategoriesPage() {
 
 /** Name and the leaf categories gathered; a filter narrows the long list of leaves. */
 function DisplayForm({ existing, leaves, onDone }: { existing: Display | null; leaves: { id: string; name: string; path: string }[]; onDone: () => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [name, setName] = useState(existing?.name ?? '')
   const [picked, setPicked] = useState<Set<string>>(new Set((existing?.leaves ?? []).map((l) => l.id!)))
@@ -206,7 +208,7 @@ function DisplayForm({ existing, leaves, onDone }: { existing: Display | null; l
       if (error) throw error
     },
     onSuccess: async () => {
-      toast.success(existing ? t('Đã lưu danh mục.') : t('Đã thêm danh mục. Hãy thêm ảnh cho danh mục.'))
+      feedback.success(existing ? t('Đã lưu danh mục. Ứng dụng khách thấy thay đổi ở lần tải trang chủ tiếp theo.') : t('Đã thêm danh mục. Thêm ảnh cho danh mục để nó hiện đẹp ở trang chủ ứng dụng khách.'))
       await queryClient.invalidateQueries({ queryKey: KEY })
       onDone()
     },

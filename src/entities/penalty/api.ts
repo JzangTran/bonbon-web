@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type PenaltyShopRow = components['schemas']['PenaltyShopRow']
@@ -65,15 +65,16 @@ export function useShopSuspensions(vendorId: string, enabled: boolean) {
 
 /** Runs a change, tells the administrator what happened, and refreshes everything about penalties and suspensions. */
 function useChange<T>(success: string, run: (input: T) => Promise<unknown>) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: run,
     onSuccess: () => {
-      toast.success(success)
+      feedback.success(success)
       void queryClient.invalidateQueries({ queryKey: PENALTIES_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: PENALTIES_KEY })
     },
   })

@@ -1,6 +1,6 @@
 import { t } from '@/shared/i18n'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import type { ShopApplication } from '@/entities/shop'
 import { ShopAddressFields, validateShopAddress, type ShopAddressValue } from '@/features/shop-address'
 import { api, problemMessage } from '@/shared/api'
@@ -23,6 +23,7 @@ type Body = {
 
 /** Step 1 · Thông tin quán: name, address (province and ward, detail, map point), Vietnamese phone, email. */
 export function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }) {
+  const feedback = useFeedback()
   const a = shop.shop?.address
   const [name, setName] = useState(shop.shop?.name ?? '')
   const [phone, setPhone] = useState(shop.shop?.phone ?? '')
@@ -61,7 +62,7 @@ export function ShopInfoStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         lat: address.lat,
         lng: address.lng,
       },
-      { onSuccess: () => (andNext ? onNext() : toast.success(t('Đã lưu nháp.'))) },
+      { onSuccess: () => (andNext ? onNext() : feedback.success(t('Đã lưu nháp. Bạn quay lại làm tiếp bất cứ lúc nào; hồ sơ chỉ gửi đi khi bạn bấm Gửi hồ sơ.'))) },
     )
   }
 

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FeedbackRegion } from './feedback'
 import { XIcon } from 'lucide-react'
 import { Dialog as SheetPrimitive } from 'radix-ui'
 import { cn } from '@/shared/lib/utils'
@@ -38,7 +39,10 @@ export function SheetContent({
         className={cn('bb-sheet fixed z-50 flex flex-col gap-4 bg-popover text-ui text-popover-foreground shadow-float outline-none', SIDE[side], className)}
         {...props}
       >
-        {children}
+        {/* errors appear next to the buttons; successes go up to the page, which stays after the sheet closes */}
+        <FeedbackRegion placement="bottom" errorsOnly>
+          {children}
+        </FeedbackRegion>
         {showCloseButton ? (
           <SheetPrimitive.Close asChild>
             <Button variant="ghost" size="icon-sm" className="absolute top-3 right-3" aria-label={t('Đóng')}>

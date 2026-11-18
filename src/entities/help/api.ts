@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type HelpArticle = components['schemas']['HelpArticleSummary']
@@ -56,6 +56,7 @@ export type HelpDraft = { title: string; body: string; audience: HelpAudience; k
 
 /** Creates the article, or changes the one with {@code id}. Keywords replace the whole list. */
 export function useSaveHelpArticle() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ id, draft }: { id: string | null; draft: HelpDraft }) => {
@@ -67,14 +68,15 @@ export function useSaveHelpArticle() {
       return result.data
     },
     onSuccess: (_, { id }) => {
-      toast.success(id ? t('Đã lưu bài.') : t('Đã tạo bài.'))
+      feedback.success(id ? t('Đã lưu bài. Người đọc thấy bản mới ngay khi bài đang hiển thị.') : t('Đã tạo bài. Bài nằm trong danh sách bên dưới; kiểm tra lại trước khi chia sẻ đường dẫn.'))
       void queryClient.invalidateQueries({ queryKey: HELP_KEY })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
 export function useDeleteHelpArticle() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (id: string) => {
@@ -82,9 +84,9 @@ export function useDeleteHelpArticle() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success(t('Đã xoá bài.'))
+      feedback.success(t('Đã xoá bài. Bài không còn hiện ở trung tâm trợ giúp và trong kết quả tìm kiếm.'))
       void queryClient.invalidateQueries({ queryKey: HELP_KEY })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }

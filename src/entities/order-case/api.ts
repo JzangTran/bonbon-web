@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type OrderCase = components['schemas']['OrderCase']
@@ -43,6 +43,7 @@ export function useAdminCase(id: string, enabled: boolean) {
 
 /** Upheld (all of it, or only the listed lines) or dismissed, with a reason both sides see. */
 export function useDecideCase() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (input: { id: string; outcome: 'UPHELD' | 'DISMISSED'; reason: string; lines?: { orderItemId: string; quantity: number }[]; noShowOutcome?: 'CUSTOMER_AT_FAULT' | 'CUSTOMER_RECEIVED' | 'SHOP_NEVER_CAME' }) => {
@@ -59,17 +60,18 @@ export function useDecideCase() {
       return data
     },
     onSuccess: (_, input) => {
-      toast.success(input.outcome === 'UPHELD' ? t('Đã chấp nhận khiếu nại. Khách sẽ được hoàn tiền.') : t('Đã bác bỏ khiếu nại.'))
+      feedback.success(input.outcome === 'UPHELD' ? t('Đã chấp nhận khiếu nại. Khách sẽ được hoàn tiền và nhận thông báo.') : t('Đã bác bỏ khiếu nại. Khách và quán nhận thông báo kèm lý do.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
   })
 }
 
 export function useReopenCase() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
@@ -78,10 +80,10 @@ export function useReopenCase() {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã mở lại khiếu nại.'))
+      feedback.success(t('Đã mở lại khiếu nại. Khiếu nại quay về danh sách chờ quyết định.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
@@ -112,6 +114,7 @@ export function useShopCase(id: string) {
 }
 
 export function useAcceptCase() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (id: string) => {
@@ -120,17 +123,18 @@ export function useAcceptCase() {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã chấp nhận khiếu nại. Khách được hoàn tiền.'))
+      feedback.success(t('Đã chấp nhận khiếu nại. Khách được hoàn tiền và nhận thông báo; số tiền được trừ vào số dư của quán.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
   })
 }
 
 export function useDisputeCase() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ id, note }: { id: string; note: string }) => {
@@ -139,11 +143,11 @@ export function useDisputeCase() {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã chuyển cho quản trị viên quyết định.'))
+      feedback.success(t('Đã chuyển khiếu nại cho quản trị viên. Bạn nhận thông báo khi có quyết định; không cần làm gì thêm lúc này.'))
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: CASES_KEY })
     },
   })

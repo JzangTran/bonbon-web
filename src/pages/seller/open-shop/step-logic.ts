@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { SHOP_QUERY_KEY, type ShopApplication } from '@/entities/shop'
 import { problemFieldErrors } from '@/shared/api'
 import type { Errors } from '@/shared/lib/validate'
@@ -44,6 +44,7 @@ export const FIELD_LABEL: Record<string, string> = {
  * server still refuses comes back by field. `errors` is both, client first.
  */
 export function useStep<T>(save: (body: T) => Promise<{ data?: ShopApplication; error?: unknown }>) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [serverErrors, setServerErrors] = useState<Errors>({})
   const [clientErrors, setClientErrors] = useState<Errors>({})
@@ -65,7 +66,7 @@ export function useStep<T>(save: (body: T) => Promise<{ data?: ShopApplication; 
     setClientErrors(found)
     setServerErrors({})
     const ok = Object.keys(found).length === 0
-    if (!ok) toast.error(t('Vui lòng kiểm tra các trường được đánh dấu.'))
+    if (!ok) feedback.error(t('Vui lòng kiểm tra các trường được đánh dấu.'))
     return ok
   }
   return { ...mutation, errors: { ...serverErrors, ...clientErrors } as Errors, check }

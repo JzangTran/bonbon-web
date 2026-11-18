@@ -188,6 +188,10 @@ const routes: RouteObject[] = [
             lazy: () => import('@/pages/seller/account').then((m) => ({ Component: m.SellerAccountPage })),
           },
           {
+            path: 'notifications',
+            lazy: () => import('@/pages/inbox').then((m) => ({ Component: () => <m.InboxPage orderPath={() => merchantPath('/orders')} /> })),
+          },
+          {
             path: 'shop',
             lazy: () => import('@/pages/seller/shop').then((m) => ({ Component: m.SellerShopPage })),
           },
@@ -319,6 +323,10 @@ const routes: RouteObject[] = [
           {
             path: 'legal-documents',
             lazy: () => import('@/pages/admin/legal-documents').then((m) => ({ Component: m.AdminLegalDocumentsPage })),
+          },
+          {
+            path: 'notifications',
+            lazy: () => import('@/pages/inbox').then((m) => ({ Component: m.InboxPage })),
           },
           {
             path: 'legal-documents/:id',

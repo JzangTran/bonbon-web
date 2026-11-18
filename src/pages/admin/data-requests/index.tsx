@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
@@ -136,6 +136,7 @@ const ACTION_TEXT: Record<Action, { title: string; note: string; needsNote: bool
 }
 
 function ActDialog({ request, action, onClose }: { request: Request; action: Action; onClose: () => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [note, setNote] = useState('')
   const [days, setDays] = useState('10')
@@ -151,7 +152,7 @@ function ActDialog({ request, action, onClose }: { request: Request; action: Act
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'data-requests'] })
-      toast.success(action === 'COMPLETE' || action === 'REJECT' ? t('Đã đóng yêu cầu và báo cho người yêu cầu.') : t('Đã cập nhật.'))
+      feedback.success(action === 'COMPLETE' || action === 'REJECT' ? t('Đã đóng yêu cầu. Người yêu cầu nhận email về kết quả.') : t('Đã cập nhật.'))
       onClose()
     },
     onError: (e) => setError(problemMessage(e)),

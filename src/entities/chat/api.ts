@@ -1,6 +1,6 @@
 import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 
 export type Conversation = components['schemas']['ConversationSummary']
 export type ChatMessage = components['schemas']['ChatMessage']
@@ -55,6 +55,7 @@ export function useMarkRead() {
 
 /** Sends text and/or one image (uploaded first), optionally replying to a message. */
 export function useSendMessage(conversationId: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (input: { text: string; image: File | null; replyToMessageId?: string }) => {
@@ -77,7 +78,7 @@ export function useSendMessage(conversationId: string) {
       return data
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: CHAT_KEY }),
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
@@ -114,6 +115,7 @@ export function useAdminThread(id: string) {
 
 /** Block or unblock the other side in this conversation (send-message.md "Blocking a conversation"). */
 export function useBlockConversation(conversationId: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (block: boolean) => {
@@ -125,7 +127,7 @@ export function useBlockConversation(conversationId: string) {
       return data
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: CHAT_KEY }),
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
@@ -145,6 +147,7 @@ export function useAutoReply() {
 }
 
 export function useSaveAutoReply() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (body: AutoReply) => {
@@ -153,6 +156,6 @@ export function useSaveAutoReply() {
       return data
     },
     onSuccess: (data) => queryClient.setQueryData(AUTO_REPLY_KEY, data),
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }

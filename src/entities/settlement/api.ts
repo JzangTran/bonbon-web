@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type CommissionRates = components['schemas']['CommissionRates']
@@ -40,6 +40,7 @@ export function useCommissionHistory(page: number, enabled: boolean, size = 25) 
 
 /** Set the global default, or a category's own rate; {@code null} for a category lets it inherit again. */
 export function useSetCommissionRate() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ categoryId, rate }: { categoryId: string | null; rate: number | null }) => {
@@ -53,10 +54,10 @@ export function useSetCommissionRate() {
       return result.data
     },
     onSuccess: () => {
-      toast.success(t('Đã lưu tỷ lệ hoa hồng. Đơn đặt từ bây giờ dùng tỷ lệ mới.'))
+      feedback.success(t('Đã lưu tỷ lệ hoa hồng. Đơn đặt từ bây giờ dùng tỷ lệ mới; đơn cũ giữ tỷ lệ lúc đặt.'))
       void queryClient.invalidateQueries({ queryKey: COMMISSION_KEY })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
@@ -122,6 +123,7 @@ export type RecordInput = { type: 'PAYOUT' | 'COLLECTION' | 'ADJUSTMENT'; amount
 
 /** Records money moved outside the system. The key is made once per dialog, so a double click is the same request. */
 export function useRecordEntry(vendorId: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ input, key }: { input: RecordInput; key: string }) => {
@@ -133,11 +135,11 @@ export function useRecordEntry(vendorId: string) {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã ghi vào sổ.'))
+      feedback.success(t('Đã ghi vào sổ. Số dư của quán cập nhật ngay; dòng mới nằm đầu lịch sử.'))
       void queryClient.invalidateQueries({ queryKey: SETTLEMENT_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: SETTLEMENT_KEY })
     },
   })

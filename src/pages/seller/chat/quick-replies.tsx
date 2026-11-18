@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { api, problemMessage } from '@/shared/api'
 import { t } from '@/shared/i18n'
 import { cn } from '@/shared/lib/utils'
@@ -40,6 +40,7 @@ export function QuickReplyPicker({ matches, active, onPick }: { matches: QuickRe
 
 /** Add, edit and remove quick replies (Cài đặt chat). */
 export function QuickReplyEditor() {
+  const feedback = useFeedback()
   const replies = useQuickReplies()
   const queryClient = useQueryClient()
   const [editing, setEditing] = useState<QuickReply | 'new' | null>(null)
@@ -66,7 +67,7 @@ export function QuickReplyEditor() {
     onSuccess: () => {
       refresh()
       setEditing(null)
-      toast.success(t('Đã lưu tin mẫu.'))
+      feedback.success(t('Đã lưu tin mẫu. Tin mẫu hiện trong ô chat để bạn bấm gửi nhanh.'))
     },
     onError: (e) => setError(problemMessage(e)),
   })
@@ -76,7 +77,7 @@ export function QuickReplyEditor() {
       if (!response.ok) throw problem
     },
     onSuccess: refresh,
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
 
   return (

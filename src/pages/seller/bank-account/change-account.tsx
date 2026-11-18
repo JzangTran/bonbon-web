@@ -24,7 +24,7 @@ export function ChangePayoutAccountDialog({ onClose }: { onClose: () => void }) 
   const [errors, setErrors] = useState<Partial<Record<keyof Body, string>>>({})
   const [error, setError] = useState<string | null>(null)
   const gate = useReauthGate()
-  const save = useApplyShop((body: Body) => api.PUT('/api/merchant/shop/payout-account', { body }), t('Đã đổi tài khoản nhận tiền.'))
+  const save = useApplyShop((body: Body) => api.PUT('/api/merchant/shop/payout-account', { body }), t('Đã đổi tài khoản nhận tiền. Từ đơn tiếp theo khách chuyển khoản vào tài khoản mới; nhớ liên kết tài khoản này trong SePay nếu quán dùng.'))
 
   const submit = (e?: React.FormEvent) => {
     e?.preventDefault()

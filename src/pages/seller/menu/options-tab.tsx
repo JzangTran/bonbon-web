@@ -64,7 +64,7 @@ export function OptionsTab({ menu, groups, quick = false }: { menu: Menu; groups
 function GroupCard({ group, quick, dishNames, onEdit }: { group: OptionGroup; quick: boolean; dishNames: string[]; onEdit: () => void }) {
   const remove = useOptionMutation(
     () => api.DELETE('/api/merchant/option-groups/{id}', { params: { path: { id: group.id! } } }),
-    t('Đã xoá nhóm lựa chọn.'),
+    t('Đã xoá nhóm lựa chọn. Món từng dùng nhóm này không còn lựa chọn đó.'),
   )
   const setStatus = useOptionMutation(({ id, status }: { id: string; status: 'AVAILABLE' | 'SOLD_OUT' }) =>
     api.PATCH('/api/merchant/options/{id}/status', { params: { path: { id } }, body: { status } }),
