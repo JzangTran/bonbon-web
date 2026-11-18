@@ -1,6 +1,11 @@
 @import "tailwindcss";
-/* Inter, the font of app.gitbook.com; the variable file carries every weight and the Vietnamese letters */
-@import "@fontsource-variable/inter";
+/* Be Vietnam Pro, drawn for Vietnamese diacritics (design v5): 400 body, 500 captions, 600 labels and titles, 700 page titles,
+   800 the wordmark only */
+@import "@fontsource/be-vietnam-pro/400.css";
+@import "@fontsource/be-vietnam-pro/500.css";
+@import "@fontsource/be-vietnam-pro/600.css";
+@import "@fontsource/be-vietnam-pro/700.css";
+@import "@fontsource/be-vietnam-pro/800.css";
 @import "./shared/ui/tokens.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -193,17 +198,18 @@
 /* The page title in the workspace, as on the GitBook docs: large, under the small breadcrumb. Outside the layers so it wins over the
    size each page set when its title was hidden. */
 .ws-content h1 {
-  font-size: 1.875rem;
-  line-height: 2.375rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: var(--bb-text-title-1);
+  line-height: var(--bb-text-title-1-line);
+  font-weight: var(--bb-text-title-1-weight);
+  letter-spacing: var(--bb-text-title-1-tracking);
 }
 
-/* A text link anywhere: its text keeps the colour around it, an orange underline marks it and thickens on hover. The thickness grows
-   downwards from a fixed offset, so the text never moves. */
+/* A link in running text (design v5): the link colour (the darker orange, readable at 14 px) with an underline that thickens on
+   hover. The thickness grows downwards from a fixed offset, so the text never moves. */
 @utility text-link {
+  color: var(--link);
   text-decoration-line: underline;
-  text-decoration-color: var(--primary);
+  text-decoration-color: currentColor;
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
   text-decoration-skip-ink: none;
