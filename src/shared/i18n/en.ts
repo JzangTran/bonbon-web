@@ -2817,4 +2817,13 @@ export const EN: Record<string, string> = {
   "Thu hồi": "Revoke",
   "bonbon — Lập trình viên": "bonbon — Developers",
   "Trang dành cho lập trình viên": "Developer portal",
+  "Đã đổi tài khoản nhận tiền.": "Receiving account changed.",
+  "Số tài khoản gồm 6–19 chữ số": "The account number has 6–19 digits",
+  "Tên chủ tài khoản chỉ gồm chữ cái và khoảng trắng": "The account holder name has letters and spaces only",
+  "Đổi tài khoản nhận tiền": "Change receiving account",
+  "Áp dụng ngay cho mã VietQR khách chuyển khoản và cho các lần bonbon chi trả. Nếu quán dùng SePay, nhớ liên kết tài khoản mới trong SePay.": "Takes effect at once for the VietQR code customers pay with and for bonbon's payouts. If the shop uses SePay, link the new account in SePay too.",
+  "Viết đúng như trên thẻ hoặc app ngân hàng, không dấu.": "Write it as on the card or banking app, without accents.",
+  "Đổi tài khoản": "Change account",
+  "Khách chuyển khoản (VietQR) và bonbon chi trả số dư vào tài khoản này.": "Customers' transfers (VietQR) and bonbon's payouts go to this account.",
+  "Thêm tài khoản": "Add account",
 }
