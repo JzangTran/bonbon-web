@@ -2826,4 +2826,11 @@ export const EN: Record<string, string> = {
   "Đổi tài khoản": "Change account",
   "Khách chuyển khoản (VietQR) và bonbon chi trả số dư vào tài khoản này.": "Customers' transfers (VietQR) and bonbon's payouts go to this account.",
   "Thêm tài khoản": "Add account",
+  "Đã lưu mã tài khoản ảo.": "Sub-account code saved.",
+  "Đã bỏ mã tài khoản ảo.": "Sub-account code removed.",
+  "Mã tài khoản ảo gồm 1–10 chữ cái hoặc chữ số.": "The sub-account code has 1–10 letters or digits.",
+  "Mã tài khoản ảo (VA) SePay": "SePay sub-account (VA) code",
+  "Chỉ cần khi SePay yêu cầu nội dung chuyển khoản bắt đầu bằng SEVQR TKP… (ví dụ VietinBank cá nhân). Nhập phần mã sau TKP, mã VietQR sẽ tự ghi đúng nội dung.": "Only needed when SePay asks for transfer content starting with SEVQR TKP… (VietinBank personal accounts, for example). Enter the code after TKP and the VietQR code will carry the right content.",
+  "Lưu mã": "Save code",
+  "Nội dung chuyển khoản sẽ là": "The transfer content will be",
 }
