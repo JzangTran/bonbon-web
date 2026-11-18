@@ -210,6 +210,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/merchant/shop/payout-account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Đổi tài khoản nhận tiền
+         * @description Áp dụng ngay cho mã VietQR khách chuyển khoản và cho các lần nền tảng chi trả. Cần đăng nhập trong 10 phút gần nhất; chỉ tài khoản cửa hàng (không phải tài khoản chính hay thành viên). Tài khoản cũ được giữ làm lịch sử; chủ quán nhận thông báo. Nếu quán dùng SePay, nhớ liên kết tài khoản mới trong SePay.
+         *
+         *     **Cần đăng nhập**, quyền `vendor:create`.
+         */
+        put: operations["changeMyPayoutAccount"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/merchant/shop/opening-hours": {
         parameters: {
             query?: never;
@@ -7020,6 +7042,13 @@ export interface components {
             /** Format: double */
             lng?: number;
         };
+        /** @description Tài khoản ngân hàng mới nhận tiền: tiền khách chuyển khoản (VietQR) và tiền nền tảng chi trả. */
+        PayoutAccountChangeRequest: {
+            /** @description Tên ngân hàng trong danh sách VietQR. */
+            bankName: string;
+            accountNumber: string;
+            accountHolderName: string;
+        };
         ShopOpeningHoursRequest: {
             openingHours: components["schemas"]["OpeningWindowInput"][];
         };
@@ -13192,6 +13221,84 @@ export interface operations {
             };
             /** @description - `GEOCODING_UNAVAILABLE`: Dịch vụ tra địa chỉ (Goong) tạm thời không phản hồi; thử lại sau. */
             503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    changeMyPayoutAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PayoutAccountChangeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopApplicationView"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /**
+             * @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `vendor:create`.
+             *     - `REAUTH_REQUIRED`: Đăng nhập đã quá 10 phút.
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /**
+             * @description - `SAME_PAYOUT_ACCOUNT`: Trùng tài khoản đang dùng.
+             *     - `SHOP_NOT_APPROVED`: Người gọi chưa có cửa hàng được duyệt.
+             */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };

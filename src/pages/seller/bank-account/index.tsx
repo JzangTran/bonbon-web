@@ -4,13 +4,20 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { FormError } from '@/widgets/auth-shell'
 import { t } from '@/shared/i18n'
 import { SepayCard } from './sepay-card'
+import { ChangePayoutAccountDialog } from './change-account'
+import { useState } from 'react'
+import { useSession } from '@/entities/session'
+import { Button } from '@/shared/ui/button'
 
 /**
- * The account bonbon pays the shop's balance into (settlement). Read-only: the number is shown masked and changing it
- * is not available yet, so a shop that needs another account contacts support.
+ * The account customers transfer to (VietQR) and bonbon pays the shop's balance into (settlement). The number is shown masked;
+ * the shop account changes it here, after signing in again if its sign-in is older than ten minutes.
  */
 export function SellerBankAccountPage() {
   const shop = useShop()
+  const { session } = useSession()
+  const canChange = (session?.permissions.has('vendor:create') ?? false) && !session?.team
+  const [changing, setChanging] = useState(false)
   if (shop.isPending) return <Skeleton className="h-48 max-w-2xl" />
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />
   const payout = shop.data.tax?.payout
@@ -32,9 +39,18 @@ export function SellerBankAccountPage() {
       ) : (
         <p className="text-muted-foreground">{t('Chưa có thông tin tài khoản nhận tiền.')}</p>
       )}
-      <p className="text-sm text-muted-foreground">
-        {t('Số dư của cửa hàng được chuyển vào tài khoản này. Hiện chưa đổi được tài khoản trên trang này; nếu cần đổi, hãy gửi yêu cầu qua mục Liên hệ hỗ trợ trong menu tài khoản.')}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="max-w-lg text-sm text-muted-foreground">
+          {t('Khách chuyển khoản (VietQR) và bonbon chi trả số dư vào tài khoản này.')}
+        </p>
+        {/* only the shop account itself, never a main account or member */}
+        {canChange ? (
+          <Button variant="outline" onClick={() => setChanging(true)}>
+            {payout ? t('Đổi tài khoản') : t('Thêm tài khoản')}
+          </Button>
+        ) : null}
+      </div>
+      {changing ? <ChangePayoutAccountDialog onClose={() => setChanging(false)} /> : null}
       <SepayCard />
     </div>
   )
