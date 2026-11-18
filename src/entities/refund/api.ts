@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type RefundRow = components['schemas']['RefundRow']
@@ -27,6 +27,7 @@ export function useRefunds(status: 'OPEN' | 'COMPLETED' | 'ALL', page: number, e
 
 /** The admin has transferred the money and enters the bank reference. */
 export function useCompleteRefund() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ id, bankReference }: { id: string; bankReference: string }) => {
@@ -35,11 +36,11 @@ export function useCompleteRefund() {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã ghi nhận chuyển khoản. Khách được báo đã hoàn tiền.'))
+      feedback.success(t('Đã ghi nhận chuyển khoản hoàn tiền. Khách nhận thông báo đã hoàn tiền; yêu cầu chuyển sang Đã xong.'))
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
   })
@@ -47,6 +48,7 @@ export function useCompleteRefund() {
 
 /** The transfer bounced: the customer is asked for another account. */
 export function useFailRefund() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
@@ -55,11 +57,11 @@ export function useFailRefund() {
       return data
     },
     onSuccess: () => {
-      toast.success(t('Đã báo chuyển khoản thất bại. Khách sẽ nhập tài khoản khác.'))
+      feedback.success(t('Đã ghi nhận chuyển khoản thất bại. Khách được báo để nhập tài khoản khác; yêu cầu quay lại hàng chờ khi có tài khoản mới.'))
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: REFUNDS_KEY })
     },
   })

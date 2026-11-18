@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 
 export type NotificationPreferences = components['schemas']['NotificationPreferences']
 export type NotificationCategory = components['schemas']['NotificationCategorySetting']
@@ -21,6 +21,7 @@ export function useNotificationPreferences() {
 }
 
 export function useUpdatePreference() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (change: { category: string; channel: 'PUSH' | 'EMAIL'; enabled: boolean }) => {
@@ -29,12 +30,13 @@ export function useUpdatePreference() {
       return data
     },
     onSuccess: (data) => queryClient.setQueryData([...KEY, 'preferences'], data),
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
 /** Both times, or neither to clear. */
 export function useSetQuietHours() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (hours: { start?: string; end?: string }) => {
@@ -43,10 +45,10 @@ export function useSetQuietHours() {
       return data
     },
     onSuccess: (data) => {
-      toast.success(data.quietHours ? t('Đã đặt giờ yên lặng.') : t('Đã bỏ giờ yên lặng.'))
+      feedback.success(data.quietHours ? t('Đã đặt giờ yên lặng. Trong khung giờ này thông báo vẫn vào hộp thư nhưng không đổ chuông.') : t('Đã bỏ giờ yên lặng. Thông báo đổ chuông ở mọi giờ.'))
       queryClient.setQueryData([...KEY, 'preferences'], data)
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
@@ -62,6 +64,7 @@ export function usePushDevices() {
 }
 
 export function useRemoveDevice() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (id: string) => {
@@ -69,9 +72,9 @@ export function useRemoveDevice() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success(t('Đã gỡ thiết bị.'))
+      feedback.success(t('Đã gỡ thiết bị. Thiết bị đó không còn nhận thông báo đẩy cho tới khi đăng nhập lại.'))
       void queryClient.invalidateQueries({ queryKey: [...KEY, 'devices'] })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }

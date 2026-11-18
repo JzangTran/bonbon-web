@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { acceptUploads } from '@/shared/lib/upload'
 import {
   MENU_QUERY_KEY,
@@ -43,6 +43,7 @@ export function DishSheet({
   sectionId: string
   onClose: () => void
 }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const leaves = useCategoryLeaves()
   const [name, setName] = useState(item?.name ?? '')
@@ -134,7 +135,7 @@ export function DishSheet({
         const { error: problem } = await api.DELETE('/api/merchant/menu-items/{id}/photo', { params: { path: { id } } })
         if (problem) throw problem
       }
-      toast.success(item ? t('Đã lưu món.') : t('Đã thêm món.'))
+      feedback.success(item ? t('Đã lưu món. Khách thấy thay đổi ngay trên thực đơn.') : t('Đã thêm món. Món hiện trên thực đơn khi quán đang mở bán.'))
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: MENU_QUERY_KEY }),
         queryClient.invalidateQueries({ queryKey: OPTIONS_QUERY_KEY }),
@@ -285,7 +286,7 @@ export function DishSheet({
               onChange={async (e) => {
                 const input = e.target
                 const picked = Array.from(input.files ?? []).slice(0, 1)
-                const [ok] = await acceptUploads(picked, { maxMb: 5 }, (m) => toast.error(m))
+                const [ok] = await acceptUploads(picked, { maxMb: 5 }, (m) => feedback.error(m))
                 if (!ok) input.value = ''
                 setPhoto(ok ?? null)
                 if (ok) setRemovePhoto(false)

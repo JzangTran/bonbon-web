@@ -1,7 +1,7 @@
+import { toast } from 'sonner'
 import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { toast } from 'sonner'
 import { useDeleteAccount, useDeletionCheck } from '@/entities/account-deletion'
 import { useSession } from '@/entities/session'
 import { useReauthGate } from '@/features/reauthenticate'
@@ -47,6 +47,7 @@ export function DeleteAccountCard() {
             setOpen(false)
             await signOut().catch(() => undefined)
             navigate(merchantPath('/login'), { replace: true })
+            // shown across the sign-out and page change, so a snackbar (no page region survives them)
             toast.success(t('Tài khoản sẽ được xoá vào {v0}.', { v0: formatDateTime(scheduled.executesAt) }), {
               description: t('Đăng nhập lại trước thời điểm đó sẽ huỷ việc xoá.'),
               duration: 20_000,

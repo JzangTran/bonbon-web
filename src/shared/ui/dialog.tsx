@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FeedbackRegion } from './feedback'
 import { XIcon } from 'lucide-react'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import { cn } from '@/shared/lib/utils'
@@ -35,7 +36,10 @@ export function DialogContent({
         )}
         {...props}
       >
-        {children}
+        {/* errors appear next to the buttons; successes go up to the page, which stays after the dialog closes */}
+        <FeedbackRegion placement="bottom" errorsOnly>
+          {children}
+        </FeedbackRegion>
         {showCloseButton ? (
           <DialogPrimitive.Close asChild>
             <Button variant="ghost" size="icon-sm" className="absolute top-3 right-3" aria-label={t('Đóng')}>

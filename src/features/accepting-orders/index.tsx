@@ -29,7 +29,7 @@ export function AcceptingOrdersSwitch() {
   const [reason, setReason] = useState<string | null>(REASONS[0])
   const toggle = useApplyShop(
     (body: { accepting: boolean; pauseMinutes?: number; reason?: string }) => api.PUT('/api/merchant/shop/accepting-orders', { body }),
-    t('Đã cập nhật trạng thái nhận đơn.'),
+    t('Đã cập nhật trạng thái nhận đơn. Khách thấy thay đổi trên trang quán ngay.'),
   )
   if (shopStatus(shop.data) !== 'APPROVED') return null
   const accepting = shop.data?.acceptingOrders ?? false

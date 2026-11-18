@@ -1,62 +1,86 @@
-import { intlLocale, t } from '@/shared/i18n'
 import { Link } from 'react-router'
+import { useAckAllNotifications, useAckNotification, useNotifications, type AppNotification } from '../api'
+import { intlLocale, t } from '@/shared/i18n'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
-import { useAckAllNotifications, useAckNotification, useNotifications } from '../api'
 
 const time = new Intl.DateTimeFormat(intlLocale, { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' })
 
-/** The notification list for the right panel: unread ones are marked with a dot; opening one marks it read. */
-export function NotificationFeed({ orderPath }: { orderPath?: (orderId: string) => string }) {
+/**
+ * The user's notifications (design v5): unread first in weight, each row leading straight to the task it is about (the order), and
+ * marked read when opened. `limit` shows only the newest few (the bell's popover); `filter` narrows the list (the inbox page).
+ */
+export function NotificationFeed({
+  orderPath,
+  limit,
+  filter,
+  heading = true,
+}: {
+  orderPath?: (orderId: string) => string
+  limit?: number
+  filter?: (n: AppNotification) => boolean
+  heading?: boolean
+}) {
   const query = useNotifications()
   const ack = useAckNotification()
   const ackAll = useAckAllNotifications()
-  const items = query.data?.items ?? []
+  const all = query.data?.items ?? []
+  const filtered = filter ? all.filter(filter) : all
+  const items = limit ? filtered.slice(0, limit) : filtered
   const unread = query.data?.unread ?? 0
 
   return (
     <section aria-label={t('Thông báo')} className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-caption font-medium tracking-wide text-muted-foreground uppercase">{t('Thông báo')}{unread > 0 ? t(' · {v0} chưa đọc', { v0: unread }) : ''}</h2>
-        {unread > 0 ? (
-          <Button variant="ghost" size="xs" disabled={ackAll.isPending} onClick={() => ackAll.mutate()}>
-            {t('Đánh dấu đã đọc')}
-          </Button>
-        ) : null}
-      </div>
+      {heading ? (
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-label text-text">
+            {t('Thông báo')}
+            {unread > 0 ? <span className="ml-1 text-text-secondary">{t('· {v0} chưa đọc', { v0: unread })}</span> : null}
+          </h2>
+          {unread > 0 ? (
+            <Button variant="ghost" size="xs" disabled={ackAll.isPending} onClick={() => ackAll.mutate()}>
+              {t('Đánh dấu đã đọc')}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
       {query.isPending ? (
         <div className="flex flex-col gap-3">
-          <Skeleton className="h-10" />
-          <Skeleton className="h-10" />
+          <Skeleton className="h-12" />
+          <Skeleton className="h-12" />
         </div>
       ) : items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('Chưa có thông báo nào.')}</p>
+        <p className="text-body-sm text-text-secondary">{filter ? t('Không có thông báo nào ở mục này.') : t('Chưa có thông báo nào. Đơn mới, thanh toán và đánh giá sẽ báo ở đây.')}</p>
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col divide-y divide-divider">
           {items.map((n) => {
             const isUnread = !n.acknowledgedAt
             const body = (
               <>
-                <span aria-hidden="true" className={cn('mt-1.5 size-1.5 shrink-0 rounded-full', isUnread ? 'bg-foreground' : 'bg-border')} />
+                <span aria-hidden="true" className={cn('mt-2 size-2 shrink-0 rounded-full', isUnread ? 'bg-primary' : 'bg-transparent')} />
                 <span className="min-w-0">
-                  <span className={cn('block text-xs leading-[1.125rem]', isUnread ? 'font-semibold' : 'font-medium')}>{n.title}</span>
-                  {n.body ? <span className="block text-xs leading-[1.125rem] text-muted-foreground">{n.body}</span> : null}
-                  <span className="block text-xs text-muted-foreground tabular-nums">{n.createdAt ? time.format(new Date(n.createdAt)) : ''}</span>
+                  <span className={cn('block text-body-sm text-text', isUnread && 'font-semibold')}>
+                    {isUnread ? <span className="sr-only">{t('Chưa đọc: ')}</span> : null}
+                    {n.title}
+                  </span>
+                  {n.body ? <span className="block text-body-sm text-text-secondary">{n.body}</span> : null}
+                  <span className="block text-caption text-text-tertiary tabular-nums">{n.createdAt ? time.format(new Date(n.createdAt)) : ''}</span>
                 </span>
               </>
             )
             const onOpen = () => {
               if (isUnread && n.id) ack.mutate(n.id)
             }
+            const row = 'flex w-full gap-3 rounded-control px-2 py-3 text-left transition-colors hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-ring'
             return (
               <li key={n.id}>
                 {orderPath && n.orderId ? (
-                  <Link to={orderPath(n.orderId)} onClick={onOpen} className="flex gap-2.5 hover:underline">
+                  <Link to={orderPath(n.orderId)} onClick={onOpen} className={row}>
                     {body}
                   </Link>
                 ) : (
-                  <button type="button" onClick={onOpen} className="flex w-full gap-2.5 text-left">
+                  <button type="button" onClick={onOpen} className={row}>
                     {body}
                   </button>
                 )}

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
@@ -24,6 +24,7 @@ const REASONS: { id: Reason; label: string; hint: string }[] = [
  * stays visible until an administrator decides; the reporter is told the outcome later.
  */
 export function ReportDialog({ target, open, onOpenChange }: { target: ReportTarget | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const feedback = useFeedback()
   const [reason, setReason] = useState<Reason | null>(null)
   const [note, setNote] = useState('')
   const send = useMutation({
@@ -36,7 +37,7 @@ export function ReportDialog({ target, open, onOpenChange }: { target: ReportTar
       return data
     },
     onSuccess: (data) => {
-      toast.success(data?.alreadyReported ? t('Bạn đã báo cáo nội dung này rồi. Chúng tôi đang xem xét.') : t('Cảm ơn bạn. Chúng tôi sẽ xem xét trong vòng 24 giờ.'))
+      feedback.success(data?.alreadyReported ? t('Bạn đã báo cáo nội dung này rồi. Chúng tôi đang xem xét.') : t('Cảm ơn bạn. Chúng tôi sẽ xem xét trong vòng 24 giờ.'))
       setReason(null)
       setNote('')
       onOpenChange(false)

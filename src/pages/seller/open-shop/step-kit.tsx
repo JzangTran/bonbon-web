@@ -1,9 +1,9 @@
 import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { SHOP_QUERY_KEY } from '@/entities/shop'
-import { api, problemMessage } from '@/shared/api'
+import { api} from '@/shared/api'
 import { acceptUploads } from '@/shared/lib/upload'
 import { Button } from '@/shared/ui/button'
 import { FormRow } from '@/shared/ui/form-row'
@@ -46,6 +46,7 @@ export function SaveButtons({ pending, onSave }: { pending: boolean; onSave: (an
 }
 
 function useUpload(kind: UploadKind) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (file: File) => {
@@ -61,9 +62,9 @@ function useUpload(kind: UploadKind) {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(SHOP_QUERY_KEY, data)
-      toast.success(t('Đã tải tệp lên.'))
+      feedback.success(t('Đã tải tệp lên. Tệp được lưu riêng tư và chỉ đội duyệt xem được.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
 }
 
@@ -88,6 +89,7 @@ export function UploadField({
   previewUrl?: string
   error?: string
 }) {
+  const feedback = useFeedback()
   const upload = useUpload(kind)
   const pdf = accept.includes('application/pdf')
   const errorId = `upload-${kind}-error`
@@ -102,7 +104,7 @@ export function UploadField({
         invalid={!!error}
         describedBy={error ? errorId : undefined}
         onPick={async (file) => {
-          const [ok] = await acceptUploads([file], { maxMb, pdf }, (m) => toast.error(m))
+          const [ok] = await acceptUploads([file], { maxMb, pdf }, (m) => feedback.error(m))
           if (ok) upload.mutate(ok)
         }}
       />

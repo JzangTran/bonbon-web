@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, clearLegalRequired, problemMessage, useGateState } from '@/shared/api'
 import { formatDateTime } from '@/shared/lib/format'
@@ -18,6 +18,7 @@ const TYPE_ROUTE: Record<string, string> = { CUSTOMER_TERMS: 'CUSTOMER_TERMS', S
  * LEGAL_ACCEPTANCE_REQUIRED, so this blocks the page until the person reads the summary and accepts; signing out is the other way out.
  */
 export function LegalGate() {
+  const feedback = useFeedback()
   const { signOut } = useSession()
   const queryClient = useQueryClient()
   const { legalRequiredAt } = useGateState()
@@ -42,7 +43,7 @@ export function LegalGate() {
     onSuccess: async () => {
       clearLegalRequired()
       setAgreed(false)
-      toast.success(t('Cảm ơn bạn đã đồng ý.'))
+      feedback.success(t('Đã ghi nhận bạn đồng ý với điều khoản mới. Bạn dùng bonbon tiếp như bình thường; điều khoản luôn có ở chân trang.'))
       await queryClient.invalidateQueries()
     },
     onError: (e) => setError(problemMessage(e)),

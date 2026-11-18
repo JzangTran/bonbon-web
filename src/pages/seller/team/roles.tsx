@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { api, problemMessage } from '@/shared/api'
 import { t } from '@/shared/i18n'
 import { Badge } from '@/shared/ui/badge'
@@ -18,6 +18,7 @@ import { PermissionPicker, PermissionSummary } from './permission-picker'
 
 /** Named, reusable permission bundles of this main account (view/create/edit/delete-seller-role.md). */
 export function SellerTeamRolesPage() {
+  const feedback = useFeedback()
   const roles = useRoles()
   const queryClient = useQueryClient()
   const [editing, setEditing] = useState<Role | 'new' | null>(null)
@@ -28,9 +29,9 @@ export function SellerTeamRolesPage() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: TEAM_KEYS.roles })
-      toast.success(t('Đã xoá vai trò.'))
+      feedback.success(t('Đã xoá vai trò. Thành viên đang có vai trò này cần được gán vai trò khác.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
 
   return (
@@ -88,6 +89,7 @@ export function SellerTeamRolesPage() {
 }
 
 function RoleDialog({ role, onClose }: { role: Role | null; onClose: () => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [name, setName] = useState(role?.name ?? '')
   const [description, setDescription] = useState(role?.description ?? '')
@@ -104,7 +106,7 @@ function RoleDialog({ role, onClose }: { role: Role | null; onClose: () => void 
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: TEAM_KEYS.roles })
       void queryClient.invalidateQueries({ queryKey: TEAM_KEYS.members })
-      toast.success(role ? t('Đã lưu vai trò.') : t('Đã tạo vai trò.'))
+      feedback.success(role ? t('Đã lưu vai trò. Thành viên có vai trò này nhận quyền mới từ lần đăng nhập tới.') : t('Đã tạo vai trò. Gán vai trò này cho thành viên ở danh sách thành viên.'))
       onClose()
     },
   })

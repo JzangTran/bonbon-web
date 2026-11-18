@@ -1,4 +1,4 @@
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { ORDER_STATUSES, OrderStatusBadge } from '@/entities/order'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
@@ -32,6 +32,7 @@ const vnd = new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'VN
 
 /** Dev-only catalogue of the base components with bonbon tokens applied. */
 export function UiKitPage() {
+  const feedback = useFeedback()
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-10 p-8">
       <header>
@@ -124,7 +125,7 @@ export function UiKitPage() {
                       <Button variant="outline">{t('Huỷ')}</Button>
                     </DialogClose>
                     <DialogClose asChild>
-                      <Button variant="destructive" onClick={() => toast.success(t('Đã từ chối đơn BB-1024'))}>
+                      <Button variant="destructive" onClick={() => feedback.success(t('Đã từ chối đơn BB-1024'))}>
                         {t('Từ chối')}
                       </Button>
                     </DialogClose>
@@ -142,7 +143,7 @@ export function UiKitPage() {
                   </SheetHeader>
                 </SheetContent>
               </Sheet>
-              <Button variant="secondary" onClick={() => toast.success(t('Đã lưu thay đổi'))}>
+              <Button variant="secondary" onClick={() => feedback.success(t('Đã lưu thay đổi'))}>
                 Toast
               </Button>
             </div>

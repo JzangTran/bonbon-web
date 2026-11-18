@@ -34,7 +34,7 @@ export function MenuTab({ menu, groups, startNewDish = false, quick = false }: {
 
   const createSection = useMenuMutation(
     (sectionName: string) => api.POST('/api/merchant/menu-sections', { body: { name: sectionName } }),
-    t('Đã thêm mục thực đơn.'),
+    t('Đã thêm mục thực đơn. Thêm món vào mục để nó hiện với khách.'),
   )
   const reorderSections = useMenuMutation(
     (ids: string[]) => api.PUT('/api/merchant/menu-sections/order', { body: { ids } }),
@@ -135,11 +135,11 @@ function SectionCard({
   const [name, setName] = useState(section.name ?? '')
   const rename = useMenuMutation(
     (value: string) => api.PATCH('/api/merchant/menu-sections/{id}', { params: { path: { id: section.id! } }, body: { name: value } }),
-    t('Đã đổi tên mục.'),
+    t('Đã đổi tên mục. Khách thấy tên mới trên thực đơn ngay.'),
   )
   const remove = useMenuMutation(
     () => api.DELETE('/api/merchant/menu-sections/{id}', { params: { path: { id: section.id! } } }),
-    t('Đã xoá mục thực đơn.'),
+    t('Đã xoá mục thực đơn. Mục không còn hiện với khách.'),
   )
   const reorderItems = useMenuMutation((ids: string[]) =>
     api.PUT('/api/merchant/menu-sections/{id}/items/order', { params: { path: { id: section.id! } }, body: { ids } }),
@@ -244,7 +244,7 @@ function DishRow({
   )
   const remove = useMenuMutation(
     () => api.DELETE('/api/merchant/menu-items/{id}', { params: { path: { id: item.id! } } }),
-    t('Đã xoá món.'),
+    t('Đã xoá món. Món không còn trên thực đơn; đơn cũ có món này vẫn giữ nguyên.'),
   )
   const switchedOff = item.status === 'SOLD_OUT'
   const outOfStock = item.stockQuantity === 0

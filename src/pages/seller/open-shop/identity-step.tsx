@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { CheckIcon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import type { ShopApplication } from '@/entities/shop'
 import { api, problemMessage } from '@/shared/api'
 import { idNumberProblem, isPersonName, requiredText, type Errors } from '@/shared/lib/validate'
@@ -35,6 +35,7 @@ function useLegalDocument(type: 'SELLER_TERMS' | 'PRIVACY_POLICY') {
 
 /** Step 4 · Định danh chủ cửa hàng: document, its number, name, the two photos and the consents. */
 export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }) {
+  const feedback = useFeedback()
   const id = shop.identity
   const terms = useLegalDocument('SELLER_TERMS')
   const privacy = useLegalDocument('PRIVACY_POLICY')
@@ -82,7 +83,7 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         onSuccess: () => {
           setDocNumber('')
           if (andNext) onNext()
-          else toast.success(t('Đã lưu nháp.'))
+          else feedback.success(t('Đã lưu nháp. Bạn quay lại làm tiếp bất cứ lúc nào; hồ sơ chỉ gửi đi khi bạn bấm Gửi hồ sơ.'))
         },
       },
     )

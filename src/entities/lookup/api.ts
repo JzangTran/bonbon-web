@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 
 export type AdminOrderRow = components['schemas']['AdminOrderRow']
 export type AdminOrderDetail = components['schemas']['AdminOrderDetail']
@@ -78,23 +78,25 @@ export function useAdminCustomer(id: string) {
 type RevealInput = { reason: RevealReason; note?: string }
 
 export function useRevealOrder(id: string) {
+  const feedback = useFeedback()
   return useMutation({
     mutationFn: async (input: RevealInput) => {
       const { data, error } = await api.POST('/api/admin/orders/{id}/reveal', { params: { path: { id } }, body: { reason: input.reason, note: input.note?.trim() || undefined } })
       if (error || !data) throw error
       return data
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
 export function useRevealCustomer(id: string) {
+  const feedback = useFeedback()
   return useMutation({
     mutationFn: async (input: RevealInput) => {
       const { data, error } = await api.POST('/api/admin/customers/{id}/reveal', { params: { path: { id } }, body: { reason: input.reason, note: input.note?.trim() || undefined } })
       if (error || !data) throw error
       return data
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }

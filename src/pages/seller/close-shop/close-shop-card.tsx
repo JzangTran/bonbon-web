@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { CLOSE_REASON_LABEL, useCloseShop, type CloseReason } from '@/entities/shop'
 import { useReauthGate } from '@/features/reauthenticate'
 import { problemMessage } from '@/shared/api'
@@ -18,6 +18,7 @@ const REASONS = Object.keys(CLOSE_REASON_LABEL) as CloseReason[]
 
 /** Closing for good (close-shop.md): irreversible, so it says what will happen first and asks for a recent sign-in. */
 export function CloseShopCard() {
+  const feedback = useFeedback()
   const close = useCloseShop()
   const navigate = useNavigate()
   const gate = useReauthGate()
@@ -37,7 +38,7 @@ export function CloseShopCard() {
         { reason, reasonText: text.trim() || undefined },
         {
           onSuccess: () => {
-            toast.success(t('Cửa hàng đang đóng. Bạn vẫn hoàn tất các đơn đang làm.'))
+            feedback.success(t('Đã đóng cửa hàng. Khách không đặt được món mới; bạn vẫn hoàn tất các đơn đang làm.'))
             navigate(merchantPath('/closing'), { replace: true })
           },
           onError: (e) => {

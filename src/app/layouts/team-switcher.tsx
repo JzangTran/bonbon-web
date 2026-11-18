@@ -1,9 +1,9 @@
 import { CheckIcon, ChevronsUpDownIcon, UsersRoundIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { teamOf, useSession, type Role } from '@/entities/session'
-import { api, problemMessage } from '@/shared/api'
+import { api} from '@/shared/api'
 import { merchantPath } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
 import { Button } from '@/shared/ui/button'
@@ -15,6 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
  * also go back to the team console.
  */
 export function TeamSwitcher() {
+  const feedback = useFeedback()
   const { session, signIn } = useSession()
   const navigate = useNavigate()
   const [busy, setBusy] = useState(false)
@@ -27,7 +28,7 @@ export function TeamSwitcher() {
     const { data, error } = await api.POST('/api/seller-team/switch-shop', { body: { vendorId: vendorId ?? undefined } })
     setBusy(false)
     if (error || !data?.accessToken || !data.user) {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       return
     }
     signIn({

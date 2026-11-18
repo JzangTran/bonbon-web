@@ -147,7 +147,7 @@ function ProfileCard() {
             {errors.phone ? <p role="alert" className="text-sm text-destructive">{errors.phone.message}</p> : null}
           </div>
           {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
-          {save.isSuccess ? <FormSuccess message={t('Đã lưu thông tin.')} /> : null}
+          {save.isSuccess ? <FormSuccess message={t('Đã lưu thông tin cá nhân. Tên mới hiện ở mọi nơi bạn xuất hiện trong bonbon.')} /> : null}
           <Button type="submit" disabled={save.isPending || profile.isPending}>
             {t('Lưu thay đổi')}
           </Button>
@@ -216,7 +216,7 @@ function PasswordCard() {
             </div>
           ))}
           <FormError message={error} />
-          {done ? <FormSuccess message={t('Đã đổi mật khẩu.')} /> : null}
+          {done ? <FormSuccess message={t('Đã đổi mật khẩu. Các thiết bị khác bị đăng xuất; thiết bị này vẫn đăng nhập.')} /> : null}
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {t('Đổi mật khẩu')}
           </Button>

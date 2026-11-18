@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { FeedbackRegion } from '@/shared/ui/feedback'
 import { Link, useNavigate } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
@@ -67,7 +68,7 @@ export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), 
             flat && '[&_[data-slot=card]]:gap-5 [&_[data-slot=card]]:py-0 [&_[data-slot=card]]:ring-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-title]]:sr-only',
           )}
         >
-          {children}
+          <FeedbackRegion>{children}</FeedbackRegion>
         </div>
       </main>
     </div>

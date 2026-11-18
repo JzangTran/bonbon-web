@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
 
 export type Review = components['schemas']['Review']
@@ -23,10 +23,11 @@ export function useSellerReviews(unreplied: boolean, page: number, size = 25) {
 
 /** Write, rewrite or remove the shop's reply (rewrite and remove only within 24 hours of posting). */
 export function useReplyActions() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const refresh = () => queryClient.invalidateQueries({ queryKey: [...REVIEWS_KEY, 'seller'] })
   const onError = (error: unknown) => {
-    toast.error(problemMessage(error))
+    feedback.error(error)
     // The window may have closed or a moderator hidden it meanwhile: show what it really is now.
     void refresh()
   }
@@ -38,7 +39,7 @@ export function useReplyActions() {
       return result.data
     },
     onSuccess: (_data, vars) => {
-      toast.success(vars.existing ? t('Đã cập nhật phản hồi.') : t('Đã gửi phản hồi.'))
+      feedback.success(vars.existing ? t('Đã cập nhật phản hồi. Khách thấy câu trả lời mới dưới đánh giá của họ.') : t('Đã gửi phản hồi. Câu trả lời hiện dưới đánh giá, và khách nhận thông báo.'))
       void refresh()
     },
     onError,
@@ -49,7 +50,7 @@ export function useReplyActions() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success(t('Đã xoá phản hồi.'))
+      feedback.success(t('Đã xoá phản hồi. Khách chỉ còn thấy đánh giá của mình, không còn câu trả lời của quán.'))
       void refresh()
     },
     onError,
@@ -87,6 +88,7 @@ export type ModerationTarget = { kind: 'review' | 'reply'; id: string }
 
 /** Hide (with a reason) or restore a review or a shop's reply; nothing is deleted. */
 export function useModerationActions() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const refresh = () => queryClient.invalidateQueries({ queryKey: [...REVIEWS_KEY, 'admin'] })
   const hide = useMutation({
@@ -100,11 +102,11 @@ export function useModerationActions() {
       return result.data
     },
     onSuccess: () => {
-      toast.success(t('Đã ẩn.'))
+      feedback.success(t('Đã ẩn đánh giá. Khách khác không còn thấy đánh giá này; bạn khôi phục được bất cứ lúc nào.'))
       void refresh()
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void refresh()
     },
   })
@@ -118,11 +120,11 @@ export function useModerationActions() {
       return result.data
     },
     onSuccess: () => {
-      toast.success(t('Đã khôi phục.'))
+      feedback.success(t('Đã khôi phục đánh giá. Đánh giá hiện lại trên trang quán.'))
       void refresh()
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void refresh()
     },
   })

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowDownIcon, ArrowUpIcon, ChevronDownIcon, ChevronRightIcon, EyeOffIcon, PlusIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage, type components } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
@@ -149,14 +149,15 @@ export function AdminCategoriesPage() {
 }
 
 function useCategoryMutation<T>(fn: (input: T) => Promise<unknown>, success: string) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: fn,
     onSuccess: () => {
-      toast.success(success)
+      feedback.success(success)
       return queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
-    onError: (error) => toast.error(problemMessage(error)),
+    onError: (error) => feedback.error(error),
   })
 }
 
@@ -181,20 +182,20 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
       ...(isRoot ? {} : { name: name.trim() }),
       ...(trimmed === '' ? { clearCommissionRate: true } : { commissionRate: Number(trimmed.replace(',', '.')) }),
     })
-  }, t('Đã lưu ngành hàng.'))
-  const setActive = useCategoryMutation((active: boolean) => patchCategory(node.id!, { active }), node.active === false ? t('Đã hiện lại ngành.') : t('Đã ẩn ngành.'))
-  const move = useCategoryMutation((parentId: string) => patchCategory(node.id!, { parentId }), t('Đã chuyển ngành.'))
+  }, t('Đã lưu ngành hàng. Món thuộc ngành này đổi theo ngay.'))
+  const setActive = useCategoryMutation((active: boolean) => patchCategory(node.id!, { active }), node.active === false ? t('Đã hiện lại ngành. Quán chọn được ngành này khi thêm món.') : t('Đã ẩn ngành. Quán không chọn được ngành này cho món mới; món cũ giữ nguyên.'))
+  const move = useCategoryMutation((parentId: string) => patchCategory(node.id!, { parentId }), t('Đã chuyển ngành. Ngành con và món của nó đi theo sang nhánh mới.'))
   const reorder = useCategoryMutation(async (direction: -1 | 1) => {
     const other = siblings[index + direction]
     if (!other) return
     await patchCategory(node.id!, { sortOrder: other.sortOrder })
     await patchCategory(other.id!, { sortOrder: node.sortOrder })
-  }, t('Đã đổi thứ tự.'))
+  }, t('Đã đổi thứ tự. Thứ tự mới hiện ngay ở danh sách chọn ngành.'))
   const remove = useCategoryMutation(async () => {
     const { error } = await api.DELETE('/api/admin/categories/{id}', { params: { path: { id: node.id! } } })
     if (error) throw error
     onDeleted()
-  }, t('Đã xoá ngành.'))
+  }, t('Đã xoá ngành. Ngành không còn trong cây ngành hàng.'))
 
   return (
     <Card>
@@ -294,6 +295,7 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
 }
 
 function CreateCategory({ parent, root, onCreated }: { parent: Node | null; root: Node | null; onCreated: (id: string) => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const target = parent && (parent.level ?? 3) < 3 ? parent : root
   const [name, setName] = useState('')
@@ -307,7 +309,7 @@ function CreateCategory({ parent, root, onCreated }: { parent: Node | null; root
       return data
     },
     onSuccess: async (data) => {
-      toast.success(t('Đã thêm ngành.'))
+      feedback.success(t('Đã thêm ngành. Quán chọn được ngành này khi thêm món từ bây giờ.'))
       setName('')
       setError(null)
       await queryClient.invalidateQueries({ queryKey: QUERY_KEY })

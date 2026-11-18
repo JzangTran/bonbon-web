@@ -1,8 +1,8 @@
+import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
 import { teamOf, useSession, type Role } from '@/entities/session'
 import { GoogleSignIn } from '@/features/google-sign-in'
@@ -48,6 +48,7 @@ export function SellerLoginPage() {
 
   const finish = (data: LoginResponse) => {
     if (data.deletionCancelled) {
+      // shown across the page change that follows sign-in, so a snackbar (no page region survives it)
       toast.success(t('Việc xoá tài khoản đã được huỷ vì bạn đăng nhập lại.'), { description: t('Tài khoản của bạn vẫn như cũ.'), duration: 12_000 })
     }
     const { tokens, user } = data

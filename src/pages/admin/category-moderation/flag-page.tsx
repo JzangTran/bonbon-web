@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { leaves, useCategoryTree, useFlagDish, useShopDishes, type ShopDish } from '@/entities/dish-category-case'
 import { useMerchants } from '@/entities/merchant-directory'
 import { problemMessage } from '@/shared/api'
@@ -109,6 +109,7 @@ function DishStep({ vendor, onBack, onPick }: { vendor: { id: string; name: stri
 }
 
 function FlagStep({ dish, onBack, onDone }: { dish: ShopDish; onBack: () => void; onDone: () => void }) {
+  const feedback = useFeedback()
   const tree = useCategoryTree()
   const options = useMemo(() => leaves(tree.data ?? []).filter((l) => l.id !== dish.categoryId), [tree.data, dish.categoryId])
   const flag = useFlagDish()
@@ -129,7 +130,7 @@ function FlagStep({ dish, onBack, onDone }: { dish: ShopDish; onBack: () => void
           { dishId: dish.id ?? '', suggestedCategoryId: suggested, reason: reason.trim(), deadlineAt: new Date(Date.now() + hoursValue * 3_600_000).toISOString() },
           {
             onSuccess: () => {
-              toast.success(t('Đã đánh dấu "{v0}". Quán đã được báo.', { v0: dish.name }))
+              feedback.success(t('Đã đánh dấu "{v0}". Quán đã được báo.', { v0: dish.name }))
               onDone()
             },
             onError: (err) => setError(problemMessage(err)),

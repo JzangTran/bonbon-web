@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { TriangleAlertIcon } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import type { ShopApplication } from '@/entities/shop'
 import { api, problemMessage } from '@/shared/api'
 import { BANK_ACCOUNT, TAX_CODE, idNumberProblem, isEmail, isPersonName, requiredText, type Errors } from '@/shared/lib/validate'
@@ -26,6 +26,7 @@ type Body = {
 
 /** Step 3 · Thuế & nhận tiền: business type, tax code, invoice emails, licence for a household, payout account. */
 export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () => void }) {
+  const feedback = useFeedback()
   const tItem = shop.tax
   const [type, setType] = useState<'INDIVIDUAL' | 'HOUSEHOLD' | undefined>(tItem?.businessType as 'INDIVIDUAL' | 'HOUSEHOLD' | undefined)
   const [businessName, setBusinessName] = useState(tItem?.businessName ?? '')
@@ -83,7 +84,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         onSuccess: () => {
           setAccountNumber('')
           if (andNext) onNext()
-          else toast.success(t('Đã lưu nháp.'))
+          else feedback.success(t('Đã lưu nháp. Bạn quay lại làm tiếp bất cứ lúc nào; hồ sơ chỉ gửi đi khi bạn bấm Gửi hồ sơ.'))
         },
       },
     )

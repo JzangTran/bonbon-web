@@ -54,7 +54,7 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
     lng: a?.lng ?? undefined,
   })
   const [problems, setProblems] = useState<Errors>({})
-  const save = useApplyShop((body: Update) => api.PATCH('/api/merchant/shop', { body }), t('Đã lưu thông tin cửa hàng.'))
+  const save = useApplyShop((body: Update) => api.PATCH('/api/merchant/shop', { body }), t('Đã lưu thông tin cửa hàng. Khách thấy thay đổi trên trang quán ngay.'))
   const disabled = save.isPending || shop.status !== 'APPROVED'
   const errors = { ...save.fieldErrors, ...problems }
   /** A new place (province, ward or map point) sends the shop back to review; the detail alone does not. */

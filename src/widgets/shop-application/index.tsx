@@ -2,8 +2,8 @@ import { t } from '@/shared/i18n'
 import { useMutation } from '@tanstack/react-query'
 import { EyeIcon, TriangleAlertIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 import { formatTime, formatVnd, weekdayName } from '@/shared/lib/format'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
@@ -91,6 +91,7 @@ export function ShopApplicationSections({ shop, canViewIdentity }: { shop: Detai
 }
 
 function IdentitySection({ shop, canView }: { shop: Detail; canView: boolean }) {
+  const feedback = useFeedback()
   const reveal = useMutation({
     mutationFn: async () => {
       const { data, error } = await api.GET('/api/admin/merchant-approval/requests/{vendorId}/identity', {
@@ -99,7 +100,7 @@ function IdentitySection({ shop, canView }: { shop: Detail; canView: boolean }) 
       if (error || !data) throw error
       return data
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   const docs = reveal.data
 

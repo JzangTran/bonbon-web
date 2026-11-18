@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage, type components } from '@/shared/api'
 import { t } from '@/shared/i18n'
@@ -26,6 +26,7 @@ const STATUS: Record<string, string> = { PENDING: 'Chờ duyệt', APPROVED: 'Đ
  * set-password email); rejecting and revoking need a reason the person reads.
  */
 export function AdminDeveloperAccessPage() {
+  const feedback = useFeedback()
   const { session } = useSession()
   const [status, setStatus] = useState<Status>('PENDING')
   const paging = usePaging(25)
@@ -47,9 +48,9 @@ export function AdminDeveloperAccessPage() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'developer-access'] })
-      toast.success(t('Đã duyệt. Người gửi nhận email hướng dẫn đăng nhập.'))
+      feedback.success(t('Đã cấp quyền lập trình viên. Người gửi nhận email hướng dẫn đăng nhập trang tài liệu API.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
   if (!session?.permissions.has('developer-access:decide')) return <FormError message={t('Bạn không có quyền xem mục này.')} />
 
@@ -132,6 +133,7 @@ export function AdminDeveloperAccessPage() {
 }
 
 function ReasonDialog({ request, action, onClose }: { request: Request; action: 'reject' | 'revoke'; onClose: () => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const [reason, setReason] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -143,7 +145,7 @@ function ReasonDialog({ request, action, onClose }: { request: Request; action: 
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'developer-access'] })
-      toast.success(action === 'reject' ? t('Đã từ chối và báo cho người gửi.') : t('Đã thu hồi; mọi phiên của tài khoản đã kết thúc.'))
+      feedback.success(action === 'reject' ? t('Đã từ chối yêu cầu. Người gửi nhận email kèm lý do.') : t('Đã thu hồi quyền lập trình viên. Mọi phiên của tài khoản đã kết thúc; họ không còn đọc được tài liệu API.'))
       onClose()
     },
     onError: (e) => setError(problemMessage(e)),

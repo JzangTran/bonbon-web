@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { api, problemMessage, type components } from '@/shared/api'
+import { useFeedback } from '@/shared/ui/feedback'
+import { api, type components } from '@/shared/api'
 
 export type ShopPerformance = components['schemas']['ShopPerformance']
 export type PerformanceWeek = components['schemas']['PerformanceWeek']
@@ -38,6 +38,7 @@ export function useWeekFaults(week: string | null) {
 }
 
 export function useAppealPenalty() {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
@@ -45,11 +46,11 @@ export function useAppealPenalty() {
       if (error) throw error
     },
     onSuccess: () => {
-      toast.success(t('Đã gửi kháng nghị. Quản trị viên sẽ xem xét.'))
+      feedback.success(t('Đã gửi kháng nghị. Quản trị viên xem xét và bạn nhận thông báo kết quả; điểm phạt giữ nguyên tới khi có quyết định.'))
       void queryClient.invalidateQueries({ queryKey: PERFORMANCE_KEY })
     },
     onError: (error) => {
-      toast.error(problemMessage(error))
+      feedback.error(error)
       void queryClient.invalidateQueries({ queryKey: PERFORMANCE_KEY })
     },
   })

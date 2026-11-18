@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CopyIcon, KeyRoundIcon, PlusIcon, SearchIcon, StoreIcon, UserRoundXIcon, UserRoundCheckIcon } from 'lucide-react'
+import { CopyButton } from '@/shared/ui/copy-button'
+import { KeyRoundIcon, PlusIcon, SearchIcon, StoreIcon, UserRoundXIcon, UserRoundCheckIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useSession } from '@/entities/session'
 import { api, problemMessage } from '@/shared/api'
 import { t } from '@/shared/i18n'
@@ -29,6 +30,7 @@ export { SellerTeamShopsPage } from './shops'
  * person, status as a badge, the shops as chips, everything else one click away.
  */
 export function SellerTeamMembersPage() {
+  const feedback = useFeedback()
   const members = useMembers()
   const [query, setQuery] = useState('')
   const [creating, setCreating] = useState(false)
@@ -47,9 +49,9 @@ export function SellerTeamMembersPage() {
     },
     onSuccess: (m) => {
       void queryClient.invalidateQueries({ queryKey: TEAM_KEYS.members })
-      toast.success(m.status === 'ACTIVE' ? t('Đã mở khoá thành viên.') : t('Đã khoá thành viên; họ bị đăng xuất ngay.'))
+      feedback.success(m.status === 'ACTIVE' ? t('Đã mở khoá thành viên. Họ đăng nhập lại được ngay.') : t('Đã khoá thành viên. Họ bị đăng xuất ngay và không đăng nhập được cho tới khi bạn mở khoá.'))
     },
-    onError: (e) => toast.error(problemMessage(e)),
+    onError: (e) => feedback.error(e),
   })
 
   const shown = useMemo(() => {
@@ -151,18 +153,10 @@ export function SellerTeamMembersPage() {
 
 function CopyText({ value }: { value: string }) {
   return (
-    <button
-      type="button"
-      className="inline-flex items-center gap-1.5 rounded-sm font-mono text-xs text-muted-foreground hover:text-primary focus-visible:outline-2"
-      onClick={() => {
-        void navigator.clipboard?.writeText(value)
-        toast.success(t('Đã sao chép.'))
-      }}
-      title={t('Sao chép')}
-    >
+    <span className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
       {value}
-      <CopyIcon className="size-3.5 opacity-60" aria-hidden="true" />
-    </button>
+      <CopyButton value={value} label={t('Sao chép {v}', { v: value })} iconOnly variant="ghost" />
+    </span>
   )
 }
 
@@ -315,16 +309,7 @@ function CreateMemberDialog({ onClose }: { onClose: () => void }) {
           <div className="flex flex-col gap-3 rounded-sm border bg-muted/40 p-4">
             <p className="text-sm">{t('Đã tạo thành viên. Gửi thông tin đăng nhập này cho họ:')}</p>
             <p className="font-mono text-sm">{created}</p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                void navigator.clipboard?.writeText(`${created}\n${draft.password}`)
-                toast.success(t('Đã sao chép tên đăng nhập và mật khẩu.'))
-              }}
-            >
-              <CopyIcon className="size-4" aria-hidden="true" />
-              {t('Sao chép tên đăng nhập và mật khẩu')}
-            </Button>
+            <CopyButton value={`${created}\n${draft.password}`} label={t('Sao chép tên đăng nhập và mật khẩu')} text={t('Sao chép tên đăng nhập và mật khẩu')} size="default" />
           </div>
         ) : null}
         <DialogFooter>
@@ -347,6 +332,7 @@ function CreateMemberDialog({ onClose }: { onClose: () => void }) {
 }
 
 function ResetPasswordDialog({ member, onClose }: { member: Member; onClose: () => void }) {
+  const feedback = useFeedback()
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -359,7 +345,7 @@ function ResetPasswordDialog({ member, onClose }: { member: Member; onClose: () 
       if (!response.ok) throw problem
     },
     onSuccess: () => {
-      toast.success(t('Đã đặt mật khẩu mới; thành viên bị đăng xuất khỏi mọi thiết bị.'))
+      feedback.success(t('Đã đặt mật khẩu mới. Thành viên bị đăng xuất khỏi mọi thiết bị; gửi mật khẩu mới cho họ.'))
       onClose()
     },
     onError: (e) => setError(problemMessage(e)),
@@ -404,6 +390,7 @@ function ResetPasswordDialog({ member, onClose }: { member: Member; onClose: () 
 
 /** One shop at a time (manage-shop-assignment.md): change the role there, add the member to another shop, or take a shop away. */
 function AssignDialog({ member, onClose }: { member: Member; onClose: () => void }) {
+  const feedback = useFeedback()
   const main = useMainAccount()
   const roles = useRoles()
   const queryClient = useQueryClient()
@@ -430,7 +417,7 @@ function AssignDialog({ member, onClose }: { member: Member; onClose: () => void
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: TEAM_KEYS.members })
-      toast.success(t('Đã lưu. Quyền bị bớt có hiệu lực ngay.'))
+      feedback.success(t('Đã lưu quyền của thành viên. Quyền bị bớt có hiệu lực ngay, quyền thêm có từ lần đăng nhập tới.'))
       setError(null)
     },
     onError: (e) => setError(problemMessage(e)),

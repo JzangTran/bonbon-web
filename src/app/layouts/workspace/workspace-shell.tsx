@@ -15,7 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
+import { FeedbackRegion } from '@/shared/ui/feedback'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { WorkspaceSlotsProvider } from '@/shared/ui/workspace-slots'
 import { useSlotHosts } from '@/shared/ui/workspace-slots/context'
 import { locate } from './locate'
@@ -132,10 +133,12 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
 
         <div className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3">
           {headerExtra}
-          {session?.team ? null : (<button
+          {session?.team ? null : (
+            <Popover open={bellOpen} onOpenChange={setBellOpen}>
+              <PopoverTrigger asChild>
+                <button
             type="button"
             aria-label={unread > 0 ? t('Thông báo, {v0} chưa đọc', { v0: unread }) : t('Thông báo')}
-            onClick={() => setBellOpen(true)}
             className="relative flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-ink"
           >
             <BellIcon className="size-[18px]" aria-hidden="true" />
@@ -144,7 +147,20 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
                 {unread > 99 ? '99+' : unread}
               </span>
             ) : null}
-          </button>)}
+          </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-96 max-w-[calc(100vw-2rem)] p-4">
+                <NotificationFeed orderPath={orderPath} limit={5} />
+                <Link
+                  to={`${homePath.replace(/\/$/, '')}/notifications`}
+                  onClick={() => setBellOpen(false)}
+                  className="mt-3 flex h-10 items-center justify-center rounded-control text-label text-link hover:bg-surface-subtle"
+                >
+                  {t('Xem tất cả trong Hộp thư')}
+                </Link>
+              </PopoverContent>
+            </Popover>
+          )}
           {!widePanel ? (
             <button
               type="button"
@@ -247,7 +263,10 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
               </nav>
             ) : null}
             <div ref={setTabsHost} className="mb-6 empty:hidden" />
-            <Outlet />
+            {/* where this page's results and errors appear (design v5 feedback ladder, rung 2) */}
+            <FeedbackRegion>
+              <Outlet />
+            </FeedbackRegion>
           </div>
           {!focus ? <ShellFooter links={footerLinks} className="mt-2 wsnav:hidden" /> : null}
         </main>
@@ -271,17 +290,6 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
 
       {!focus ? <ShellFooter links={footerLinks} className="hidden wsnav:flex" /> : null}
 
-      <Sheet open={bellOpen} onOpenChange={setBellOpen}>
-        <SheetContent side="right" className="gap-0 p-0">
-          <SheetHeader className="px-6 pt-6">
-            <SheetTitle>{t('Thông báo')}</SheetTitle>
-            <SheetDescription className="sr-only">{t('Thông báo mới nhất của bạn')}</SheetDescription>
-          </SheetHeader>
-          <div className="overflow-y-auto px-6 py-4">
-            <NotificationFeed orderPath={orderPath} />
-          </div>
-        </SheetContent>
-      </Sheet>
     </div>
   )
 }

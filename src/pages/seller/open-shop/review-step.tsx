@@ -1,7 +1,7 @@
 import { t } from '@/shared/i18n'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CheckIcon } from 'lucide-react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { SHOP_QUERY_KEY, type ShopApplication } from '@/entities/shop'
 import { api, problemCode, problemMessage } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
@@ -12,6 +12,7 @@ import { FIELD_LABEL, STEPS } from './step-logic'
 
 /** Step 5 · Xác nhận và gửi duyệt: what is still missing in each step, and the button that sends the application. */
 export function ReviewStep({ shop, goTo }: { shop: ShopApplication; goTo: (step: number) => void }) {
+  const feedback = useFeedback()
   const queryClient = useQueryClient()
   const submit = useMutation({
     mutationFn: async () => {
@@ -21,7 +22,7 @@ export function ReviewStep({ shop, goTo }: { shop: ShopApplication; goTo: (step:
     },
     onSuccess: (data) => {
       queryClient.setQueryData(SHOP_QUERY_KEY, data)
-      toast.success(t('Đã gửi hồ sơ. Bạn sẽ nhận email khi có kết quả.'))
+      feedback.success(t('Đã gửi hồ sơ mở quán. Đội duyệt thường trả lời trong 1–2 ngày làm việc; bạn nhận email khi có kết quả.'))
     },
     onError: (e) => {
       if (problemCode(e) === 'SHOP_APPLICATION_INCOMPLETE') {

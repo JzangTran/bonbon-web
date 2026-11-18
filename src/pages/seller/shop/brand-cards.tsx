@@ -1,7 +1,7 @@
 import { DownloadIcon } from 'lucide-react'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import { useFeedback } from '@/shared/ui/feedback'
 import { useApplyShop, type ShopApplication } from '@/entities/shop'
 import { api } from '@/shared/api'
 import { siteUrl } from '@/shared/config/sites'
@@ -16,6 +16,7 @@ const shopLink = (id: string) => siteUrl('public', `/shops/${id}`)
 
 /** The square picture next to the shop's name in the customer app. */
 export function LogoCard({ shop }: { shop: ShopApplication }) {
+  const feedback = useFeedback()
   const upload = useApplyShop(async (file: File) => {
     const form = new FormData()
     form.append('file', file)
@@ -23,8 +24,8 @@ export function LogoCard({ shop }: { shop: ShopApplication }) {
       body: form as unknown as { file: string },
       bodySerializer: (body) => body as unknown as FormData,
     })
-  }, t('Đã đổi logo.'))
-  const remove = useApplyShop(() => api.DELETE('/api/merchant/shop/logo'), t('Đã gỡ logo.'))
+  }, t('Đã đổi logo. Khách thấy logo mới trên trang quán và danh sách quán.'))
+  const remove = useApplyShop(() => api.DELETE('/api/merchant/shop/logo'), t('Đã gỡ logo. Trang quán hiện chữ cái đầu của tên quán thay cho logo.'))
   const logo = shop.shop?.logoUrl
   return (
     <Card>
@@ -40,7 +41,7 @@ export function LogoCard({ shop }: { shop: ShopApplication }) {
           pending={upload.isPending}
           onPick={async (file) => {
             const problem = await checkUpload(file, { maxMb: 2 })
-            if (problem) toast.error(problem)
+            if (problem) feedback.error(problem)
             else upload.mutate(file)
           }}
         />
@@ -56,6 +57,7 @@ export function LogoCard({ shop }: { shop: ShopApplication }) {
 
 /** The picture behind the top of the shop's page in the customer app, darkened there so the buttons stay readable. */
 export function CoverCard({ shop }: { shop: ShopApplication }) {
+  const feedback = useFeedback()
   const upload = useApplyShop(async (file: File) => {
     const form = new FormData()
     form.append('file', file)
@@ -63,8 +65,8 @@ export function CoverCard({ shop }: { shop: ShopApplication }) {
       body: form as unknown as { file: string },
       bodySerializer: (body) => body as unknown as FormData,
     })
-  }, t('Đã đổi ảnh nền.'))
-  const remove = useApplyShop(() => api.DELETE('/api/merchant/shop/cover'), t('Đã gỡ ảnh nền.'))
+  }, t('Đã đổi ảnh nền. Khách thấy ảnh mới ở đầu trang quán.'))
+  const remove = useApplyShop(() => api.DELETE('/api/merchant/shop/cover'), t('Đã gỡ ảnh nền. Đầu trang quán hiện nền trơn.'))
   const cover = shop.shop?.coverUrl
   return (
     <Card>
@@ -80,7 +82,7 @@ export function CoverCard({ shop }: { shop: ShopApplication }) {
           pending={upload.isPending}
           onPick={async (file) => {
             const problem = await checkUpload(file, { maxMb: 5 })
-            if (problem) toast.error(problem)
+            if (problem) feedback.error(problem)
             else upload.mutate(file)
           }}
         />
