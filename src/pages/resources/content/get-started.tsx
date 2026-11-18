@@ -9,6 +9,30 @@ const whatsNew: ResourceDoc = {
   ),
   sections: [
     {
+      id: '2026-11-19',
+      title: tx('19/11/2026 · Ngôn ngữ thiết kế v5: Cam Bếp', '19 Nov 2026 · Design language v5: Kitchen Orange'),
+      body: (
+        <>
+          <List
+            items={[
+              tx('Token có một nguồn duy nhất: repo bonbon-design. Lệnh npm run sync sinh token cho web và điện thoại; bộ kiểm thử đo độ tương phản của mọi cặp màu ở giao diện sáng và tối.', 'Tokens have one source: the bonbon-design repo. npm run sync generates the web and phone tokens; the tests measure the contrast of every colour pair in light and dark.'),
+              tx('Nút chính cam đậm #CF430D (4,71:1 với chữ trắng); liên kết #B33A0C; xám ấm cùng tông cam; cảnh báo dùng vàng hổ phách.', 'Primary buttons in dark orange #CF430D (4.71:1 with white); links #B33A0C; warm stone neutrals; warnings in amber.'),
+              tx('Be Vietnam Pro thay Inter trên web và điện thoại; tám kiểu chữ có tên (display, title-1/2/3, body, body-sm, label, caption).', 'Be Vietnam Pro replaces Inter on web and phone; eight named styles (display, title-1/2/3, body, body-sm, label, caption).'),
+              tx('Nút, ô nhập, chip bo 10 px; thẻ 12 px; tròn chỉ cho ảnh đại diện, công tắc, chấm.', 'Buttons, fields and chips 10 px; cards 12 px; circles only for avatars, switches and dots.'),
+              tx('Thang phản hồi 5 bậc thay cho toast: tại chỗ, nội tuyến, banner, snackbar có hoàn tác, trang kết quả. Mỗi thông điệp nói chuyện gì xảy ra, có nghĩa gì, làm gì tiếp.', 'A five-rung feedback ladder replaces toasts: in place, inline, banner, undoable snackbar, result page. Every message says what happened, what it means, what next.'),
+              tx('Component mới: Text, IconButton, TextField, Chip, Switch, Checkbox, Avatar, ListItem, Price, Rating, QuantityStepper, Spinner, InlineMessage, Banner, Snackbar, ResultPage.', 'New components: Text, IconButton, TextField, Chip, Switch, Checkbox, Avatar, ListItem, Price, Rating, QuantityStepper, Spinner, InlineMessage, Banner, Snackbar, ResultPage.'),
+            ]}
+          />
+          <P>
+            {tx('Tên v4 (', 'v4 names (')}
+            <C>text-h1</C>, <C>text-ui</C>, <C>grey-100</C>
+            {tx(') vẫn chạy và trỏ về v5; màn hình mới dùng tên v5 (', ') still work and point to v5; new screens use v5 names (')}
+            <C>text-title-1</C>, <C>text-body-sm</C>, <C>bg-surface-subtle</C>).
+          </P>
+        </>
+      ),
+    },
+    {
       id: '2026-10-29',
       title: tx('29/10/2026 · Hai ngôn ngữ, tên component tiếng Anh', '29 Oct 2026 · Two languages, English component names'),
       body: (

@@ -36,13 +36,13 @@ const principles: ResourceDoc = {
         <>
           <P>
             {tx(
-              'Mỗi vùng có nhiều nhất một nút chính màu mực. Các việc khác là nút phụ hoặc nút chữ. Người xem không phải đoán bấm vào đâu.',
-              'Each region has at most one ink primary button. Other actions are secondary or text buttons. People never have to guess what to press.',
+              'Mỗi vùng có nhiều nhất một nút chính màu cam đậm. Các việc khác là nút viền, nút phụ hoặc nút chữ. Người xem không phải đoán bấm vào đâu.',
+              'Each region has at most one orange primary button. Other actions are outline, secondary or text buttons. People never have to guess what to press.',
             )}
           </P>
           <Rules
             items={[
-              { ok: true, caption: tx('Một nút chính, một nút phụ', 'One primary, one secondary'), demo: <><Button>{t('Nhận đơn')}</Button><Button variant="secondary">{t('Từ chối đơn')}</Button></> },
+              { ok: true, caption: tx('Một nút chính, một nút phụ', 'One primary, one secondary'), demo: <><Button>{t('Nhận đơn')}</Button><Button variant="outline">{t('Từ chối đơn')}</Button></> },
               { ok: false, caption: tx('Hai nút chính tranh nhau', 'Two primary buttons competing'), demo: <><Button>{t('Nhận đơn')}</Button><Button>{t('Từ chối đơn')}</Button></> },
             ]}
           />
@@ -51,12 +51,12 @@ const principles: ResourceDoc = {
     },
     {
       id: 'selection-is-colour',
-      title: tx('Đang chọn thì đổi màu chữ, không đổi khối', 'Selection changes the text colour, not the block'),
+      title: tx('Thứ đang chọn luôn nhìn ra ngay', 'The selected thing is obvious at a glance'),
       body: (
         <P>
           {tx(
-            'Mục đang chọn (tab, menu, lựa chọn nhanh) có chữ cam. Rê chuột lên bất kỳ mục nào cho nền xám nhẹ và chữ đen, kể cả mục đang chọn. Viền chỉ xuất hiện quanh thứ đang chọn hoặc thứ cần ranh giới, như bảng.',
-            'The selected item (tab, menu, quick choice) has orange text. Hovering any item gives a light grey background and black text, the selected one included. Borders appear only around what is selected or what needs a boundary, like tables.',
+            'Mục đang chọn (chip, mục menu) có nền cam nhạt và chữ cam đậm; tab đang chọn có gạch dưới màu cam. Rê chuột lên mục khác cho nền nhạt. Viền chỉ xuất hiện quanh ô nhập, thẻ cần tách khỏi trang, và bảng.',
+            'The selected item (chip, menu item) gets a pale orange fill and dark orange text; the selected tab an orange underline. Hovering other items gives a subtle fill. Borders only around inputs, cards that must stand apart, and tables.',
           )}
         </P>
       ),
@@ -151,34 +151,35 @@ const logo: ResourceDoc = {
 
 const color: ResourceDoc = {
   summary: tx(
-    'Màu giúp người xem biết đâu là nội dung, đâu là thứ đang chọn và đâu là việc cần để ý. bonbon dùng ít màu: trắng, mực, hai sắc xám, cam thương hiệu và bốn màu trạng thái.',
-    'Colour tells people what is content, what is selected and what needs attention. bonbon uses few colours: white, ink, two greys, the brand orange and four state colours.',
+    'Màu giúp người xem biết đâu là nội dung, đâu là việc chính, đâu là thứ đang chọn và đâu là việc cần để ý. Màu theo ba lớp: thang màu gốc, vai trò (accent, textSecondary, warningSubtle…), rồi component. Màn hình chỉ dùng vai trò.',
+    'Colour tells people what is content, what the main action is, what is selected and what needs attention. It comes in three layers: palettes, roles (accent, textSecondary, warningSubtle…), then components. Screens only use roles.',
   ),
   sections: [
     {
       id: 'brand-and-neutrals',
-      title: tx('Màu thương hiệu và màu trung tính', 'Brand and neutral colours'),
+      title: tx('Cam Bếp và xám ấm', 'Kitchen orange and warm stone'),
       body: (
         <>
           <P>
             {tx(
-              'Cam #FE551B đạt 3,22:1 trên nền trắng: đủ cho chữ lớn và các phần điều khiển, nhưng chưa đủ cho chữ nhỏ. Vì vậy nút chính màu mực; cam dành cho liên kết, mục đang chọn và điểm nhấn. Cần chữ cam nhỏ thì dùng Orange 600 #CC3D0B (4,95:1).',
-              'Orange #FE551B reaches 3.22:1 on white: enough for large text and controls, not for small text. So primary buttons are ink; orange is for links, selected items and accents. For small orange text use Orange 600 #CC3D0B (4.95:1).',
+              'Màu thương hiệu là cam, nối tiếp logo và chú gấu. Nút chính, mục đang chọn và viền focus dùng Orange 600 #CF430D: chữ trắng trên nền này đạt 4,71:1. Liên kết trong đoạn văn dùng Orange 700 #B33A0C, đọc rõ ở cỡ 14 px. Orange 500 chỉ cho logo và mảng lớn, không bao giờ cho chữ. Màu trung tính là xám ấm (stone), hơi ngả về cam để cả trang cùng một tông.',
+              'The brand colour is orange, continuing the logo and the mascot. Primary buttons, selected items and focus rings use Orange 600 #CF430D: white text on it reaches 4.71:1. Links in running text use Orange 700 #B33A0C, readable at 14 px. Orange 500 is for the logo and large shapes only, never text. Neutrals are warm stone, tinted towards the orange so the whole page shares one tone.',
             )}
           </P>
           <SwatchGrid colors={BRAND_COLORS} />
+          <Principle>{tx('Mỗi màn hình một nút cam. Màu cam trên mảng lớn làm mất thứ bậc.', 'One orange button per screen. Orange on large surfaces flattens the hierarchy.')}</Principle>
         </>
       ),
     },
     {
       id: 'states',
-      title: tx('Màu trạng thái nói một việc', 'State colours say one thing'),
+      title: tx('Màu trạng thái chỉ để báo trạng thái', 'State colours only report state'),
       body: (
         <>
           <P>
             {tx(
-              'Mỗi màu trạng thái có ba sắc: màu chính, nền nhạt (-subtle) và chữ trên nền nhạt (-fg). Nhãn trạng thái dùng nền nhạt và chữ đậm, không dùng màu chính làm nền.',
-              'Each state colour has three shades: the main colour, a pale background (-subtle) and text on that background (-fg). Status badges use the pale background with dark text, never the main colour as a background.',
+              'Mỗi trạng thái có ba sắc: màu chính (biểu tượng), nền nhạt (Subtle) và chữ trên nền nhạt (onSubtle). Cảnh báo dùng vàng hổ phách, không dùng cam, để không lẫn với thương hiệu. Trạng thái luôn có chữ hoặc biểu tượng đi kèm, không chỉ dựa vào màu.',
+              'Each state has three shades: the main colour (icons), a pale fill (Subtle) and text on that fill (onSubtle). Warnings use amber, not orange, so they never read as the brand. A state always comes with words or an icon, never colour alone.',
             )}
           </P>
           <SwatchGrid colors={STATE_COLORS} />
@@ -188,13 +189,13 @@ const color: ResourceDoc = {
     },
     {
       id: 'charts',
-      title: tx('Biểu đồ dùng ba màu theo thứ tự cố định', 'Charts use three colours in a fixed order'),
+      title: tx('Biểu đồ dùng màu theo thứ tự cố định', 'Charts use colours in a fixed order'),
       body: (
         <>
           <P>
             {tx(
-              'Ba màu chuỗi được kiểm tra cho người mù màu trên nền be. Chuỗi thứ nhất luôn là cam. Chữ và nhãn trên biểu đồ không dùng màu chuỗi.',
-              'The three series colours are checked for colour blindness on the beige background. The first series is always orange. Text and labels on charts never use series colours.',
+              'Chuỗi thứ nhất luôn là số liệu của chính quán, màu cam. Chữ và nhãn trên biểu đồ dùng màu chữ, không dùng màu chuỗi.',
+              "The first series is always the shop's own figure, in orange. Text and labels on charts use text colours, never series colours.",
             )}
           </P>
           <SwatchGrid colors={CHART_COLORS} />
@@ -202,20 +203,22 @@ const color: ResourceDoc = {
       ),
     },
     {
-      id: 'dark',
-      title: tx('Giao diện tối đổi giá trị, không đổi tên', 'The dark theme changes values, not names'),
+      id: 'tokens',
+      title: tx('Một nguồn, hai giao diện, tự kiểm tra', 'One source, two themes, self-checking'),
       body: (
         <P>
-          {tx('Mỗi token có giá trị cho giao diện sáng và tối. Màn hình chỉ gọi tên token (', 'Every token has a light and a dark value. Screens only name the token (')}
-          <C>bg-primary</C>, <C>theme.text</C>
-          {tx('), nên tự đổi khi giao diện đổi. Bảng đầy đủ ở Token cho web › Token màu.', '), so they switch with the theme. The full table is in Web tokens › Color tokens.')}
+          {tx('Giá trị nằm trong repo bonbon-design; lệnh npm run sync sinh ra token cho web (', 'Values live in the bonbon-design repo; npm run sync generates the web tokens (')}
+          <C>--bb-accent</C>
+          {tx(') và cho điện thoại (', ') and the phone tokens (')}
+          <C>theme.accent</C>
+          {tx('). Mỗi vai trò có giá trị sáng và tối, và bộ kiểm thử đo độ tương phản WCAG của từng cặp chữ và nền ở cả hai giao diện.', '). Every role has a light and a dark value, and the tests measure the WCAG contrast of every text and background pair in both themes.')}
         </P>
       ),
     },
   ],
   takeaway: tx(
-    'Mực cho nội dung và nút chính, xám cho khung, cam cho thứ đang chọn và liên kết, màu trạng thái chỉ cho trạng thái.',
-    'Ink for content and primary buttons, grey for the frame, orange for selection and links, state colours only for states.',
+    'Cam đậm cho việc chính và thứ đang chọn, xám ấm cho nội dung và khung, màu trạng thái chỉ cho trạng thái, và mọi cặp màu đều đạt chuẩn tương phản.',
+    'Dark orange for the main action and selection, warm stone for content and frame, state colours only for states, and every pair passes contrast.',
   ),
 }
 
@@ -520,25 +523,25 @@ const motion: ResourceDoc = {
 
 const shapes: ResourceDoc = {
   summary: tx(
-    'Hình dạng cho biết một thứ là gì trước khi đọc chữ: viên thuốc là thứ bấm được, góc 8 px là ô để nhập, góc 12 px là bề mặt chứa nội dung.',
-    'Shape tells what something is before reading it: a pill is something to press, 8 px corners are a field to type in, 12 px corners are a surface holding content.',
+    'Hình dạng cho biết một thứ là gì trước khi đọc chữ: góc 10 px là thứ để bấm hoặc nhập, góc 12 px là bề mặt chứa nội dung, hình tròn chỉ cho ảnh đại diện, công tắc và chấm trạng thái.',
+    'Shape tells what something is before reading it: 10 px corners are something to press or type into, 12 px corners a surface holding content, circles only avatars, switches and status dots.',
   ),
   sections: [
     {
       id: 'radius',
-      title: tx('Bốn mức bo góc', 'Four corner radii'),
+      title: tx('Năm mức bo góc', 'Five corner radii'),
       body: (
         <>
           <Stage>
             {[
-              { r: 'rounded-full', name: 'pill', px: '999' },
-              { r: 'rounded-[12px]', name: 'lg / card', px: '12' },
-              { r: 'rounded-[8px]', name: 'md', px: '8' },
-              { r: 'rounded-[4px]', name: 'xs / sm', px: '4' },
+              { r: 'rounded-[20px]', name: 'sheet', px: '20' },
+              { r: 'rounded-[12px]', name: 'card', px: '12' },
+              { r: 'rounded-[10px]', name: 'control', px: '10' },
+              { r: 'rounded-[4px]', name: 'xs', px: '4' },
             ].map((s) => (
               <div key={s.name} className="flex flex-col items-center gap-2">
-                <div className={`h-16 w-24 border-2 border-ink bg-white ${s.r}`} />
-                <span className="text-small">
+                <div className={`h-16 w-24 border-2 border-ink bg-surface ${s.r}`} />
+                <span className="text-body-sm">
                   {s.name} · {s.px}
                 </span>
               </div>
@@ -547,10 +550,11 @@ const shapes: ResourceDoc = {
           <DataTable
             head={[tx('Bo góc', 'Radius'), tx('Dùng cho', 'Used for')]}
             rows={[
-              ['pill', tx('Nút, chip, tab, nhãn, ô tìm kiếm, lựa chọn nhanh', 'Buttons, chips, tabs, badges, search fields, quick choices')],
-              ['12 px', tx('Thẻ, sheet, hộp thoại, ảnh, khối số liệu', 'Cards, sheets, dialogs, photos, stats blocks')],
-              ['8 px', tx('Ô nhập, nút chỉ có biểu tượng', 'Fields, icon-only buttons')],
-              ['4 px', tx('Dấu rất nhỏ, mã trong dòng chữ', 'Tiny marks, inline code')],
+              ['control · 10 px', tx('Nút, ô nhập, chọn, chip, tab, nút biểu tượng', 'Buttons, inputs, selects, chips, tabs, icon buttons')],
+              ['card · 12 px', tx('Thẻ, ảnh, hộp thoại, menu, banner', 'Cards, images, dialogs, menus, banners')],
+              ['sheet · 20 px', tx('Mép trên của bottom sheet', 'Top corners of a bottom sheet')],
+              ['xs · 4 px', tx('Nhãn trạng thái, dấu rất nhỏ', 'Status badges, tiny marks')],
+              ['full', tx('Chỉ ảnh đại diện, công tắc, chấm trạng thái', 'Only avatars, switches, status dots')],
             ]}
           />
         </>
@@ -563,8 +567,8 @@ const shapes: ResourceDoc = {
         <>
           <Rules
             items={[
-              { ok: true, caption: tx('Nút viên thuốc, ô nhập góc 8 px', 'Pill button, 8 px field'), demo: <div className="flex w-full max-w-xs flex-col gap-2 rounded-xl bg-white p-3"><Input placeholder={t('Tìm')} /><Button>{t('Tìm')}</Button></div> },
-              { ok: false, caption: tx('Nút vuông góc giữa các nút tròn', 'A square button among pills'), demo: <><Button>{t('Lưu')}</Button><Button className="rounded-none">{t('Huỷ')}</Button></> },
+              { ok: true, caption: tx('Nút và ô nhập cùng bo 10 px', 'Button and field share 10 px'), demo: <div className="flex w-full max-w-xs flex-col gap-2 rounded-card bg-surface p-3"><Input placeholder={t('Tìm')} /><Button>{t('Tìm')}</Button></div> },
+              { ok: false, caption: tx('Nút tròn hai đầu giữa các nút bo 10 px', 'A pill among 10 px buttons'), demo: <><Button>{t('Lưu')}</Button><Button variant="outline" className="rounded-full">{t('Huỷ')}</Button></> },
             ]}
           />
           <Principle>{tx('Đừng đổi bo góc của một component để nó "nổi bật"; dùng loại khác của nó.', 'Never change a component\'s corners to make it "stand out"; use another of its types.')}</Principle>
@@ -576,22 +580,22 @@ const shapes: ResourceDoc = {
 
 const typography: ResourceDoc = {
   summary: tx(
-    'Chữ mang hầu hết thông tin của bonbon. Một font, Inter, với một thang cỡ chữ cố định, để mọi trang có cùng nhịp đọc.',
-    'Type carries most of bonbon\'s information. One font, Inter, with a fixed type scale, so every page has the same reading rhythm.',
+    'Chữ mang hầu hết thông tin của bonbon. Một họ chữ, Be Vietnam Pro, với tám kiểu có tên dùng chung cho web và điện thoại, để mọi trang có cùng nhịp đọc.',
+    "Type carries most of bonbon's information. One family, Be Vietnam Pro, with eight named styles shared by web and phone, so every page has the same reading rhythm.",
   ),
   sections: [
     {
       id: 'typeface',
-      title: tx('Một font: Inter', 'One typeface: Inter'),
+      title: tx('Một họ chữ: Be Vietnam Pro', 'One family: Be Vietnam Pro'),
       body: (
         <>
           <P>
             {tx(
-              'Inter có đủ dấu tiếng Việt và đọc rõ ở cỡ nhỏ. Font miễn phí trên Google Fonts. Tiêu đề đậm vừa (600), chữ thường 400, nhãn và nút 500. Đậm 800 chỉ cho chữ bonbon và tiêu đề rất lớn.',
-              'Inter has every Vietnamese diacritic and stays clear at small sizes. It is free on Google Fonts. Headings are semibold (600), body 400, labels and buttons 500. Extra bold 800 is only for the bonbon wordmark and very large headlines.',
+              'Be Vietnam Pro được vẽ riêng cho dấu tiếng Việt: dấu không chạm nhau ở cỡ nhỏ và không bị cắt ở dòng trên cùng. Chỉ dùng năm độ đậm: 400 cho nội dung, 500 cho chú thích, 600 cho nhãn và tiêu đề nhỏ, 700 cho tiêu đề trang, 800 chỉ cho chữ bonbon.',
+              'Be Vietnam Pro is drawn for Vietnamese diacritics: marks never collide at small sizes and are not clipped on the top line. Only five weights: 400 body, 500 captions, 600 labels and small titles, 700 page titles, 800 the bonbon wordmark only.',
             )}
           </P>
-          <a href="https://fonts.google.com/specimen/Inter" target="_blank" rel="noreferrer" className="text-link w-fit">
+          <a href="https://fonts.google.com/specimen/Be+Vietnam+Pro" target="_blank" rel="noreferrer" className="text-link w-fit">
             {t('Tải font trên Google Fonts')}
           </a>
         </>
@@ -599,62 +603,63 @@ const typography: ResourceDoc = {
     },
     {
       id: 'scale',
-      title: tx('Thang cỡ chữ', 'Type scale'),
+      title: tx('Tám kiểu chữ', 'Eight styles'),
       body: (
         <>
-          <div className="flex flex-col divide-y divide-grey-200 rounded-xl border border-grey-200">
+          <div className="flex flex-col divide-y divide-border rounded-card border">
             {[
-              { cls: 'text-display', name: 'display', spec: '48 / 56 · 600' },
-              { cls: 'text-h1', name: 'h1', spec: '36 / 44 · 600' },
-              { cls: 'text-h2', name: 'h2', spec: '24 / 32 · 600' },
-              { cls: 'text-h3', name: 'h3', spec: '18 / 28 · 600' },
-              { cls: 'text-lead', name: 'lead', spec: '18 / 28 · 400' },
-              { cls: 'text-body', name: 'body', spec: '16 / 26 · 400' },
-              { cls: 'text-ui', name: 'ui', spec: '14 / 20 · 400–500' },
-              { cls: 'text-small', name: 'small', spec: '13 / 20 · 400' },
-              { cls: 'text-caption', name: 'caption', spec: '12 / 16 · 400' },
+              { cls: 'text-display', name: 'display', spec: '40 / 48 · 700', use: tx('Tiêu đề landing, một lần mỗi trang', 'Landing hero, once per page') },
+              { cls: 'text-title-1', name: 'title-1', spec: '28 / 36 · 700', use: tx('Tiêu đề trang', 'Page title') },
+              { cls: 'text-title-2', name: 'title-2', spec: '22 / 28 · 600', use: tx('Tiêu đề phần', 'Section title') },
+              { cls: 'text-title-3', name: 'title-3', spec: '18 / 24 · 600', use: tx('Tiêu đề thẻ, hộp thoại', 'Card and dialog title') },
+              { cls: 'text-body', name: 'body', spec: '16 / 24 · 400', use: tx('Nội dung, ô nhập', 'Running text, inputs') },
+              { cls: 'text-body-sm', name: 'body-sm', spec: '14 / 20 · 400', use: tx('Mô tả, bảng, danh sách dày', 'Descriptions, tables, dense lists') },
+              { cls: 'text-label', name: 'label', spec: '14 / 20 · 600', use: tx('Nút, tab, nhãn ô nhập, chip', 'Buttons, tabs, field labels, chips') },
+              { cls: 'text-caption', name: 'caption', spec: '12 / 16 · 500', use: tx('Thời gian, nhãn trạng thái, gợi ý', 'Timestamps, badges, help text') },
             ].map((s) => (
               <div key={s.name} className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-4 py-3">
                 <span className={`${s.cls} min-w-0`}>{t('Đặt món ngay trong khu')}</span>
-                <span className="shrink-0 font-mono text-small text-muted-foreground">
-                  text-{s.name} · {s.spec}
+                <span className="shrink-0 font-mono text-caption text-text-tertiary">
+                  text-{s.name} · {s.spec} · {s.use}
                 </span>
               </div>
             ))}
           </div>
           <P>
-            {tx('Ứng dụng điện thoại dùng thang riêng gọn hơn trong ', 'The phone app uses a tighter scale in ')}
-            <C>typography</C>
-            {tx(': caption 12, bodySm 14, body 16, titleSm 18, title 20, headline 24, display 30.', ': caption 12, bodySm 14, body 16, titleSm 18, title 20, headline 24, display 30.')}
+            {tx('Điện thoại dùng đúng tám kiểu này qua ', 'The phone app uses the same eight styles through ')}
+            <C>{'<Text variant="title1">'}</C>
+            {tx('; cỡ display chỉ dùng trên web.', '; display is web only.')}
           </P>
         </>
       ),
     },
     {
-      id: 'hierarchy',
-      title: tx('Tạo tầng bằng cỡ và màu, không bằng chữ in hoa', 'Build hierarchy with size and colour, not capitals'),
+      id: 'emphasis',
+      title: tx('Quy tắc nhấn mạnh', 'Emphasis rules'),
       body: (
         <>
-          <List
-            items={[
-              tx('Mỗi trang một h1. Tiêu đề phần là h2, nhóm nhỏ trong phần là h3.', 'One h1 per page. Section titles are h2, small groups within a section h3.'),
-              tx('Chữ nội dung màu mực; mô tả và nhãn màu xám 600.', 'Content text in ink; descriptions and labels in grey 600.'),
-              tx('Chữ in hoa chỉ cho tên nhóm nhỏ trong menu (caption, giãn chữ).', 'Capitals only for small group names in menus (caption, tracked out).'),
-              tx('Số trong bảng và ô số liệu dùng chữ số cùng độ rộng (tabular-nums).', 'Numbers in tables and stat tiles use tabular figures (tabular-nums).'),
+          <DataTable
+            head={[tx('Cách', 'How'), tx('Dùng khi', 'Use for'), tx('Không dùng khi', 'Never for')]}
+            rows={[
+              [tx('Đậm 600', 'Bold 600'), tx('Một con số hay tên người đọc cần thấy trước: tổng tiền, giờ giao', 'The one value read first: total, delivery time'), tx('Cả câu, cả đoạn', 'Whole sentences or paragraphs')],
+              [tx('Nghiêng', 'Italic'), tx('Trích lời khách trong đánh giá', 'Quoting a customer review'), tx('Chữ giao diện: dấu tiếng Việt khó đọc khi nghiêng', 'Interface text: diacritics lose legibility')],
+              [tx('Gạch chân', 'Underline'), tx('Liên kết trong đoạn văn', 'Links in running text'), tx('Nhấn mạnh: người đọc tưởng là liên kết', 'Emphasis: it reads as a link')],
+              [tx('Màu chữ', 'Text colour'), tx('Ba mức: chính, phụ, chú thích; màu liên kết', 'Three levels: primary, secondary, tertiary; link colour'), tx('Tô màu để nhấn mạnh; chữ đỏ không phải lỗi', 'Tinting for emphasis; red text that is not an error')],
+              [tx('Chữ hoa', 'Capitals'), tx('Không dùng; viết hoa chữ đầu câu', 'Never; sentence case'), tx('Nhãn nút, tiêu đề mục', 'Button labels, section titles')],
             ]}
           />
           <H3>{tx('Chữ phóng to', 'Enlarged text')}</H3>
           <P>
             {tx(
-              'Trên điện thoại người dùng chọn cỡ chữ 125 % hoặc 150 %; trên web họ phóng to bằng trình duyệt. Mọi cỡ trong thang tính bằng rem nên phóng cùng nhau; đừng cố định chiều cao khối chứa chữ.',
-              'On phones people pick 125% or 150% text; on the web they zoom with the browser. Every size in the scale is in rem so they grow together; never fix the height of a box holding text.',
+              'Mọi cỡ tính bằng rem nên phóng cùng nhau khi người dùng phóng to trình duyệt; trên điện thoại người dùng chọn 100, 120 hoặc 140 %. Đừng cố định chiều cao khối chứa chữ.',
+              'Every size is in rem so they grow together when people zoom; on phones people pick 100, 120 or 140%. Never fix the height of a box holding text.',
             )}
           </P>
         </>
       ),
     },
   ],
-  takeaway: tx('Inter, chín cỡ cố định, tầng bằng cỡ và màu, và mọi khối chịu được chữ phóng 150 %.', 'Inter, nine fixed sizes, hierarchy through size and colour, and every block survives 150% text.'),
+  takeaway: tx('Be Vietnam Pro, tám kiểu có tên, ba mức màu chữ, in đậm có chừng mực, và mọi khối chịu được chữ phóng to.', 'Be Vietnam Pro, eight named styles, three text levels, sparing bold, and every block survives enlarged text.'),
 }
 
 export const DESIGN_LANGUAGE: Record<string, ResourceDoc> = {
