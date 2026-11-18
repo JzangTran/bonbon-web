@@ -1,182 +1,145 @@
 /*
- * bonbon design tokens v4 (orange, quiet) — owner decision 2026-10-27, after gitbook.com.
- * White first and a lot of space; text in a near-black and two greys so the content stands out; borders only where something is
- * selected or needs a boundary; a selected item changes its text colour, not its background. Brand colour: orange.
- *
- * Orange (owner decision 2026-10-27): the bright #FE551B of gitbook.com for buttons, links and selected items, as GitBook does.
- * It reaches 3.22:1 on white: enough for large text and UI parts (WCAG 1.4.11), below 4.5:1 for small text (1.4.3). To go back to the
- * accessible shade, set --primary to --orange-600 (#CC3D0B, 4.95:1).
- *   ink        #1D1D1D 16.9:1  ·  grey-600 #6E6E6E 5.10:1  ·  grey-400 #A3A3A3 decorative only
+ * bonbon design tokens v5 (owner decision 2026-11-19: direction A "Cam Bếp", 10 px controls, Be Vietnam Pro everywhere).
+ * The values come from the bonbon-design repo (design/ in the umbrella), generated into ./generated/tokens.css as --bb-* custom
+ * properties for light and .dark. This file only maps the names the pages already use onto those roles, so no page carries a
+ * colour, size or radius of its own. To change a value, change bonbon-design/tokens and run `npm run sync` there.
  */
+@import './generated/tokens.css';
 
 :root {
-  /* brand orange */
-  --orange-50: #fff4ee;
-  --orange-100: #ffe3d4;
-  --orange-500: #fe551b;
-  --orange-600: #cc3d0b;
-  --orange-700: #a8320a;
-  --orange-900: #4a1704;
-  /* neutral greys */
-  --grey-50: #fafafa;
-  --grey-100: #f5f5f5;
-  --grey-200: #ededed;
-  --grey-300: #e0e0e0;
-  --grey-400: #a3a3a3;
-  --grey-600: #6e6e6e;
-  --ink: #1d1d1d;
-  --amber-50: #fff6e0;
-  --amber-400: #ffb020;
-  --amber-800: #8a5100;
-  --image-slot: #f2f2f2;
-  /* the warm off-white of the gitbook.com footer */
-  --beige-50: #fafaf9;
+  /* palettes the pages still name directly (prefer the roles below in new code) */
+  --orange-50: var(--bb-orange-50);
+  --orange-100: var(--bb-orange-100);
+  --orange-500: var(--bb-orange-500);
+  --orange-600: var(--bb-orange-600);
+  --orange-700: var(--bb-orange-700);
+  --orange-900: var(--bb-orange-900);
+  /* the old grey names follow the theme now: they were light-only before v5 */
+  --grey-50: var(--bb-surface-subtle);
+  --grey-100: var(--bb-surface-subtle);
+  --grey-200: var(--bb-surface-strong);
+  --grey-300: var(--bb-border-strong);
+  --grey-400: var(--bb-text-disabled);
+  --grey-600: var(--bb-text-secondary);
+  --ink: var(--bb-text);
+  --amber-50: var(--bb-warning-subtle);
+  --amber-400: var(--bb-amber-400);
+  --amber-800: var(--bb-on-warning-subtle);
+  --image-slot: var(--bb-image-slot);
+  --beige-50: var(--bb-surface-subtle);
 
-  /* semantic states keep their own colours (success stays green) */
-  --success: #1f7a3f;
-  --success-subtle: #ebf6ef;
-  --success-fg: #1f6b38;
-  --warning: #a15c00;
-  --warning-subtle: #fff4e0;
-  --warning-fg: #8a4b00;
-  --info: #1d5bd8;
-  --info-subtle: #eef3ff;
-  --info-fg: #1d4fb8;
-  --danger-subtle: #fdecea;
-  --danger-fg: #b3261e;
-  --highlight-subtle: var(--amber-50);
-  --highlight-fg: var(--amber-800);
+  --success: var(--bb-success);
+  --success-subtle: var(--bb-success-subtle);
+  --success-fg: var(--bb-on-success-subtle);
+  --warning: var(--bb-warning);
+  --warning-subtle: var(--bb-warning-subtle);
+  --warning-fg: var(--bb-on-warning-subtle);
+  --info: var(--bb-info);
+  --info-subtle: var(--bb-info-subtle);
+  --info-fg: var(--bb-on-info-subtle);
+  --danger: var(--bb-danger);
+  --danger-subtle: var(--bb-danger-subtle);
+  --danger-fg: var(--bb-on-danger-subtle);
+  --highlight-subtle: var(--bb-promo-subtle);
+  --highlight-fg: var(--bb-promo);
 
-  --background: #ffffff;
-  --foreground: var(--ink);
-  --card: #ffffff;
-  --card-foreground: var(--ink);
-  --popover: #ffffff;
-  --popover-foreground: var(--ink);
-  --primary: var(--orange-500);
-  --primary-hover: #ee4a12;
-  --primary-foreground: #ffffff;
-  /* filled buttons are ink, as on gitbook.com; orange stays for links, selected items and accents */
-  --button: var(--ink);
-  --button-hover: #3a3a3a;
-  --button-foreground: #ffffff;
-  --secondary: var(--grey-100);
-  --secondary-foreground: var(--ink);
-  --muted: var(--grey-100);
-  --muted-foreground: var(--grey-600);
-  --accent: var(--orange-50);
-  --accent-foreground: var(--orange-500);
-  --destructive: #c42b1c;
-  --destructive-foreground: #ffffff;
-  /* a hairline, used sparingly (selected things, tables) */
-  --border: var(--grey-200);
-  /* the boundary of a control that has no fill */
-  --input: var(--grey-300);
-  --ring: var(--orange-500);
-  /* chart series in fixed order (validated for colour-blind separation on the beige surface): orange, blue, aqua */
-  --chart-1: var(--orange-500);
-  --chart-2: #2a78d6;
-  --chart-3: #1baf7a;
-  --chart-grid: #ebe9e4;
-  --chart-axis: #c9c7c0;
-  --chart-4: var(--orange-900);
-  --chart-5: #a15c00;
-  --radius: 0.5rem;
+  --background: var(--bb-background);
+  --foreground: var(--bb-text);
+  --card: var(--bb-surface);
+  --card-foreground: var(--bb-text);
+  --popover: var(--bb-surface);
+  --popover-foreground: var(--bb-text);
+  --primary: var(--bb-accent);
+  --primary-hover: var(--bb-accent-hover);
+  --primary-foreground: var(--bb-on-accent);
+  /* the filled button is the accent in v5 (it was ink in v4) */
+  --button: var(--bb-accent);
+  --button-hover: var(--bb-accent-hover);
+  --button-foreground: var(--bb-on-accent);
+  --secondary: var(--bb-surface-subtle);
+  --secondary-foreground: var(--bb-text);
+  --muted: var(--bb-surface-subtle);
+  --muted-foreground: var(--bb-text-secondary);
+  --accent: var(--bb-accent-subtle);
+  --accent-foreground: var(--bb-on-accent-subtle);
+  --destructive: var(--bb-danger);
+  --destructive-foreground: var(--bb-on-danger);
+  --border: var(--bb-border);
+  --input: var(--bb-border-strong);
+  --ring: var(--bb-focus-ring);
+  --link: var(--bb-link);
 
-  /* merchant, console and ops: white everywhere */
-  --ws-header: #ffffff;
-  --ws-ground: #ffffff;
-  --ws-fill: var(--grey-100);
-  --ws-hairline: var(--grey-200);
+  --chart-1: var(--bb-chart-1);
+  --chart-2: var(--bb-chart-2);
+  --chart-3: var(--bb-chart-3);
+  --chart-4: var(--bb-chart-4);
+  --chart-5: var(--bb-chart-5);
+  --chart-grid: var(--bb-chart-grid);
+  --chart-axis: var(--bb-chart-axis);
+  --radius: var(--bb-radius-control);
 
-  --headline-soft: var(--grey-400); /* only for text of 24px and up */
-  --pill-pale: var(--grey-100);
-}
+  /* merchant, console and ops */
+  --ws-header: var(--bb-surface);
+  --ws-ground: var(--bb-background);
+  --ws-fill: var(--bb-surface-subtle);
+  --ws-hairline: var(--bb-border);
 
-.dark {
-  --image-slot: #262626;
-  --beige-50: #1a1918;
-  --chart-1: #f2551b;
-  --chart-2: #3987e5;
-  --chart-3: #199e70;
-  --chart-grid: #2c2c2a;
-  --chart-axis: #383835;
-  --success: #4fc27a;
-  --success-subtle: #12301f;
-  --success-fg: #8fdcaa;
-  --warning-subtle: #33240a;
-  --warning-fg: #f5c26b;
-  --info-subtle: #14223f;
-  --info-fg: #9ebcff;
-  --danger-subtle: #3a1714;
-  --danger-fg: #f4a39a;
-  --highlight-subtle: #2e2410;
-  --highlight-fg: #f2cb7a;
-
-  --ws-header: #141414;
-  --ws-ground: #141414;
-  --ws-fill: #222222;
-  --ws-hairline: rgb(255 255 255 / 8%);
-
-  --background: #141414;
-  --foreground: #ececec;
-  --card: #141414;
-  --card-foreground: #ececec;
-  --popover: #1c1c1c;
-  --popover-foreground: #ececec;
-  --primary: #ff7a4a;
-  --primary-hover: #ff9670;
-  --primary-foreground: #141414;
-  --button: #ececec;
-  --button-hover: #ffffff;
-  --button-foreground: #141414;
-  --secondary: #222222;
-  --secondary-foreground: #ececec;
-  --muted: #222222;
-  --muted-foreground: #a3a3a3;
-  --accent: #2e1a10;
-  --accent-foreground: #ff9670;
-  --destructive: #f07b6e;
-  --destructive-foreground: #141414;
-  --border: rgb(255 255 255 / 10%);
-  --input: rgb(255 255 255 / 18%);
-  --ring: #ff7a4a;
-  --ink: #ececec;
+  --headline-soft: var(--bb-text-tertiary);
+  --pill-pale: var(--bb-surface-subtle);
 }
 
 @theme inline {
-  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-sans);
+  --font-sans: var(--bb-font-sans);
+  --font-heading: var(--bb-font-sans);
+  --font-mono: var(--bb-font-mono);
 
   /*
-   * Type scale (size / line height / weight). Headings are semibold at most; body text is regular; small UI text is 14px.
-   *   display 48/56 · h1 36/44 · h2 24/32 · h3 18/28 · lead 18/28 · body 16/26 · ui 14/20 · small 13/20 · caption 12/16
+   * The eight named styles (size / line height / weight): display 40/48/700 · title-1 28/36/700 · title-2 22/28/600 ·
+   * title-3 18/24/600 · body 16/24/400 · body-sm 14/20/400 · label 14/20/600 · caption 12/16/500.
+   * The v4 names stay as aliases of the nearest style so pages keep working: h1 = title-1, h2 = title-2, h3 = title-3,
+   * lead = body, ui = small = body-sm. New code uses the v5 names.
    */
-  --text-display: 3rem;
-  --text-display--line-height: 3.5rem;
-  --text-display--letter-spacing: -0.025em;
-  --text-display--font-weight: 600;
-  --text-h1: 2.25rem;
-  --text-h1--line-height: 2.75rem;
-  --text-h1--letter-spacing: -0.02em;
-  --text-h1--font-weight: 600;
-  --text-h2: 1.5rem;
-  --text-h2--line-height: 2rem;
-  --text-h2--letter-spacing: -0.01em;
-  --text-h2--font-weight: 600;
-  --text-h3: 1.125rem;
-  --text-h3--line-height: 1.75rem;
-  --text-h3--font-weight: 600;
-  --text-lead: 1.125rem;
-  --text-lead--line-height: 1.75rem;
-  --text-body: 1rem;
-  --text-body--line-height: 1.625rem;
-  --text-ui: 0.875rem;
-  --text-ui--line-height: 1.25rem;
-  --text-small: 0.8125rem;
-  --text-small--line-height: 1.25rem;
-  --text-caption: 0.75rem;
-  --text-caption--line-height: 1rem;
+  --text-display: var(--bb-text-display);
+  --text-display--line-height: var(--bb-text-display-line);
+  --text-display--letter-spacing: var(--bb-text-display-tracking);
+  --text-display--font-weight: var(--bb-text-display-weight);
+  --text-title-1: var(--bb-text-title-1);
+  --text-title-1--line-height: var(--bb-text-title-1-line);
+  --text-title-1--letter-spacing: var(--bb-text-title-1-tracking);
+  --text-title-1--font-weight: var(--bb-text-title-1-weight);
+  --text-title-2: var(--bb-text-title-2);
+  --text-title-2--line-height: var(--bb-text-title-2-line);
+  --text-title-2--font-weight: var(--bb-text-title-2-weight);
+  --text-title-3: var(--bb-text-title-3);
+  --text-title-3--line-height: var(--bb-text-title-3-line);
+  --text-title-3--font-weight: var(--bb-text-title-3-weight);
+  --text-body: var(--bb-text-body);
+  --text-body--line-height: var(--bb-text-body-line);
+  --text-body-sm: var(--bb-text-body-sm);
+  --text-body-sm--line-height: var(--bb-text-body-sm-line);
+  --text-label: var(--bb-text-label);
+  --text-label--line-height: var(--bb-text-label-line);
+  --text-label--font-weight: var(--bb-text-label-weight);
+  --text-caption: var(--bb-text-caption);
+  --text-caption--line-height: var(--bb-text-caption-line);
+  --text-caption--font-weight: var(--bb-text-caption-weight);
+
+  --text-h1: var(--bb-text-title-1);
+  --text-h1--line-height: var(--bb-text-title-1-line);
+  --text-h1--letter-spacing: var(--bb-text-title-1-tracking);
+  --text-h1--font-weight: var(--bb-text-title-1-weight);
+  --text-h2: var(--bb-text-title-2);
+  --text-h2--line-height: var(--bb-text-title-2-line);
+  --text-h2--font-weight: var(--bb-text-title-2-weight);
+  --text-h3: var(--bb-text-title-3);
+  --text-h3--line-height: var(--bb-text-title-3-line);
+  --text-h3--font-weight: var(--bb-text-title-3-weight);
+  --text-lead: var(--bb-text-body);
+  --text-lead--line-height: var(--bb-text-body-line);
+  --text-ui: var(--bb-text-body-sm);
+  --text-ui--line-height: var(--bb-text-body-sm-line);
+  --text-small: var(--bb-text-body-sm);
+  --text-small--line-height: var(--bb-text-body-sm-line);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -201,6 +164,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-link: var(--link);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -208,6 +172,32 @@
   --color-chart-5: var(--chart-5);
   --color-chart-grid: var(--chart-grid);
   --color-chart-axis: var(--chart-axis);
+
+  /* v5 role names for new code */
+  --color-surface: var(--bb-surface);
+  --color-surface-subtle: var(--bb-surface-subtle);
+  --color-surface-strong: var(--bb-surface-strong);
+  --color-border-strong: var(--bb-border-strong);
+  --color-divider: var(--bb-divider);
+  --color-text: var(--bb-text);
+  --color-text-secondary: var(--bb-text-secondary);
+  --color-text-tertiary: var(--bb-text-tertiary);
+  --color-text-disabled: var(--bb-text-disabled);
+  --color-on-accent: var(--bb-on-accent);
+  --color-accent-subtle: var(--bb-accent-subtle);
+  --color-on-accent-subtle: var(--bb-on-accent-subtle);
+  --color-accent-border: var(--bb-accent-border);
+  --color-brand: var(--bb-brand);
+  --color-neutral-action: var(--bb-neutral-action);
+  --color-on-neutral-action: var(--bb-on-neutral-action);
+  --color-on-danger: var(--bb-on-danger);
+  --color-on-success-subtle: var(--bb-on-success-subtle);
+  --color-on-warning-subtle: var(--bb-on-warning-subtle);
+  --color-on-danger-subtle: var(--bb-on-danger-subtle);
+  --color-on-info-subtle: var(--bb-on-info-subtle);
+  --color-promo: var(--bb-promo);
+  --color-promo-subtle: var(--bb-promo-subtle);
+  --color-overlay: var(--bb-overlay);
 
   --color-ws-header: var(--ws-header);
   --color-ws-ground: var(--ws-ground);
@@ -223,13 +213,11 @@
   --color-grey-300: var(--grey-300);
   --color-grey-400: var(--grey-400);
   --color-grey-600: var(--grey-600);
-
-  /* "brand" is orange now; the old names stay so the pages keep working */
   --color-brand-50: var(--orange-50);
   --color-brand-100: var(--orange-100);
   --color-brand-500: var(--orange-500);
-  --color-brand-600: var(--orange-500);
-  --color-brand-700: var(--orange-500);
+  --color-brand-600: var(--orange-600);
+  --color-brand-700: var(--orange-700);
   --color-brand-800: var(--orange-700);
   --color-brand-900: var(--orange-900);
   --color-amber-50: var(--amber-50);
@@ -245,25 +233,28 @@
   --color-info: var(--info);
   --color-info-subtle: var(--info-subtle);
   --color-info-fg: var(--info-fg);
+  --color-danger: var(--danger);
   --color-danger-subtle: var(--danger-subtle);
   --color-danger-fg: var(--danger-fg);
   --color-highlight-subtle: var(--highlight-subtle);
   --color-highlight-fg: var(--highlight-fg);
 
-  /* Shape: buttons, chips, tabs and search fields are pills (rounded-full); controls 8 px; surfaces 12 px. */
-  --radius-xs: 4px;
-  --radius-sm: var(--radius);
-  --radius-md: var(--radius);
-  --radius-lg: 12px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
-  --radius-3xl: 16px;
-  --radius-4xl: 16px;
-  --radius-panel: 12px;
-  --radius-card: 12px;
-  --radius-media: 12px;
+  /* Shape (v5): controls 10 px (buttons, inputs, chips, tabs), cards 12, sheets 20; full only for avatars, switches, dots. */
+  --radius-xs: var(--bb-radius-xs);
+  --radius-sm: var(--bb-radius-control);
+  --radius-md: var(--bb-radius-control);
+  --radius-lg: var(--bb-radius-card);
+  --radius-xl: var(--bb-radius-card);
+  --radius-2xl: var(--bb-radius-sheet);
+  --radius-3xl: var(--bb-radius-sheet);
+  --radius-4xl: var(--bb-radius-sheet);
+  --radius-control: var(--bb-radius-control);
+  --radius-panel: var(--bb-radius-card);
+  --radius-card: var(--bb-radius-card);
+  --radius-media: var(--bb-radius-card);
   --radius-device: 44px;
 
-  /* a floating layer (menu, popover, dialog) needs to stand off the page: a soft, wide shadow, no outline */
-  --shadow-float: 0 8px 28px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.06);
+  /* only layers above the page (menu, popover, dialog, sheet, snackbar) get a shadow */
+  --shadow-float: var(--bb-elevation-overlay);
+  --shadow-overlay: var(--bb-elevation-overlay);
 }
