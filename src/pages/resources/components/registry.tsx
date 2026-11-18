@@ -8,6 +8,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { ActionGroup, StatRow, StatsPanel, StatTile } from '@/shared/ui/section'
 import { Textarea } from '@/shared/ui/textarea'
+import { V5_COMPONENTS } from './registry-v5'
 import { ChartDemo, PaginationDemo, SampleTable, SegmentedDemo, TabsDemo } from './demos'
 import { t, tx } from '@/shared/i18n'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
@@ -59,8 +60,8 @@ export const COMPONENTS: ComponentDoc[] = [
 <Button onClick={…}>Button</Button>`,
     },
     types: [
-      { name: t('Nút chính'), text: t('Nền màu mực. Dành cho hành động quan trọng nhất của một vùng; mỗi vùng chỉ có một.'), demo: <Button>Button</Button> },
-      { name: t('Nút phụ'), text: t('Nền xám nhạt. Cho hành động đi kèm nút chính hoặc nhiều hành động ngang hàng.'), demo: <Button variant="secondary">Button</Button> },
+      { name: t('Nút chính'), text: t('Nền cam đậm. Dành cho hành động quan trọng nhất của một vùng; mỗi vùng chỉ có một.'), demo: <Button>Button</Button> },
+      { name: t('Nút phụ'), text: t('Nền nhạt. Cho hành động đi kèm nút chính hoặc nhiều hành động ngang hàng; nút viền (outline) cho hành động thứ hai rõ hơn.'), demo: <Button variant="secondary">Button</Button> },
       { name: t('Nút chữ'), text: t('Không nền, chữ xám. Cho hành động ít quan trọng hoặc lặp lại nhiều lần trong danh sách, như Huỷ hay Bỏ qua.'), demo: <Button variant="ghost">Button</Button> },
       { name: t('Nút nguy hiểm'), text: t('Nền đỏ. Chỉ cho hành động không hoàn tác được, như từ chối đơn hay xoá tài khoản; thường đi qua một bước xác nhận.'), demo: <Button variant="destructive">Button</Button> },
       {
@@ -619,5 +620,5 @@ import { Label } from '@/shared/ui/label'
       },
     ],
   },
+  ...V5_COMPONENTS,
 ]
-
