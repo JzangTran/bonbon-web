@@ -67,7 +67,7 @@ export function useOpenTicket() {
       return data
     },
     onSuccess: () => {
-      feedback.success(t('Đã gửi phiếu hỗ trợ. Đội hỗ trợ thường trả lời trong 1 ngày làm việc; bạn nhận thông báo khi có câu trả lời.'))
+      feedback.success(t('Đã gửi phiếu hỗ trợ. Bạn nhận thông báo khi đội hỗ trợ trả lời; theo dõi phiếu ở mục Yêu cầu hỗ trợ.'))
       void queryClient.invalidateQueries({ queryKey: TICKETS_KEY })
     },
   })

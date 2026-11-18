@@ -22,7 +22,7 @@ export function ReviewStep({ shop, goTo }: { shop: ShopApplication; goTo: (step:
     },
     onSuccess: (data) => {
       queryClient.setQueryData(SHOP_QUERY_KEY, data)
-      feedback.success(t('Đã gửi hồ sơ mở quán. Đội duyệt thường trả lời trong 1–2 ngày làm việc; bạn nhận email khi có kết quả.'))
+      feedback.success(t('Đã gửi hồ sơ mở quán. Bạn nhận email khi có kết quả; trong lúc chờ, hồ sơ không sửa được.'))
     },
     onError: (e) => {
       if (problemCode(e) === 'SHOP_APPLICATION_INCOMPLETE') {
