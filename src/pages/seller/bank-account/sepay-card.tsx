@@ -8,6 +8,8 @@ import { intlLocale, t } from '@/shared/i18n'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Input } from '@/shared/ui/input'
+import { Label } from '@/shared/ui/label'
 import { FormError } from '@/widgets/auth-shell'
 
 const OUTCOME: Record<string, { label: string; tone: 'default' | 'secondary' | 'outline' | 'destructive' }> = {
@@ -39,6 +41,74 @@ function Copy({ value, label }: { value: string; label: string }) {
         <CopyIcon className="size-4" aria-hidden="true" />
       </Button>
     </div>
+  )
+}
+
+/**
+ * The SePay sub-account (VA) code: for banks SePay only reports when the content starts with "SEVQR TKP<code>" (VietinBank
+ * personal accounts among them), bonbon puts that in front of the order code in the VietQR content.
+ */
+function SubAccount({ current, canEdit }: { current: string | null; canEdit: boolean }) {
+  const queryClient = useQueryClient()
+  const [code, setCode] = useState(current ?? '')
+  const [error, setError] = useState<string | null>(null)
+  const save = useMutation({
+    mutationFn: async (value: string) => {
+      const { data, error } = await api.PUT('/api/merchant/payments/sepay/sub-account', { body: { code: value } })
+      if (error || !data) throw error
+      return data
+    },
+    onSuccess: (data) => {
+      setCode(data.subAccount ?? '')
+      queryClient.setQueryData(['merchant', 'sepay'], data)
+      toast.success(data.subAccount ? t('Đã lưu mã tài khoản ảo.') : t('Đã bỏ mã tài khoản ảo.'))
+    },
+    onError: (e) => setError(problemMessage(e)),
+  })
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const value = code.trim().toUpperCase().replace(/^TKP(?=.)/, '')
+    if (value && !/^[A-Z0-9]{1,10}$/.test(value)) {
+      setError(t('Mã tài khoản ảo gồm 1–10 chữ cái hoặc chữ số.'))
+      return
+    }
+    setError(null)
+    save.mutate(value)
+  }
+  const preview = (code.trim().toUpperCase().replace(/^TKP(?=.)/, '') || current) ?? ''
+  return (
+    <form onSubmit={submit} className="flex flex-col gap-2 rounded-sm border p-3" noValidate>
+      <Label htmlFor="sepay-va" className="text-sm font-semibold">
+        {t('Mã tài khoản ảo (VA) SePay')}
+      </Label>
+      <p className="text-xs text-muted-foreground">
+        {t('Chỉ cần khi SePay yêu cầu nội dung chuyển khoản bắt đầu bằng SEVQR TKP… (ví dụ VietinBank cá nhân). Nhập phần mã sau TKP, mã VietQR sẽ tự ghi đúng nội dung.')}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <Input
+          id="sepay-va"
+          className="w-40 uppercase"
+          maxLength={13}
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="2PO"
+          disabled={!canEdit}
+          autoComplete="off"
+          aria-invalid={!!error}
+        />
+        {canEdit ? (
+          <Button type="submit" variant="outline" disabled={save.isPending}>
+            {t('Lưu mã')}
+          </Button>
+        ) : null}
+      </div>
+      {preview ? (
+        <p className="text-xs text-muted-foreground">
+          {t('Nội dung chuyển khoản sẽ là')} <code className="font-mono">SEVQR TKP{preview} BONBON123</code>
+        </p>
+      ) : null}
+      <FormError message={error} />
+    </form>
   )
 }
 
@@ -127,6 +197,7 @@ export function SepayCard() {
             ) : null}
           </div>
         ) : null}
+        {s?.connected ? <SubAccount current={s.subAccount ?? null} canEdit={canEdit} /> : null}
         {s?.connected ? (
           <section className="flex flex-col gap-2">
             <h3 className="text-sm font-semibold">{t('Giao dịch gần đây')}</h3>

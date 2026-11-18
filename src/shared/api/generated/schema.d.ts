@@ -422,6 +422,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/merchant/payments/sepay/sub-account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Đặt mã tài khoản ảo SePay
+         * @description Với ngân hàng mà SePay chỉ báo giao dịch có nội dung bắt đầu bằng `SEVQR TKP<mã VA>` (ví dụ VietinBank cá nhân), quán nhập mã VA SePay cấp; từ đó nội dung VietQR của đơn là `SEVQR TKP<mã> BONBON<số đơn>`. Để trống để bỏ.
+         *
+         *     **Cần đăng nhập**, quyền `vendor:write`.
+         */
+        put: operations["setSepaySubAccount"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/merchant/option-groups/{id}": {
         parameters: {
             query?: never;
@@ -7094,6 +7116,55 @@ export interface components {
             shortcut?: string;
             text?: string;
         };
+        /** @description Mã tài khoản ảo (VA) SePay cấp cho tài khoản ngân hàng của quán; để trống để bỏ. */
+        SepaySubAccountRequest: {
+            /**
+             * @description 1–10 chữ cái hoặc chữ số, ví dụ `2BO`; không gồm tiền tố `TKP`.
+             * @example 2BO
+             */
+            code?: string;
+        };
+        SepayEvent: {
+            /**
+             * Format: int64
+             * @description UUID.
+             */
+            sepayId?: number;
+            /**
+             * Format: int64
+             * @description Số tiền, số nguyên VND (không có phần thập phân).
+             */
+            amount?: number;
+            content?: string;
+            /** Format: int64 */
+            orderNumber?: number;
+            /** @description `PAID` đã ghi nhận; `NOT_FOUND` không có đơn; `NOT_A_BANK_TRANSFER`; `ALREADY_PAID`; `AMOUNT_SHORT` thiếu tiền; `NO_CODE` nội dung không có mã đơn; `OUTGOING` tiền ra. */
+            outcome?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            receivedAt?: string;
+        };
+        SepayStatus: {
+            connected?: boolean;
+            /** @description Địa chỉ nhận webhook để dán vào SePay. */
+            webhookUrl?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            connectedAt?: string;
+            /**
+             * Format: date-time
+             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
+             */
+            lastEventAt?: string;
+            /** @description Mã tài khoản ảo (VA) SePay của quán, ví dụ `2BO`; có thì nội dung chuyển khoản bắt đầu bằng `SEVQR TKP<mã>`. */
+            subAccount?: string;
+            /** @description Mười giao dịch gần nhất SePay báo về. */
+            recent?: components["schemas"]["SepayEvent"][];
+        };
         OptionGroupRequest: {
             name: string;
             /** Format: int32 */
@@ -10366,45 +10437,6 @@ export interface components {
             type?: string;
             /** Format: date-time */
             at?: string;
-        };
-        SepayEvent: {
-            /**
-             * Format: int64
-             * @description UUID.
-             */
-            sepayId?: number;
-            /**
-             * Format: int64
-             * @description Số tiền, số nguyên VND (không có phần thập phân).
-             */
-            amount?: number;
-            content?: string;
-            /** Format: int64 */
-            orderNumber?: number;
-            /** @description `PAID` đã ghi nhận; `NOT_FOUND` không có đơn; `NOT_A_BANK_TRANSFER`; `ALREADY_PAID`; `AMOUNT_SHORT` thiếu tiền; `NO_CODE` nội dung không có mã đơn; `OUTGOING` tiền ra. */
-            outcome?: string;
-            /**
-             * Format: date-time
-             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
-             */
-            receivedAt?: string;
-        };
-        SepayStatus: {
-            connected?: boolean;
-            /** @description Địa chỉ nhận webhook để dán vào SePay. */
-            webhookUrl?: string;
-            /**
-             * Format: date-time
-             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
-             */
-            connectedAt?: string;
-            /**
-             * Format: date-time
-             * @description Thời điểm ISO 8601 theo UTC; hiển thị theo giờ Việt Nam.
-             */
-            lastEventAt?: string;
-            /** @description Mười giao dịch gần nhất SePay báo về. */
-            recent?: components["schemas"]["SepayEvent"][];
         };
         ShopOrderPage: {
             items?: components["schemas"]["ShopOrderSummary"][];
@@ -14279,6 +14311,81 @@ export interface operations {
             };
             /** @description - `QUICK_REPLY_NOT_FOUND`: Không có tin này trong quán. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `INTERNAL_ERROR`: Lỗi không lường trước ở máy chủ. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    setSepaySubAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SepaySubAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SepayStatus"];
+                };
+            };
+            /**
+             * @description - `VALIDATION_FAILED`: Dữ liệu gửi lên không hợp lệ; `errors` liệt kê từng trường và lý do.
+             *     - `INVALID_CHARACTER`: Văn bản có ký tự điều khiển hoặc ký tự đảo chiều chữ không được phép (xuống dòng và tab thì được).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `UNAUTHENTICATED`: Thiếu access token, token sai hoặc đã hết hạn. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description - `FORBIDDEN`: Vai trò đang dùng không có quyền `vendor:write`. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /**
+             * @description - `SEPAY_NOT_CONNECTED`: Quán chưa kết nối SePay.
+             *     - `SHOP_NOT_APPROVED`: Người gọi chưa có cửa hàng được duyệt.
+             */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
