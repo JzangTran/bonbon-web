@@ -17,6 +17,39 @@ type RegionApi = { show: (message: Message) => void; clear: () => void }
 
 const RegionContext = createContext<RegionApi | null>(null)
 
+/**
+ * Carry-over: a screen often saves and then goes back or away at once, which unmounts its region with the fresh message in it. The
+ * host keeps the mounted page regions in order; when one goes away holding a message under 3 s old, the message moves to the region
+ * still open on top (the screen the user returns to) or waits for the next one that opens (a route change).
+ */
+type Delivered = Message & { at: number }
+type Host = { register: (region: RegionApi) => void; unregister: (region: RegionApi, fresh: Delivered | null) => void }
+const HostContext = createContext<Host | null>(null)
+
+export function FeedbackHost({ children }: { children: ReactNode }) {
+  const regions = useRef<RegionApi[]>([])
+  const pending = useRef<Delivered | null>(null)
+  const host = useMemo<Host>(
+    () => ({
+      register: (region) => {
+        regions.current.push(region)
+        const waiting = pending.current
+        pending.current = null
+        if (waiting && Date.now() - waiting.at < 5000) region.show(waiting)
+      },
+      unregister: (region, fresh) => {
+        regions.current = regions.current.filter((r) => r !== region)
+        if (!fresh || Date.now() - fresh.at > 3000) return
+        const next = regions.current[regions.current.length - 1]
+        if (next) next.show(fresh)
+        else pending.current = fresh
+      },
+    }),
+    [],
+  )
+  return <HostContext value={host}>{children}</HostContext>
+}
+
 export function FeedbackRegion({
   children,
   placement = 'top',
@@ -31,6 +64,8 @@ export function FeedbackRegion({
   className?: string
 }) {
   const parent = useContext(RegionContext)
+  const host = useContext(HostContext)
+  const latest = useRef<Delivered | null>(null)
   const [message, setMessage] = useState<(Message & { id: number }) | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const seq = useRef(0)
@@ -43,12 +78,19 @@ export function FeedbackRegion({
           return
         }
         seq.current += 1
+        latest.current = { ...m, at: Date.now() }
         setMessage({ ...m, id: seq.current })
       },
       clear: () => setMessage(null),
     }),
     [errorsOnly, parent],
   )
+
+  useEffect(() => {
+    if (!host || errorsOnly) return
+    host.register(api)
+    return () => host.unregister(api, latest.current)
+  }, [host, api, errorsOnly])
 
   useEffect(() => {
     if (!message) return

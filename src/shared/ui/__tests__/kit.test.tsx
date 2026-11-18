@@ -260,3 +260,43 @@ describe('CopyButton', () => {
     expect(await screen.findByText('Đã chép', { selector: 'span:not(.sr-only)' })).toBeInTheDocument()
   })
 })
+
+describe('feedback carry-over', () => {
+  it('a message from a page that closes right after saving moves to the page underneath', async () => {
+    const { FeedbackHost, FeedbackRegion, useFeedback } = await import('../feedback')
+    function Form({ onDone }: { onDone: () => void }) {
+      const feedback = useFeedback()
+      return (
+        <button
+          onClick={() => {
+            feedback.success('Đã lưu món. Khách thấy thay đổi ngay.')
+            onDone()
+          }}
+        >
+          save
+        </button>
+      )
+    }
+    function Pages() {
+      const [open, setOpen] = useState(true)
+      return (
+        <FeedbackRegion>
+          <p>list</p>
+          {open ? (
+            <FeedbackRegion>
+              <Form onDone={() => setOpen(false)} />
+            </FeedbackRegion>
+          ) : null}
+        </FeedbackRegion>
+      )
+    }
+    render(
+      <FeedbackHost>
+        <Pages />
+      </FeedbackHost>,
+    )
+    await userEvent.click(screen.getByText('save'))
+    expect(screen.queryByText('save')).toBeNull()
+    expect(screen.getByRole('status')).toHaveTextContent('Đã lưu món')
+  })
+})
