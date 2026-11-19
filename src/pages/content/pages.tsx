@@ -111,7 +111,7 @@ export function ArticlePage({ collection }: { collection: Collection }) {
 function NextSteps({ articles }: { articles: Article[] }) {
   return (
     <section aria-labelledby="buoc-tiep-theo" className="mt-12">
-      <h2 id="buoc-tiep-theo" className="mb-4 text-[1.5rem] leading-9 font-semibold">
+      <h2 id="buoc-tiep-theo" className="mb-4 text-title-2 leading-9">
         {t('Bước tiếp theo')}
       </h2>
       <ul className="grid gap-4 sm:grid-cols-2">
@@ -134,8 +134,8 @@ export function HubPage({ collection, title, intro }: { collection: Collection; 
         <section className="border-b bg-white">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
             <Breadcrumb trail={trail} />
-            <h1 className="max-w-3xl text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.02em] sm:text-[2.75rem] sm:leading-[3.25rem]">{title}</h1>
-            <p className="max-w-2xl text-[1.0625rem] leading-7 text-muted-foreground">{intro}</p>
+            <h1 className="max-w-3xl text-title-1 tracking-[-0.02em] sm:text-display sm:leading-[3.25rem]">{title}</h1>
+            <p className="max-w-2xl text-body leading-7 text-muted-foreground">{intro}</p>
           </div>
         </section>
         <section className="relative bg-background pt-8 pb-16 lg:pt-12 lg:pb-24">

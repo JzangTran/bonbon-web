@@ -1,4 +1,6 @@
 import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
+import { splitMessage } from '@/shared/ui/feedback'
+import { InlineMessage } from '@/shared/ui/message'
 import type { ReactNode } from 'react'
 import { pictureOf, type MascotPose } from '@/shared/assets/mascot-pictures'
 import { siteUrl } from '@/shared/config/sites'
@@ -70,7 +72,7 @@ function AuthFrame({ children, footer }: { children: ReactNode; footer?: ReactNo
 function Heading({ first, second, as = 'h1' }: { first: string; second?: string; as?: 'h1' | 'h2' }) {
   const Tag = as
   return (
-    <Tag className="text-[1.875rem] leading-9 font-medium tracking-[-0.015em]">
+    <Tag className="text-title-1 leading-9 tracking-[-0.015em]">
       {second ? (
         <>
           <span className="block text-ink/60">{first}</span>
@@ -191,19 +193,25 @@ export function SuccessMark({ mascot }: { mascot?: MascotPose }) {
   )
 }
 
+/**
+ * A form's result or problem (design v5, rung 2): an InlineMessage next to the submit button. A message written as two sentences shows
+ * the first as the title and the rest as what it means / what to do.
+ */
 export function FormError({ message }: { message: string | null }) {
   if (!message) return null
+  const { title, body } = splitMessage(message)
   return (
-    <p role="alert" className="rounded-md bg-danger-subtle px-3 py-2 text-ui text-danger-fg">
-      {message}
-    </p>
+    <InlineMessage tone="danger" title={title}>
+      {body}
+    </InlineMessage>
   )
 }
 
 export function FormSuccess({ message }: { message: string }) {
+  const { title, body } = splitMessage(message)
   return (
-    <p role="status" className="rounded-md bg-success-subtle px-3 py-2 text-ui text-success-fg">
-      {message}
-    </p>
+    <InlineMessage tone="success" title={title}>
+      {body}
+    </InlineMessage>
   )
 }

@@ -268,7 +268,7 @@ export function SiteFooter() {
                 <div className="grid gap-8 sm:grid-cols-3 sm:gap-0">
                   {group.columns.map((col, i) => (
                     <div key={col.label} className={cn('flex flex-col gap-3', i > 0 && 'sm:border-l sm:border-grey-200 sm:pl-8', i < group.columns.length - 1 && 'sm:pr-8')}>
-                      <h3 className="text-caption font-medium tracking-wide text-primary uppercase">{col.label}</h3>
+                      <h3 className="text-caption font-medium text-primary">{col.label}</h3>
                       <ul className="flex flex-col gap-2.5">
                         {col.links.map((link) => (
                           <li key={link.label}>
@@ -288,7 +288,7 @@ export function SiteFooter() {
               <StoreIcon className="relative size-6" strokeWidth={1.5} aria-hidden="true" />
               <span className="relative mt-2 text-body font-medium">{t('Mở quán trên bonbon')}</span>
               <span className="relative text-small text-white/85">{t('Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.')}</span>
-              <span className="relative mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-small font-medium text-ink">
+              <span className="relative mt-3 inline-flex w-fit items-center gap-1.5 rounded-xs bg-white px-3.5 py-1.5 text-small font-medium text-ink">
                 {t('Bắt đầu')}
                 <ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </span>

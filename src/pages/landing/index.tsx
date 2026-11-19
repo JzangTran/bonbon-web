@@ -73,16 +73,16 @@ function Hero() {
         <Reveal className="flex flex-col items-center gap-5">
           <a
             href={siteUrl('merchant', '/register')}
-            className="inline-flex items-center gap-2 rounded-full border border-grey-200 bg-white py-1 pr-3 pl-1 text-sm text-muted-foreground transition-colors hover:bg-grey-100 hover:text-ink"
+            className="inline-flex items-center gap-2 rounded-control border border-grey-200 bg-white py-1 pr-3 pl-1 text-body-sm text-muted-foreground transition-colors hover:bg-grey-100 hover:text-ink"
           >
-            <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">{t('Mới')}</span>
+            <span className="rounded-xs bg-primary px-2 py-0.5 text-caption text-primary-foreground">{t('Mới')}</span>
             {t('Mở quán trên bonbon chỉ trong vài bước')}
             <ArrowRightIcon className="size-4" aria-hidden="true" />
           </a>
-          <h1 className="max-w-[56rem] text-[2.5rem] leading-[1.08] font-medium tracking-[-0.03em] text-balance sm:text-[3.5rem]">
+          <h1 className="max-w-[56rem] text-display text-balance">
             {t('Đặt món từ quán dưới sảnh. ')}<span className="text-primary">{t('Giao tận cửa.')}</span>
           </h1>
-          <p className="max-w-2xl text-lg leading-[1.75rem] text-muted-foreground">{t('Quán ăn trong toà và trong khu của bạn, trong một ứng dụng.')}</p>
+          <p className="max-w-2xl text-body text-text-secondary">{t('Quán ăn trong toà và trong khu của bạn, trong một ứng dụng.')}</p>
           <div id="get-app" className="flex scroll-mt-24 flex-wrap justify-center gap-3">
             <span aria-disabled="true" title={t('Ứng dụng sắp có trên App Store và Google Play.')} className={cn(btnSolid, 'cursor-default')}>
               {t('Tải app đặt món')}
@@ -136,7 +136,7 @@ function OrderSteps() {
     <div id="how-it-works" className="relative scroll-mt-20">
     <StepCarousel />
     <Wrap className="hidden grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8 py-12 sm:grid lg:py-20">
-      <h2 className="col-span-full max-w-[640px] text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
+      <h2 className="col-span-full max-w-[640px] text-title-1 text-balance lg:text-display">
         {t('Một đơn hàng, ')}<Soft>{t('bốn bước rõ ràng')}</Soft>
       </h2>
       {STEPS.map(({ bear, chip, title, body }, i) => (
@@ -145,10 +145,10 @@ function OrderSteps() {
           <div className="mb-2 flex aspect-[5/4] items-end justify-center overflow-hidden rounded-2xl bg-white px-4 pt-4 ring-1 ring-grey-200">
             <BearScene kind={bear} className="max-h-full w-auto max-w-full" />
           </div>
-          <span className="text-caption font-medium tracking-wide text-primary uppercase">
+          <span className="text-label text-primary">
             {t('Bước ')}{i + 1} · {chip}
           </span>
-          <h3 className="text-lg font-medium">{title}</h3>
+          <h3 className="text-title-3">{title}</h3>
           <p className="leading-6 text-muted-foreground">{body}</p>
         </div>
       ))}
@@ -175,12 +175,12 @@ function StepCarousel() {
     const card = el?.children[i] as HTMLElement | undefined
     if (el && card) el.scrollTo({ left: card.offsetLeft - 16, behavior: 'smooth' })
   }
-  const grounds = ['bg-[#fff3ea]', 'bg-[#fff8e6]', 'bg-[#eef6f0]', 'bg-[#f1f0fb]']
+  const grounds = ['bg-accent-subtle', 'bg-warning-subtle', 'bg-success-subtle', 'bg-info-subtle']
 
   return (
     <section className="pt-2 pb-12 sm:hidden" aria-label={t('Một đơn hàng, bốn bước rõ ràng')}>
       <Wrap>
-        <h2 className="text-[1.75rem] leading-9 font-semibold tracking-[-0.02em]">
+        <h2 className="text-title-1 text-balance">
           {t('Một đơn hàng, ')}<Soft>{t('bốn bước rõ ràng')}</Soft>
         </h2>
       </Wrap>
@@ -192,15 +192,15 @@ function StepCarousel() {
         {STEPS.map(({ bear, chip, title, body }, i) => (
           <article key={title} className={cn('flex w-[82%] shrink-0 snap-start scroll-ml-4 flex-col overflow-hidden rounded-3xl', grounds[i])}>
             <div className="relative flex aspect-[4/3] items-end justify-center px-6 pt-12">
-              <span className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full bg-white text-sm font-semibold text-ink shadow-sm">
+              <span className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full bg-white text-label text-ink shadow-sm">
                 {i + 1}
               </span>
-              <span className="absolute top-5 right-4 rounded-full bg-white/85 px-2.5 py-1 text-xs font-medium text-primary">{chip}</span>
+              <span className="absolute top-5 right-4 rounded-xs bg-white/85 px-2.5 py-1 text-caption text-primary">{chip}</span>
               <BearScene kind={bear} className="max-h-full w-auto max-w-full mix-blend-multiply" />
             </div>
             <div className="flex flex-1 flex-col gap-1.5 bg-white/70 p-5">
-              <h3 className="text-lg font-semibold">{title}</h3>
-              <p className="text-ui leading-6 text-muted-foreground">{body}</p>
+              <h3 className="text-title-3">{title}</h3>
+              <p className="text-body-sm text-text-secondary">{body}</p>
             </div>
           </article>
         ))}
@@ -237,7 +237,7 @@ function TrustRow() {
               <Icon strokeWidth={1.75} />
             </Badge>
             <div>
-              <h3 className="mb-1 text-[1.0625rem] font-semibold">{title}</h3>
+              <h3 className="mb-1 text-title-3">{title}</h3>
               <p className="leading-6 text-muted-foreground">{body}</p>
             </div>
           </div>
@@ -259,7 +259,7 @@ function SellerBand() {
       <Reveal>
       <Wrap className="flex flex-wrap items-center gap-10 sm:gap-14">
         <div className="flex min-w-0 flex-[1_1_30rem] flex-col gap-6">
-          <h2 className="text-[2.125rem] leading-[2.5rem] font-semibold tracking-[-0.03em] lg:text-[3.25rem] lg:leading-[3.625rem]">
+          <h2 className="text-title-1 text-balance lg:text-display">
             {t('Bán cho hàng xóm, ')}<span className="text-primary">{t('giữ lại nhiều hơn từ mỗi đơn')}</span>
           </h2>
           <p className="text-lead text-muted-foreground">
@@ -270,12 +270,12 @@ function SellerBand() {
               <li key={step.title} className="relative flex gap-4 pb-6 last:pb-0 sm:flex-col sm:gap-1 sm:pb-0">
                 {/* on a phone: a numbered timeline, a line joining one step to the next */}
                 {i < SELLER_STEPS.length - 1 ? <span className="absolute top-9 bottom-0 left-[17px] w-0.5 bg-primary/20 sm:hidden" aria-hidden="true" /> : null}
-                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground sm:hidden" aria-hidden="true">
+                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-label text-primary-foreground sm:hidden" aria-hidden="true">
                   {i + 1}
                 </span>
                 <span className="flex flex-col gap-1 pt-1.5 sm:pt-0">
-                  <span className="hidden text-caption font-medium tracking-wide text-primary uppercase sm:block">{t('Bước ')}{i + 1}</span>
-                  <b className="text-body font-medium">{step.title}</b>
+                  <span className="hidden text-label text-primary sm:block">{t('Bước ')}{i + 1}</span>
+                  <b className="text-label">{step.title}</b>
                   <span className="text-ui text-muted-foreground">{step.body}</span>
                 </span>
               </li>
@@ -289,14 +289,14 @@ function SellerBand() {
               {t('Hồ sơ cần những gì?')}
             </a>
           </div>
-          <a href={siteUrl('merchant', '/login')} className="text-link self-start text-ui font-medium text-ink">
+          <a href={siteUrl('merchant', '/login')} className="text-link self-start text-label text-ink">
             {t('Đã có tài khoản? Đăng nhập')}
           </a>
         </div>
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
           {pictureOf('wave') ? (
             // the rendered scene already has its own shop and counter: show it whole
-            <div className="w-full max-w-[600px] overflow-hidden rounded-2xl bg-[#fff6ef] shadow-[0_24px_60px_rgb(0_0_0/0.10)]">
+            <div className="w-full max-w-[600px] overflow-hidden rounded-2xl bg-accent-subtle shadow-[0_24px_60px_rgb(0_0_0/0.10)]">
               <Mascot pose="wave" className="w-full" />
             </div>
           ) : (
@@ -336,16 +336,16 @@ function Faq() {
     <section id="faq" className="relative scroll-mt-4 bg-background py-12 lg:py-20">
       <Reveal>
       <Wrap className="flex flex-col gap-8">
-        <h2 className="text-[2rem] leading-10 font-semibold tracking-[-0.02em] lg:text-[2.75rem] lg:leading-[3.125rem]">
+        <h2 className="text-title-1 text-balance lg:text-display">
           {t('Câu hỏi ')}<Soft>{t('thường gặp')}</Soft>
         </h2>
         <div className="grid gap-10 md:grid-cols-2 md:gap-12">
           {FAQ.map((group) => (
             <div key={group.group} className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold text-primary">{group.group}</h3>
+              <h3 className="text-label text-primary">{group.group}</h3>
               {group.items.map((item) => (
                 <details key={item.q} className="group rounded-panel bg-card px-4 py-4 sm:px-6">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[1.0625rem] font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-title-3 outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                     {item.q}
                     <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-pill-pale" aria-hidden="true">
                       <ChevronDownIcon className="size-4 transition-transform group-open:rotate-180" />

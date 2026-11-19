@@ -52,7 +52,7 @@ function HelpRow({ article }: { article: HelpArticle }) {
   return (
     <li>
       <Link to={articlePath(article.id)} className="group flex flex-col gap-2 rounded-xl border border-grey-200 p-5 outline-none transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring">
-        <span className="text-caption font-medium tracking-wide text-primary uppercase">{AUDIENCE_LABEL[article.audience ?? 'ALL'] ?? t('Mọi người')}</span>
+        <span className="text-caption font-medium text-primary">{AUDIENCE_LABEL[article.audience ?? 'ALL'] ?? t('Mọi người')}</span>
         <span className="text-body font-medium text-ink">{article.title}</span>
         {article.keywords?.length ? <TagList tags={article.keywords} oneLine /> : null}
       </Link>
@@ -79,7 +79,7 @@ export function HelpCenterPage() {
             aria-label={t('Tìm trong trung tâm trợ giúp')}
             placeholder={t('Tìm theo tiêu đề, nội dung hoặc từ khoá')}
             maxLength={100}
-            className="h-11 rounded-full pl-10"
+            className="h-11 rounded-control pl-10"
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
@@ -207,8 +207,8 @@ export function ContactPage() {
       <PageSeo title={t('Liên hệ hỗ trợ')} description={t('Gửi câu hỏi cho đội ngũ bonbon; câu trả lời đến email của bạn.')} path={path} trail={trail} site="help" />
       <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:gap-16">
         <div className="flex flex-col gap-5 lg:pt-6">
-          <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">{t('Liên hệ hỗ trợ')}</span>
-          <h1 className="text-[2.25rem] leading-[2.75rem] font-medium tracking-[-0.025em] sm:text-[3rem] sm:leading-[3.375rem]">{t('Đội ngũ bonbon luôn sẵn sàng giúp bạn')}</h1>
+          <span className="text-caption font-medium text-primary">{t('Liên hệ hỗ trợ')}</span>
+          <h1 className="text-display tracking-[-0.025em] sm:text-display sm:leading-[3.375rem]">{t('Đội ngũ bonbon luôn sẵn sàng giúp bạn')}</h1>
           <p className="text-lead text-muted-foreground">
             {t('Khách đặt món, chủ quán hay bất kỳ ai cũng gửi được, không cần đăng nhập. Chúng tôi trả lời qua email bạn để lại, thường trong một ngày làm việc.')}
           </p>
@@ -248,7 +248,7 @@ export function ContactPage() {
               </div>
             ) : (
               <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
-                <h2 className="text-[1.875rem] leading-9 font-medium tracking-[-0.015em]">{t('Gửi yêu cầu')}</h2>
+                <h2 className="text-title-1 leading-9 tracking-[-0.015em]">{t('Gửi yêu cầu')}</h2>
                 <div className={field}>
                   <Label htmlFor="c-name">
                     {t('Họ tên ')}<Required />

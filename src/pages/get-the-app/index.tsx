@@ -31,7 +31,7 @@ export function GetTheAppPage({ audience }: { audience: 'seller' | 'staff' }) {
           <img src={picture} alt="" aria-hidden="true" className="w-56 max-w-[70vw] [mask-image:linear-gradient(to_bottom,black_82%,transparent)]" />
         ) : null}
         <div className="flex max-w-md flex-col gap-3">
-          <h1 className="text-[2rem] leading-[1.15] font-medium tracking-[-0.02em] text-balance">
+          <h1 className="text-title-1 leading-[1.15] tracking-[-0.02em] text-balance">
             {staff ? t('Trang quản trị dùng trên máy tính') : t('Bonbon nằm gọn trong túi bạn')}
           </h1>
           <p className="text-body text-muted-foreground text-balance">

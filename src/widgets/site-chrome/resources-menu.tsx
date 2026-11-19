@@ -42,7 +42,7 @@ export function MegaMenu({ label, current, columns, feature, renderLink }: {
           <nav aria-label={label} className={cn('grid gap-6 sm:gap-0', columns.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2')}>
             {columns.map((col, i) => (
               <div key={col.label} className={cn('flex flex-col gap-1', i > 0 && 'sm:border-l sm:border-grey-200 sm:pl-6', i < columns.length - 1 && 'sm:pr-6')}>
-                <p className="mb-2 font-mono text-caption font-medium tracking-wide text-primary uppercase">{col.label}</p>
+                <p className="mb-2 font-mono text-caption font-medium text-primary">{col.label}</p>
                 {col.links.map((l) => (
                   <div key={l.label}>{renderLink(l, link, close)}</div>
                 ))}
@@ -56,7 +56,7 @@ export function MegaMenu({ label, current, columns, feature, renderLink }: {
               <p className="line-clamp-3 px-1 text-ui text-ink">{feature.article.title}</p>
               {renderLink(
                 { label: feature.action, to: articlePath(feature.article.collection, feature.article.slug) },
-                'mt-auto flex h-9 items-center justify-center gap-2 rounded-full bg-button text-ui font-medium text-button-foreground outline-none hover:bg-button-hover focus-visible:ring-2 focus-visible:ring-ring',
+                'mt-auto flex h-9 items-center justify-center gap-2 rounded-control bg-button text-ui font-medium text-button-foreground outline-none hover:bg-button-hover focus-visible:ring-2 focus-visible:ring-ring',
                 close,
               )}
             </div>
@@ -75,7 +75,7 @@ export function MegaMenu({ label, current, columns, feature, renderLink }: {
               <span className="text-small text-white/85">{t('Bán cho cư dân trong toà và trong khu, hoa hồng thấp, tự giao.')}</span>
             </span>
           </span>
-          <span className="relative hidden shrink-0 items-center gap-1.5 rounded-full bg-white px-4 py-2 text-ui font-medium text-ink sm:inline-flex">
+          <span className="relative hidden shrink-0 items-center gap-1.5 rounded-xs bg-white px-4 py-2 text-ui font-medium text-ink sm:inline-flex">
             {t('Bắt đầu')}
             <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </span>

@@ -26,7 +26,7 @@ type Props = {
 export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), width = 'md', flat = false, children }: Props) {
   const { signOut } = useSession()
   const navigate = useNavigate()
-  const barButton = 'rounded-full px-3 py-1.5 text-label text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
+  const barButton = 'rounded-control px-3 py-1.5 text-label text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
   return (
     <div className="ws-root flex min-h-svh flex-col bg-ws-ground text-body-sm">
       <a

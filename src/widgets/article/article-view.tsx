@@ -28,13 +28,13 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
         switch (b.t) {
           case 'h2':
             return (
-              <h2 key={i} id={headings[h++].id} className="mt-6 scroll-mt-6 text-[1.5rem] leading-9 font-semibold tracking-[-0.01em]">
+              <h2 key={i} id={headings[h++].id} className="mt-6 scroll-mt-6 text-title-2 leading-9 tracking-[-0.01em]">
                 {b.text}
               </h2>
             )
           case 'h3':
             return (
-              <h3 key={i} id={headings[h++].id} className="mt-2 scroll-mt-6 text-[1.1875rem] leading-8 font-semibold">
+              <h3 key={i} id={headings[h++].id} className="mt-2 scroll-mt-6 text-title-3 leading-8">
                 {b.text}
               </h3>
             )
@@ -116,7 +116,7 @@ export function Toc({ headings }: { headings: Heading[] }) {
   const active = useActiveHeading(headings.map((h) => h.id))
   if (headings.length === 0) return null
   const list = (
-    <ul className="flex flex-col gap-0.5 text-[0.9375rem]">
+    <ul className="flex flex-col gap-0.5 text-body">
       {headings.map((h) => (
         <li key={h.id}>
           <a
@@ -137,7 +137,7 @@ export function Toc({ headings }: { headings: Heading[] }) {
   return (
     <>
       <details className="rounded-lg bg-card lg:hidden">
-        <summary className="cursor-pointer list-none px-4 py-3 text-[0.9375rem] font-semibold marker:hidden">{t('Trong bài này')}</summary>
+        <summary className="cursor-pointer list-none px-4 py-3 text-body font-semibold marker:hidden">{t('Trong bài này')}</summary>
         <nav aria-label={t('Trong bài này')} className="px-2 pb-3">
           {list}
         </nav>
@@ -159,7 +159,7 @@ export function DocsSidebar({ groups, current }: { groups: { title: string; item
     <nav aria-label={t('Mục lục hướng dẫn')} className="sticky top-24 flex max-h-[calc(100svh-7rem)] flex-col gap-6 overflow-y-auto pr-2">
       {groups.map((g) => (
         <div key={g.title} className="flex flex-col gap-0.5">
-          <p className="mb-1 px-3 text-caption font-medium tracking-wide text-muted-foreground uppercase">{g.title}</p>
+          <p className="mb-1 px-3 text-caption font-medium text-muted-foreground">{g.title}</p>
           {g.items.map((item) => (
             <Link
               key={item.to}
@@ -225,7 +225,7 @@ export function ArticleView({
         <Breadcrumb trail={trail} />
         <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
           <article className="min-w-0 max-w-3xl">
-            <h1 className="text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.025em] sm:text-[2.5rem] sm:leading-[3rem]">{title}</h1>
+            <h1 className="text-title-1 tracking-[-0.025em] sm:text-display sm:leading-[3rem]">{title}</h1>
             {meta ? <p className="mt-3 text-body-sm text-muted-foreground">{meta}</p> : null}
             <div className="mt-8">
               <ArticleBody blocks={blocks} />
@@ -322,13 +322,13 @@ export function BlogPostView({
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
           <article className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              <span className="text-caption font-medium tracking-[0.08em] text-primary uppercase">Blog</span>
+              <span className="text-caption font-medium text-primary">Blog</span>
               <Link to={allPath} className="text-link text-ui text-ink">
                 {t('Xem tất cả bài viết')}
               </Link>
             </div>
-            <h1 className="mt-5 text-[2rem] leading-[2.5rem] font-medium tracking-[-0.02em] sm:text-[2.375rem] sm:leading-[2.875rem]">{title}</h1>
-            <p className="mt-2 text-[1.25rem] leading-7 tracking-[-0.01em] text-ink">{description}</p>
+            <h1 className="mt-5 text-title-1 tracking-[-0.02em] sm:text-display sm:leading-[2.875rem]">{title}</h1>
+            <p className="mt-2 text-title-2 leading-7 tracking-[-0.01em] text-ink">{description}</p>
             <img src={image} alt={imageAlt} decoding="async" className="mt-8 aspect-[16/9] w-full rounded-xl bg-image-slot object-cover" />
             <div className="bb-blog mt-10">
               <ArticleBody blocks={blocks} />

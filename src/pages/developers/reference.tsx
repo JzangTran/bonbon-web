@@ -163,7 +163,7 @@ export function DeveloperReferencePage() {
                           onClick={() => setOpen(expanded ? null : key)}
                           className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-muted/60"
                         >
-                          <span className={cn('w-16 shrink-0 rounded-sm px-1.5 py-0.5 text-center font-mono text-caption font-semibold uppercase', METHOD_TONE[e.method])}>
+                          <span className={cn('w-16 shrink-0 rounded-sm px-1.5 py-0.5 text-center font-mono text-caption font-semibold', METHOD_TONE[e.method])}>
                             {e.method}
                           </span>
                           <code className="min-w-0 truncate font-mono text-body-sm">{e.path}</code>
@@ -198,7 +198,7 @@ function EndpointDetail({ e }: { e: Endpoint }) {
       ) : null}
       {e.parameters?.length ? (
         <div className="flex flex-col gap-2">
-          <h3 className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t('Tham số')}</h3>
+          <h3 className="text-caption font-semibold tracking-wide text-muted-foreground">{t('Tham số')}</h3>
           <table className="w-full text-left text-body-sm">
             <tbody className="divide-y">
               {e.parameters.map((p) => (
@@ -219,7 +219,7 @@ function EndpointDetail({ e }: { e: Endpoint }) {
       ) : null}
       {body ? (
         <div className="flex flex-col gap-1">
-          <h3 className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t('Nội dung gửi')}</h3>
+          <h3 className="text-caption font-semibold tracking-wide text-muted-foreground">{t('Nội dung gửi')}</h3>
           <p>
             <code className="font-mono">{body[0]}</code>
             {refName(body[1].schema?.$ref) ? <> · {t('lược đồ')} <code className="font-mono">{refName(body[1].schema?.$ref)}</code></> : null}
@@ -228,7 +228,7 @@ function EndpointDetail({ e }: { e: Endpoint }) {
       ) : null}
       {e.responses ? (
         <div className="flex flex-col gap-2">
-          <h3 className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t('Phản hồi')}</h3>
+          <h3 className="text-caption font-semibold tracking-wide text-muted-foreground">{t('Phản hồi')}</h3>
           <ul className="flex flex-col gap-1.5">
             {Object.entries(e.responses).map(([code, r]) => (
               <li key={code} className="flex gap-3">

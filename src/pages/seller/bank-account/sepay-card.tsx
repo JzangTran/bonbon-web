@@ -78,7 +78,7 @@ function SubAccount({ current, canEdit }: { current: string | null; canEdit: boo
       <div className="flex flex-wrap gap-2">
         <Input
           id="sepay-va"
-          className="w-40 uppercase"
+          className="w-40"
           maxLength={13}
           value={code}
           onChange={(e) => setCode(e.target.value)}

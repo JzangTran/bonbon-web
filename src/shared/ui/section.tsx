@@ -56,7 +56,7 @@ export function StatTile({ label, value, hint, className }: { label: ReactNode; 
   return (
     <div className={cn('flex min-w-0 flex-col gap-1', className)}>
       <span className="text-small text-muted-foreground">{label}</span>
-      <span className="text-[1.75rem] leading-9 font-semibold tracking-[-0.02em] text-ink">{value}</span>
+      <span className="text-title-1 leading-9 tracking-[-0.02em] text-ink">{value}</span>
       {hint ? <span className="text-small text-muted-foreground">{hint}</span> : null}
     </div>
   )

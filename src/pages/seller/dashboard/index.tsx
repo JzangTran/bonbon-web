@@ -78,7 +78,7 @@ function Count({ to, value, label }: { to: string; value: number | undefined; la
   return (
     <li>
       <Link to={to} className="flex h-full flex-col gap-1 rounded-lg px-3 py-3 outline-none hover:bg-white/70 focus-visible:ring-2 focus-visible:ring-ring">
-        <span className="text-[1.75rem] leading-9 font-semibold tabular-nums">{value ?? '–'}</span>
+        <span className="text-title-1 leading-9 tabular-nums">{value ?? '–'}</span>
         <span className="text-small text-muted-foreground">{label}</span>
       </Link>
     </li>
