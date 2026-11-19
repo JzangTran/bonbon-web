@@ -5,48 +5,76 @@ import { cn } from '@/shared/lib/utils'
 import { InlineMessage, type MessageTone } from './message'
 
 /**
- * The feedback ladder in code (design v5, design/docs/feedback.md). Screens and mutation hooks call useFeedback() instead of a toast;
- * the message appears in the nearest FeedbackRegion, which sits where the user is looking: the top of the workspace page, the bottom
- * of a dialog or sheet (next to its buttons). Write every message as what happened (title) · what it means and what next (body).
+ * The feedback ladder in code (design v5, design/docs/feedback.md), the same model as the mobile app. Screens and mutation hooks call
+ * useFeedback() instead of a toast; the message appears in a FeedbackRegion where the user is looking: the top of the workspace page,
+ * the focus frame, the bottom of a dialog or sheet next to its buttons.
  *
- * A region in a dialog takes only errors and warnings: a success usually closes the dialog, so it goes up to the page's region and
- * stays visible there. With no region at all (a page outside the shells) the message falls back to a snackbar.
+ * Which region: the FeedbackHost keeps the open regions as layers. A message goes to the top layer that takes it: a region nested in
+ * another is above it (the dialog over its page), otherwise the one opened last. It does not depend on where useFeedback() is called,
+ * so a component that renders its own <Dialog> still reaches the dialog. A dialog takes only errors and warnings: a success usually
+ * closes it, so it lands on the page and stays visible there. Carry-over: when a layer goes away holding a message under 3 s old
+ * (save, then navigate), the message moves to the layer below or waits 5 s for the next page's. Without any layer: a snackbar.
+ *
+ * Write every message as "what happened. What it means / what next."; the first sentence becomes the title, the rest the body.
  */
 type Message = { tone: MessageTone; title: string; body?: ReactNode; action?: ReactNode }
 type RegionApi = { show: (message: Message) => void; clear: () => void }
+type Delivered = Message & { at: number }
+type Layer = { api: RegionApi; errorsOnly: boolean; parent: RegionApi | null; stamp: number }
+type Host = {
+  register: (layer: Omit<Layer, 'stamp'>) => void
+  unregister: (api: RegionApi, fresh: Delivered | null) => void
+  show: (message: Message) => boolean
+  clear: () => void
+}
 
 const RegionContext = createContext<RegionApi | null>(null)
-
-/**
- * Carry-over: a screen often saves and then goes back or away at once, which unmounts its region with the fresh message in it. The
- * host keeps the mounted page regions in order; when one goes away holding a message under 3 s old, the message moves to the region
- * still open on top (the screen the user returns to) or waits for the next one that opens (a route change).
- */
-type Delivered = Message & { at: number }
-type Host = { register: (region: RegionApi) => void; unregister: (region: RegionApi, fresh: Delivered | null) => void }
 const HostContext = createContext<Host | null>(null)
 
+const takes = (layer: Layer, m: Message) => !(layer.errorsOnly && (m.tone === 'success' || m.tone === 'info'))
+
 export function FeedbackHost({ children }: { children: ReactNode }) {
-  const regions = useRef<RegionApi[]>([])
+  const layers = useRef<Layer[]>([])
   const pending = useRef<Delivered | null>(null)
-  const host = useMemo<Host>(
-    () => ({
-      register: (region) => {
-        regions.current.push(region)
+  const clock = useRef(0)
+  const host = useMemo<Host>(() => {
+    /** the layer opened last that takes the message, then its deepest open child that takes it too */
+    const topFor = (m: Message): Layer | undefined => {
+      const byRecency = [...layers.current].sort((a, b) => b.stamp - a.stamp)
+      let best = byRecency.find((l) => takes(l, m))
+      while (best) {
+        const parent = best.api
+        const child = byRecency.find((l) => l.parent === parent && takes(l, m))
+        if (!child) break
+        best = child
+      }
+      return best
+    }
+    const showOn = (m: Message) => {
+      const layer = topFor(m)
+      layer?.api.show(m)
+      return !!layer
+    }
+    return {
+      register: (entry) => {
+        clock.current += 1
+        const layer = { ...entry, stamp: clock.current }
+        layers.current = [...layers.current, layer]
         const waiting = pending.current
-        pending.current = null
-        if (waiting && Date.now() - waiting.at < 5000) region.show(waiting)
+        if (waiting && Date.now() - waiting.at < 5000 && takes(layer, waiting)) {
+          pending.current = null
+          layer.api.show(waiting)
+        }
       },
-      unregister: (region, fresh) => {
-        regions.current = regions.current.filter((r) => r !== region)
+      unregister: (api, fresh) => {
+        layers.current = layers.current.filter((l) => l.api !== api)
         if (!fresh || Date.now() - fresh.at > 3000) return
-        const next = regions.current[regions.current.length - 1]
-        if (next) next.show(fresh)
-        else pending.current = fresh
+        if (!showOn(fresh)) pending.current = fresh
       },
-    }),
-    [],
-  )
+      show: showOn,
+      clear: () => topFor({ tone: 'danger', title: '' })?.api.clear(),
+    }
+  }, [])
   return <HostContext value={host}>{children}</HostContext>
 }
 
@@ -59,21 +87,22 @@ export function FeedbackRegion({
   children: ReactNode
   /** where the message shows relative to the content: top of a page, bottom of a dialog (next to its buttons) */
   placement?: 'top' | 'bottom'
-  /** dialogs and sheets: successes go up to the page */
+  /** dialogs and sheets: successes go to the page */
   errorsOnly?: boolean
   className?: string
 }) {
   const parent = useContext(RegionContext)
   const host = useContext(HostContext)
-  const latest = useRef<Delivered | null>(null)
   const [message, setMessage] = useState<(Message & { id: number }) | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const seq = useRef(0)
+  const latest = useRef<Delivered | null>(null)
 
   const api = useMemo<RegionApi>(
     () => ({
       show: (m) => {
-        if (errorsOnly && (m.tone === 'success' || m.tone === 'info') && parent) {
+        // without a host (tests, a page outside the app providers) a success leaves an error-only region for the one around it
+        if (!host && errorsOnly && (m.tone === 'success' || m.tone === 'info') && parent) {
           parent.show(m)
           return
         }
@@ -83,14 +112,14 @@ export function FeedbackRegion({
       },
       clear: () => setMessage(null),
     }),
-    [errorsOnly, parent],
+    [errorsOnly, parent, host],
   )
 
   useEffect(() => {
-    if (!host || errorsOnly) return
-    host.register(api)
+    if (!host) return
+    host.register({ api, errorsOnly, parent })
     return () => host.unregister(api, latest.current)
-  }, [host, api, errorsOnly])
+  }, [host, api, errorsOnly, parent])
 
   useEffect(() => {
     if (!message) return
@@ -135,17 +164,19 @@ export function splitMessage(text: string): { title: string; body?: string } {
 }
 
 export function useFeedback(): Feedback {
+  const host = useContext(HostContext)
   const region = useContext(RegionContext)
   const show = useCallback(
     (raw: Message) => {
       const m = raw.body === undefined ? { ...raw, ...splitMessage(raw.title) } : raw
+      if (host?.show(m)) return
       if (region) return region.show(m)
       // outside every region: a snackbar is the only place left
-      const text = typeof m.body === 'string' ? `${m.title} ${m.body}` : m.title
+      const text = typeof m.body === 'string' ? `${m.title}. ${m.body}` : m.title
       if (m.tone === 'danger') toast.error(text)
       else toast(text)
     },
-    [region],
+    [host, region],
   )
   return useMemo(
     () => ({
@@ -154,8 +185,8 @@ export function useFeedback(): Feedback {
       warning: (title, body, action) => show({ tone: 'warning', title, body, action }),
       error: (problemOrTitle, body, action) =>
         show({ tone: 'danger', title: typeof problemOrTitle === 'string' ? problemOrTitle : problemMessage(problemOrTitle), body, action }),
-      clear: () => region?.clear(),
+      clear: () => (host ? host.clear() : region?.clear()),
     }),
-    [show, region],
+    [show, host, region],
   )
 }

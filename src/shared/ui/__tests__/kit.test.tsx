@@ -300,3 +300,31 @@ describe('feedback carry-over', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Đã lưu món')
   })
 })
+
+describe('feedback layers', () => {
+  it('a component that renders its own dialog region still reaches it; the success lands on the page', async () => {
+    const { FeedbackHost, FeedbackRegion, useFeedback } = await import('../feedback')
+    function PageWithDialog() {
+      const feedback = useFeedback()
+      return (
+        <FeedbackRegion>
+          <div data-testid="dialog">
+            <FeedbackRegion placement="bottom" errorsOnly>
+              <button onClick={() => feedback.error('Chưa lưu được món')}>fail</button>
+              <button onClick={() => feedback.success('Đã lưu món')}>ok</button>
+            </FeedbackRegion>
+          </div>
+        </FeedbackRegion>
+      )
+    }
+    render(
+      <FeedbackHost>
+        <PageWithDialog />
+      </FeedbackHost>,
+    )
+    await userEvent.click(screen.getByText('fail'))
+    expect(screen.getByTestId('dialog')).toContainElement(screen.getByRole('alert'))
+    await userEvent.click(screen.getByText('ok'))
+    expect(screen.getByTestId('dialog')).not.toContainElement(screen.getByRole('status'))
+  })
+})
