@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 
@@ -11,7 +11,7 @@ export function SubPage({ back, title, description, children }: { back: { to: st
     <div className="flex max-w-3xl flex-col gap-8">
       <div className="flex flex-col gap-3">
         <Link to={back.to} className="flex w-fit items-center gap-1.5 text-ui text-muted-foreground hover:text-ink">
-          <ArrowLeftIcon className="size-4" aria-hidden="true" />
+          <ChevronLeftIcon className="size-4" aria-hidden="true" />
           {back.label}
         </Link>
         <h1 className="text-h2">{title}</h1>

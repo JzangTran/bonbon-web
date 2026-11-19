@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
-import { ArrowRightIcon, BookOpenIcon, ChevronDownIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
+import { isEmbedded } from '@/shared/lib/embed'
+import { ChevronRightIcon, BookOpenIcon, ChevronDownIcon, SmartphoneIcon, StoreIcon } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 import { useSession } from '@/entities/session'
 import { cn } from '@/shared/lib/utils'
@@ -63,7 +64,12 @@ function isHere(pathname: string, to: string) {
  * with a large menu, Trung tâm trợ giúp) and one action. Under 1024 px the menu folds into one button. Sign-in pages have their own slimmer bar, and the
  * workspace, focus and payment pages show no site bar at all.
  */
+/** The public site header; left out when the page is embedded in the app. */
 export function SiteHeader() {
+  return isEmbedded() ? null : <PublicHeader />
+}
+
+function PublicHeader() {
   const { session } = useSession()
   const { pathname } = useLocation()
   const area =
@@ -238,9 +244,14 @@ function FooterAnchor({ link }: { link: FooterLink }) {
  * The public footer, after gitbook.com: tall and quiet. Groups with a large name, columns under small orange upper-case labels split
  * by faint lines, two cards on the right, then the logo, the language, the copyright and the legal links.
  */
+/** The public site footer; left out when the page is embedded in the app. */
 export function SiteFooter() {
+  return isEmbedded() ? null : <PublicFooter />
+}
+
+function PublicFooter() {
   return (
-    <footer className="bg-beige-50 pt-12 pb-10 sm:pt-24 sm:pb-12">
+    <footer className="border-t border-border bg-pane pt-12 pb-10 sm:pt-24 sm:pb-12">
       <Wrap className="flex flex-col gap-10 sm:gap-16">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
           {/* on a phone: one tap-to-open row per column instead of a page of links */}
@@ -290,7 +301,7 @@ export function SiteFooter() {
               <span className="relative text-small text-white/85">{t('Bán cho cư dân ngay trong toà và khu của bạn, hoa hồng thấp, tự giao trong khu.')}</span>
               <span className="relative mt-3 inline-flex w-fit items-center gap-1.5 rounded-xs bg-white px-3.5 py-1.5 text-small font-medium text-ink">
                 {t('Bắt đầu')}
-                <ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                <ChevronRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </span>
             </a>
             <PublicLink to="/guides/getting-started" className="group flex flex-col gap-2 rounded-2xl bg-accent p-6">

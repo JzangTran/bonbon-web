@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
+import { isEmbedded } from '@/shared/lib/embed'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { legalUrl, siteUrl } from '@/shared/config/sites'
@@ -67,11 +68,14 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
   decoration?: ReactNode
   children: ReactNode
 }) {
+  // inside the app (the help center in a web view) the app draws its own header: no site header, tabs or footer here
+  const embedded = isEmbedded()
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-clip bg-background text-ink">
       <a href="#main" className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-ui font-medium text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
         {t('Bỏ qua đến nội dung chính')}
       </a>
+      {embedded ? null : (
       <header className="sticky top-0 z-30 border-b border-grey-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex shrink-0 items-center gap-3">
@@ -114,7 +118,8 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
         {tabsEnd ? <div className="hidden shrink-0 sm:block">{tabsEnd}</div> : null}
         </div>
       </header>
-      {decoration ? (
+      )}
+      {decoration && !embedded ? (
         // cut by the line under the tabs and by the right edge of the page, so it seems to come in from outside, as on gitbook.com
         <div aria-hidden="true" className="pointer-events-none absolute top-[6.9rem] right-0 -z-0 hidden h-[26rem] w-[22rem] overflow-hidden xl:block">
           <div className="absolute -top-[7rem] -right-[9rem] w-[34rem]">{decoration}</div>
@@ -129,7 +134,8 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
           <aside className={cn('hidden xl:block xl:sticky xl:top-36 xl:self-start', decoration && 'xl:mt-72')}>{aside}</aside>
         ) : null}
       </div>
-      <footer className="border-t border-grey-200 bg-beige-50">
+      {embedded ? null : (
+      <footer className="border-t border-grey-200 bg-pane">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4 py-6 text-small text-muted-foreground sm:px-6">
           <span>© {new Date().getFullYear()} bonbon</span>
           <LanguageSwitch />
@@ -146,6 +152,7 @@ export function DocsFrame({ label, tabs, tab, sidebar, aside, wide = false, sear
           </nav>
         </div>
       </footer>
+      )}
     </div>
   )
 }

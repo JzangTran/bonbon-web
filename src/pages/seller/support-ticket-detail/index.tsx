@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { ImagePicker, TICKET_STATUS, TicketThread, useCloseTicket, useMyTicket, useReplyTicket } from '@/entities/support-ticket'
@@ -26,7 +26,7 @@ export function SellerSupportTicketDetailPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <Link to={merchantPath('/support-tickets')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" />{t(' Phiếu hỗ trợ')}
+        <ChevronLeftIcon className="size-4" />{t(' Phiếu hỗ trợ')}
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}
       {ticket.isPending ? <Skeleton className="h-48" /> : null}

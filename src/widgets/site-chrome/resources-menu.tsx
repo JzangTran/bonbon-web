@@ -1,4 +1,4 @@
-import { ArrowRightIcon, ChevronDownIcon, StoreIcon } from 'lucide-react'
+import { ChevronRightIcon, ChevronDownIcon, StoreIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { articlePath, type Article } from '@/entities/article'
 import { siteUrl } from '@/shared/config/sites'
@@ -77,7 +77,7 @@ export function MegaMenu({ label, current, columns, feature, renderLink }: {
           </span>
           <span className="relative hidden shrink-0 items-center gap-1.5 rounded-xs bg-white px-4 py-2 text-ui font-medium text-ink sm:inline-flex">
             {t('Bắt đầu')}
-            <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            <ChevronRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </span>
         </a>
       </PopoverContent>

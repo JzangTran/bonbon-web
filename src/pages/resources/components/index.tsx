@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from 'lucide-react'
+import { ChevronRightIcon } from 'lucide-react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { cn } from '@/shared/lib/utils'
 import { t, tx } from '@/shared/i18n'
@@ -73,7 +73,7 @@ export function ComponentsIndexPage() {
                 <span className="flex flex-col gap-1 p-4">
                   <span className="flex items-center justify-between font-mono text-body font-medium text-ink">
                     {c.name}
-                    <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden="true" />
+                    <ChevronRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden="true" />
                   </span>
                   <span className="text-caption text-muted-foreground">{onPhone(c.slug) ? 'Web · Android · iOS' : 'Web'}</span>
                 </span>

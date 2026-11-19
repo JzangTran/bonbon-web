@@ -2,15 +2,15 @@ import * as React from 'react'
 import { cn } from '@/shared/lib/utils'
 
 /**
- * A block of related content (design v6, Fluent 2): a white surface with 8 px corners lifted by shadow4 on the grey canvas, so groups
- * read without lines; 16 px inside. `size="sm"` tightens the spacing.
+ * A block of related content (design v6.1, Fluent 2): white, 8 px corners and a thin light border; never a shadow (owner
+ * 2026-11-19). 16 px inside. `size="sm"` tightens the spacing.
  */
 export function Card({ className, size = 'default', ...props }: React.ComponentProps<'div'> & { size?: 'default' | 'sm' }) {
   return (
     <div
       data-slot="card"
       data-size={size}
-      className={cn('group/card flex flex-col rounded-card bg-card text-body-sm text-card-foreground shadow-card', size === 'sm' ? 'gap-3 py-3' : 'gap-4 py-4', className)}
+      className={cn('group/card flex flex-col rounded-card border border-border bg-card text-body-sm text-card-foreground', size === 'sm' ? 'gap-3 py-3' : 'gap-4 py-4', className)}
       {...props}
     />
   )

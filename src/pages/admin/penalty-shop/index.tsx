@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { APPEAL_LABEL, CONSEQUENCE } from '@/entities/performance'
@@ -59,7 +59,7 @@ export function AdminPenaltyShopPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <Link to={consolePath('/penalties')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" />{t(' Điểm phạt các quán')}
+        <ChevronLeftIcon className="size-4" />{t(' Điểm phạt các quán')}
       </Link>
       {history.isError ? <FormError message={problemMessage(history.error)} /> : null}
       {history.isPending ? <Skeleton className="h-40" /> : null}

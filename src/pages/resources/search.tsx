@@ -64,7 +64,7 @@ export function ResourceSearch({ tab }: { tab: TabKey }) {
       e.preventDefault()
       setOpen(true)
       setActive((i) => Math.min(i + 1, results.length - 1))
-    } else if (e.key === 'ArrowUp') {
+    } else if (e.key === 'ChevronUp') {
       e.preventDefault()
       setActive((i) => Math.max(i - 1, 0))
     } else if (e.key === 'Enter' && results[active]) {

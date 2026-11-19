@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, MonitorIcon } from 'lucide-react'
+import { ChevronLeftIcon, MonitorIcon } from 'lucide-react'
 import { pictureOf } from '@/shared/assets/mascot-pictures'
 import { siteUrl } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
@@ -46,7 +46,7 @@ export function GetTheAppPage({ audience }: { audience: 'seller' | 'staff' }) {
           </div>
         )}
         <a href={siteUrl('public')} className="text-link flex items-center gap-1.5 text-ui">
-          <ArrowLeftIcon className="size-4" aria-hidden="true" />
+          <ChevronLeftIcon className="size-4" aria-hidden="true" />
           {t('Về trang chủ bonbon')}
         </a>
       </main>

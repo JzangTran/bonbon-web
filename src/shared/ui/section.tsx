@@ -48,7 +48,7 @@ export function Toolbar({ className, children }: { className?: string; children:
  * The light beige ground of statistics (figures, charts, their tables) so they stand apart from the forms and lists around them.
  */
 export function StatsPanel({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn('flex flex-col gap-4 rounded-card bg-surface p-4 shadow-card', className)}>{children}</div>
+  return <div className={cn('flex flex-col gap-4 rounded-card border border-border bg-surface p-4', className)}>{children}</div>
 }
 
 /** One figure: a label, the value, and an optional line under it (a comparison or what it counts). */

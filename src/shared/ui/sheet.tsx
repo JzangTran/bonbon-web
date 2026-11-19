@@ -13,7 +13,7 @@ export const SheetClose = SheetPrimitive.Close
 export const SheetPortal = SheetPrimitive.Portal
 
 export function SheetOverlay({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Overlay>) {
-  return <SheetPrimitive.Overlay data-slot="sheet-overlay" className={cn('bb-overlay fixed inset-0 z-50 bg-black/25', className)} {...props} />
+  return <SheetPrimitive.Overlay data-slot="sheet-overlay" className={cn('bb-overlay fixed inset-0 z-50 bg-overlay', className)} {...props} />
 }
 
 const SIDE = {

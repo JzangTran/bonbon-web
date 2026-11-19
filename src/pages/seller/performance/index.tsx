@@ -111,7 +111,7 @@ export function SellerPerformancePage() {
       {view === 'weeks' ? (
       <section className="flex flex-col gap-3">
         <h2 className="text-h3">{t('Chi tiết từng tuần')}</h2>
-        <div className="overflow-x-auto rounded-card bg-surface px-2 py-1 shadow-card sm:px-3">
+        <div className="overflow-x-auto rounded-card bg-surface px-2 py-1 border border-border sm:px-3">
           <table className="w-full text-ui">
             <thead className="text-small text-muted-foreground">
               <tr>
@@ -199,7 +199,7 @@ export function SellerPerformancePage() {
                 {pen.decisionReason ? <p className="text-body-sm">{t('Quản trị viên: ')}{pen.decisionReason}</p> : null}
                 {appealing?.id === pen.id ? (
                   <form
-                    className="mt-3 flex flex-col gap-3 rounded-card bg-surface p-4 shadow-card"
+                    className="mt-3 flex flex-col gap-3 rounded-card bg-surface p-4 border border-border"
                     onSubmit={(e) => {
                       e.preventDefault()
                       if (appealing?.id) appeal.mutate({ id: appealing.id, reason }, { onSuccess: () => setAppealing(null) })

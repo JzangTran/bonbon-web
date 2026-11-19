@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { HelpAsk } from './help-ask'
-import { ArrowRightIcon, CheckIcon, SearchIcon } from 'lucide-react'
+import { ChevronRightIcon, CheckIcon, SearchIcon } from 'lucide-react'
 import { useDeferredValue, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
 import { blocksFromText, headingsOf } from '@/entities/article'
@@ -94,7 +94,7 @@ export function HelpCenterPage() {
             <span className="text-body font-medium">{t('Chưa thấy câu trả lời?')}</span>
             <span className="text-ui text-muted-foreground">{t('Gửi câu hỏi cho đội hỗ trợ bonbon.')}</span>
           </span>
-          <ArrowRightIcon className="size-5 text-primary transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          <ChevronRightIcon className="size-5 text-primary transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </Link>
       </div>
     </HelpFrame>

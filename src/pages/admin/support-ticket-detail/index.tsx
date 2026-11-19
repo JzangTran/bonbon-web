@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useSession } from '@/entities/session'
@@ -30,7 +30,7 @@ export function AdminSupportTicketDetailPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <Link to={consolePath('/support-tickets')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" />{t(' Hộp thư phiếu')}
+        <ChevronLeftIcon className="size-4" />{t(' Hộp thư phiếu')}
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}
       {ticket.isPending ? <Skeleton className="h-48" /> : null}

@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, CheckIcon } from 'lucide-react'
+import { ChevronLeftIcon, CheckIcon } from 'lucide-react'
 import { splitMessage } from '@/shared/ui/feedback'
 import { InlineMessage } from '@/shared/ui/message'
 import type { ReactNode } from 'react'
@@ -28,7 +28,7 @@ function AuthArt() {
               key={src}
               src={src}
               alt=""
-              className="absolute top-0 left-0 w-full rounded-2xl border border-black/5 bg-white shadow-[-20px_36px_70px_rgb(0_0_0/0.13)]"
+              className="absolute top-0 left-0 w-full rounded-2xl border border-border bg-surface"
               style={{ transform: `translate(${-i * 18}%, ${i * 40}%)`, zIndex: shots.length - i }}
             />
           ))}
@@ -167,7 +167,7 @@ export function AuthStepPage({ steps, current, title, description, onBack, child
             aria-label={t('Quay lại')}
             className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-grey-100 hover:text-ink"
           >
-            <ArrowLeftIcon className="size-5" />
+            <ChevronLeftIcon className="size-5" />
           </button>
         ) : null}
         <div className="flex flex-col gap-2">

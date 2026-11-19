@@ -45,10 +45,12 @@ export type WorkspaceProps = {
 }
 
 /**
- * The seller, admin and ops workspace, after the GitBook docs: a white header with the logo, a page search in the middle and the
- * account on the right; a left navigation on a thin rail; the page with a small breadcrumb above it; a right column on a rail like
- * GitBook's "On this page". The page never scrolls: the three body regions scroll on their own.
- * Below 1280 px the right column becomes a drawer; below 768 px so does the navigation.
+ * The seller, admin and ops workspace, after Microsoft Teams (design v6.1): three neutral layers with gentle steps between them. The
+ * global frame (grey) holds a slim top bar (logo, page search, account) and, with two or more spaces, an app rail down the left
+ * (icon with a small fixed-size label under it). Inside the frame, a panel with a rounded corner: the navigation pane (light grey)
+ * and the content (white). A right column appears only when the page puts something in it (RightPanel); notifications live under
+ * the bell. The page never scrolls: the body regions scroll on their own. Below 1280 px the right column becomes a drawer; below
+ * 768 px so does the navigation.
  */
 export function WorkspaceShell(props: WorkspaceProps) {
   return (
@@ -98,7 +100,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
   const atHome = pathname === homePath
 
   return (
-    <div className="ws-root flex h-svh flex-col bg-card text-body-sm">
+    <div className="ws-root flex h-svh flex-col bg-frame text-body-sm text-ink">
       <a
         href="#main"
         className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-body-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
@@ -106,7 +108,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
         {t('Bỏ qua đến nội dung chính')}
       </a>
 
-      <header className="relative z-20 flex h-16 shrink-0 items-center gap-4 border-b border-grey-200 bg-ws-header px-4 text-ink sm:px-5">
+      <header className="relative z-20 flex h-12 shrink-0 items-center gap-4 bg-frame px-3 text-ink sm:px-4">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           {!wideNav ? (
             <button
@@ -120,12 +122,12 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
             </button>
           ) : null}
           <Link to={homePath} className="flex items-center">
-            <Lockup className="h-7" />
+            <Lockup className="h-6" />
           </Link>
           {focus ? (
             <span className="hidden rounded-xs bg-accent px-3 py-1 text-caption font-semibold text-accent-foreground sm:inline">{focus.label}</span>
           ) : (
-            <span className="hidden text-ui text-muted-foreground lg:inline">{area}</span>
+            <span className="hidden text-body-sm text-text-secondary lg:inline">{area}</span>
           )}
         </div>
 
@@ -161,7 +163,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
               </PopoverContent>
             </Popover>
           )}
-          {!widePanel ? (
+          {!widePanel && custom ? (
             <button
               type="button"
               aria-label={t('Thông tin bổ sung')}
@@ -173,8 +175,8 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
             </button>
           ) : null}
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex h-10 items-center gap-2 rounded-control border border-grey-300 pr-3 pl-1 text-ui outline-none hover:bg-grey-50 focus-visible:ring-2 focus-visible:ring-ring">
-              <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-accent text-caption font-semibold text-primary">
+            <DropdownMenuTrigger className="flex h-9 items-center gap-2 rounded-control pr-2 pl-1 text-body-sm outline-none hover:bg-background/70 focus-visible:ring-2 focus-visible:ring-ring">
+              <span aria-hidden="true" className="flex size-7 items-center justify-center rounded-full bg-accent text-caption font-semibold text-primary">
                 {name.trim().charAt(0).toUpperCase() || '?'}
               </span>
               <span className="hidden max-w-40 truncate sm:inline">{name}</span>
@@ -193,13 +195,9 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           </DropdownMenu>
         </div>
       </header>
-      {spaces.length > 1 && wideNav && !focus ? (
-        <div className="shrink-0 border-b border-grey-200 bg-ws-header px-4 sm:px-5">
-          <SpaceTabs spaces={spaces} current={space.key} />
-        </div>
-      ) : null}
-
-      <div className="relative flex min-h-0 flex-1 overflow-hidden">
+      <div className="flex min-h-0 flex-1">
+      {spaces.length > 1 && wideNav && !focus ? <AppRail spaces={spaces} current={space.key} /> : null}
+      <div className={cn('relative flex min-h-0 min-w-0 flex-1 overflow-hidden bg-background', wideNav && 'rounded-tl-card border-t border-l border-border', wideNav && !(spaces.length > 1 && !focus) && 'ml-2')}>
         {(navOpen && !wideNav) || (panelOpen && !widePanel) ? (
           <button
             type="button"
@@ -209,59 +207,27 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
               setNavOpen(false)
               setPanelOpen(false)
             }}
-            className="bb-overlay absolute inset-0 z-30 bg-black/30"
+            className="bb-overlay absolute inset-0 z-30 bg-overlay"
           />
         ) : null}
 
         <aside
           inert={!wideNav && !navOpen}
           className={cn(
-            'absolute inset-y-0 left-0 z-40 w-72 shrink-0 overflow-y-auto bg-card px-5 py-8 shadow-float transition-transform wsnav:static wsnav:z-auto wsnav:translate-x-0 wsnav:shadow-none wsnav:transition-none',
+            'absolute inset-y-0 left-0 z-40 w-64 shrink-0 overflow-y-auto border-r border-border bg-pane px-3 py-4 shadow-float transition-transform wsnav:static wsnav:z-auto wsnav:translate-x-0 wsnav:shadow-none wsnav:transition-none',
             navOpen ? 'translate-x-0' : '-translate-x-full',
           )}
         >
           {!wideNav && !focus ? <PageSearch nav={allNav} extras={allExtras} className="mb-6" /> : null}
           <nav aria-label={area}>
-            {!wideNav && spaces.length > 1 ? <SpaceTabs spaces={spaces} current={space.key} vertical onNavigate={() => setNavOpen(false)} /> : null}
+            {!wideNav && spaces.length > 1 ? <SpaceTabs spaces={spaces} current={space.key} onNavigate={() => setNavOpen(false)} /> : null}
             <NavTree nav={space.nav} location={location} homePath={space === spaces[0] && !focus ? homePath : undefined} onNavigate={() => setNavOpen(false)} />
           </nav>
         </aside>
 
-        <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-ws-ground outline-none">
-          <div key={pathname} className="ws-content bb-page-in px-4 py-6 sm:px-8 sm:py-8">
-            {!focus ? (
-              <nav aria-label={t('Đường dẫn')} className="mb-4">
-                <ol className="flex flex-wrap items-center gap-1.5 text-caption text-muted-foreground">
-                  <li>
-                    {atHome ? (
-                      <span aria-current="page">{t('Trang chủ')}</span>
-                    ) : (
-                      <Link to={homePath} className="hover:text-ink">
-                        {t('Trang chủ')}
-                      </Link>
-                    )}
-                  </li>
-                  {location.parent?.children && location.page ? (
-                    <Fragment>
-                      <li aria-hidden="true">
-                        <ChevronRightIcon className="size-3" />
-                      </li>
-                      <li>{location.parent.label}</li>
-                    </Fragment>
-                  ) : null}
-                  {location.page ? (
-                    <Fragment>
-                      <li aria-hidden="true">
-                        <ChevronRightIcon className="size-3" />
-                      </li>
-                      <li aria-current="page" className="text-ink">
-                        {location.page.label}
-                      </li>
-                    </Fragment>
-                  ) : null}
-                </ol>
-              </nav>
-            ) : null}
+        <main id="main" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-background outline-none">
+          <div key={pathname} className="ws-content bb-page-in px-4 py-5 sm:px-8 sm:py-6">
+            {!focus ? <Breadcrumb homePath={homePath} atHome={atHome} location={location} /> : null}
             <div ref={setTabsHost} className="mb-6 empty:hidden" />
             {/* where this page's results and errors appear (design v5 feedback ladder, rung 2) */}
             <FeedbackRegion>
@@ -275,17 +241,16 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           <aside
             aria-label={t('Thông tin bổ sung')}
             inert={!widePanel && !panelOpen}
+            hidden={!custom}
             className={cn(
-              'absolute inset-y-0 right-0 z-40 w-80 shrink-0 overflow-y-auto bg-card p-6 shadow-float transition-transform wspanel:static wspanel:z-auto wspanel:w-72 wspanel:translate-x-0 wspanel:py-8 wspanel:pr-8 wspanel:pl-0 wspanel:shadow-none wspanel:transition-none',
+              'absolute inset-y-0 right-0 z-40 w-80 shrink-0 overflow-y-auto bg-pane p-5 shadow-float transition-transform wspanel:static wspanel:z-auto wspanel:w-72 wspanel:translate-x-0 wspanel:border-l wspanel:border-border wspanel:shadow-none wspanel:transition-none',
               panelOpen ? 'translate-x-0' : 'translate-x-full',
             )}
           >
-            <div className="wspanel:border-l wspanel:border-grey-200 wspanel:pl-5">
-              <div ref={setPanelHost} className="flex flex-col gap-8 empty:hidden" />
-              {!custom && !session?.team ? <NotificationFeed orderPath={orderPath} /> : null}
-            </div>
+            <div ref={setPanelHost} className="flex flex-col gap-6 empty:hidden" />
           </aside>
         ) : null}
+      </div>
       </div>
 
       {!focus ? <ShellFooter links={footerLinks} className="hidden wsnav:flex" /> : null}
@@ -297,13 +262,10 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
 /** The first page of a space: its first single page or the first page of its first group. */
 const firstPage = (s: Space) => s.nav[0]?.to ?? s.nav[0]?.children?.[0]?.to ?? '/'
 
-/**
- * The tabs of the spaces, after the GitBook docs: an icon and a name; the current one in orange with an orange line under it.
- * Stacked as a short list at the top of the navigation drawer on a narrow screen.
- */
-function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: Space[]; current: string; vertical?: boolean; onNavigate?: () => void }) {
+/** The spaces as a short list at the top of the navigation drawer on a narrow screen. */
+function SpaceTabs({ spaces, current, onNavigate }: { spaces: Space[]; current: string; vertical?: boolean; onNavigate?: () => void }) {
   return (
-    <nav aria-label={t('Khu vực làm việc')} className={cn(vertical ? 'mb-6 flex flex-col gap-1' : '-mb-px flex gap-2 overflow-x-auto')}>
+    <nav aria-label={t('Khu vực làm việc')} className="mb-5 flex flex-col gap-0.5">
       {spaces.map((s) => {
         const Icon = s.icon
         const on = s.key === current
@@ -314,14 +276,11 @@ function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: 
             onClick={onNavigate}
             aria-current={on ? 'page' : undefined}
             className={cn(
-              'flex shrink-0 items-center gap-2 text-ui whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              vertical ? 'rounded-control px-3 py-2' : 'border-b-2 px-3 py-2.5',
-              'transition-colors hover:bg-grey-100 hover:text-ink',
-              !vertical && 'rounded-t-md',
-              on ? cn('font-medium text-primary', !vertical && 'border-primary') : cn('text-muted-foreground', !vertical && 'border-transparent'),
+              'flex min-h-9 items-center gap-2.5 rounded-control px-3 text-body-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+              on ? 'bg-background font-semibold text-ink' : 'text-text-secondary hover:bg-surface-strong hover:text-ink',
             )}
           >
-            <Icon className="size-4" strokeWidth={1.75} aria-hidden="true" />
+            <Icon className={cn('size-[18px]', on && 'text-primary')} aria-hidden="true" />
             {s.label}
           </Link>
         )
@@ -330,10 +289,106 @@ function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: 
   )
 }
 
+/**
+ * The app rail, after Microsoft Teams: one button per space down the left of the frame, an icon with its name under it in a
+ * small fixed size (10 px, whatever the icon). The current one has a white tile, the icon in the signal blue and a short blue
+ * mark at the left; choosing one gives the icon a quick little wiggle.
+ */
+function AppRail({ spaces, current }: { spaces: Space[]; current: string }) {
+  const [wiggle, setWiggle] = useState<string | null>(null)
+  return (
+    <nav aria-label={t('Khu vực làm việc')} className="flex w-[68px] shrink-0 flex-col items-center gap-1 pt-1">
+      {spaces.map((s) => {
+        const Icon = s.icon
+        const on = s.key === current
+        return (
+          <Link
+            key={s.key}
+            to={firstPage(s)}
+            aria-current={on ? 'page' : undefined}
+            onClick={() => setWiggle(s.key + Date.now())}
+            className={cn(
+              'group relative flex w-14 flex-col items-center gap-1 rounded-control py-2 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+              on ? 'text-primary' : 'text-text-secondary hover:bg-background/60 hover:text-ink',
+            )}
+          >
+            {on ? <span aria-hidden="true" className="absolute top-1/2 left-0 h-5 w-[3px] -translate-y-1/2 rounded-full bg-primary" /> : null}
+            <Icon
+              key={wiggle?.startsWith(s.key) ? wiggle : s.key}
+              className={cn('size-6', wiggle?.startsWith(s.key) && 'bb-wiggle')}
+              strokeWidth={on ? 1.75 : 1.5}
+              aria-hidden="true"
+            />
+            <span className={cn('max-w-full truncate px-0.5 text-[10px] leading-3', on ? 'font-semibold' : '')}>{s.label}</span>
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+
+/**
+ * Where the page is, and a way to move: every step but the last is a link. The group step opens a short menu of its pages, so a
+ * neighbouring page is one click away.
+ */
+function Breadcrumb({ homePath, atHome, location }: { homePath: string; atHome: boolean; location: ReturnType<typeof locate> }) {
+  const step = 'inline-flex h-7 items-center gap-1 rounded-control px-2 text-text-secondary outline-none transition-colors hover:bg-surface-strong hover:text-ink focus-visible:ring-2 focus-visible:ring-ring'
+  const group = location.parent?.children && location.page ? location.parent : null
+  return (
+    <nav aria-label={t('Đường dẫn')} className="-ml-2 mb-3">
+      <ol className="flex flex-wrap items-center gap-0.5 text-caption">
+        <li>
+          {atHome ? (
+            <span aria-current="page" className="inline-flex h-7 items-center px-2 text-ink">{t('Trang chủ')}</span>
+          ) : (
+            <Link to={homePath} className={step}>
+              {t('Trang chủ')}
+            </Link>
+          )}
+        </li>
+        {group ? (
+          <Fragment>
+            <li aria-hidden="true" className="text-text-tertiary">
+              <ChevronRightIcon className="size-3" />
+            </li>
+            <li>
+              <DropdownMenu>
+                <DropdownMenuTrigger className={step}>
+                  {group.label}
+                  <ChevronDownIcon className="size-3" aria-hidden="true" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  {group.children!.map((c) => (
+                    <DropdownMenuItem key={c.to} asChild>
+                      <Link to={c.to} aria-current={c.to === location.page?.to ? 'page' : undefined} className={c.to === location.page?.to ? 'font-semibold' : undefined}>
+                        {c.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </li>
+          </Fragment>
+        ) : null}
+        {location.page ? (
+          <Fragment>
+            <li aria-hidden="true" className="text-text-tertiary">
+              <ChevronRightIcon className="size-3" />
+            </li>
+            <li aria-current="page" className="inline-flex h-7 items-center px-2 text-ink">
+              {location.page.label}
+            </li>
+          </Fragment>
+        ) : null}
+      </ol>
+    </nav>
+  )
+}
+
 /** Copyright, version and links. Below md it ends the scrolling work area instead of taking a fixed strip of the screen. */
 function ShellFooter({ links, className }: { links: FooterLink[]; className?: string }) {
   return (
-    <footer className={cn('flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-ws-hairline bg-card px-4 py-1.5 text-caption text-muted-foreground sm:px-5', className)}>
+    <footer className={cn('flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-0.5 bg-frame px-4 py-1.5 text-caption text-text-tertiary sm:px-5', className)}>
       <span>
         © {new Date().getFullYear()}{t(' bonbon · phiên bản ')}{__APP_VERSION__}
       </span>
