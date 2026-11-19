@@ -56,8 +56,8 @@ export function BankPicker({ id, value, onChange, invalid }: { id: string; value
           }}
         />
         <ul role="listbox" aria-label={t('Ngân hàng')} className="max-h-72 overflow-y-auto py-1">
-          {isError ? <li className="px-3 py-2 text-sm text-destructive">{t('Không tải được danh sách ngân hàng.')}</li> : null}
-          {banks && shown.length === 0 ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Không có ngân hàng phù hợp.')}</li> : null}
+          {isError ? <li className="px-3 py-2 text-body-sm text-destructive">{t('Không tải được danh sách ngân hàng.')}</li> : null}
+          {banks && shown.length === 0 ? <li className="px-3 py-2 text-body-sm text-muted-foreground">{t('Không có ngân hàng phù hợp.')}</li> : null}
           {shown.map((b) => {
             const selected = chosen?.bin === b.bin
             return (
@@ -65,12 +65,12 @@ export function BankPicker({ id, value, onChange, invalid }: { id: string; value
                 <button
                   type="button"
                   onClick={() => { onChange(b.shortName ?? ''); setOpen(false) }}
-                  className="flex w-full items-start gap-2 px-3 py-2 text-left text-sm hover:bg-grey-100 focus-visible:bg-grey-100 focus-visible:outline-none"
+                  className="flex w-full items-start gap-2 px-3 py-2 text-left text-body-sm hover:bg-grey-100 focus-visible:bg-grey-100 focus-visible:outline-none"
                 >
                   <CheckIcon className={cn('mt-0.5 size-4 shrink-0 text-primary', !selected && 'invisible')} />
                   <span>
                     <span className="font-medium">{b.shortName}</span> <span className="text-muted-foreground">({b.code})</span>
-                    <span className="block text-xs text-muted-foreground">{b.name}</span>
+                    <span className="block text-caption text-muted-foreground">{b.name}</span>
                   </span>
                 </button>
               </li>

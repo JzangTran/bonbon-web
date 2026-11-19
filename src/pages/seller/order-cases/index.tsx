@@ -37,8 +37,8 @@ export function SellerOrderCasesPage() {
     <div className="flex max-w-4xl flex-col gap-10">
       <OrderCaseTabs />
       <div>
-        <h1 className="text-2xl font-semibold">{t('Khiếu nại của khách')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Khiếu nại của khách')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Khách báo chưa nhận được hàng, thiếu món, sai món hoặc chất lượng. Bạn có 12 giờ để chấp nhận (khách được hoàn tiền) hoặc phản đối (quản trị viên quyết định). Không trả lời kịp cũng chuyển cho quản trị viên.')}
         </p>
       </div>
@@ -71,9 +71,9 @@ export function SellerOrderCasesPage() {
                       <Badge variant="outline">{CASE_TYPE_LABEL[item.type ?? ''] ?? item.type}</Badge>
                       <Badge className={status.className}>{status.label}</Badge>
                     </div>
-                    <span className="text-lg font-semibold tabular-nums">{formatVnd(item.shopBears)}</span>
+                    <span className="text-title-3 tabular-nums">{formatVnd(item.shopBears)}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-body-sm text-muted-foreground">
                     {t('Khách được hoàn ')}{formatVnd(item.refundAmount)}{t('; quán chịu ')}{formatVnd(item.shopBears)} · {formatDateTime(item.openedAt)}
                     {hoursLeft !== null ? t(' · còn khoảng {v0} giờ để trả lời', { v0: hoursLeft }) : ''}
                   </p>

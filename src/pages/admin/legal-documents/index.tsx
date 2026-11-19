@@ -23,8 +23,8 @@ export function AdminLegalDocumentsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Văn bản pháp lý')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Văn bản pháp lý')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Điều khoản và chính sách mà người dùng phải đồng ý. Phiên bản đã đăng không sửa được nữa; muốn đổi thì đăng phiên bản mới. Thay đổi quan trọng cần báo trước và người dùng phải đồng ý lại.')}
         </p>
       </div>
@@ -38,11 +38,11 @@ export function AdminLegalDocumentsPage() {
               <section key={tItem.id} className="flex flex-col gap-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <h2 className="text-lg font-semibold">{tItem.label}</h2>
-                    <p className="text-xs text-muted-foreground">{t('Áp dụng cho: ')}{tItem.audience}</p>
+                    <h2 className="text-title-3">{tItem.label}</h2>
+                    <p className="text-caption text-muted-foreground">{t('Áp dụng cho: ')}{tItem.audience}</p>
                   </div>
                   {hasDraft ? (
-                    <span className="text-xs text-muted-foreground">{t('Đang có một bản nháp')}</span>
+                    <span className="text-caption text-muted-foreground">{t('Đang có một bản nháp')}</span>
                   ) : (
                     <Button asChild size="sm" variant="outline">
                       <Link to={consolePath(`/legal-documents/new?type=${tItem.id}`)}>
@@ -51,7 +51,7 @@ export function AdminLegalDocumentsPage() {
                     </Button>
                   )}
                 </div>
-                {items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">{t('Chưa có phiên bản nào.')}</Card> : null}
+                {items.length === 0 ? <Card className="p-4 text-body-sm text-muted-foreground">{t('Chưa có phiên bản nào.')}</Card> : null}
                 <ul className="flex flex-col gap-2">
                   {items.map((v) => (
                     <VersionItem key={v.id} v={v} />
@@ -76,12 +76,12 @@ function VersionItem({ v }: { v: LegalVersion }) {
             {v.requiresReacceptance ? <Badge className="ml-1 bg-accent text-accent-foreground">{t('Phải đồng ý lại')}</Badge> : null}
           </p>
           {v.status !== 'DRAFT' ? (
-            <p className="text-sm text-muted-foreground tabular-nums">
+            <p className="text-body-sm text-muted-foreground tabular-nums">
               {(v.accepted ?? 0).toLocaleString(intlLocale)}{t(' đã đồng ý · ')}{(v.pending ?? 0).toLocaleString(intlLocale)}{t(' chưa')}
             </p>
           ) : null}
         </div>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-body-sm text-muted-foreground">
           {v.effectiveAt ? `${v.status === 'SCHEDULED' ? t('Hiệu lực từ') : t('Hiệu lực')} ${formatDateTime(v.effectiveAt)}` : t('Chưa có ngày hiệu lực')}
           {v.cancelReason ? t(' · lý do huỷ: {v0}', { v0: v.cancelReason }) : ''}
         </p>

@@ -59,8 +59,8 @@ export function SellerCategoryCasesPage() {
     <div className="flex max-w-4xl flex-col gap-10">
       <MenuTabs />
       <div>
-        <h1 className="text-2xl font-semibold">{t('Món sai ngành')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Món sai ngành')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Hoa hồng tính theo ngành của món. Khi quản trị viên thấy một món xếp sai ngành, món bị ẩn khỏi tìm kiếm cho đến khi bạn sửa; món vẫn có trên thực đơn và khách vẫn đặt được. Quá hạn, hệ thống tự chuyển món sang ngành đúng và bạn có 7 ngày để đồng ý hoặc kháng nghị. Ngành mới chỉ áp dụng cho đơn đặt từ lúc đổi.')}
         </p>
       </div>
@@ -117,11 +117,11 @@ function CaseItem({ c, busy, acting, onDone, onResolve, onAppeal, onConfirm }: {
         <p className="font-semibold">
           {c.dishName} <Badge className={cn('ml-2', status.className)}>{status.label}</Badge>
         </p>
-        <p className="text-xs text-muted-foreground" title={formatDateTime(c.openedAt)}>
+        <p className="text-caption text-muted-foreground" title={formatDateTime(c.openedAt)}>
           {formatRelative(c.openedAt)}
         </p>
       </div>
-      <p className="text-sm">
+      <p className="text-body-sm">
         <span className="text-muted-foreground">{t('Bạn chọn:')}</span> {c.originalCategory?.name} <span className="text-muted-foreground">{t('→ nên là:')}</span> <b>{c.suggestedCategory?.name}</b>
         {c.requestedCategory ? (
           <>
@@ -136,13 +136,13 @@ function CaseItem({ c, busy, acting, onDone, onResolve, onAppeal, onConfirm }: {
           </>
         ) : null}
       </p>
-      <p className="text-sm text-muted-foreground">{t('Lý do: ')}{c.reason}</p>
-      {c.status === 'RESTRICTED' ? <p className="text-sm text-danger-fg">{t('Sửa trước ')}{formatDateTime(c.deadlineAt)}{t(', sau đó hệ thống tự chuyển. Món đang bị ẩn khỏi tìm kiếm.')}</p> : null}
-      {c.status === 'AUTO_CORRECTED' ? <p className="text-sm text-warning-fg">{t('Đồng ý hoặc kháng nghị trước ')}{formatDateTime(c.appealDeadlineAt)}.</p> : null}
-      {c.status === 'APPEALED' ? <p className="text-sm text-muted-foreground">{t('Chờ quản trị viên quyết định (thường 3–5 ngày làm việc). Trong lúc chờ món giữ ngành hệ thống đã đặt.')}</p> : null}
-      {c.appealNote ? <p className="rounded-sm bg-muted px-3 py-2 text-sm">{t('Bạn giải thích: ')}{c.appealNote}</p> : null}
+      <p className="text-body-sm text-muted-foreground">{t('Lý do: ')}{c.reason}</p>
+      {c.status === 'RESTRICTED' ? <p className="text-body-sm text-danger-fg">{t('Sửa trước ')}{formatDateTime(c.deadlineAt)}{t(', sau đó hệ thống tự chuyển. Món đang bị ẩn khỏi tìm kiếm.')}</p> : null}
+      {c.status === 'AUTO_CORRECTED' ? <p className="text-body-sm text-warning-fg">{t('Đồng ý hoặc kháng nghị trước ')}{formatDateTime(c.appealDeadlineAt)}.</p> : null}
+      {c.status === 'APPEALED' ? <p className="text-body-sm text-muted-foreground">{t('Chờ quản trị viên quyết định (thường 3–5 ngày làm việc). Trong lúc chờ món giữ ngành hệ thống đã đặt.')}</p> : null}
+      {c.appealNote ? <p className="rounded-sm bg-muted px-3 py-2 text-body-sm">{t('Bạn giải thích: ')}{c.appealNote}</p> : null}
       {c.decisionReason ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-body-sm text-muted-foreground">
           {t('Quyết định (')}{formatDateTime(c.decidedAt)}): {c.decisionReason}
         </p>
       ) : null}
@@ -199,7 +199,7 @@ function ActionForm({ kase, kind, onClose }: { kase: CategoryCase; kind: 'resolv
     <div className="mt-2 flex flex-col gap-4 rounded-xl bg-grey-50 p-4">
         <div className="flex flex-col gap-1">
           <p className="font-medium">{isResolve ? t('Sửa ngành của món') : t('Kháng nghị')}</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {isResolve
               ? t('Nên chuyển sang "{v0}". Chọn ngành khác cũng đóng vụ này, nhưng nếu quản trị viên vẫn thấy sai họ có thể đánh dấu lại.', { v0: kase.suggestedCategory?.name })
               : t('Hệ thống đã chuyển món sang "{v0}". Chọn ngành bạn cho là đúng và giải thích; mỗi vụ kháng nghị một lần.', { v0: kase.finalCategory?.name })}

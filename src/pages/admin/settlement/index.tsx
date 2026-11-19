@@ -40,8 +40,8 @@ export function AdminSettlementPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Đối soát')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Đối soát')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Số dư dương: nền tảng nợ quán (chủ yếu tiền khách trả online). Số dư âm: quán nợ nền tảng (hoa hồng đơn tiền mặt). Mọi số liệu tính từ sổ cái.')}
         </p>
       </div>
@@ -83,11 +83,11 @@ export function AdminSettlementPage() {
                     </Badge>
                   ) : null}
                 </p>
-                <p className={cn('text-lg font-semibold tabular-nums', (shop.balance ?? 0) < 0 ? 'text-danger-fg' : 'text-success-fg')}>
+                <p className={cn('text-title-3 tabular-nums', (shop.balance ?? 0) < 0 ? 'text-danger-fg' : 'text-success-fg')}>
                   {(shop.balance ?? 0) < 0 ? t('Quán nợ {v0}', { v0: formatVnd(shop.owed) }) : t('Nền tảng nợ {v0}', { v0: formatVnd(shop.payable) })}
                 </p>
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-body-sm text-muted-foreground">
                 {shop.orders}{t(' đơn · món ')}{formatVnd(shop.foodValue)}{t(' · hoa hồng ')}{formatVnd(shop.commission)} ({percent(shop.effectiveRate)}) ·{' '}
                 {shop.lastPayoutAt ? t('chi trả gần nhất {v0}', { v0: formatRelative(shop.lastPayoutAt) }) : t('chưa chi trả lần nào')}
               </p>

@@ -24,15 +24,15 @@ export function SellerMenuPage({ startNewDish = false, tab = 'dishes' }: { start
     <div className="flex max-w-5xl flex-col gap-10">
       <MenuTabs quick={quick} />
       <div>
-        <h1 className="text-2xl font-semibold">{quick ? t('Còn/hết món') : t('Thực đơn')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{quick ? t('Còn/hết món') : t('Thực đơn')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {quick
             ? t('Bấm vào nút của món hoặc lựa chọn để báo hết hoặc bán lại. Khách thấy thay đổi ngay.')
             : t('Mục thực đơn là cách bạn nhóm món cho khách xem. Nhóm lựa chọn (cỡ ly, topping…) dùng lại được cho nhiều món.')}
         </p>
       </div>
       {openCases > 0 && !quick ? (
-        <p className="flex flex-wrap items-center gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
+        <p className="flex flex-wrap items-center gap-2 rounded-md bg-warning-subtle px-4 py-3 text-body-sm text-warning-fg">
           <TriangleAlertIcon className="size-4 shrink-0" />
           {t('Có ')}{openCases}{t(' món bị đánh dấu sai ngành hàng.')}
           <Link to={merchantPath('/category-cases')} className="text-link font-medium">

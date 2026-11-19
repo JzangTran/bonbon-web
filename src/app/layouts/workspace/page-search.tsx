@@ -96,7 +96,7 @@ export function PageSearch({ nav, extras, className }: { nav: NavParent[]; extra
           }}
           className="min-w-0 flex-1 bg-transparent text-ui text-ink outline-none placeholder:text-muted-foreground"
         />
-        <kbd className="hidden rounded border border-grey-300 px-1.5 font-mono text-[0.6875rem] leading-4 text-muted-foreground lg:inline">Ctrl K</kbd>
+        <kbd className="hidden rounded border border-grey-300 px-1.5 font-mono text-caption leading-4 text-muted-foreground lg:inline">Ctrl K</kbd>
       </div>
       {shown ? (
         <ul id={listId} role="listbox" aria-label={t('Trang')} className="bb-pop-menu absolute inset-x-0 top-12 z-50 max-h-80 overflow-y-auto rounded-xl bg-popover p-1.5 shadow-float">

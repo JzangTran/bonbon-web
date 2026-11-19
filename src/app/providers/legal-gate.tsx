@@ -69,11 +69,11 @@ export function LegalGate() {
         {pending.isError ? <FormError message={problemMessage(pending.error)} /> : null}
         <ul className="flex flex-col gap-3">
           {items.map((d) => (
-            <li key={d.id} className="flex flex-col gap-1 rounded-sm border p-3 text-sm">
+            <li key={d.id} className="flex flex-col gap-1 rounded-sm border p-3 text-body-sm">
               <p className="font-semibold">
                 {d.title} <span className="font-normal text-muted-foreground">{t('· phiên bản ')}{d.version}</span>
               </p>
-              <p className="text-xs text-muted-foreground">{t('Có hiệu lực từ ')}{formatDateTime(d.effectiveAt)}</p>
+              <p className="text-caption text-muted-foreground">{t('Có hiệu lực từ ')}{formatDateTime(d.effectiveAt)}</p>
               {d.summary ? <p className="whitespace-pre-line">{d.summary}</p> : <p className="text-muted-foreground">{t('Không có tóm tắt thay đổi.')}</p>}
               <a className="text-link" href={legalUrl(TYPE_ROUTE[d.type ?? ''] ?? d.type ?? '')} target="_blank" rel="noreferrer">
                 {t('Đọc toàn văn')}
@@ -81,7 +81,7 @@ export function LegalGate() {
             </li>
           ))}
         </ul>
-        <label className="flex items-start gap-2 text-sm">
+        <label className="flex items-start gap-2 text-body-sm">
           <input type="checkbox" className="mt-1" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
           <span>{t('Tôi đã đọc và đồng ý với ')}{items.length > 1 ? t('các văn bản') : t('văn bản')}{t(' trên.')}</span>
         </label>

@@ -26,12 +26,12 @@ type Props = {
 export function FocusFrame({ title, exitTo, loginPath = merchantPath('/login'), width = 'md', flat = false, children }: Props) {
   const { signOut } = useSession()
   const navigate = useNavigate()
-  const barButton = 'rounded-full px-3 py-1.5 text-[0.8125rem] font-medium text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
+  const barButton = 'rounded-full px-3 py-1.5 text-label text-ink outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
   return (
-    <div className="ws-root flex min-h-svh flex-col bg-ws-ground text-[0.8125rem]">
+    <div className="ws-root flex min-h-svh flex-col bg-ws-ground text-body-sm">
       <a
         href="#main"
-        className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
+        className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-body-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
       >
         {t('Bỏ qua đến nội dung chính')}
       </a>

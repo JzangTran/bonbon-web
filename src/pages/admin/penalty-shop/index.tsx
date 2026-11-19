@@ -58,7 +58,7 @@ export function AdminPenaltyShopPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-10">
-      <Link to={consolePath('/penalties')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/penalties')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" />{t(' Điểm phạt các quán')}
       </Link>
       {history.isError ? <FormError message={problemMessage(history.error)} /> : null}
@@ -67,20 +67,20 @@ export function AdminPenaltyShopPage() {
         <>
           <Card className="gap-2 p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h1 className="text-2xl font-semibold">{h.name}</h1>
+              <h1 className="text-title-1">{h.name}</h1>
               {canWrite ? <Button onClick={() => setAction({ kind: 'add' })}>{t('Cộng điểm')}</Button> : null}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-4xl font-semibold tabular-nums">{h.activePoints}</span>
+              <span className="text-display tabular-nums">{h.activePoints}</span>
               <span className="text-muted-foreground">{t('điểm còn hiệu lực')}</span>
               <Badge className={consequence.className}>{consequence.label}</Badge>
               {h.reviewFlagged ? <Badge className="bg-danger-subtle text-danger-fg">{t('Nên xem xét đình chỉ')}</Badge> : null}
             </div>
-            {h.restrictionStartsAt ? <p className="text-sm text-muted-foreground">{t('Hạn chế hiển thị bắt đầu ')}{formatDateTime(h.restrictionStartsAt)}</p> : null}
+            {h.restrictionStartsAt ? <p className="text-body-sm text-muted-foreground">{t('Hạn chế hiển thị bắt đầu ')}{formatDateTime(h.restrictionStartsAt)}</p> : null}
           </Card>
 
           <section className="flex flex-col gap-3">
-            <h2 className="text-lg font-semibold">{t('Lịch sử điểm')}</h2>
+            <h2 className="text-title-3">{t('Lịch sử điểm')}</h2>
             {(h.penalties ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{t('Quán chưa có điểm phạt nào.')}</Card> : null}
             <ul className="flex flex-col gap-3">
               {(h.penalties ?? []).map((p) => (
@@ -108,14 +108,14 @@ export function AdminPenaltyShopPage() {
                         </div>
                       ) : null}
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-body-sm text-muted-foreground">
                       {t('Cấp ')}{formatDateTime(p.issuedAt)}{t(' · hết hạn ')}{formatDateTime(p.expiresAt)}
                       {p.faultOrders !== undefined ? t(' · {v0} đơn lỗi trên {v1} đơn', { v0: p.faultOrders, v1: p.finishedOrders }) : ''}
                     </p>
-                    {p.reason ? <p className="text-sm">{t('Lý do: ')}{p.reason}</p> : null}
-                    {p.appealReason ? <p className="text-sm">{t('Quán kháng nghị: ')}{p.appealReason}</p> : null}
-                    {p.appealDecisionReason ? <p className="text-sm">{t('Quyết định kháng nghị: ')}{p.appealDecisionReason}</p> : null}
-                    {p.decisionReason && p.decisionReason !== p.appealDecisionReason ? <p className="text-sm">{t('Miễn điểm: ')}{p.decisionReason}</p> : null}
+                    {p.reason ? <p className="text-body-sm">{t('Lý do: ')}{p.reason}</p> : null}
+                    {p.appealReason ? <p className="text-body-sm">{t('Quán kháng nghị: ')}{p.appealReason}</p> : null}
+                    {p.appealDecisionReason ? <p className="text-body-sm">{t('Quyết định kháng nghị: ')}{p.appealDecisionReason}</p> : null}
+                    {p.decisionReason && p.decisionReason !== p.appealDecisionReason ? <p className="text-body-sm">{t('Miễn điểm: ')}{p.decisionReason}</p> : null}
                   </Card>
                 </li>
               ))}
@@ -124,7 +124,7 @@ export function AdminPenaltyShopPage() {
 
           <section className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold">{t('Đình chỉ')}</h2>
+              <h2 className="text-title-3">{t('Đình chỉ')}</h2>
               {canSuspend && !open ? (
                 <Button variant="outline" onClick={() => setAction({ kind: 'suspend' })}>
                   {t('Đình chỉ cửa hàng')}
@@ -137,7 +137,7 @@ export function AdminPenaltyShopPage() {
               ) : null}
               {canSuspend && open?.status === 'APPLIED' ? <Button onClick={() => setAction({ kind: 'reinstate' })}>{t('Khôi phục cửa hàng')}</Button> : null}
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               {t('Đình chỉ có lịch báo trước ít nhất 5 ngày (mức tối thiểu theo luật); quán vẫn hoạt động đến ngày đó. Chỉ yêu cầu của cơ quan có thẩm quyền mới đình chỉ ngay.')}
             </p>
             {suspensions.isError ? <FormError message={problemMessage(suspensions.error)} /> : null}
@@ -166,13 +166,13 @@ function SuspensionItem({ suspension: s }: { suspension: ShopSuspension }) {
           </Badge>
           {s.kind === 'IMMEDIATE' ? <Badge variant="outline">{t('Theo yêu cầu cơ quan')}</Badge> : null}
         </div>
-        <p className="text-sm">{s.reason}</p>
-        {s.authorityReference ? <p className="text-sm text-muted-foreground">{t('Yêu cầu: ')}{s.authorityReference}</p> : null}
-        <p className="text-sm text-muted-foreground">
+        <p className="text-body-sm">{s.reason}</p>
+        {s.authorityReference ? <p className="text-body-sm text-muted-foreground">{t('Yêu cầu: ')}{s.authorityReference}</p> : null}
+        <p className="text-body-sm text-muted-foreground">
           {t('Báo ')}{formatDateTime(s.noticeSentAt)}{t(' · hiệu lực ')}{formatDateTime(s.effectiveAt)}
           {s.endedAt ? t(' · kết thúc {v0}', { v0: formatDateTime(s.endedAt) }) : ''}
         </p>
-        {s.endReason ? <p className="text-sm">{t('Lý do kết thúc: ')}{s.endReason}</p> : null}
+        {s.endReason ? <p className="text-body-sm">{t('Lý do kết thúc: ')}{s.endReason}</p> : null}
       </Card>
     </li>
   )
@@ -250,7 +250,7 @@ function Actions({ action, onClose, vendorId }: { action: Action | null; onClose
           ) : null}
           {action?.kind === 'suspend' ? (
             <>
-              <label className="flex items-center gap-2 text-sm">
+              <label className="flex items-center gap-2 text-body-sm">
                 <input type="checkbox" checked={immediate} onChange={(e) => setImmediate(e.target.checked)} />
                 {t('Đình chỉ ngay theo yêu cầu của cơ quan có thẩm quyền')}
               </label>

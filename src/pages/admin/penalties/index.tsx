@@ -33,8 +33,8 @@ export function AdminPenaltiesPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Điểm phạt các quán')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Điểm phạt các quán')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Quán nào đang có điểm, miễn hoặc cộng điểm, quyết kháng nghị và đình chỉ. Từ 6 điểm quán được đánh dấu để xem xét đình chỉ; hệ thống không bao giờ tự đình chỉ.')}
         </p>
       </div>
@@ -71,9 +71,9 @@ export function AdminPenaltiesPage() {
                         {shop.reviewFlagged ? <Badge className="bg-danger-subtle text-danger-fg">{t('Nên xem xét đình chỉ')}</Badge> : null}
                         {(shop.pendingAppeals ?? 0) > 0 ? <Badge variant="outline">{shop.pendingAppeals}{t(' kháng nghị chờ')}</Badge> : null}
                       </div>
-                      <span className="text-2xl font-semibold tabular-nums">{shop.activePoints}{t(' điểm')}</span>
+                      <span className="text-title-1 tabular-nums">{shop.activePoints}{t(' điểm')}</span>
                     </div>
-                    {shop.restrictionStartsAt ? <p className="text-sm text-muted-foreground">{t('Hạn chế bắt đầu ')}{formatDateTime(shop.restrictionStartsAt)}</p> : null}
+                    {shop.restrictionStartsAt ? <p className="text-body-sm text-muted-foreground">{t('Hạn chế bắt đầu ')}{formatDateTime(shop.restrictionStartsAt)}</p> : null}
                   </Card>
                 </Link>
               </li>
@@ -88,10 +88,10 @@ export function AdminPenaltiesPage() {
                 <Card className="gap-1 p-4 transition-colors hover:bg-accent">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-semibold">{a.vendorName}</span>
-                    <span className="text-sm text-muted-foreground">{t('chờ từ ')}{formatRelative(a.appealedAt)}</span>
+                    <span className="text-body-sm text-muted-foreground">{t('chờ từ ')}{formatRelative(a.appealedAt)}</span>
                   </div>
-                  <p className="text-sm">{a.appealReason}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-body-sm">{a.appealReason}</p>
+                  <p className="text-caption text-muted-foreground">
                     {a.points}{t(' điểm · ')}{a.faultOrders ?? '–'}{t(' đơn lỗi trên ')}{a.finishedOrders ?? '–'}{t(' đơn')}
                   </p>
                 </Card>

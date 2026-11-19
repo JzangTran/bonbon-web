@@ -18,7 +18,7 @@ import { QUICK_REPLIES_KEY as KEY, useQuickReplies, type QuickReply } from './qu
 export function QuickReplyPicker({ matches, active, onPick }: { matches: QuickReply[]; active: number; onPick: (r: QuickReply) => void }) {
   return (
     <ul role="listbox" aria-label={t('Tin trả lời mẫu')} className="mb-2 flex max-h-56 flex-col overflow-y-auto rounded-sm border bg-card shadow-sm">
-      {matches.length === 0 ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Không có tin mẫu khớp. Thêm tin mẫu trong Cài đặt chat.')}</li> : null}
+      {matches.length === 0 ? <li className="px-3 py-2 text-body-sm text-muted-foreground">{t('Không có tin mẫu khớp. Thêm tin mẫu trong Cài đặt chat.')}</li> : null}
       {matches.map((r, i) => (
         <li key={r.id} role="option" aria-selected={i === active}>
           <button
@@ -27,9 +27,9 @@ export function QuickReplyPicker({ matches, active, onPick }: { matches: QuickRe
               e.preventDefault()
               onPick(r)
             }}
-            className={cn('flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left text-sm hover:bg-muted', i === active && 'bg-muted')}
+            className={cn('flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left text-body-sm hover:bg-muted', i === active && 'bg-muted')}
           >
-            <span className="font-mono text-xs text-primary">/{r.shortcut}</span>
+            <span className="font-mono text-caption text-primary">/{r.shortcut}</span>
             <span className="line-clamp-2">{r.text}</span>
           </button>
         </li>
@@ -85,7 +85,7 @@ export function QuickReplyEditor() {
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-medium">{t('Tin trả lời mẫu')}</p>
-          <p className="text-xs text-muted-foreground">{t('Gõ / và mã gõ tắt trong ô chat để chèn, ví dụ /giao.')}</p>
+          <p className="text-caption text-muted-foreground">{t('Gõ / và mã gõ tắt trong ô chat để chèn, ví dụ /giao.')}</p>
         </div>
         <Button size="sm" variant="outline" onClick={() => open('new')}>
           <PlusIcon className="size-4" aria-hidden="true" />
@@ -104,7 +104,7 @@ export function QuickReplyEditor() {
           }}
         >
           <div className="flex items-center gap-1">
-            <span className="text-sm text-muted-foreground">/</span>
+            <span className="text-body-sm text-muted-foreground">/</span>
             <Input
               value={shortcut}
               maxLength={20}
@@ -127,8 +127,8 @@ export function QuickReplyEditor() {
       ) : null}
       <ul className="flex flex-col divide-y rounded-sm border empty:hidden">
         {(replies.data ?? []).map((r) => (
-          <li key={r.id} className="flex items-start gap-3 px-3 py-2 text-sm">
-            <span className="w-20 shrink-0 font-mono text-xs text-primary">/{r.shortcut}</span>
+          <li key={r.id} className="flex items-start gap-3 px-3 py-2 text-body-sm">
+            <span className="w-20 shrink-0 font-mono text-caption text-primary">/{r.shortcut}</span>
             <span className="min-w-0 flex-1 line-clamp-2">{r.text}</span>
             <Button variant="ghost" size="icon-sm" aria-label={t('Sửa')} onClick={() => open(r)}>
               <PencilIcon />

@@ -51,10 +51,10 @@ export function AdminSettlementShopPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-10">
       <div>
-        <Link to={consolePath('/settlement')} className="text-link text-sm">
+        <Link to={consolePath('/settlement')} className="text-link text-body-sm">
           {t('← Đối soát')}
         </Link>
-        <h1 className="text-2xl font-semibold">{v?.name ?? t('Quán')}</h1>
+        <h1 className="text-title-1">{v?.name ?? t('Quán')}</h1>
       </div>
       {vendor.isError ? <FormError message={problemMessage(vendor.error)} /> : null}
       {vendor.isPending ? <Skeleton className="h-24" /> : null}
@@ -62,9 +62,9 @@ export function AdminSettlementShopPage() {
       {v ? (
         <Card className="flex-row flex-wrap items-center justify-between gap-4 p-4">
           <div>
-            <p className="text-sm text-muted-foreground">{(v.balance ?? 0) < 0 ? t('Quán đang nợ nền tảng') : t('Nền tảng đang nợ quán')}</p>
-            <p className={cn('text-3xl font-semibold tabular-nums', (v.balance ?? 0) < 0 ? 'text-danger-fg' : 'text-success-fg')}>{formatVnd(Math.abs(v.balance ?? 0))}</p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">{(v.balance ?? 0) < 0 ? t('Quán đang nợ nền tảng') : t('Nền tảng đang nợ quán')}</p>
+            <p className={cn('text-title-1 tabular-nums', (v.balance ?? 0) < 0 ? 'text-danger-fg' : 'text-success-fg')}>{formatVnd(Math.abs(v.balance ?? 0))}</p>
+            <p className="text-caption text-muted-foreground">
               {t('Có thể chi trả ngay ')}{formatVnd(v.payable)}
               {v.heldForCases ? t(' · giữ cho khiếu nại {v0}', { v0: formatVnd(v.heldForCases) }) : ''}
             </p>
@@ -98,12 +98,12 @@ export function AdminSettlementShopPage() {
       {tab === 'ledger' ? (
         <section className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <Label htmlFor="type-filter" className="text-sm">
+            <Label htmlFor="type-filter" className="text-body-sm">
               {t('Loại')}
             </Label>
             <select
               id="type-filter"
-              className="h-9 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-2 text-sm"
+              className="h-9 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-2 text-body-sm"
               value={type ?? ''}
               onChange={(e) => {
                 setType(e.target.value || null)
@@ -122,13 +122,13 @@ export function AdminSettlementShopPage() {
           {ledger.data && (ledger.data.items ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{t('Chưa có bút toán nào.')}</Card> : null}
           <ul className="flex flex-col divide-y rounded-sm border bg-card">
             {(ledger.data?.items ?? []).map((entry) => (
-              <li key={entry.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+              <li key={entry.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-body-sm">
                 <div>
                   <p className="font-medium">
                     {LEDGER_TYPE_LABEL[entry.type ?? ''] ?? entry.type}
                     {entry.orderNumber ? t(' · đơn #{v0}', { v0: entry.orderNumber }) : ''}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-caption text-muted-foreground">
                     {formatDateTime(entry.createdAt)} · {entry.actedByType === 'SYSTEM' ? t('tự động') : t('quản trị viên')}
                     {entry.reference ? t(' · mã {v0}', { v0: entry.reference }) : ''}
                     {entry.note ? ` · ${entry.note}` : ''}
@@ -237,14 +237,14 @@ function RecordDialog({ vendorId, kind, payable, owed, onClose }: { vendorId: st
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="amount">{t('Số tiền (₫)')}</Label>
             <Input id="amount" inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value)} />
-            {limit !== null ? <p className="text-xs text-muted-foreground">{t('Tối đa ')}{formatVnd(limit)}</p> : null}
-            {limit !== null && digits > limit ? <p role="alert" className="text-sm text-destructive">{t('Vượt quá số cho phép.')}</p> : null}
+            {limit !== null ? <p className="text-caption text-muted-foreground">{t('Tối đa ')}{formatVnd(limit)}</p> : null}
+            {limit !== null && digits > limit ? <p role="alert" className="text-body-sm text-destructive">{t('Vượt quá số cho phép.')}</p> : null}
           </div>
           {needsReference ? (
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="reference">{t('Mã giao dịch ngân hàng')}</Label>
               <Input id="reference" value={reference} maxLength={100} onChange={(e) => setReference(e.target.value)} />
-              <p className="text-xs text-muted-foreground">{t('Dùng để đối chiếu với sao kê ngân hàng; hệ thống không kiểm tra được.')}</p>
+              <p className="text-caption text-muted-foreground">{t('Dùng để đối chiếu với sao kê ngân hàng; hệ thống không kiểm tra được.')}</p>
             </div>
           ) : null}
           <div className="flex flex-col gap-1.5">

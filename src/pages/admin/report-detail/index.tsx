@@ -27,7 +27,7 @@ export function AdminReportDetailPage() {
   const r = report.data
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to={consolePath('/reports')} className="text-link text-sm">
+      <Link to={consolePath('/reports')} className="text-link text-body-sm">
         {t('← Hàng đợi báo cáo')}
       </Link>
       <div className="flex flex-col gap-2">
@@ -36,15 +36,15 @@ export function AdminReportDetailPage() {
           <Badge variant="outline">{REASON_LABEL[r.reasonCode ?? ''] ?? r.reasonCode}</Badge>
           {r.decisionCode ? <Badge>{DECISION_LABEL[r.decisionCode] ?? r.decisionCode}</Badge> : null}
         </div>
-        <h1 className="text-xl font-semibold">{r.targetLabel}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-2">{r.targetLabel}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Gửi lúc {v0} bởi một {v1}.', { v0: formatDateTime(r.createdAt), v1: r.reporterSide === 'SELLER' ? t('người bán') : t('khách') })}{' '}
           {t('Người này có {v0} báo cáo trong 90 ngày, {v1} bị bác.', { v0: r.reporterReports90d ?? 0, v1: r.reporterDismissed90d ?? 0 })}{' '}
           {t('Người hoặc quán bị báo cáo có {v0} lần bị xử lý trước đây.', { v0: r.targetActionedBefore ?? 0 })}
         </p>
-        {r.note ? <p className="rounded-md bg-muted p-3 text-sm">{t('Ghi chú của người báo cáo: ')}{r.note}</p> : null}
+        {r.note ? <p className="rounded-md bg-muted p-3 text-body-sm">{t('Ghi chú của người báo cáo: ')}{r.note}</p> : null}
         {r.contestedAt ? (
-          <p className="rounded-md bg-warning-subtle p-3 text-sm text-warning-fg">
+          <p className="rounded-md bg-warning-subtle p-3 text-body-sm text-warning-fg">
             {t('Người bị xử lý khiếu nại lúc {v0}: ', { v0: formatDateTime(r.contestedAt) })}{r.contestNote}
           </p>
         ) : null}
@@ -56,7 +56,7 @@ export function AdminReportDetailPage() {
       </Card>
 
       {r.status === 'OPEN' ? <DecideCard report={r} /> : (
-        <Card className="gap-1 p-4 text-sm">
+        <Card className="gap-1 p-4 text-body-sm">
           <p className="font-semibold">{DECISION_LABEL[r.decisionCode ?? ''] ?? r.decisionCode}</p>
           <p className="text-muted-foreground">{formatDateTime(r.decidedAt)} · {r.decisionReason}</p>
         </Card>
@@ -74,13 +74,13 @@ function Evidence({ report: r }: { report: ReportDetail }) {
     return (
       <div className="flex flex-col gap-2">
         {r.evidence && e.conversationId ? (
-          <Link to={consolePath(`/conversations/${String(e.conversationId)}`)} className="text-link self-start text-xs">
+          <Link to={consolePath(`/conversations/${String(e.conversationId)}`)} className="text-link self-start text-caption">
             {t('Mở cả cuộc trò chuyện (được ghi lại)')}
           </Link>
         ) : null}
         {[...before, ...(message ? [message] : []), ...after].map((m) => (
-          <div key={m.id} className={cn('rounded-md p-2 text-sm', m.id === message?.id ? 'border-2 border-destructive' : 'bg-muted')}>
-            <p className="text-xs text-muted-foreground">
+          <div key={m.id} className={cn('rounded-md p-2 text-body-sm', m.id === message?.id ? 'border-2 border-destructive' : 'bg-muted')}>
+            <p className="text-caption text-muted-foreground">
               {m.senderType === 'SHOP' ? String(e.shopName ?? t('Cửa hàng')) : t('Khách')} · {formatDateTime(m.createdAt)}
             </p>
             {m.imageUrl ? <img src={m.imageUrl} alt={t('Ảnh trong tin nhắn')} className="my-1 max-h-48 rounded-sm" /> : null}
@@ -92,17 +92,17 @@ function Evidence({ report: r }: { report: ReportDetail }) {
   }
   if (r.targetType === 'REVIEW') {
     return (
-      <div className="text-sm">
+      <div className="text-body-sm">
         <p className="font-medium">{String(e.reviewerName ?? '')} · {String(e.rating ?? '')}★ · {String(e.shopName ?? '')}</p>
         <p className="whitespace-pre-wrap">{String(e.comment ?? t('(không có nhận xét)'))}</p>
       </div>
     )
   }
   if (r.targetType === 'REVIEW_RESPONSE') {
-    return <p className="text-sm whitespace-pre-wrap">{String(e.shopName ?? '')}: {String(e.text ?? '')}</p>
+    return <p className="text-body-sm whitespace-pre-wrap">{String(e.shopName ?? '')}: {String(e.text ?? '')}</p>
   }
   return (
-    <p className="text-sm">
+    <p className="text-body-sm">
       {t('Cửa hàng ')}
       <Link to={consolePath(`/merchants/${String(e.shopId ?? '')}`)} className="text-link">
         {String(e.shopName ?? '')}
@@ -121,27 +121,27 @@ function DecideCard({ report: r }: { report: ReportDetail }) {
     <Card className="gap-3 p-4">
       <h2 className="font-semibold">{r.contestedAt ? t('Xem lại quyết định') : t('Quyết định')}</h2>
       {r.contestedAt ? (
-        <p className="text-sm text-muted-foreground">{t('Chọn Không vi phạm sẽ khôi phục nội dung và gỡ hạn chế đã áp dụng.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Chọn Không vi phạm sẽ khôi phục nội dung và gỡ hạn chế đã áp dụng.')}</p>
       ) : null}
       <fieldset className="flex flex-col gap-2">
         <legend className="sr-only">{t('Hành động')}</legend>
         {(r.allowedActions ?? []).map((a) => (
-          <label key={a} className="flex cursor-pointer items-start gap-2 rounded-md border p-2 text-sm has-checked:border-primary has-checked:bg-accent">
+          <label key={a} className="flex cursor-pointer items-start gap-2 rounded-md border p-2 text-body-sm has-checked:border-primary has-checked:bg-accent">
             <input type="radio" name="decision" className="mt-1" checked={action === a} onChange={() => setAction(a)} />
             <span>
               <span className="font-medium">{ACTION_LABEL[a]?.label ?? a}</span>
-              <span className="block text-xs text-muted-foreground">{ACTION_LABEL[a]?.hint}</span>
+              <span className="block text-caption text-muted-foreground">{ACTION_LABEL[a]?.hint}</span>
             </span>
           </label>
         ))}
       </fieldset>
       {action === 'RESTRICT' ? (
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-body-sm">
           {t('Số ngày hạn chế')}
           <input type="number" min={1} max={30} value={days} onChange={(e) => setDays(Number(e.target.value))} className="h-9 w-20 rounded-md border px-2" />
         </label>
       ) : null}
-      <label htmlFor="decision-reason" className="text-sm font-medium">
+      <label htmlFor="decision-reason" className="text-label">
         {t('Lý do (người bị xử lý sẽ đọc)')}
       </label>
       <Textarea id="decision-reason" maxLength={500} rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />

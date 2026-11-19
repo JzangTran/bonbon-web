@@ -115,8 +115,8 @@ export function SellerOrdersPage() {
     <div className="flex max-w-5xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Đơn hàng')}</h1>
-          <p className="text-sm text-muted-foreground">{t('Đơn mới hiện ngay khi khách đặt. Nhận đơn trong vài phút, nếu không đơn sẽ tự bị từ chối.')}</p>
+          <h1 className="text-title-1">{t('Đơn hàng')}</h1>
+          <p className="text-body-sm text-muted-foreground">{t('Đơn mới hiện ngay khi khách đặt. Nhận đơn trong vài phút, nếu không đơn sẽ tự bị từ chối.')}</p>
         </div>
         <Button variant="outline" size="sm" aria-pressed={soundOn} onClick={toggleSound}>
           {soundOn ? <BellIcon /> : <BellOffIcon />} {soundOn ? t('Đang bật âm báo') : t('Âm báo đang tắt')}
@@ -124,7 +124,7 @@ export function SellerOrdersPage() {
       </div>
 
       {socket === 'offline' ? (
-        <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-sm text-warning-fg" role="status">
+        <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-body-sm text-warning-fg" role="status">
           <WifiOffIcon className="size-4" aria-hidden="true" />{t(' Mất kết nối trực tiếp, đang tự tải lại mỗi 10 giây.')}
         </p>
       ) : null}
@@ -187,20 +187,20 @@ function OrderRow({ order, now, onOpen }: { order: ShopOrderSummary; now: number
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-semibold tabular-nums">#{order.number}</span>
               <OrderStatusBadge status={status} />
-              <span className="text-sm text-muted-foreground">{formatRelative(order.placedAt)}</span>
+              <span className="text-body-sm text-muted-foreground">{formatRelative(order.placedAt)}</span>
             </div>
             <p className="mt-1 font-medium">{order.customerName}</p>
-            <p className="line-clamp-2 text-sm text-muted-foreground">{order.itemsPreview}</p>
+            <p className="line-clamp-2 text-body-sm text-muted-foreground">{order.itemsPreview}</p>
           </button>
           <div className="flex flex-col items-end gap-1">
             <span className="font-semibold tabular-nums">{formatVnd(order.grandTotal)}</span>
             {response ? (
-              <span className={cn('text-sm tabular-nums', response.urgent ? 'font-semibold text-destructive' : 'text-muted-foreground')}>
+              <span className={cn('text-body-sm tabular-nums', response.urgent ? 'font-semibold text-destructive' : 'text-muted-foreground')}>
                 {t('Còn ')}{response.text}
               </span>
             ) : null}
             {handover ? (
-              <span className={cn('text-sm tabular-nums', handover.urgent ? 'font-semibold text-destructive' : 'text-muted-foreground')}>
+              <span className={cn('text-body-sm tabular-nums', handover.urgent ? 'font-semibold text-destructive' : 'text-muted-foreground')}>
                 {t('Hạn giao đi ')}{handover.text}
               </span>
             ) : null}
@@ -232,7 +232,7 @@ function History({ live, onOpen, statuses }: { live: boolean; onOpen: (id: strin
           <Label htmlFor="history-status">{t('Trạng thái')}</Label>
           <select
             id="history-status"
-            className="h-10 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-sm"
+            className="h-10 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-body-sm"
             value={status}
             onChange={(e) => reset(setStatus)(e.target.value as 'ALL' | OrderStatus)}
           >
@@ -266,7 +266,7 @@ export function SellerCancelledOrdersPage() {
   const [openId, setOpenId] = useState<string | null>(null)
   return (
     <div className="flex max-w-5xl flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t('Đơn hủy')}</h1>
+      <h1 className="text-title-1">{t('Đơn hủy')}</h1>
       <History live={false} statuses={CANCELLED} onOpen={setOpenId} />
       <OrderSheet id={openId} onClose={() => setOpenId(null)} />
     </div>

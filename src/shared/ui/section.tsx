@@ -23,7 +23,7 @@ export function Section({ title, description, actions, className, children }: {
       {title || description || actions ? (
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div className="flex max-w-2xl flex-col gap-1">
-            {title ? <h2 className="text-h3 font-medium">{title}</h2> : null}
+            {title ? <h2 className="text-h3">{title}</h2> : null}
             {description ? <p className="text-ui text-muted-foreground">{description}</p> : null}
           </div>
           {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}

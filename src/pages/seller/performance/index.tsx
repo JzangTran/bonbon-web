@@ -42,8 +42,8 @@ export function SellerPerformancePage() {
     <div className="flex max-w-4xl flex-col gap-10">
       <OrderCaseTabs />
       <div>
-        <h1 className="text-2xl font-semibold">{t('Hiệu suất cửa hàng')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Hiệu suất cửa hàng')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Đơn thất bại do quán (từ chối, không trả lời kịp, không giao đi kịp, huỷ sau khi nhận, khiếu nại hoàn cả đơn, không đến khi giao). Đơn khách huỷ, thanh toán quá hạn và hoàn một phần không bị tính.')}
         </p>
       </div>
@@ -51,12 +51,12 @@ export function SellerPerformancePage() {
       {suspension.data && suspension.data.status !== 'NONE' ? (
         <Card className="gap-1 border-danger p-4">
           <p className="font-semibold text-danger-fg">{suspension.data.status === 'SUSPENDED' ? t('Quán đang bị đình chỉ') : t('Quán sắp bị đình chỉ')}</p>
-          <p className="text-sm">
+          <p className="text-body-sm">
             {suspension.data.status === 'SUSPENDED'
               ? t('Khách không tìm thấy quán và không đặt thêm được. Bạn vẫn hoàn tất các đơn đang làm và xem được thu nhập.')
               : t('Từ {v0} quán sẽ bị đình chỉ. Đến lúc đó quán vẫn hoạt động bình thường.', { v0: formatDateTime(suspension.data.effectiveAt) })}
           </p>
-          {suspension.data.reason ? <p className="text-sm text-muted-foreground">{t('Lý do: ')}{suspension.data.reason}</p> : null}
+          {suspension.data.reason ? <p className="text-body-sm text-muted-foreground">{t('Lý do: ')}{suspension.data.reason}</p> : null}
         </Card>
       ) : null}
 
@@ -66,11 +66,11 @@ export function SellerPerformancePage() {
       {standing ? (
         <StatsPanel className="gap-2">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-4xl font-semibold tabular-nums">{standing.activePoints ?? 0}</span>
+            <span className="text-display tabular-nums">{standing.activePoints ?? 0}</span>
             <span className="text-muted-foreground">{t('điểm phạt còn hiệu lực')}</span>
             <Badge className={consequence.className}>{consequence.label}</Badge>
           </div>
-          <p className="text-sm">
+          <p className="text-body-sm">
             {standing.consequence === 'RESTRICTED'
               ? t('Quán không hiện khi khách tìm kiếm và xếp cuối danh sách, nhưng khách mở thẳng quán vẫn đặt được. Hạn chế được gỡ ngay khi điểm xuống dưới 3.')
               : standing.consequence === 'RESTRICTION_SCHEDULED'
@@ -79,7 +79,7 @@ export function SellerPerformancePage() {
                   ? t('Mới là cảnh báo. Từ 3 điểm quán bị hạn chế hiển thị, sau khi được báo trước 5 ngày.')
                   : t('Quán đang đạt yêu cầu.')}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-caption text-muted-foreground">
             {t('Mỗi tuần (thứ Hai) hệ thống đánh giá tuần vừa đóng: từ ')}{p?.minOrders}{t(' đơn trở lên mà tỷ lệ lỗi vượt ')}{p?.thresholdPercent}{t('% thì bị 1 điểm; điểm hết hạn sau 90 ngày.')}
           </p>
         </StatsPanel>
@@ -110,7 +110,7 @@ export function SellerPerformancePage() {
 
       {view === 'weeks' ? (
       <section className="flex flex-col gap-3">
-        <h2 className="text-h3 font-medium">{t('Chi tiết từng tuần')}</h2>
+        <h2 className="text-h3">{t('Chi tiết từng tuần')}</h2>
         <div className="overflow-x-auto rounded-xl bg-beige-50 px-2 py-1 sm:px-3">
           <table className="w-full text-ui">
             <thead className="text-small text-muted-foreground">
@@ -127,12 +127,12 @@ export function SellerPerformancePage() {
                 <tr key={w.start} className={cn('border-t border-grey-200', week === w.start && 'font-medium text-primary')}>
                   <td className="px-3 py-3">
                     {formatDay(w.start)} – {formatDay(w.end)}
-                    {w.current ? <span className="ml-2 text-xs text-muted-foreground">{t('(tạm tính)')}</span> : null}
+                    {w.current ? <span className="ml-2 text-caption text-muted-foreground">{t('(tạm tính)')}</span> : null}
                   </td>
                   <td className="px-3 py-3 text-right tabular-nums">{w.finishedOrders}</td>
                   <td className="px-3 py-3 text-right tabular-nums">{w.faultOrders}</td>
                   <td className="px-3 py-3 text-right tabular-nums">{w.ratePercent}%</td>
-                  <td className="px-3 py-3 text-right text-xs">
+                  <td className="px-3 py-3 text-right text-caption">
                     {w.current ? '' : w.penalised ? <span className="text-danger-fg">{t('+1 điểm')}</span> : w.counted ? t('Đạt') : t('Chưa đủ {v0} đơn', { v0: p?.minOrders })}
                   </td>
                   <td className="px-3 py-3 text-right">
@@ -151,7 +151,7 @@ export function SellerPerformancePage() {
           <Card className="gap-2 p-4">
             <h3 className="font-semibold">{t('Các đơn lỗi tuần ')}{formatDay(week)}</h3>
             {faults.isPending ? <Skeleton className="h-12" /> : null}
-            <ul className="divide-y text-sm">
+            <ul className="divide-y text-body-sm">
               {(faults.data ?? []).map((f) => (
                 <li key={`${f.orderId}-${f.type}`} className="flex flex-wrap justify-between gap-2 py-2">
                   <span>
@@ -191,12 +191,12 @@ export function SellerPerformancePage() {
                     </Button>
                   ) : null}
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-body-sm text-muted-foreground">
                   {t('Cấp ')}{formatDateTime(pen.issuedAt)}{t(' · hết hạn ')}{formatDateTime(pen.expiresAt)}
                   {pen.canAppeal ? t(' · kháng nghị được đến {v0}', { v0: formatDateTime(pen.appealDeadline) }) : ''}
                 </p>
-                {pen.reason ? <p className="text-sm">{t('Lý do: ')}{pen.reason}</p> : null}
-                {pen.decisionReason ? <p className="text-sm">{t('Quản trị viên: ')}{pen.decisionReason}</p> : null}
+                {pen.reason ? <p className="text-body-sm">{t('Lý do: ')}{pen.reason}</p> : null}
+                {pen.decisionReason ? <p className="text-body-sm">{t('Quản trị viên: ')}{pen.decisionReason}</p> : null}
                 {appealing?.id === pen.id ? (
                   <form
                     className="mt-3 flex flex-col gap-3 rounded-xl bg-grey-50 p-4"
@@ -205,7 +205,7 @@ export function SellerPerformancePage() {
                       if (appealing?.id) appeal.mutate({ id: appealing.id, reason }, { onSuccess: () => setAppealing(null) })
                     }}
                   >
-                    <p className="text-sm text-muted-foreground">{t('Mỗi điểm kháng nghị được một lần. Trong lúc chờ, hạn chế (nếu có) vẫn giữ nguyên; nếu được chấp nhận, điểm được miễn và hậu quả tính lại ngay.')}</p>
+                    <p className="text-body-sm text-muted-foreground">{t('Mỗi điểm kháng nghị được một lần. Trong lúc chờ, hạn chế (nếu có) vẫn giữ nguyên; nếu được chấp nhận, điểm được miễn và hậu quả tính lại ngay.')}</p>
                     <Label htmlFor={`appeal-${pen.id}`}>{t('Vì sao điểm này không đúng?')}</Label>
                     <Textarea id={`appeal-${pen.id}`} autoFocus rows={4} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t('Ví dụ: tuần đó bếp mất điện, có biên bản của điện lực')} />
                     <div className="flex gap-2">

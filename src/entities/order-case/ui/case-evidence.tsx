@@ -23,7 +23,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
       <Card className="gap-3 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-lg font-semibold">
+            <span className="text-title-3">
               {t('Đơn #')}{orderCase.orderNumber}
             </span>
             <Badge variant="outline">
@@ -31,11 +31,11 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
             </Badge>
             <Badge className={status.className}>{status.label}</Badge>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {t('Gửi lúc ')}{formatDateTime(orderCase.openedAt)}
           </p>
         </div>
-        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm">
+        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-body-sm">
           {orderCase.customerName ? (
             <>
               <dt className="text-muted-foreground">{t('Người nhận')}</dt>
@@ -71,7 +71,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
       {!noShow ? (
         <Card className="gap-2 p-4">
           <h3 className="font-semibold">{t('Món bị báo')}</h3>
-          <ul className="divide-y text-sm">
+          <ul className="divide-y text-body-sm">
             {(orderCase.lines ?? []).map((line) => (
               <li
                 key={line.orderItemId}
@@ -92,7 +92,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
       {orderCase.note ? (
         <Card className="gap-1 p-4">
           <h3 className="font-semibold">{noShow ? t('Quán báo') : t('Khách nói')}</h3>
-          <p className="text-sm whitespace-pre-wrap">{orderCase.note}</p>
+          <p className="text-body-sm whitespace-pre-wrap">{orderCase.note}</p>
         </Card>
       ) : null}
 
@@ -122,13 +122,13 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
       {orderCase.shopResponse ? (
         <Card className="gap-1 p-4">
           <h3 className="font-semibold">{t('Quán trả lời')}</h3>
-          <p className="text-sm">
+          <p className="text-body-sm">
             {orderCase.shopResponse === "ACCEPTED"
               ? t('Quán chấp nhận.')
               : t('Quán phản đối.')}
           </p>
           {orderCase.shopResponseNote ? (
-            <p className="text-sm whitespace-pre-wrap">
+            <p className="text-body-sm whitespace-pre-wrap">
               {orderCase.shopResponseNote}
             </p>
           ) : null}
@@ -138,12 +138,12 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
       {orderCase.customerAnswer ? (
         <Card className="gap-1 p-4">
           <h3 className="font-semibold">{t('Khách trả lời')}</h3>
-          <p className="text-sm">
+          <p className="text-body-sm">
             {CUSTOMER_ANSWER[orderCase.customerAnswer] ??
               orderCase.customerAnswer}
           </p>
           {orderCase.customerAnswerNote ? (
-            <p className="text-sm whitespace-pre-wrap">
+            <p className="text-body-sm whitespace-pre-wrap">
               {orderCase.customerAnswerNote}
             </p>
           ) : null}
@@ -151,7 +151,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
       ) : null}
 
       {orderCase.noShowOutcome ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-body-sm text-muted-foreground">
           {t('Kết cục:')}{" "}
           {NO_SHOW_OUTCOME[orderCase.noShowOutcome] ?? orderCase.noShowOutcome}
         </p>
@@ -160,7 +160,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
       {orderCase.decidedAt ? (
         <Card className="gap-1 p-4">
           <h3 className="font-semibold">{t('Kết quả')}</h3>
-          <p className="text-sm">
+          <p className="text-body-sm">
             {orderCase.status === "UPHELD" ? t('Được chấp nhận') : t('Bị bác bỏ')}
             {orderCase.decidedBy === "SHOP"
               ? t(' bởi quán')
@@ -170,7 +170,7 @@ export function CaseEvidence({ orderCase }: { orderCase: OrderCase }) {
             {t('lúc ')}{formatDateTime(orderCase.decidedAt)}.
           </p>
           {orderCase.reason ? (
-            <p className="text-sm whitespace-pre-wrap">{orderCase.reason}</p>
+            <p className="text-body-sm whitespace-pre-wrap">{orderCase.reason}</p>
           ) : null}
         </Card>
       ) : null}

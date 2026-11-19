@@ -39,7 +39,7 @@ export function SellerTeamRolesPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1>{t('Vai trò và quyền')}</h1>
-          <p className="text-sm text-muted-foreground">{t('Gom quyền thành vai trò để giao nhanh cho nhiều người, ví dụ Thu ngân hay Bếp trưởng.')}</p>
+          <p className="text-body-sm text-muted-foreground">{t('Gom quyền thành vai trò để giao nhanh cho nhiều người, ví dụ Thu ngân hay Bếp trưởng.')}</p>
         </div>
         <Button onClick={() => setEditing('new')}>
           <PlusIcon className="size-4" aria-hidden="true" />
@@ -56,12 +56,12 @@ export function SellerTeamRolesPage() {
           <article key={r.id} className="flex flex-col gap-3 rounded-sm border bg-card p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex flex-col gap-1">
-                <h2 className="text-base font-semibold">{r.name}</h2>
-                {r.description ? <p className="text-sm text-muted-foreground">{r.description}</p> : null}
+                <h2 className="text-body font-semibold">{r.name}</h2>
+                {r.description ? <p className="text-body-sm text-muted-foreground">{r.description}</p> : null}
               </div>
               <Badge variant="secondary">{t('{n} người').replace('{n}', String(r.memberCount ?? 0))}</Badge>
             </div>
-            <p className="text-sm">
+            <p className="text-body-sm">
               <PermissionSummary codes={r.permissions ?? []} />
             </p>
             <div className="mt-auto flex justify-end gap-1">

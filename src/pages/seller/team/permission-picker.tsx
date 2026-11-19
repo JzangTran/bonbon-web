@@ -7,7 +7,7 @@ import { grouped, usePermissions } from './api'
  */
 export function PermissionPicker({ value, onChange, idPrefix }: { value: string[]; onChange: (next: string[]) => void; idPrefix: string }) {
   const permissions = usePermissions()
-  if (!permissions.data) return <p className="text-sm text-muted-foreground">{t('Đang tải quyền…')}</p>
+  if (!permissions.data) return <p className="text-body-sm text-muted-foreground">{t('Đang tải quyền…')}</p>
   const toggle = (code: string, on: boolean) => {
     const next = new Set(value)
     if (on) {
@@ -24,11 +24,11 @@ export function PermissionPicker({ value, onChange, idPrefix }: { value: string[
       <legend className="sr-only">{t('Quyền')}</legend>
       {grouped(permissions.data).map(([group, items]) => (
         <div key={group} className="flex flex-col gap-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t(group)}</p>
+          <p className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t(group)}</p>
           {items.map((p) => {
             const id = `${idPrefix}-${p.code}`
             return (
-              <label key={p.code} htmlFor={id} className="flex items-center gap-3 text-sm">
+              <label key={p.code} htmlFor={id} className="flex items-center gap-3 text-body-sm">
                 <input
                   id={id}
                   type="checkbox"
@@ -42,7 +42,7 @@ export function PermissionPicker({ value, onChange, idPrefix }: { value: string[
           })}
         </div>
       ))}
-      <p className="text-xs text-muted-foreground">
+      <p className="text-caption text-muted-foreground">
         {value.length ? t('Đã chọn {n} quyền.').replace('{n}', String(value.length)) : t('Chưa chọn quyền nào: thành viên sẽ không làm được gì.')}
       </p>
     </fieldset>

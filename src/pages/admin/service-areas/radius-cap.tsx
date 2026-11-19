@@ -45,7 +45,7 @@ export function RadiusCapForm() {
       }}
     >
       <div className="flex flex-col gap-1">
-        <h2 className="text-h3 font-medium">{t('Bán kính giao tối đa của mọi quán')}</h2>
+        <h2 className="text-h3">{t('Bán kính giao tối đa của mọi quán')}</h2>
         <p className="text-ui text-muted-foreground">{t('Áp dụng cho lần lưu sau của các quán; quán đã duyệt giữ bán kính hiện tại. Mỗi khu vực có thể đặt mức thấp hơn.')}</p>
       </div>
       <Label htmlFor="radius-cap">Km</Label>

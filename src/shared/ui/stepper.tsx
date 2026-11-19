@@ -24,7 +24,7 @@ export function Stepper({ steps, current, onSelect, className }: {
         const circle = (
           <span
             className={cn(
-              'flex size-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-semibold',
+              'flex size-7 shrink-0 items-center justify-center rounded-full border-2 text-caption font-semibold',
               done && 'border-primary bg-primary text-primary-foreground',
               active && !done && 'border-primary bg-card text-primary',
               !done && !active && 'border-border bg-card text-muted-foreground',
@@ -34,7 +34,7 @@ export function Stepper({ steps, current, onSelect, className }: {
           </span>
         )
         const label = (
-          <span className={cn('max-w-24 text-center text-xs leading-tight', active ? 'font-semibold text-foreground' : 'text-muted-foreground')}>
+          <span className={cn('max-w-24 text-center text-caption leading-tight', active ? 'font-semibold text-foreground' : 'text-muted-foreground')}>
             {step.label}
           </span>
         )

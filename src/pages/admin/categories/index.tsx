@@ -82,7 +82,7 @@ export function AdminCategoriesPage() {
           <button
             type="button"
             onClick={() => setSelectedId(node.id!)}
-            className={cn('flex min-h-10 min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5 py-1 text-left text-sm', hidden && 'text-muted-foreground')}
+            className={cn('flex min-h-10 min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5 py-1 text-left text-body-sm', hidden && 'text-muted-foreground')}
           >
             <span className={cn(node.level === 1 && 'font-semibold')}>{node.name}</span>
             <Badge variant="outline">{t('Cấp ')}{node.level}</Badge>
@@ -91,7 +91,7 @@ export function AdminCategoriesPage() {
                 <EyeOffIcon />{t(' Đã ẩn')}
               </Badge>
             ) : null}
-            <span className="ml-auto text-xs text-muted-foreground">
+            <span className="ml-auto text-caption text-muted-foreground">
               {node.commissionRate !== undefined && node.commissionRate !== null
                 ? formatRate(node.commissionRate)
                 : node.effectiveCommissionRate !== undefined && node.effectiveCommissionRate !== null
@@ -110,8 +110,8 @@ export function AdminCategoriesPage() {
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Ngành hàng')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Ngành hàng')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Cây 3 cấp, cấp 1 cố định. Mỗi món thuộc một ngành cấp 3; hoa hồng lấy theo ngành gần nhất có đặt tỷ lệ.')}
         </p>
       </div>
@@ -260,7 +260,7 @@ function EditCategory({ node, all, onDeleted }: { node: Node; all: Node[]; onDel
                 <Label htmlFor="cat-move">{t('Chuyển sang ngành cha')}</Label>
                 <select
                   id="cat-move"
-                  className="h-9 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-2.5 text-sm"
+                  className="h-9 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-2.5 text-body-sm"
                   defaultValue=""
                   onChange={(e) => e.target.value && move.mutate(e.target.value)}
                 >

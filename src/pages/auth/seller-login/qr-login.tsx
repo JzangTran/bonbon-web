@@ -108,15 +108,15 @@ function QrPanel({ onSignedIn }: { onSignedIn: (data: LoginResponse) => void }) 
         {session ? (
           <img src={session.image} alt={t('Mã QR đăng nhập')} className={faded ? 'size-full opacity-15' : 'size-full'} />
         ) : (
-          <span className="text-sm text-muted-foreground">{t('Đang tạo mã…')}</span>
+          <span className="text-body-sm text-muted-foreground">{t('Đang tạo mã…')}</span>
         )}
         {state === 'SCANNED' ? (
-          <span className="absolute inset-x-4 rounded-md bg-background/95 p-3 text-center text-sm font-medium shadow">
+          <span className="absolute inset-x-4 rounded-md bg-background/95 p-3 text-center text-label shadow">
             {t('Đã quét. Hãy xác nhận trên điện thoại.')}
           </span>
         ) : null}
       </div>
-      <p role="status" aria-live="polite" className="min-h-5 text-center text-sm text-muted-foreground">
+      <p role="status" aria-live="polite" className="min-h-5 text-center text-body-sm text-muted-foreground">
         {error ??
           (state === 'PENDING'
             ? t('Mã hết hạn sau {s} giây', { s: secondsLeft })

@@ -57,13 +57,13 @@ export function ShopReviewDetailPage() {
 
   return (
     <div className="flex max-w-6xl flex-col gap-10">
-      <Link to={consolePath('/shop-review')} className="text-link inline-flex items-center gap-1 text-sm">
+      <Link to={consolePath('/shop-review')} className="text-link inline-flex items-center gap-1 text-body-sm">
         <ArrowLeftIcon className="size-4" />{t(' Duyệt cửa hàng')}
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold">{shop.name ?? t('(chưa đặt tên)')}</h1>
+        <h1 className="text-title-1">{shop.name ?? t('(chưa đặt tên)')}</h1>
         <Badge className={status.className}>{status.label}</Badge>
-        <span className="text-sm text-muted-foreground" title={formatDateTime(shop.submittedAt)}>
+        <span className="text-body-sm text-muted-foreground" title={formatDateTime(shop.submittedAt)}>
           {t('Gửi ')}{formatRelative(shop.submittedAt)}
         </span>
       </div>
@@ -72,7 +72,7 @@ export function ShopReviewDetailPage() {
           <ShopApplicationSections shop={shop} canViewIdentity={session.permissions.has('merchant-approval:read-identity')} />
           {application.data.history?.length ? (
             <Section title={t('Lịch sử quyết định')}>
-              <ul className="flex flex-col gap-2 text-sm">
+              <ul className="flex flex-col gap-2 text-body-sm">
                 {application.data.history.map((d, i) => (
                   <li key={i}>
                     <span className="font-medium">{d.decision === 'APPROVED' ? t('Duyệt') : t('Từ chối')}</span> ·{' '}
@@ -134,7 +134,7 @@ function DecisionPanel({ shop }: { shop: Detail }) {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <Button onClick={() => setConfirmApprove(true)}>{t('Duyệt cửa hàng')}</Button>
-          <p className="text-xs text-muted-foreground">{t('Người bán nhận email ngay khi duyệt hoặc từ chối.')}</p>
+          <p className="text-caption text-muted-foreground">{t('Người bán nhận email ngay khi duyệt hoặc từ chối.')}</p>
           <FormError message={error} />
         </CardContent>
       </Card>

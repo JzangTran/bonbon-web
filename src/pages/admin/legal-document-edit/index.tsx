@@ -52,7 +52,7 @@ export function AdminLegalDocumentEditPage() {
 
 function Back() {
   return (
-    <Link to={consolePath('/legal-documents')} className="text-link inline-flex items-center gap-1 text-sm">
+    <Link to={consolePath('/legal-documents')} className="text-link inline-flex items-center gap-1 text-body-sm">
       <ArrowLeftIcon className="size-4" />{t(' Văn bản pháp lý')}
     </Link>
   )
@@ -65,9 +65,9 @@ function Preview({ title, summary, content }: { title: string; summary: string; 
         <CardTitle>{t('Xem trước')}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <h2 className="text-xl font-semibold">{title || t('(chưa có tiêu đề)')}</h2>
+        <h2 className="text-title-2">{title || t('(chưa có tiêu đề)')}</h2>
         {summary ? (
-          <div className="rounded-sm bg-muted px-3 py-2 text-sm">
+          <div className="rounded-sm bg-muted px-3 py-2 text-body-sm">
             <p className="font-medium">{t('Tóm tắt thay đổi')}</p>
             <p className="whitespace-pre-line">{summary}</p>
           </div>
@@ -109,9 +109,9 @@ function Fields({
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="legal-content">{t('Nội dung')}</Label>
-        <Textarea id="legal-content" rows={16} maxLength={200000} className="font-mono text-sm" value={content} onChange={(e) => setContent(e.target.value)} />
+        <Textarea id="legal-content" rows={16} maxLength={200000} className="font-mono text-body-sm" value={content} onChange={(e) => setContent(e.target.value)} />
       </div>
-      <label className="flex items-start gap-2 text-sm">
+      <label className="flex items-start gap-2 text-body-sm">
         <input type="checkbox" className="mt-1" checked={reaccept} onChange={(e) => setReaccept(e.target.checked)} />
         <span>
           <span className="font-medium">{t('Thay đổi quan trọng: người dùng phải đồng ý lại.')}</span>
@@ -139,7 +139,7 @@ function Editor({ type }: { type: LegalDocumentType }) {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <Back />
-      <h1 className="text-2xl font-semibold">{t('Soạn phiên bản mới: ')}{label}</h1>
+      <h1 className="text-title-1">{t('Soạn phiên bản mới: ')}{label}</h1>
       <Card size="sm">
         <CardContent className="flex flex-col gap-4">
           <Fields title={title} setTitle={setTitle} summary={summary} setSummary={setSummary} content={content} setContent={setContent} reaccept={reaccept} setReaccept={setReaccept} />
@@ -182,7 +182,7 @@ function VersionView({ detail }: { detail: LegalDetail }) {
     <div className="flex max-w-4xl flex-col gap-10">
       <Back />
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold">
+        <h1 className="text-title-1">
           {typeLabel}{t(' · phiên bản ')}{v.version}
         </h1>
         <Badge className={status.className}>{status.label}</Badge>
@@ -192,7 +192,7 @@ function VersionView({ detail }: { detail: LegalDetail }) {
       ) : (
         <>
           <Card size="sm">
-            <CardContent className="flex flex-col gap-1 text-sm">
+            <CardContent className="flex flex-col gap-1 text-body-sm">
               <p>
                 <span className="text-muted-foreground">{t('Đăng:')}</span> {formatDateTime(v.publishedAt)} · <span className="text-muted-foreground">{t('Hiệu lực:')}</span> {formatDateTime(v.effectiveAt)}
               </p>
@@ -206,7 +206,7 @@ function VersionView({ detail }: { detail: LegalDetail }) {
                   <span className="text-muted-foreground">{t('Huỷ lúc ')}{formatDateTime(v.cancelledAt)}:</span> {v.cancelReason}
                 </p>
               ) : null}
-              <p className="break-all text-xs text-muted-foreground">{t('SHA-256 lúc đăng: ')}{v.contentSha256}</p>
+              <p className="break-all text-caption text-muted-foreground">{t('SHA-256 lúc đăng: ')}{v.contentSha256}</p>
             </CardContent>
           </Card>
           <Preview title={v.title ?? ''} summary={v.summary ?? ''} content={detail.content ?? ''} />
@@ -278,7 +278,7 @@ function PublishPanel({ id, reaccept, dirty, onDiscarded }: { id: string; reacce
         <CardTitle>{t('Đăng phiên bản')}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-body-sm text-muted-foreground">
           {reaccept
             ? t('Thay đổi quan trọng: ngày hiệu lực phải cách bây giờ ít nhất {v0} ngày (bỏ trống là đúng {v1} ngày). Mọi người thuộc đối tượng được báo trong ứng dụng và qua email, và phải đồng ý lại khi có hiệu lực.', { v0: MIN_NOTICE_DAYS, v1: MIN_NOTICE_DAYS })
             : t('Thay đổi nhỏ: bỏ trống là có hiệu lực ngay. Mọi người thuộc đối tượng vẫn được báo, nhưng không phải đồng ý lại.')}{' '}
@@ -287,9 +287,9 @@ function PublishPanel({ id, reaccept, dirty, onDiscarded }: { id: string; reacce
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="legal-effective">{t('Ngày hiệu lực')}</Label>
           <Input id="legal-effective" type="datetime-local" className="max-w-xs" value={effectiveAt} onChange={(e) => setEffectiveAt(e.target.value)} />
-          {tooSoon ? <p className="text-sm text-danger-fg">{t('Chưa đủ ')}{MIN_NOTICE_DAYS}{t(' ngày báo trước. Sớm nhất: ')}{formatDateTime(min.toISOString())}.</p> : null}
+          {tooSoon ? <p className="text-body-sm text-danger-fg">{t('Chưa đủ ')}{MIN_NOTICE_DAYS}{t(' ngày báo trước. Sớm nhất: ')}{formatDateTime(min.toISOString())}.</p> : null}
         </div>
-        {dirty ? <p className="text-sm text-warning-fg">{t('Có thay đổi chưa lưu. Hãy lưu bản nháp trước khi đăng.')}</p> : null}
+        {dirty ? <p className="text-body-sm text-warning-fg">{t('Có thay đổi chưa lưu. Hãy lưu bản nháp trước khi đăng.')}</p> : null}
         <FormError message={error} />
         <div className="flex flex-wrap justify-between gap-2">
           <Button
@@ -351,7 +351,7 @@ function CancelPanel({ id }: { id: string }) {
         <CardTitle>{t('Rút lại phiên bản')}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">{t('Phiên bản chưa đến ngày hiệu lực có thể rút lại. Mọi người được báo là thay đổi sẽ không áp dụng, kèm lý do.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Phiên bản chưa đến ngày hiệu lực có thể rút lại. Mọi người được báo là thay đổi sẽ không áp dụng, kèm lý do.')}</p>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="cancel-reason">{t('Lý do (người dùng sẽ thấy)')}</Label>
           <Textarea id="cancel-reason" rows={2} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />

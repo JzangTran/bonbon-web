@@ -46,7 +46,7 @@ function ShopStep({ onPick }: { onPick: (shop: { id: string; name: string }) => 
   const shops = useMerchants('APPROVED', q, 0, true)
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm font-medium">{t('1 · Chọn cửa hàng')}</p>
+      <p className="text-label">{t('1 · Chọn cửa hàng')}</p>
       <form
         className="flex gap-2"
         onSubmit={(e) => {
@@ -61,13 +61,13 @@ function ShopStep({ onPick }: { onPick: (shop: { id: string; name: string }) => 
       </form>
       {shops.isError ? <FormError message={problemMessage(shops.error)} /> : null}
       {shops.isPending ? <Skeleton className="h-24" /> : null}
-      {shops.data && (shops.data.items ?? []).length === 0 ? <p className="text-sm text-muted-foreground">{t('Không có cửa hàng nào khớp.')}</p> : null}
+      {shops.data && (shops.data.items ?? []).length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Không có cửa hàng nào khớp.')}</p> : null}
       <ul className="flex max-h-72 flex-col divide-y overflow-y-auto rounded-sm border">
         {(shops.data?.items ?? []).map((s) => (
           <li key={s.vendorId}>
-            <button type="button" className="flex w-full flex-col px-3 py-2 text-left text-sm hover:bg-muted/50" onClick={() => onPick({ id: s.vendorId ?? '', name: s.name ?? '' })}>
+            <button type="button" className="flex w-full flex-col px-3 py-2 text-left text-body-sm hover:bg-muted/50" onClick={() => onPick({ id: s.vendorId ?? '', name: s.name ?? '' })}>
               <span className="font-medium">{s.name}</span>
-              <span className="text-xs text-muted-foreground">{[s.ward, s.province].filter(Boolean).join(', ')}</span>
+              <span className="text-caption text-muted-foreground">{[s.ward, s.province].filter(Boolean).join(', ')}</span>
             </button>
           </li>
         ))}
@@ -81,23 +81,23 @@ function DishStep({ vendor, onBack, onPick }: { vendor: { id: string; name: stri
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium">{t('2 · Chọn món của ')}{dishes.data?.shopName ?? (vendor.name || t('cửa hàng'))}</p>
+        <p className="text-label">{t('2 · Chọn món của ')}{dishes.data?.shopName ?? (vendor.name || t('cửa hàng'))}</p>
         <Button type="button" variant="ghost" size="sm" onClick={onBack}>
           {t('Đổi cửa hàng')}
         </Button>
       </div>
       {dishes.isError ? <FormError message={problemMessage(dishes.error)} /> : null}
       {dishes.isPending ? <Skeleton className="h-24" /> : null}
-      {dishes.data && (dishes.data.items ?? []).length === 0 ? <p className="text-sm text-muted-foreground">{t('Cửa hàng chưa có món nào.')}</p> : null}
+      {dishes.data && (dishes.data.items ?? []).length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Cửa hàng chưa có món nào.')}</p> : null}
       <ul className="flex max-h-80 flex-col divide-y overflow-y-auto rounded-sm border">
         {(dishes.data?.items ?? []).map((d) => (
           <li key={d.id}>
-            <button type="button" disabled={!!d.openCase} className="flex w-full flex-col gap-0.5 px-3 py-2 text-left text-sm hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-60" onClick={() => onPick(d)}>
+            <button type="button" disabled={!!d.openCase} className="flex w-full flex-col gap-0.5 px-3 py-2 text-left text-body-sm hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-60" onClick={() => onPick(d)}>
               <span className="flex flex-wrap items-center gap-2 font-medium">
                 {d.name} <span className="font-normal text-muted-foreground tabular-nums">{formatVnd(d.price)}</span>
                 {d.openCase ? <Badge className="bg-warning-subtle text-warning-fg">{t('Đang có vụ chưa đóng')}</Badge> : null}
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-caption text-muted-foreground">
                 {d.categoryPath}{t(' · hoa hồng ')}{d.commissionRate !== undefined && d.commissionRate !== null ? `${d.commissionRate.toLocaleString(intlLocale)}%` : t('mặc định chung')}
               </span>
             </button>
@@ -139,12 +139,12 @@ function FlagStep({ dish, onBack, onDone }: { dish: ShopDish; onBack: () => void
       }}
     >
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium">{t('3 · Ngành đúng của “')}{dish.name}”</p>
+        <p className="text-label">{t('3 · Ngành đúng của “')}{dish.name}”</p>
         <Button type="button" variant="ghost" size="sm" onClick={onBack}>
           {t('Đổi món')}
         </Button>
       </div>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-body-sm text-muted-foreground">
         {t('Hiện ở: ')}{dish.categoryPath} ({dish.commissionRate !== undefined && dish.commissionRate !== null ? `${dish.commissionRate.toLocaleString(intlLocale)}%` : t('hoa hồng mặc định')})
       </p>
       <div className="flex flex-col gap-1.5">
@@ -158,7 +158,7 @@ function FlagStep({ dish, onBack, onDone }: { dish: ShopDish; onBack: () => void
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="flag-hours">{t('Thời gian quán được sửa (giờ, tối đa 168)')}</Label>
         <Input id="flag-hours" type="number" min={1} max={168} className="max-w-32" value={hours} onChange={(e) => setHours(e.target.value)} />
-        <p className="text-xs text-muted-foreground">{t('Quá hạn hệ thống tự chuyển món sang ngành bạn chọn; quán có 7 ngày để đồng ý hoặc kháng nghị.')}</p>
+        <p className="text-caption text-muted-foreground">{t('Quá hạn hệ thống tự chuyển món sang ngành bạn chọn; quán có 7 ngày để đồng ý hoặc kháng nghị.')}</p>
       </div>
       <FormError message={error} />
       <div className="flex flex-wrap gap-2">

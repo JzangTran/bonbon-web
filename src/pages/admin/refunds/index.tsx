@@ -60,8 +60,8 @@ export function AdminRefundsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Hoàn tiền')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Hoàn tiền')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Các khoản MoMo không hoàn lại được. Chuyển đúng số tiền tới tài khoản khách nhập, rồi ghi mã giao dịch của ngân hàng. Không sửa được số tiền.')}
         </p>
       </div>
@@ -89,22 +89,22 @@ export function AdminRefundsPage() {
               <Card className="gap-3 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-lg font-semibold tabular-nums">{formatVnd(refund.amount)}</span>
+                    <span className="text-title-3 tabular-nums">{formatVnd(refund.amount)}</span>
                     <Badge className={status.className}>{status.label}</Badge>
                     {refund.mode === 'GATEWAY' ? <Badge variant="outline">Qua MoMo</Badge> : <Badge variant="outline">{t('Chuyển khoản')}</Badge>}
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-body-sm text-muted-foreground">
                     {t('Đơn #')}{refund.orderNumber}{t(' · chờ từ ')}{formatRelative(refund.createdAt)}
                   </p>
                 </div>
-                <p className="text-sm">
+                <p className="text-body-sm">
                   {REASON[refund.reason ?? ''] ?? refund.reason}
                   {refund.gatewayResultCode ? <span className="text-muted-foreground">{t(' · mã MoMo ')}{refund.gatewayResultCode}</span> : null}
                 </p>
-                {refund.failureReason ? <p className="text-sm text-warning-fg">{t('Lần chuyển trước thất bại: ')}{refund.failureReason}</p> : null}
+                {refund.failureReason ? <p className="text-body-sm text-warning-fg">{t('Lần chuyển trước thất bại: ')}{refund.failureReason}</p> : null}
 
                 {destination ? (
-                  <dl className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 rounded-sm bg-muted p-3 text-sm">
+                  <dl className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 rounded-sm bg-muted p-3 text-body-sm">
                     <dt className="text-muted-foreground">{t('Ngân hàng')}</dt>
                     <dd className="col-span-2">{destination.bankName}</dd>
                     <dt className="text-muted-foreground">{t('Số tài khoản')}</dt>
@@ -115,7 +115,7 @@ export function AdminRefundsPage() {
                   </dl>
                 ) : null}
                 {refund.bankReference ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-body-sm text-muted-foreground">
                     {t('Mã giao dịch ')}{refund.bankReference} · {formatDateTime(refund.transferredAt ?? refund.completedAt)}
                   </p>
                 ) : null}
@@ -160,7 +160,7 @@ export function AdminRefundsPage() {
           <div className="flex flex-col gap-2">
             <Label htmlFor="bank-reference">{t('Mã giao dịch của ngân hàng')}</Label>
             <Input id="bank-reference" value={reference} maxLength={100} onChange={(e) => setReference(e.target.value)} />
-            <p className="text-xs text-muted-foreground">{t('Mỗi mã chỉ dùng cho một khoản hoàn; mã đã dùng sẽ bị từ chối.')}</p>
+            <p className="text-caption text-muted-foreground">{t('Mỗi mã chỉ dùng cho một khoản hoàn; mã đã dùng sẽ bị từ chối.')}</p>
           </div>
           <DialogFooter>
             <DialogClose asChild>

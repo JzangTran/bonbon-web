@@ -98,7 +98,7 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
       <FormRow label={t('Loại giấy tờ')} required>
         <div role="radiogroup" aria-label={t('Loại giấy tờ')} className="flex gap-4">
           {(['CCCD', 'CMND'] as const).map((value) => (
-            <label key={value} className="flex min-h-9 items-center gap-2 text-sm">
+            <label key={value} className="flex min-h-9 items-center gap-2 text-body-sm">
               <input type="radio" name="doc-type" checked={docType === value} onChange={() => setDocType(value)} /> {value}
             </label>
           ))}
@@ -134,7 +134,7 @@ export function IdentityStep({ shop, onNext }: { shop: ShopApplication; onNext: 
         previewUrl={id?.selfiePhotoUrl}
         error={save.errors.selfiePhoto}
       />
-      <div className="flex flex-col gap-3 border-t pt-4 text-sm">
+      <div className="flex flex-col gap-3 border-t pt-4 text-body-sm">
         <Consent error={save.errors.accuracyConfirmed}>
           <label className="flex items-start gap-3">
             <input type="checkbox" className="mt-0.5 size-4" checked={accurate} onChange={(e) => setAccurate(e.target.checked)} />
@@ -189,7 +189,7 @@ function Consent({ error, children }: { error?: string; children: React.ReactNod
     <div className="flex flex-col gap-1">
       {children}
       {error ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-body-sm text-destructive">
           {error}
         </p>
       ) : null}

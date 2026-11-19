@@ -101,7 +101,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
               ['HOUSEHOLD', t('Hộ kinh doanh')],
             ] as const
           ).map(([value, label]) => (
-            <label key={value} className="flex min-h-9 items-center gap-2 text-sm">
+            <label key={value} className="flex min-h-9 items-center gap-2 text-body-sm">
               <input type="radio" name="business-type" checked={type === value} onChange={() => setType(value)} /> {label}
             </label>
           ))}
@@ -137,7 +137,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
               ) : null}
             </div>
             {save.errors[`invoiceEmails[${i}]`] ? (
-              <p role="alert" className="text-sm text-destructive">
+              <p role="alert" className="text-body-sm text-destructive">
                 {save.errors[`invoiceEmails[${i}]`]}
               </p>
             ) : null}
@@ -161,7 +161,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
           error={save.errors.businessLicense}
         />
       ) : null}
-      <p className="border-t pt-4 text-sm font-medium">{t('Tài khoản nhận tiền')}</p>
+      <p className="border-t pt-4 text-label">{t('Tài khoản nhận tiền')}</p>
       <Field id="pay-bank" label={t('Ngân hàng')} required error={save.errors.bankName}>
         <BankPicker id="pay-bank" value={bankName} onChange={setBankName} invalid={!!save.errors.bankName} />
       </Field>
@@ -178,7 +178,7 @@ export function TaxStep({ shop, onNext }: { shop: ShopApplication; onNext: () =>
         <Input id="pay-holder" maxLength={100} autoComplete="off" value={holder} onChange={(e) => setHolder(e.target.value)} />
       </Field>
       {mismatch ? (
-        <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-sm text-warning-fg">
+        <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-body-sm text-warning-fg">
           <TriangleAlertIcon className="size-4 shrink-0" />{t(' Tên chủ tài khoản khác tên trên giấy tờ; quản trị viên sẽ kiểm tra kỹ hơn.')}
         </p>
       ) : null}

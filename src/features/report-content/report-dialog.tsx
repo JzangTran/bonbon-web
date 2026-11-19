@@ -55,25 +55,25 @@ export function ReportDialog({ target, open, onOpenChange }: { target: ReportTar
           </DialogDescription>
         </DialogHeader>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-sm font-medium">{t('Lý do')}</legend>
+          <legend className="mb-1 text-label">{t('Lý do')}</legend>
           {REASONS.map((r) => (
-            <label key={r.id} className="flex cursor-pointer items-start gap-2 rounded-md border p-2 text-sm has-checked:border-primary has-checked:bg-accent">
+            <label key={r.id} className="flex cursor-pointer items-start gap-2 rounded-md border p-2 text-body-sm has-checked:border-primary has-checked:bg-accent">
               <input type="radio" name="report-reason" className="mt-1" checked={reason === r.id} onChange={() => setReason(r.id)} />
               <span>
                 <span className="font-medium">{r.label}</span>
-                <span className="block text-xs text-muted-foreground">{r.hint}</span>
+                <span className="block text-caption text-muted-foreground">{r.hint}</span>
               </span>
             </label>
           ))}
         </fieldset>
         <div className="flex flex-col gap-1">
-          <label htmlFor="report-note" className="text-sm font-medium">
+          <label htmlFor="report-note" className="text-label">
             {reason === 'OTHER' ? t('Mô tả (bắt buộc)') : t('Mô tả thêm (không bắt buộc)')}
           </label>
           <Textarea id="report-note" maxLength={500} rows={3} value={note} onChange={(e) => setNote(e.target.value)} />
-          <span className="self-end text-xs text-muted-foreground">{note.length}/500</span>
+          <span className="self-end text-caption text-muted-foreground">{note.length}/500</span>
         </div>
-        {send.isError ? <p role="alert" className="text-sm text-destructive">{problemMessage(send.error)}</p> : null}
+        {send.isError ? <p role="alert" className="text-body-sm text-destructive">{problemMessage(send.error)}</p> : null}
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('Huỷ')}

@@ -30,8 +30,8 @@ export function SellerSupportTicketsPage() {
     <div className="flex max-w-3xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Yêu cầu hỗ trợ của tôi')}</h1>
-          <p className="text-sm text-muted-foreground">{t('Gửi phiếu khi trợ giúp chưa trả lời được. Bạn có thể có tối đa 3 phiếu chưa xong cùng lúc.')}</p>
+          <h1 className="text-title-1">{t('Yêu cầu hỗ trợ của tôi')}</h1>
+          <p className="text-body-sm text-muted-foreground">{t('Gửi phiếu khi trợ giúp chưa trả lời được. Bạn có thể có tối đa 3 phiếu chưa xong cùng lúc.')}</p>
         </div>
         <Button asChild>
           <Link to={merchantPath('/support-tickets/new')}>
@@ -56,9 +56,9 @@ export function SellerSupportTicketsPage() {
                       <span className="font-semibold">{tItem.subject}</span>
                       <Badge className={status.className}>{status.label}</Badge>
                     </div>
-                    <span className="text-xs text-muted-foreground">{formatRelative(tItem.updatedAt)}</span>
+                    <span className="text-caption text-muted-foreground">{formatRelative(tItem.updatedAt)}</span>
                   </div>
-                  {tItem.orderNumber ? <p className="text-sm text-muted-foreground">{t('Về đơn #')}{tItem.orderNumber}</p> : null}
+                  {tItem.orderNumber ? <p className="text-body-sm text-muted-foreground">{t('Về đơn #')}{tItem.orderNumber}</p> : null}
                 </Card>
               </Link>
             </li>

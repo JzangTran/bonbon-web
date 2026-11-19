@@ -47,11 +47,11 @@ function OpenShopPage() {
 function UnderReview({ shop }: { shop: ShopApplication }) {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t('Hồ sơ đang chờ duyệt')}</h1>
+      <h1 className="text-title-1">{t('Hồ sơ đang chờ duyệt')}</h1>
       <Card>
         <CardContent className="flex items-start gap-3">
           <ClockIcon className="mt-0.5 size-5 shrink-0 text-warning" />
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex flex-col gap-1 text-body-sm">
             <p>
               {t('Hồ sơ cửa hàng ')}<b>{shop.shop?.name}</b>{t(' đã gửi lúc ')}{formatDateTime(shop.submittedAt)}{t('. Quản trị viên sẽ xem và bạn nhận email khi có kết quả.')}
             </p>
@@ -72,7 +72,7 @@ function Wizard({ shop }: { shop: ShopApplication }) {
     <div className="flex flex-col gap-10">
       <h1 className="sr-only">{t('Mở cửa hàng')}</h1>
       {shop.status === 'REJECTED' ? (
-        <p role="alert" className="flex items-start gap-2 rounded-sm bg-danger-subtle px-3 py-2 text-sm text-danger-fg">
+        <p role="alert" className="flex items-start gap-2 rounded-sm bg-danger-subtle px-3 py-2 text-body-sm text-danger-fg">
           <TriangleAlertIcon className="mt-0.5 size-4 shrink-0" />
           <span>
             <b>{t('Hồ sơ chưa được duyệt.')}</b>{t(' Lý do: ')}{shop.rejectionReason}{t(' Hãy sửa thông tin rồi gửi lại ở bước 5.')}

@@ -45,7 +45,7 @@ export function MenuTab({ menu, groups, startNewDish = false, quick = false }: {
       {sections.length === 0 && !adding && !quick ? (
         <Card className="items-start gap-3 p-6">
           <p className="font-semibold">{t('Thực đơn đang trống')}</p>
-          <p className="text-sm text-muted-foreground">{t('Bắt đầu bằng một mục như “Cơm”, “Nước uống”, rồi thêm món vào đó.')}</p>
+          <p className="text-body-sm text-muted-foreground">{t('Bắt đầu bằng một mục như “Cơm”, “Nước uống”, rồi thêm món vào đó.')}</p>
           <Button onClick={() => setAdding(true)}>
             <PlusIcon />{t(' Thêm mục thực đơn')}
           </Button>
@@ -166,8 +166,8 @@ function SectionCard({
           </form>
         ) : (
           <>
-            <h2 className="text-lg font-semibold">{section.name}</h2>
-            <span className="text-sm text-muted-foreground">{items.length}{t(' món')}</span>
+            <h2 className="text-title-3">{section.name}</h2>
+            <span className="text-body-sm text-muted-foreground">{items.length}{t(' món')}</span>
             {!quick ? (
               <Button variant="ghost" size="icon-sm" aria-label={t('Đổi tên mục')} onClick={() => setRenaming(true)}>
                 <PencilIcon />
@@ -199,7 +199,7 @@ function SectionCard({
         </div>
       </div>
       {items.length === 0 ? (
-        <p className="px-4 py-6 text-sm text-muted-foreground">{t('Chưa có món nào trong mục này.')}</p>
+        <p className="px-4 py-6 text-body-sm text-muted-foreground">{t('Chưa có món nào trong mục này.')}</p>
       ) : (
         <ul className="divide-y">
           {items.map((item, index) => (
@@ -264,9 +264,9 @@ function DishRow({
           {outOfStock ? <Badge variant="secondary">{t('Hết tồn kho')}</Badge> : null}
           {blockedByOptions ? <Badge className="bg-warning-subtle text-warning-fg">{t('Thiếu lựa chọn bắt buộc')}</Badge> : null}
         </div>
-        {item.description ? <p className="line-clamp-1 text-sm text-muted-foreground">{item.description}</p> : null}
+        {item.description ? <p className="line-clamp-1 text-body-sm text-muted-foreground">{item.description}</p> : null}
         {item.stockQuantity !== undefined && item.stockQuantity !== null && !outOfStock ? (
-          <p className="text-xs text-muted-foreground">{t('Còn ')}{item.stockQuantity}{t(' phần')}</p>
+          <p className="text-caption text-muted-foreground">{t('Còn ')}{item.stockQuantity}{t(' phần')}</p>
         ) : null}
       </div>
       <span className="w-28 text-right font-semibold tabular-nums">{formatVnd(item.price)}</span>
@@ -287,13 +287,13 @@ function DishRow({
             <DropdownMenuItem onSelect={() => toggle.mutate({ status: 'SOLD_OUT', until: 'TODAY' })}>
               <span className="flex flex-col">
                 <span>{t('Hết hôm nay')}</span>
-                <span className="text-xs text-muted-foreground">{t('Tự bán lại lúc 4 giờ sáng mai')}</span>
+                <span className="text-caption text-muted-foreground">{t('Tự bán lại lúc 4 giờ sáng mai')}</span>
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => toggle.mutate({ status: 'SOLD_OUT' })}>
               <span className="flex flex-col">
                 <span>{t('Hết đến khi bật lại')}</span>
-                <span className="text-xs text-muted-foreground">{t('Món nghỉ dài, ví dụ hết mùa')}</span>
+                <span className="text-caption text-muted-foreground">{t('Món nghỉ dài, ví dụ hết mùa')}</span>
               </span>
             </DropdownMenuItem>
           </DropdownMenuContent>

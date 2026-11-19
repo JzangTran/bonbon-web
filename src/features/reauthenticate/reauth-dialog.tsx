@@ -56,7 +56,7 @@ export function ReauthDialog({ open, onOpenChange, onDone }: { open: boolean; on
             <PasswordInput id="reauth-password" autoComplete="current-password" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <FormError message={error} />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-caption text-muted-foreground">
             {t('Đăng nhập bằng Google, không có mật khẩu?')}{' '}
             <button type="button" className="text-link" onClick={() => void signOut()}>
               {t('Đăng xuất')}

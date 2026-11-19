@@ -28,7 +28,7 @@ export function VerifyEmailPage() {
     <AuthShell title={result.data ? t('Xác thực thành công') : t('Xác thực email')} heading={t('Đăng ký')}>
       {result.data ? <SuccessMark mascot="verified" /> : null}
       {!token ? <FormError message={t('Liên kết thiếu mã xác thực.')} /> : null}
-      {result.isPending && token ? <p className="text-sm text-muted-foreground">{t('Đang xác thực…')}</p> : null}
+      {result.isPending && token ? <p className="text-body-sm text-muted-foreground">{t('Đang xác thực…')}</p> : null}
       {result.data === 'VERIFIED' ? <FormSuccess message={t('Email đã được xác thực. Bạn có thể đăng nhập.')} /> : null}
       {result.data === 'ALREADY_VERIFIED' ? <FormSuccess message={t('Email này đã được xác thực trước đó.')} /> : null}
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
@@ -37,7 +37,7 @@ export function VerifyEmailPage() {
           <Button asChild size="lg" className="uppercase tracking-wide">
             <a href={siteUrl('merchant', '/login')}>{t('Đăng nhập người bán')}</a>
           </Button>
-          <p className="text-sm text-muted-foreground">{t('Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.')}</p>
+          <p className="text-body-sm text-muted-foreground">{t('Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.')}</p>
         </>
       ) : null}
       {result.isError || !token ? <ResendForm /> : null}

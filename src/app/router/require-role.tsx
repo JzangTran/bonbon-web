@@ -22,7 +22,7 @@ export function RequireRole({ role, loginPath }: { role: Role; loginPath: string
   if (status === 'offline' && !session) {
     return (
       <div role="alert" className="flex min-h-svh flex-col items-center justify-center gap-4 px-6 text-center">
-        <p className="text-h3 font-semibold">{t('Không kết nối được máy chủ')}</p>
+        <p className="text-h3">{t('Không kết nối được máy chủ')}</p>
         <p className="max-w-md text-body text-muted-foreground">{t('Máy chủ bonbon đang không phản hồi. Kiểm tra kết nối mạng rồi thử lại.')}</p>
         <Button onClick={retry}>{t('Thử lại')}</Button>
       </div>

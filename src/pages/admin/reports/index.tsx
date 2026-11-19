@@ -50,8 +50,8 @@ export function AdminReportsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Báo cáo vi phạm')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Báo cáo vi phạm')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Khách và người bán báo cáo tin nhắn, đánh giá, phản hồi hoặc cửa hàng. Báo cáo không tự ẩn hay phạt ai; bạn quyết định kèm lý do. Mục tiêu: xử lý trong 24 giờ.')}
         </p>
       </div>
@@ -101,7 +101,7 @@ export function AdminReportsPage() {
                       {r.decisionCode ? <Badge variant="outline">{DECISION_LABEL[r.decisionCode] ?? r.decisionCode}</Badge> : null}
                     </div>
                     <p className="truncate">{r.targetLabel}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-body-sm text-muted-foreground">
                       {r.status === 'OPEN' ? t('Gửi {v0}', { v0: formatRelative(r.createdAt) }) : formatDateTime(r.createdAt)}
                     </p>
                   </Card>
@@ -125,7 +125,7 @@ function TermsPanel({ canEdit }: { canEdit: boolean }) {
   const valid = term.trim().length >= 2 && term.trim().length <= 50
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground">
+      <p className="text-body-sm text-muted-foreground">
         {t('Từ hoặc cụm từ trong danh sách bị thay bằng *** trong tin nhắn người nhận đọc, kể cả khi gõ không dấu. Tin gốc vẫn được lưu. Đây là bộ lọc tối thiểu, không thay cho báo cáo.')}
       </p>
       <form
@@ -141,7 +141,7 @@ function TermsPanel({ canEdit }: { canEdit: boolean }) {
         </Button>
       </form>
       {terms.isPending ? <Skeleton className="h-20" /> : null}
-      {terms.data && terms.data.length === 0 ? <p className="text-sm text-muted-foreground">{t('Danh sách đang trống.')}</p> : null}
+      {terms.data && terms.data.length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Danh sách đang trống.')}</p> : null}
       <ul className="flex flex-col divide-y rounded-md border">
         {(terms.data ?? []).map((x) => (
           <li key={x.id} className="flex items-center justify-between gap-3 px-3 py-2">

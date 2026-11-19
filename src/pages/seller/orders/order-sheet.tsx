@@ -26,7 +26,7 @@ function SoldOutToday({ itemId, name }: { itemId: string; name: string }) {
     t('Đã báo hết {v0} đến sáng mai. Nhắn khách để đổi món cho đơn này.', { v0: name }),
   )
   return (
-    <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" disabled={mark.isPending || mark.isSuccess} onClick={() => mark.mutate(undefined)}>
+    <Button variant="ghost" size="sm" className="h-7 px-2 text-caption" disabled={mark.isPending || mark.isSuccess} onClick={() => mark.mutate(undefined)}>
       {mark.isSuccess ? t('Đã báo hết') : t('Báo hết món')}
     </Button>
   )
@@ -61,12 +61,12 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
             <div className="flex flex-wrap items-center gap-3">
               <OrderStatusBadge status={status} />
               {response ? (
-                <span className={response.urgent ? 'font-semibold text-destructive' : 'text-sm text-muted-foreground'}>
+                <span className={response.urgent ? 'font-semibold text-destructive' : 'text-body-sm text-muted-foreground'}>
                   {t('Còn ')}{response.text}{t(' để trả lời')}
                 </span>
               ) : null}
               {handover ? (
-                <span className={handover.urgent ? 'font-semibold text-destructive' : 'text-sm text-muted-foreground'}>
+                <span className={handover.urgent ? 'font-semibold text-destructive' : 'text-body-sm text-muted-foreground'}>
                   {t('Hạn giao đi: ')}{handover.text}
                 </span>
               ) : null}
@@ -87,8 +87,8 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                   </a>
                 )}
               </p>
-              <p className="text-sm text-muted-foreground">{data.deliveryAddress}</p>
-              {data.note ? <p className="mt-1 rounded-sm bg-highlight-subtle px-3 py-2 text-sm text-highlight-fg">{t('Ghi chú giao hàng: ')}{data.note}</p> : null}
+              <p className="text-body-sm text-muted-foreground">{data.deliveryAddress}</p>
+              {data.note ? <p className="mt-1 rounded-sm bg-highlight-subtle px-3 py-2 text-body-sm text-highlight-fg">{t('Ghi chú giao hàng: ')}{data.note}</p> : null}
             </section>
 
             <section className="flex flex-col gap-2">
@@ -100,9 +100,9 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                     <div className="min-w-0 flex-1">
                       <p className="font-medium">{line.name}</p>
                       {(line.options ?? []).length > 0 ? (
-                        <p className="text-sm text-muted-foreground">{(line.options ?? []).map((o) => o.name).join(', ')}</p>
+                        <p className="text-body-sm text-muted-foreground">{(line.options ?? []).map((o) => o.name).join(', ')}</p>
                       ) : null}
-                      {line.note ? <p className="text-sm text-highlight-fg">{t('Ghi chú: ')}{line.note}</p> : null}
+                      {line.note ? <p className="text-body-sm text-highlight-fg">{t('Ghi chú: ')}{line.note}</p> : null}
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       <span className="tabular-nums">{formatVnd(line.lineTotal)}</span>
@@ -111,7 +111,7 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                   </li>
                 ))}
               </ul>
-              <dl className="ml-auto grid w-64 grid-cols-2 gap-y-1 text-sm">
+              <dl className="ml-auto grid w-64 grid-cols-2 gap-y-1 text-body-sm">
                 <dt className="text-muted-foreground">{t('Tiền món')}</dt>
                 <dd className="text-right tabular-nums">{formatVnd(data.totals?.itemsTotal)}</dd>
                 <dt className="text-muted-foreground">{t('Phí giao')}</dt>
@@ -119,7 +119,7 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
                 <dt className="font-semibold">{t('Khách trả')}</dt>
                 <dd className="text-right font-semibold tabular-nums">{formatVnd(data.totals?.grandTotal)}</dd>
               </dl>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-body-sm text-muted-foreground">
                 {data.paymentMethod === 'COD'
                   ? `${t('Thu tiền mặt khi giao')} · ${data.paymentStatus === 'PAID' ? t('đã thu tiền') : t('chưa thu')}`
                   : data.paymentMethod === 'BANK_TRANSFER'
@@ -135,7 +135,7 @@ export function OrderSheet({ id, onClose }: { id: string | null; onClose: () => 
               <h3 className="font-semibold">{t('Lịch sử đơn')}</h3>
               <ol className="flex flex-col gap-2 border-l pl-4">
                 {(data.timeline ?? []).map((step, index) => (
-                  <li key={index} className="text-sm">
+                  <li key={index} className="text-body-sm">
                     <span className="font-medium">{step.to ? STATUS_LABELS[step.to] ?? step.to : ''}</span>
                     <span className="text-muted-foreground">
                       {' '}
@@ -174,7 +174,7 @@ function TransferReceived({ id, message }: { id: string; message: string }) {
   }
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-sm text-muted-foreground">{t('Nội dung chuyển khoản: {v0}', { v0: message })}</span>
+      <span className="text-body-sm text-muted-foreground">{t('Nội dung chuyển khoản: {v0}', { v0: message })}</span>
       <Button variant="outline" size="sm" disabled={action.isPending} onClick={ask}>
         {t('Đã nhận tiền')}
       </Button>

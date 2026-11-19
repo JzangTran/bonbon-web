@@ -70,8 +70,8 @@ export function AdminAppConfigPage() {
         onValueChange={(id) => setTab(id as 'versions' | 'maintenance')}
       />
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold">{t('Cấu hình app')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Chỉ ảnh hưởng ứng dụng điện thoại. Mọi thay đổi cần lý do và bạn đã đăng nhập trong 10 phút gần nhất.')}</p>
+        <h1 className="text-title-1">{t('Cấu hình app')}</h1>
+        <p className="text-body-sm text-muted-foreground">{t('Chỉ ảnh hưởng ứng dụng điện thoại. Mọi thay đổi cần lý do và bạn đã đăng nhập trong 10 phút gần nhất.')}</p>
       </div>
       {config.isError ? <FormError message={problemMessage(config.error)} /> : null}
       {config.isPending ? <Skeleton className="h-64" /> : null}
@@ -141,7 +141,7 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
             <Input id={`${platform}-latest`} inputMode="decimal" placeholder="1.0.0" value={latest} onChange={(e) => setLatest(e.target.value.trim())} aria-invalid={latest !== '' && !VERSION.test(latest)} />
           </div>
         </div>
-        {belowMin ? <p className="text-sm text-danger-fg">{t('Bản mới nhất không được thấp hơn bản tối thiểu.')}</p> : null}
+        {belowMin ? <p className="text-body-sm text-danger-fg">{t('Bản mới nhất không được thấp hơn bản tối thiểu.')}</p> : null}
         <div className="flex flex-col gap-1.5">
           <Label htmlFor={`${platform}-store`}>{t('Liên kết cửa hàng ứng dụng')}</Label>
           <Input id={`${platform}-store`} type="url" maxLength={500} placeholder="https://" value={storeUrl} onChange={(e) => setStoreUrl(e.target.value)} />
@@ -156,7 +156,7 @@ function VersionCard({ platform, label, policy }: { platform: AppPlatform; label
         </div>
         <FormError message={error} />
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">{policy?.updatedAt ? t('Cập nhật {v0}', { v0: formatDateTime(policy.updatedAt) }) : t('Chưa cấu hình')}</p>
+          <p className="text-caption text-muted-foreground">{policy?.updatedAt ? t('Cập nhật {v0}', { v0: formatDateTime(policy.updatedAt) }) : t('Chưa cấu hình')}</p>
           <Button
             disabled={!valid || belowMin || !changed || reason.trim() === '' || save.isPending}
             onClick={() => {
@@ -250,10 +250,10 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
               role="radio"
               aria-checked={level === l.id}
               onClick={() => setLevel(l.id)}
-              className={cn('flex flex-col gap-1 rounded-sm border p-3 text-left text-sm', level === l.id ? 'border-primary bg-primary/5' : 'hover:bg-muted/50')}
+              className={cn('flex flex-col gap-1 rounded-sm border p-3 text-left text-body-sm', level === l.id ? 'border-primary bg-primary/5' : 'hover:bg-muted/50')}
             >
               <span className="font-semibold">{l.label}</span>
-              <span className="text-xs text-muted-foreground">{l.hint}</span>
+              <span className="text-caption text-muted-foreground">{l.hint}</span>
             </button>
           ))}
         </div>
@@ -269,7 +269,7 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
                 <Input id="maint-end" type="datetime-local" value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
               </div>
             </div>
-            {windowInvalid ? <p className="text-sm text-danger-fg">{t('Giờ kết thúc phải sau giờ bắt đầu.')}</p> : null}
+            {windowInvalid ? <p className="text-body-sm text-danger-fg">{t('Giờ kết thúc phải sau giờ bắt đầu.')}</p> : null}
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="maint-message">{t('Lời nhắn hiện cho người dùng')}</Label>
               <Textarea id="maint-message" rows={2} maxLength={500} value={message} onChange={(e) => setMessage(e.target.value)} />
@@ -281,7 +281,7 @@ function MaintenanceCard({ current }: { current: MaintenanceStatus | undefined }
           <Input id="maint-reason" maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
         </div>
         {level === 'FULL' ? (
-          <p className="flex items-center gap-2 rounded-md bg-warning-subtle px-3 py-2 text-sm text-warning-fg">
+          <p className="flex items-center gap-2 rounded-md bg-warning-subtle px-3 py-2 text-body-sm text-warning-fg">
             <TriangleAlertIcon className="size-4 shrink-0" />
             {t('Dừng hoàn toàn chặn cả khách và người bán. Quản trị viên vẫn vào được để tắt.')}
           </p>

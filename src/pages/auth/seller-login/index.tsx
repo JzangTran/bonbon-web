@@ -153,9 +153,9 @@ export function SellerLoginPage() {
             {...form.register('email')}
           />
           {form.formState.errors.email ? (
-            <p role="alert" className="text-sm text-destructive">{form.formState.errors.email.message}</p>
+            <p role="alert" className="text-body-sm text-destructive">{form.formState.errors.email.message}</p>
           ) : (
-            <p id="login-hint" className="text-xs text-muted-foreground">{t('Tài khoản chính: tên:main. Thành viên: tên:mã do chủ cấp.')}</p>
+            <p id="login-hint" className="text-caption text-muted-foreground">{t('Tài khoản chính: tên:main. Thành viên: tên:mã do chủ cấp.')}</p>
           )}
         </div>
         <div className="flex flex-col gap-1.5">
@@ -170,7 +170,7 @@ export function SellerLoginPage() {
             aria-invalid={!!form.formState.errors.password}
             {...form.register('password')}
           />
-          {form.formState.errors.password ? <p role="alert" className="text-sm text-destructive">{form.formState.errors.password.message}</p> : null}
+          {form.formState.errors.password ? <p role="alert" className="text-body-sm text-destructive">{form.formState.errors.password.message}</p> : null}
         </div>
         {needsCaptcha ? <Captcha onToken={setCaptchaToken} /> : null}
         <FormError message={error} />
@@ -183,7 +183,7 @@ export function SellerLoginPage() {
         <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? t('Đang đăng nhập…') : t('Đăng nhập')}
         </Button>
-        <Link to="/forgot-password" className="text-link -mt-2 self-start text-xs">
+        <Link to="/forgot-password" className="text-link -mt-2 self-start text-caption">
           {t('Quên mật khẩu')}
         </Link>
       </form>

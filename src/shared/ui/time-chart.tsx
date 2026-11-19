@@ -146,14 +146,14 @@ export function TimeChart({
           {yTicks.map((tItem) => (
             <g key={tItem}>
               <line x1={PAD.left} x2={W - PAD.right} y1={y(tItem)} y2={y(tItem)} stroke={tItem === 0 ? 'var(--chart-axis)' : 'var(--chart-grid)'} strokeWidth={1} />
-              <text x={PAD.left - 8} y={y(tItem)} dy="0.32em" textAnchor="end" className="fill-muted-foreground text-[11px] tabular-nums">
+              <text x={PAD.left - 8} y={y(tItem)} dy="0.32em" textAnchor="end" className="fill-muted-foreground text-caption tabular-nums">
                 {compactNumber(tItem)}
               </text>
             </g>
           ))}
           {points.map((p, i) =>
             i % every === 0 ? (
-              <text key={p.key} x={x(i)} y={H - 8} textAnchor="middle" className="fill-muted-foreground text-[11px]">
+              <text key={p.key} x={x(i)} y={H - 8} textAnchor="middle" className="fill-muted-foreground text-caption">
                 {p.label}
               </text>
             ) : null,

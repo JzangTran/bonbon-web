@@ -40,14 +40,14 @@ export function AdminOrderCaseDetailPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to={consolePath('/order-cases')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/order-cases')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" />{t(' Danh sách khiếu nại')}
       </Link>
       {detail.isError ? <FormError message={problemMessage(detail.error)} /> : null}
       {detail.isPending ? <Skeleton className="h-64" /> : null}
       {d?.orderCase ? (
         <>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {t('Quán ')}<span className="font-medium text-foreground">{d.vendorName}</span>
           </p>
           <CaseEvidence orderCase={d.orderCase} />
@@ -55,7 +55,7 @@ export function AdminOrderCaseDetailPage() {
             <History title={t('Khách này')} history={d.customerHistory} />
             <History title={t('Quán này')} history={d.shopHistory} />
           </div>
-          {d.noResponse && d.orderCase.type !== 'CUSTOMER_NO_SHOW' ? <p className="text-sm text-warning-fg">{t('Quán không trả lời trong thời hạn.')}</p> : null}
+          {d.noResponse && d.orderCase.type !== 'CUSTOMER_NO_SHOW' ? <p className="text-body-sm text-warning-fg">{t('Quán không trả lời trong thời hạn.')}</p> : null}
           <Log log={d.log ?? []} />
           {canDecide && d.orderCase.status === 'OPEN' ? <DecidePanel key={d.orderCase.id} detail={d} /> : null}
           {canDecide && (d.orderCase.status === 'UPHELD' || d.orderCase.status === 'DISMISSED') && !d.reopened ? <ReopenPanel id={id} /> : null}
@@ -68,7 +68,7 @@ export function AdminOrderCaseDetailPage() {
 function History({ title, history }: { title: string; history?: CaseHistory }) {
   const recent = history?.dismissedLast90Days ?? 0
   return (
-    <Card className="gap-1 p-4 text-sm">
+    <Card className="gap-1 p-4 text-body-sm">
       <h3 className="font-semibold">{title}</h3>
       <p>
         {history?.total ?? 0}{t(' khiếu nại khác: ')}{history?.upheld ?? 0}{t(' được chấp nhận, ')}{history?.dismissed ?? 0}{t(' bị bác bỏ.')}
@@ -82,7 +82,7 @@ function Log({ log }: { log: NonNullable<AdminCaseDetail['log']> }) {
   return (
     <Card className="gap-2 p-4">
       <h3 className="font-semibold">{t('Diễn biến')}</h3>
-      <ol className="flex flex-col gap-2 text-sm">
+      <ol className="flex flex-col gap-2 text-body-sm">
         {log.map((entry, i) => (
           <li key={i} className="flex flex-col">
             <span>
@@ -124,9 +124,9 @@ function DecidePanel({ detail }: { detail: AdminCaseDetail }) {
       <h3 className="font-semibold">{t('Quyết định')}</h3>
       {noShow ? (
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-sm font-medium">{t('Kết cục')}</legend>
+          <legend className="mb-1 text-label">{t('Kết cục')}</legend>
           {(['CUSTOMER_AT_FAULT', 'CUSTOMER_RECEIVED', 'SHOP_NEVER_CAME'] as const).map((o) => (
-            <label key={o} className="flex items-start gap-2 text-sm">
+            <label key={o} className="flex items-start gap-2 text-body-sm">
               <input type="radio" name="no-show-outcome" className="mt-1" checked={noShowOutcome === o} onChange={() => setNoShowOutcome(o)} />
               <span>{NO_SHOW_OUTCOME[o]}</span>
             </label>
@@ -135,12 +135,12 @@ function DecidePanel({ detail }: { detail: AdminCaseDetail }) {
       ) : null}
       {canNarrow ? (
         <div className="flex flex-col gap-2">
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-body-sm">
             <input type="checkbox" checked={partial} onChange={(e) => setPartial(e.target.checked)} />
             {t('Chỉ chấp nhận một phần số món khách báo')}
           </label>
           {partial ? (
-            <ul className="flex flex-col gap-2 rounded-sm bg-muted p-3 text-sm">
+            <ul className="flex flex-col gap-2 rounded-sm bg-muted p-3 text-body-sm">
               {lines.map((line) => (
                 <li key={line.orderItemId} className="flex items-center justify-between gap-3">
                   <span>{line.name}</span>
@@ -158,7 +158,7 @@ function DecidePanel({ detail }: { detail: AdminCaseDetail }) {
                   </span>
                 </li>
               ))}
-              <li className="text-xs text-muted-foreground">{t('Tiền hoàn tính lại theo tỷ lệ số phần. Để 0 để bỏ một món.')}</li>
+              <li className="text-caption text-muted-foreground">{t('Tiền hoàn tính lại theo tỷ lệ số phần. Để 0 để bỏ một món.')}</li>
             </ul>
           ) : null}
         </div>
@@ -196,7 +196,7 @@ function DecidePanel({ detail }: { detail: AdminCaseDetail }) {
                 : t('Không có khoản tiền nào thay đổi. Khiếu nại bị bác bỏ được tính vào lịch sử của khách.')}
             </DialogDescription>
           </DialogHeader>
-          <p className="rounded-sm bg-muted p-3 text-sm whitespace-pre-wrap">{reason.trim()}</p>
+          <p className="rounded-sm bg-muted p-3 text-body-sm whitespace-pre-wrap">{reason.trim()}</p>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">{t('Xem lại')}</Button>
@@ -227,7 +227,7 @@ function ReopenPanel({ id }: { id: string }) {
   return (
     <Card className={cn('gap-2 p-4')}>
       <h3 className="font-semibold">{t('Xem lại quyết định')}</h3>
-      <p className="text-sm text-muted-foreground">{t('Mở lại được một lần, kèm lý do. Khách và quán đều được báo. Bút toán đã ghi không bị sửa.')}</p>
+      <p className="text-body-sm text-muted-foreground">{t('Mở lại được một lần, kèm lý do. Khách và quán đều được báo. Bút toán đã ghi không bị sửa.')}</p>
       <div>
         <Button variant="outline" onClick={() => setOpen(true)}>
           {t('Mở lại khiếu nại')}

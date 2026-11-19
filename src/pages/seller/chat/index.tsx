@@ -59,8 +59,8 @@ export function SellerChatPage() {
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Tin nhắn')}</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-title-1">{t('Tin nhắn')}</h1>
+          <p className="text-body-sm text-muted-foreground">
             {t('Khách nhắn hỏi về món, thời gian hoặc địa chỉ giao. Khách chỉ thấy "cửa hàng" trả lời, không thấy ai bên bạn viết. ')}{live ? t('Tin mới hiện ngay.') : t('Đang kiểm tra tin mới mỗi vài giây.')}
           </p>
         </div>
@@ -99,7 +99,7 @@ export function SellerChatPage() {
             ))}
           </ul>
           {total > size ? (
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-body-sm">
               <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
                 {t('Trước')}
               </Button>
@@ -117,7 +117,7 @@ export function SellerChatPage() {
           {selected ? (
             <Thread key={selected} conversationId={selected} conversation={items.find((c) => c.id === selected)} live={live} onBack={() => setParams({})} />
           ) : (
-            <Card className="hidden p-6 text-sm text-muted-foreground md:block">{t('Chọn một cuộc trò chuyện để xem và trả lời.')}</Card>
+            <Card className="hidden p-6 text-body-sm text-muted-foreground md:block">{t('Chọn một cuộc trò chuyện để xem và trả lời.')}</Card>
           )}
         </div>
       </div>
@@ -133,12 +133,12 @@ function ConversationRow({ conversation: c, active, onOpen }: { conversation: Co
         <div className="flex items-center justify-between gap-2">
           <span className={cn('truncate', c.unread ? 'font-semibold' : '')}>
             {c.customerName}
-            {c.blockedByMe ? <span className="ml-2 text-xs font-normal text-muted-foreground">{t('· đã chặn')}</span> : null}
+            {c.blockedByMe ? <span className="ml-2 text-caption font-normal text-muted-foreground">{t('· đã chặn')}</span> : null}
           </span>
-          <span className="shrink-0 text-xs text-muted-foreground">{formatRelative(last?.sentAt)}</span>
+          <span className="shrink-0 text-caption text-muted-foreground">{formatRelative(last?.sentAt)}</span>
         </div>
         <div className="flex items-center justify-between gap-2">
-          <span className={cn('truncate text-sm', c.unread ? 'text-foreground' : 'text-muted-foreground')}>
+          <span className={cn('truncate text-body-sm', c.unread ? 'text-foreground' : 'text-muted-foreground')}>
             {last?.sender === 'SHOP' ? t('Bạn: ') : ''}
             {last?.text || (last?.hasImage ? t('Đã gửi một ảnh') : '')}
           </span>
@@ -227,13 +227,13 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
       </div>
       <ReportDialog target={reporting} open={!!reporting} onOpenChange={(open) => !open && setReporting(null)} />
       {closed ? (
-        <p className="border-t bg-muted/50 p-3 text-sm text-muted-foreground">
+        <p className="border-t bg-muted/50 p-3 text-body-sm text-muted-foreground">
           {blockedByMe ? t('Bạn đã chặn khách này. Bỏ chặn để nhắn tiếp.') : t('Khách đã đóng cuộc trò chuyện này. Đơn hàng của khách vẫn đến bình thường.')}
         </p>
       ) : (
       <div className="flex flex-col gap-2 border-t p-3">
         {replyTo ? (
-          <div className="flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1 text-xs">
+          <div className="flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1 text-caption">
             <span className="truncate">{t('Trả lời: ')}{replyTo.text || t('Ảnh')}</span>
             <button type="button" onClick={() => setReplyTo(null)} aria-label={t('Bỏ trả lời')}>
               <XIcon className="size-4" />
@@ -241,7 +241,7 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
           </div>
         ) : null}
         {image ? (
-          <div className="flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1 text-xs">
+          <div className="flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1 text-caption">
             <span className="truncate">{t('Ảnh: ')}{image.name}</span>
             <button type="button" onClick={() => setImage(null)} aria-label={t('Bỏ ảnh')}>
               <XIcon className="size-4" />
@@ -326,7 +326,7 @@ function AutoReplyCard() {
           <BotIcon className="size-4 text-muted-foreground" />
           <div>
             <p className="font-medium">{t('Trả lời tự động')}</p>
-            <p className="text-xs text-muted-foreground">{t('Gửi một lần khi khách nhắn mà quán chưa trả lời. Khách thấy nhãn "Trả lời tự động".')}</p>
+            <p className="text-caption text-muted-foreground">{t('Gửi một lần khi khách nhắn mà quán chưa trả lời. Khách thấy nhãn "Trả lời tự động".')}</p>
           </div>
         </div>
         <button
@@ -348,7 +348,7 @@ function AutoReplyCard() {
         <div className="flex flex-col gap-2">
           <Textarea value={message} maxLength={1000} rows={2} onChange={(e) => setDraft(e.target.value)} aria-label={t('Nội dung trả lời tự động')} />
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs text-muted-foreground">{message.length}/1000</span>
+            <span className="text-caption text-muted-foreground">{message.length}/1000</span>
             <Button
               size="sm"
               disabled={!changed || !message.trim() || save.isPending}

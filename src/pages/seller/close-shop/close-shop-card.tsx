@@ -56,14 +56,14 @@ export function CloseShopCard() {
         <CardDescription>{t('Đóng hẳn cửa hàng, không mở lại được. Muốn bán lại phải mở một cửa hàng mới.')}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+        <ul className="list-disc space-y-1 pl-5 text-body-sm text-muted-foreground">
           <li>{t('Cửa hàng biến mất khỏi danh sách và không nhận đơn mới ngay khi bạn xác nhận.')}</li>
           <li>{t('Các đơn đang làm vẫn làm tiếp; khiếu nại và kháng nghị đang mở vẫn xử lý; bạn vẫn xem được thu nhập.')}</li>
           <li>{t('Cửa hàng chỉ đóng hẳn khi không còn đơn đang làm, khiếu nại hay kháng nghị, không còn tiền bị giữ và số dư sổ cái về 0: số dương được chi trả cho bạn, số âm bạn cần thanh toán hoặc được quản trị viên xử lý.')}</li>
           <li>{t('Thực đơn và lịch sử đơn hàng được giữ lại để đối chiếu.')}</li>
         </ul>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-sm font-medium">{t('Lý do')}</legend>
+          <legend className="mb-1 text-label">{t('Lý do')}</legend>
           <div role="radiogroup" aria-label={t('Lý do đóng cửa hàng')} className="grid gap-2 sm:grid-cols-2">
             {REASONS.map((r) => (
               <button
@@ -72,7 +72,7 @@ export function CloseShopCard() {
                 role="radio"
                 aria-checked={reason === r}
                 onClick={() => setReason(r)}
-                className={cn('rounded-sm border px-3 py-2 text-left text-sm', reason === r ? 'border-primary bg-primary/5 font-semibold' : 'hover:bg-muted/50')}
+                className={cn('rounded-sm border px-3 py-2 text-left text-body-sm', reason === r ? 'border-primary bg-primary/5 font-semibold' : 'hover:bg-muted/50')}
               >
                 {CLOSE_REASON_LABEL[r]}
               </button>
@@ -83,7 +83,7 @@ export function CloseShopCard() {
           <Label htmlFor="close-text">{needsText ? t('Ghi rõ lý do') : t('Ghi chú thêm (không bắt buộc)')}</Label>
           <Textarea id="close-text" rows={2} maxLength={500} value={text} onChange={(e) => setText(e.target.value)} />
         </div>
-        <label className="flex items-start gap-2 text-sm">
+        <label className="flex items-start gap-2 text-body-sm">
           <input type="checkbox" className="mt-1" checked={understood} onChange={(e) => setUnderstood(e.target.checked)} />
           <span>{t('Tôi hiểu rằng đóng cửa hàng là vĩnh viễn và không hoàn tác được.')}</span>
         </label>

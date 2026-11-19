@@ -50,8 +50,8 @@ export function SellerReviewsPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Đánh giá của khách')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Phản hồi hiển thị công khai dưới đánh giá. Sửa hoặc xoá được trong 24 giờ kể từ lúc đăng.')}</p>
+        <h1 className="text-title-1">{t('Đánh giá của khách')}</h1>
+        <p className="text-body-sm text-muted-foreground">{t('Phản hồi hiển thị công khai dưới đánh giá. Sửa hoặc xoá được trong 24 giờ kể từ lúc đăng.')}</p>
       </div>
 
       <div role="tablist" className="flex gap-1 border-b">
@@ -65,7 +65,7 @@ export function SellerReviewsPage() {
               paging.reset()
             }}
             className={cn(
-              '-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap',
+              '-mb-px min-h-10 border-b-2 px-3 text-body-sm whitespace-nowrap',
               unreplied === tab.unreplied ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground',
             )}
           >
@@ -90,17 +90,17 @@ export function SellerReviewsPage() {
               <Card className="gap-2 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Stars value={review.rating ?? 0} />
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-body-sm text-muted-foreground">
                     {t('Đơn #')}{review.orderNumber} · {review.reviewerName} · {formatRelative(review.createdAt)}
                   </p>
                 </div>
-                {review.comment ? <p>{review.comment}</p> : <p className="text-sm text-muted-foreground">{t('Không có nhận xét.')}</p>}
+                {review.comment ? <p>{review.comment}</p> : <p className="text-body-sm text-muted-foreground">{t('Không có nhận xét.')}</p>}
                 {reply ? (
-                  <div className="rounded-sm bg-muted p-3 text-sm">
-                    <p className="text-xs text-muted-foreground">{t('Quán phản hồi · ')}{formatRelative(reply.createdAt)}</p>
+                  <div className="rounded-sm bg-muted p-3 text-body-sm">
+                    <p className="text-caption text-muted-foreground">{t('Quán phản hồi · ')}{formatRelative(reply.createdAt)}</p>
                     <p>{reply.text}</p>
                     {reply.hidden ? (
-                      <p className="mt-1 text-xs text-warning-fg">
+                      <p className="mt-1 text-caption text-warning-fg">
                         {t('Phản hồi bị ẩn vì vi phạm quy định')}{reply.hiddenReason ? `: ${reply.hiddenReason}` : ''}
                       </p>
                     ) : null}
@@ -145,10 +145,10 @@ export function SellerReviewsPage() {
                       <Button variant="outline" onClick={() => setDeleting(review)}>
                         {t('Xoá')}
                       </Button>
-                      <span className="text-xs text-muted-foreground">{t('Sửa hoặc xoá được đến ')}{formatDateTime(reply.editableUntil)}</span>
+                      <span className="text-caption text-muted-foreground">{t('Sửa hoặc xoá được đến ')}{formatDateTime(reply.editableUntil)}</span>
                     </>
                   ) : null}
-                  {reply && !reply.hidden && !open ? <span className="text-xs text-muted-foreground">{t('Đã quá 24 giờ, không sửa hoặc xoá được phản hồi.')}</span> : null}
+                  {reply && !reply.hidden && !open ? <span className="text-caption text-muted-foreground">{t('Đã quá 24 giờ, không sửa hoặc xoá được phản hồi.')}</span> : null}
                   <Button variant="ghost" size="sm" className="ml-auto text-muted-foreground" onClick={() => setReporting({ type: 'REVIEW', id: review.id ?? '' })}>
                     {t('Báo cáo đánh giá')}
                   </Button>

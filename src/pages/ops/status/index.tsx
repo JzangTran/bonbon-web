@@ -27,7 +27,7 @@ function CheckRow({ check }: { check: OpsCheck }) {
         )}
         <span className="font-medium">{check.name}</span>
       </span>
-      <span className="flex items-center gap-3 text-sm text-muted-foreground tabular-nums">
+      <span className="flex items-center gap-3 text-body-sm text-muted-foreground tabular-nums">
         <span>{check.detail}</span>
         <span>{check.latencyMs} ms</span>
         <span className="sr-only">{check.ok ? t('Đạt') : t('Không đạt')}</span>
@@ -50,8 +50,8 @@ export function OpsStatusPage() {
     <div className="flex flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Tình trạng hệ thống')}</h1>
-          <p className="text-sm text-muted-foreground">{t('Kiểm tra các thành phần hệ thống dựa vào, cập nhật mỗi 15 giây.')}</p>
+          <h1 className="text-title-1">{t('Tình trạng hệ thống')}</h1>
+          <p className="text-body-sm text-muted-foreground">{t('Kiểm tra các thành phần hệ thống dựa vào, cập nhật mỗi 15 giây.')}</p>
         </div>
         {data ? (
           <Badge className={data.status === 'UP' ? 'bg-success-subtle text-success-fg' : 'bg-danger-subtle text-danger-fg'}>
@@ -81,7 +81,7 @@ export function OpsStatusPage() {
               <CardTitle>{t('Phiên bản đang chạy')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <dl className="grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2">
+              <dl className="grid gap-x-8 gap-y-3 text-body-sm sm:grid-cols-2">
                 <div className="flex justify-between gap-4 border-b pb-2">
                   <dt className="text-muted-foreground">{t('Chạy được')}</dt>
                   <dd className="tabular-nums">{uptime(data.uptimeSeconds ?? 0)}</dd>
@@ -109,7 +109,7 @@ export function OpsStatusPage() {
                   <dd>{data.profiles?.length ? data.profiles.join(', ') : t('mặc định')}</dd>
                 </div>
               </dl>
-              <p className="mt-4 text-xs text-muted-foreground">{t('Kiểm tra lúc ')}{formatDateTime(data.checkedAt)}.</p>
+              <p className="mt-4 text-caption text-muted-foreground">{t('Kiểm tra lúc ')}{formatDateTime(data.checkedAt)}.</p>
             </CardContent>
           </Card>
         </>

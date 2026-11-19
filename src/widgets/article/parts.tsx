@@ -9,7 +9,7 @@ import { t } from '@/shared/i18n'
 export function Breadcrumb({ trail }: { trail: { name: string; path: string }[] }) {
   const away = (path: string) => /^https?:/.test(path)
   return (
-    <nav aria-label={t('Đường dẫn')} className="text-sm text-muted-foreground">
+    <nav aria-label={t('Đường dẫn')} className="text-body-sm text-muted-foreground">
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
         {trail.map((item, i) => {
           const last = i === trail.length - 1

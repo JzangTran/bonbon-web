@@ -24,7 +24,7 @@ export function SellerBankAccountPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-10">
-      <h1 className="text-2xl font-semibold">{t('Tài khoản ngân hàng')}</h1>
+      <h1 className="text-title-1">{t('Tài khoản ngân hàng')}</h1>
       {payout ? (
         <dl className="grid grid-cols-[10rem_1fr] gap-x-6 gap-y-4">
           <dt className="text-muted-foreground">{t('Ngân hàng')}</dt>
@@ -40,7 +40,7 @@ export function SellerBankAccountPage() {
         <p className="text-muted-foreground">{t('Chưa có thông tin tài khoản nhận tiền.')}</p>
       )}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="max-w-lg text-sm text-muted-foreground">
+        <p className="max-w-lg text-body-sm text-muted-foreground">
           {t('Khách chuyển khoản (VietQR) và bonbon chi trả số dư vào tài khoản này.')}
         </p>
         {/* only the shop account itself, never a main account or member */}

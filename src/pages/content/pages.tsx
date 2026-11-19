@@ -80,7 +80,7 @@ export function ArticlePage({ collection }: { collection: Collection }) {
           more={
             others.length > 0 ? (
               <section aria-labelledby="bai-khac" className="mt-24">
-                <h2 id="bai-khac" className="mb-6 text-h2 font-medium">
+                <h2 id="bai-khac" className="mb-6 text-h2">
                   {t('Đọc thêm bài viết')}
                 </h2>
                 <CardGrid articles={others} initial={3} step={3} />

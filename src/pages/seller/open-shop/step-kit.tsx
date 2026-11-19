@@ -14,8 +14,8 @@ export function StepCard({ title, description, children, footer }: { title: stri
   return (
     <section className="flex flex-col gap-5">
       <div>
-        <h2 className="text-lg font-semibold">{title}</h2>
-        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
+        <h2 className="text-title-3">{title}</h2>
+        {description ? <p className="text-body-sm text-muted-foreground">{description}</p> : null}
       </div>
       {children}
       <div className="flex flex-wrap items-center justify-end gap-2 border-t pt-4">{footer}</div>

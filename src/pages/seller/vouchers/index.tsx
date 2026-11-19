@@ -59,8 +59,8 @@ export function SellerVouchersPage() {
     <div className="flex max-w-4xl flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Voucher của quán')}</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-title-1">{t('Voucher của quán')}</h1>
+          <p className="text-body-sm text-muted-foreground">
             {t('Khách chọn voucher ở trang quán hoặc giỏ hàng. Quán chịu khoản giảm, và hoa hồng được tính trên tiền món sau giảm.')}
           </p>
         </div>
@@ -87,11 +87,11 @@ export function SellerVouchersPage() {
                     <span className="font-mono font-semibold">{v.code}</span>
                     {!on ? <Badge variant="secondary">{t('Đã tắt')}</Badge> : ended ? <Badge variant="secondary">{t('Hết hạn')}</Badge> : null}
                   </div>
-                  <p className="text-sm">
+                  <p className="text-body-sm">
                     {describe(v)}
                     {v.minOrderValue ? ` · ${t('đơn từ {v0}', { v0: formatVnd(v.minOrderValue) })}` : ''}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-caption text-muted-foreground">
                     {formatDateTime(v.validFrom)} – {formatDateTime(v.validTo)} · {t('Đã dùng {v0}', { v0: `${v.usedCount}${v.usageLimit ? `/${v.usageLimit}` : ''}` })}
                     {v.maxPerCustomer ? ` · ${t('mỗi khách {v0} lần', { v0: v.maxPerCustomer })}` : ''}
                   </p>
@@ -175,7 +175,7 @@ function VoucherForm({ onDone }: { onDone: () => void }) {
           <Field id="voucher-type" label={t('Loại giảm')}>
             <select
               id="voucher-type"
-              className="h-9 rounded-md border bg-background px-3 text-sm"
+              className="h-9 rounded-md border bg-background px-3 text-body-sm"
               value={type}
               onChange={(e) => setType(e.target.value as 'PERCENT' | 'FIXED')}
             >

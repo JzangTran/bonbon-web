@@ -22,8 +22,8 @@ export function SellerNotificationSettingsPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Cài đặt thông báo')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Tắt một kênh chỉ ngăn thông báo đến máy bạn; mọi thông báo vẫn nằm trong danh sách trong ứng dụng.')}</p>
+        <h1 className="text-title-1">{t('Cài đặt thông báo')}</h1>
+        <p className="text-body-sm text-muted-foreground">{t('Tắt một kênh chỉ ngăn thông báo đến máy bạn; mọi thông báo vẫn nằm trong danh sách trong ứng dụng.')}</p>
       </div>
 
       {prefs.isError ? <FormError message={problemMessage(prefs.error)} /> : null}
@@ -38,7 +38,7 @@ export function SellerNotificationSettingsPage() {
                   {c.title}
                   {c.locked ? <LockIcon className="size-4 text-muted-foreground" aria-label={t('Không tắt được')} /> : null}
                 </h2>
-                <p className="text-sm text-muted-foreground">{c.description}</p>
+                <p className="text-body-sm text-muted-foreground">{c.description}</p>
               </div>
               <div className="flex flex-wrap gap-4">
                 {(c.channels ?? []).map((ch) => {
@@ -78,7 +78,7 @@ function QuietHours({ start, end, zone }: { start?: string; end?: string; zone?:
     <Card className="gap-3 p-4">
       <div>
         <h2 className="font-semibold">{t('Giờ yên lặng')}</h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-body-sm text-muted-foreground">
           {t('Trong khung giờ này thông báo đẩy của các nhóm tắt được được giữ lại. Đơn mới và thông báo bảo mật vẫn đến ngay. Múi giờ ')}{zone ?? 'Asia/Ho_Chi_Minh'}.
         </p>
       </div>
@@ -113,13 +113,13 @@ function Devices() {
     <Card className="gap-3 p-4">
       <div>
         <h2 className="font-semibold">{t('Thiết bị nhận thông báo đẩy')}</h2>
-        <p className="text-sm text-muted-foreground">{t('Gỡ máy đã mất hoặc không còn dùng. Máy bị gỡ sẽ nhận lại thông báo nếu bạn đăng nhập lại trên đó.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Gỡ máy đã mất hoặc không còn dùng. Máy bị gỡ sẽ nhận lại thông báo nếu bạn đăng nhập lại trên đó.')}</p>
       </div>
       {devices.isPending ? <Skeleton className="h-12" /> : null}
-      {devices.data && items.length === 0 ? <p className="text-sm text-muted-foreground">{t('Chưa có thiết bị nào. Đăng nhập trên ứng dụng điện thoại và cho phép thông báo để nhận đơn mới.')}</p> : null}
+      {devices.data && items.length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Chưa có thiết bị nào. Đăng nhập trên ứng dụng điện thoại và cho phép thông báo để nhận đơn mới.')}</p> : null}
       <ul className="flex flex-col gap-2">
         {items.map((d) => (
-          <li key={d.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
+          <li key={d.id} className="flex flex-wrap items-center justify-between gap-2 text-body-sm">
             <span>
               {d.platform === 'IOS' ? 'iPhone' : d.platform === 'ANDROID' ? 'Android' : t('Trình duyệt')}{t(' · phiên bản ')}{d.appVersion ?? '–'}{t(' · dùng ')}{formatRelative(d.lastSeenAt)}
             </span>

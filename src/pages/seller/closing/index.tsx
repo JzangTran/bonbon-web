@@ -20,7 +20,7 @@ export function SellerClosingPage() {
   if (status === 'CLOSED') {
     return (
       <div className="flex max-w-3xl flex-col gap-3">
-        <h1 className="text-2xl font-semibold">{t('Cửa hàng đã đóng')}</h1>
+        <h1 className="text-title-1">{t('Cửa hàng đã đóng')}</h1>
         <p className="text-muted-foreground">{t('Mọi việc đã xong và cửa hàng đã đóng. Muốn bán lại, hãy mở một cửa hàng mới hoặc liên hệ hỗ trợ.')}</p>
       </div>
     )
@@ -34,8 +34,8 @@ export function SellerClosingPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Cửa hàng đang đóng')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Cửa hàng đang đóng')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Cửa hàng không còn hiện với khách và không nhận đơn mới. Các đơn đang làm vẫn làm tiếp, và bạn vẫn xem được thu nhập. Cửa hàng tự đóng hẳn khi tất cả các việc dưới đây xong; đóng rồi không mở lại được.')}
         </p>
       </div>
@@ -44,7 +44,7 @@ export function SellerClosingPage() {
       {c && b ? (
         <>
           <Card size="sm">
-            <CardContent className="text-sm">
+            <CardContent className="text-body-sm">
               {t('Lý do: ')}<b>{CLOSE_REASON_LABEL[c.reason ?? ''] ?? c.reason}</b>
               {c.reasonText ? ` — ${c.reasonText}` : ''}{t(' · yêu cầu lúc ')}{formatDateTime(c.requestedAt)}
             </CardContent>
@@ -54,7 +54,7 @@ export function SellerClosingPage() {
               <CardTitle>{b.ready ? t('Mọi việc đã xong') : t('Còn chờ')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
-              {b.ready ? <p className="text-sm text-success-fg">{t('Không còn gì chặn. Cửa hàng sẽ được đóng hẳn trong ít phút.')}</p> : null}
+              {b.ready ? <p className="text-body-sm text-success-fg">{t('Không còn gì chặn. Cửa hàng sẽ được đóng hẳn trong ít phút.')}</p> : null}
               <Item done={(b.ordersInProgress ?? 0) === 0} title={t('Đơn đang làm')} detail={t('{v0} đơn chưa giao xong', { v0: b.ordersInProgress })} to={merchantPath('/orders')} action={t('Xem đơn hàng')} />
               <Item done={(b.openCases ?? 0) === 0} title={t('Khiếu nại')} detail={t('{v0} khiếu nại chưa xong', { v0: b.openCases })} to={merchantPath('/order-cases')} action={t('Xem khiếu nại')} />
               <Item done={(b.pendingAppeals ?? 0) === 0} title={t('Kháng nghị điểm phạt')} detail={t('{v0} kháng nghị chờ quản trị viên', { v0: b.pendingAppeals })} to={merchantPath('/performance')} action={t('Xem hiệu suất')} />
@@ -80,7 +80,7 @@ export function SellerClosingPage() {
 
 function Item({ done, title, detail, to, action }: { done: boolean; title: string; detail: string; to: string; action: ReactNode }) {
   return (
-    <div className="flex items-start gap-3 text-sm">
+    <div className="flex items-start gap-3 text-body-sm">
       {done ? <CheckCircle2Icon className="mt-0.5 size-5 shrink-0 text-success-fg" /> : <CircleDashedIcon className="mt-0.5 size-5 shrink-0 text-warning-fg" />}
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="font-medium">{title}</span>

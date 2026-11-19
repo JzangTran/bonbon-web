@@ -28,17 +28,17 @@ function Viewer({ id, onBack }: { id: string; onBack: () => void }) {
 
   return (
     <div className="flex max-w-3xl flex-col gap-4">
-      <button type="button" onClick={onBack} className="inline-flex items-center gap-1 self-start text-sm text-muted-foreground hover:text-foreground">
+      <button type="button" onClick={onBack} className="inline-flex items-center gap-1 self-start text-body-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" />{t(' Quay lại')}
       </button>
       <div>
-        <h1 className="text-2xl font-semibold">{t('Trò chuyện khách – quán')}</h1>
+        <h1 className="text-title-1">{t('Trò chuyện khách – quán')}</h1>
         {conversation.data ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {conversation.data.customerName} ↔ {conversation.data.shopName}{t(' · từ ')}{formatDateTime(conversation.data.createdAt)}
           </p>
         ) : null}
-        <p className="text-sm text-muted-foreground">{t('Chỉ đọc. Việc mở cuộc trò chuyện này được ghi nhật ký cùng tên bạn.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Chỉ đọc. Việc mở cuộc trò chuyện này được ghi nhật ký cùng tên bạn.')}</p>
       </div>
       {conversation.isError ? <FormError message={problemMessage(conversation.error)} /> : null}
       {thread.isError ? <FormError message={problemMessage(thread.error)} /> : null}
@@ -51,7 +51,7 @@ function Viewer({ id, onBack }: { id: string; onBack: () => void }) {
             </Button>
           </div>
         ) : null}
-        {thread.data && messages.length === 0 ? <p className="text-sm text-muted-foreground">{t('Chưa có tin nhắn.')}</p> : null}
+        {thread.data && messages.length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Chưa có tin nhắn.')}</p> : null}
         <MessageList messages={messages} showSide />
       </Card>
     </div>

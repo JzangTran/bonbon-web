@@ -48,7 +48,7 @@ export function Captcha({ onToken }: { onToken: (token: string | null) => void }
 
   if (!env.recaptchaSiteKey) {
     return (
-      <label className="flex items-center gap-2 rounded-md border border-dashed border-input p-3 text-sm">
+      <label className="flex items-center gap-2 rounded-md border border-dashed border-input p-3 text-body-sm">
         <input type="checkbox" onChange={(e) => onToken(e.target.checked ? 'dev-captcha' : null)} />
         {t('Tôi không phải robot ')}<span className="text-muted-foreground">{t('(bản dev, chưa cấu hình reCAPTCHA)')}</span>
       </label>

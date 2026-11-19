@@ -20,7 +20,7 @@ import { FormError } from '@/widgets/auth-shell'
 import { t } from '@/shared/i18n'
 
 const NATIVE_SELECT =
-  'h-10 w-full rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
+  'h-10 w-full rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-body-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
 
 /** "45.000" or "45000" to 45000; empty or unreadable to undefined. */
 function parseInteger(text: string): number | undefined {
@@ -169,7 +169,7 @@ export function DishSheet({
           <div className="flex flex-col gap-2">
             <Label htmlFor="dish-name">{t('Tên món')}</Label>
             <Input id="dish-name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} aria-invalid={Boolean(fieldErrors.name)} />
-            {fieldErrors.name ? <p role="alert" className="text-sm text-destructive">{fieldErrors.name}</p> : null}
+            {fieldErrors.name ? <p role="alert" className="text-body-sm text-destructive">{fieldErrors.name}</p> : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="dish-desc">{t('Mô tả (không bắt buộc)')}</Label>
@@ -191,7 +191,7 @@ export function DishSheet({
                 value={original}
                 onChange={(e) => setOriginal(e.target.value)}
               />
-              <p id="dish-original-hint" className="text-xs text-muted-foreground">
+              <p id="dish-original-hint" className="text-caption text-muted-foreground">
                 {(() => {
                   const p = parseInteger(price)
                   const o = parseInteger(original)
@@ -246,15 +246,15 @@ export function DishSheet({
                 </optgroup>
               ))}
             </select>
-            <p className="text-xs text-muted-foreground">{t('Chọn sai ngành có thể làm món bị ẩn khỏi tìm kiếm.')}</p>
+            <p className="text-caption text-muted-foreground">{t('Chọn sai ngành có thể làm món bị ẩn khỏi tìm kiếm.')}</p>
           </div>
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-1 text-sm font-medium">{t('Nhóm lựa chọn của món')}</legend>
+            <legend className="mb-1 text-label">{t('Nhóm lựa chọn của món')}</legend>
             {groupList.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t('Chưa có nhóm lựa chọn. Tạo ở tab “Nhóm lựa chọn”.')}</p>
+              <p className="text-body-sm text-muted-foreground">{t('Chưa có nhóm lựa chọn. Tạo ở tab “Nhóm lựa chọn”.')}</p>
             ) : (
               groupList.map((g) => (
-                <label key={g.id} className="flex min-h-10 items-center gap-3 rounded-sm border px-3 text-sm">
+                <label key={g.id} className="flex min-h-10 items-center gap-3 rounded-sm border px-3 text-body-sm">
                   <input
                     type="checkbox"
                     className="size-4 accent-primary"
@@ -262,7 +262,7 @@ export function DishSheet({
                     onChange={(e) => setGroupIds((prev) => (e.target.checked ? [...prev, g.id!] : prev.filter((x) => x !== g.id)))}
                   />
                   <span className="flex-1">{g.name}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-caption text-muted-foreground">
                     {g.min === 0 ? t('tuỳ chọn') : t('bắt buộc')}{t(', chọn ')}{g.min === g.max ? g.max : `${g.min}–${g.max}`}
                   </span>
                 </label>
@@ -292,7 +292,7 @@ export function DishSheet({
                 if (ok) setRemovePhoto(false)
               }}
             />
-            <p className="text-xs text-muted-foreground">{t('JPG, PNG hoặc WebP, tối đa 5 MB.')}</p>
+            <p className="text-caption text-muted-foreground">{t('JPG, PNG hoặc WebP, tối đa 5 MB.')}</p>
           </div>
           <FormError message={error} />
         </form>

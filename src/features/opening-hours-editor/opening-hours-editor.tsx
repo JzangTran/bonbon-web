@@ -29,8 +29,8 @@ export function OpeningHoursEditor({ value, onChange }: { value: OpeningWindow[]
         const windows = byDay(day)
         return (
           <div key={day} className="flex flex-wrap items-center gap-2 px-3 py-2">
-            <span className="w-full shrink-0 text-sm font-medium sm:w-20">{name}</span>
-            {windows.length === 0 ? <span className="text-sm text-muted-foreground">{t('Nghỉ')}</span> : null}
+            <span className="w-full shrink-0 text-label sm:w-20">{name}</span>
+            {windows.length === 0 ? <span className="text-body-sm text-muted-foreground">{t('Nghỉ')}</span> : null}
             {windows.map(({ w, i }) => (
               <span key={i} className="flex max-w-full flex-wrap items-center gap-1 rounded-md bg-muted px-2 py-1">
                 <Input
@@ -48,7 +48,7 @@ export function OpeningHoursEditor({ value, onChange }: { value: OpeningWindow[]
                   value={w.closesAt}
                   onChange={(e) => update(i, { closesAt: e.target.value })}
                 />
-                {w.closesAt < w.opensAt ? <span className="text-xs text-muted-foreground">{t('(qua đêm)')}</span> : null}
+                {w.closesAt < w.opensAt ? <span className="text-caption text-muted-foreground">{t('(qua đêm)')}</span> : null}
                 <Button type="button" variant="ghost" size="icon-sm" aria-label={t('Xoá khung giờ {v0}', { v0: name })} onClick={() => remove(i)}>
                   <XIcon />
                 </Button>

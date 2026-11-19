@@ -22,7 +22,7 @@ export function SellerShippingPage() {
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />
   return (
     <div className="flex max-w-4xl flex-col gap-10">
-      <h1 className="text-2xl font-semibold">{t('Cài đặt vận chuyển')}</h1>
+      <h1 className="text-title-1">{t('Cài đặt vận chuyển')}</h1>
       <IntakeCard shop={shop.data} />
       <ShippingCard key={`ship-${JSON.stringify(shop.data.shipping)}`} shop={shop.data} />
       <HoursCard key={`hours-${JSON.stringify(shop.data.shipping?.openingHours)}`} shop={shop.data} />
@@ -41,7 +41,7 @@ function IntakeCard({ shop }: { shop: ShopApplication }) {
       <CardContent className="flex flex-wrap items-center gap-4">
         <div className="flex flex-1 flex-col gap-1">
           <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold">{shop.shop?.name}</span>
+            <span className="text-title-3">{shop.shop?.name}</span>
             {shop.status === 'PENDING' ? (
               <Badge className="bg-warning-subtle text-warning-fg">{t('Đang chờ duyệt lại')}</Badge>
             ) : shop.openNow ? (
@@ -50,7 +50,7 @@ function IntakeCard({ shop }: { shop: ShopApplication }) {
               <Badge variant="secondary">{t('Đang đóng')}</Badge>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {accepting
               ? t('Đang bật nhận đơn: cửa hàng mở trong các khung giờ đã đặt.')
               : t('Đang tạm ngưng: không nhận đơn mới, kể cả trong giờ mở cửa. Đơn đã nhận không bị huỷ.')}
@@ -108,7 +108,7 @@ function ShippingCard({ shop }: { shop: ShopApplication }) {
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="sh-radius">{t('Bán kính giao (km)')}</Label>
               <Input id="sh-radius" inputMode="decimal" maxLength={4} value={radius} onChange={(e) => setRadius(e.target.value.replace(',', '.').replace(/[^\d.]/g, ''))} />
-              <p className="text-xs text-muted-foreground">{t('Tối đa ')}{shop.maxDeliveryRadiusKm} km.</p>
+              <p className="text-caption text-muted-foreground">{t('Tối đa ')}{shop.maxDeliveryRadiusKm} km.</p>
             </div>
             <div className="flex flex-1 flex-col gap-2">
               <Label htmlFor="sh-fee">{t('Phí giao hàng (₫)')}</Label>

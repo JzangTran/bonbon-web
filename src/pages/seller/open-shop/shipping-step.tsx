@@ -71,9 +71,9 @@ export function ShippingStep({ shop, onNext }: { shop: ShopApplication; onNext: 
     >
       <FormRow label={t('Khu vực phục vụ')} hint={t('Tính theo vị trí quán ở bước 1; khu vực quyết định bán kính giao tối đa.')}>
         {area ? (
-          <p className="flex min-h-9 items-center text-sm font-medium">{area.name}</p>
+          <p className="flex min-h-9 items-center text-label">{area.name}</p>
         ) : (
-          <p className="flex min-h-9 items-center text-sm text-destructive">{t('Chưa xác định. Hãy quay lại bước 1 và định vị quán.')}</p>
+          <p className="flex min-h-9 items-center text-body-sm text-destructive">{t('Chưa xác định. Hãy quay lại bước 1 và định vị quán.')}</p>
         )}
       </FormRow>
       <Field id="ship-radius" label={t('Bán kính giao (km)')} required hint={`Tối đa ${cap} km${area ? t(' ở {v0}', { v0: area.name }) : ''}, tính đường chim bay từ cửa hàng.`} error={save.errors.deliveryRadiusKm}>

@@ -20,7 +20,7 @@ export function PasswordStrength({ password, email, name, className }: { passwor
           <span key={i} className={cn('h-1 flex-1 rounded-full', i <= score ? COLORS[score] : 'bg-grey-200')} />
         ))}
       </div>
-      <p className={cn('text-xs', problem ? 'text-destructive' : 'text-muted-foreground')}>
+      <p className={cn('text-caption', problem ? 'text-destructive' : 'text-muted-foreground')}>
         {problem ?? t('Độ mạnh: {v0}', { v0: t(LABELS[score]) })}
       </p>
     </div>

@@ -96,16 +96,16 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
             <div className="flex flex-col gap-2">
               <Label htmlFor="group-min">{t('Chọn tối thiểu')}</Label>
               <Input id="group-min" inputMode="numeric" maxLength={2} className="tabular-nums" value={min} onChange={(e) => setMin(e.target.value.replace(/\D/g, ''))} />
-              <p className="text-xs text-muted-foreground">{t('0 = khách có thể bỏ qua')}</p>
+              <p className="text-caption text-muted-foreground">{t('0 = khách có thể bỏ qua')}</p>
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="group-max">{t('Chọn tối đa')}</Label>
               <Input id="group-max" inputMode="numeric" maxLength={2} className="tabular-nums" value={max} onChange={(e) => setMax(e.target.value.replace(/\D/g, ''))} />
-              <p className="text-xs text-muted-foreground">{t('1 = chọn một')}</p>
+              <p className="text-caption text-muted-foreground">{t('1 = chọn một')}</p>
             </div>
           </div>
           <fieldset className="flex flex-col gap-3">
-            <legend className="mb-1 text-sm font-medium">{t('Các lựa chọn')}</legend>
+            <legend className="mb-1 text-label">{t('Các lựa chọn')}</legend>
             {rows.map((row, index) => (
               <div key={row.key} className="flex flex-col gap-2 rounded-sm border p-3">
                 <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export function OptionGroupSheet({ group, onClose }: { group: OptionGroup | null
                     <Trash2Icon />
                   </Button>
                 </div>
-                <div className="flex flex-wrap gap-4 text-sm">
+                <div className="flex flex-wrap gap-4 text-body-sm">
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
