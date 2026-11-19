@@ -14,7 +14,7 @@ export function SubPage({ back, title, description, children }: { back: { to: st
           <ArrowLeftIcon className="size-4" aria-hidden="true" />
           {back.label}
         </Link>
-        <h1 className="text-h2 font-semibold">{title}</h1>
+        <h1 className="text-h2">{title}</h1>
         {description ? <p className="text-body text-muted-foreground">{description}</p> : null}
       </div>
       {children}

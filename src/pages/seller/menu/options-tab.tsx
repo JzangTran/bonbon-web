@@ -23,11 +23,11 @@ export function OptionsTab({ menu, groups, quick = false }: { menu: Menu; groups
   return (
     <div className="flex flex-col gap-6">
       {list.length === 0 && quick ? (
-        <p className="text-sm text-muted-foreground">{t('Chưa có nhóm lựa chọn')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Chưa có nhóm lựa chọn')}</p>
       ) : list.length === 0 ? (
         <Card className="items-start gap-3 p-6">
           <p className="font-semibold">{t('Chưa có nhóm lựa chọn')}</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {t('Dùng cho cỡ ly, độ ngọt, topping… Tạo một lần, gắn cho nhiều món, khách chọn khi đặt.')}
           </p>
           <Button onClick={() => setEditing('new')}>
@@ -73,7 +73,7 @@ function GroupCard({ group, quick, dishNames, onEdit }: { group: OptionGroup; qu
   return (
     <Card className="gap-0 p-0">
       <div className="flex flex-wrap items-center gap-2 border-b px-4 py-3">
-        <h2 className="text-lg font-semibold">{group.name}</h2>
+        <h2 className="text-title-3">{group.name}</h2>
         <Badge variant="outline">{rule(group)}</Badge>
         <div className={quick ? 'hidden' : 'ml-auto flex items-center gap-1'}>
           <Button variant="ghost" size="icon-sm" aria-label={t('Sửa nhóm {v0}', { v0: group.name })} onClick={onEdit}>
@@ -100,7 +100,7 @@ function GroupCard({ group, quick, dishNames, onEdit }: { group: OptionGroup; qu
             <li key={option.id} className="flex flex-wrap items-center gap-3 px-4 py-2">
               <span className={soldOut ? 'flex-1 text-muted-foreground' : 'flex-1'}>
                 {option.name}
-                {option.defaultChoice ? <span className="ml-2 text-xs text-muted-foreground">{t('mặc định')}</span> : null}
+                {option.defaultChoice ? <span className="ml-2 text-caption text-muted-foreground">{t('mặc định')}</span> : null}
               </span>
               <span className="tabular-nums">{option.priceDelta ? `+${formatVnd(option.priceDelta)}` : t('Miễn phí')}</span>
               <Button
@@ -116,7 +116,7 @@ function GroupCard({ group, quick, dishNames, onEdit }: { group: OptionGroup; qu
           )
         })}
       </ul>
-      <p className="border-t px-4 py-2 text-xs text-muted-foreground">
+      <p className="border-t px-4 py-2 text-caption text-muted-foreground">
         {dishNames.length === 0 ? t('Chưa gắn với món nào.') : t('Dùng cho: {v0}', { v0: dishNames.join(', ') })}
       </p>
     </Card>

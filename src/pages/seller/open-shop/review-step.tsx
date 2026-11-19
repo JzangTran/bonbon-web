@@ -44,7 +44,7 @@ export function ReviewStep({ shop, goTo }: { shop: ShopApplication; goTo: (step:
     >
       <ul className="flex flex-col gap-2">
         {(shop.steps ?? []).map((s) => (
-          <li key={s.step} className="flex flex-wrap items-center gap-2 rounded-sm border px-3 py-2 text-sm">
+          <li key={s.step} className="flex flex-wrap items-center gap-2 rounded-sm border px-3 py-2 text-body-sm">
             <span className={cn('flex size-6 items-center justify-center rounded-full', s.complete ? 'bg-success text-white' : 'bg-warning-subtle text-warning-fg')}>
               {s.complete ? <CheckIcon className="size-4" /> : '!'}
             </span>

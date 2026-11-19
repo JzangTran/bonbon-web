@@ -81,7 +81,7 @@ export function UnitPicker({
           aria-expanded={open}
           aria-invalid={invalid}
           aria-describedby={describedBy}
-          className="flex h-10 w-full items-center justify-between gap-2 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-left text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
+          className="flex h-10 w-full items-center justify-between gap-2 rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-left text-body outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-body-sm"
         >
           <span className={cn('truncate', !label && 'text-muted-foreground')}>{label || t('Chọn Tỉnh/Thành phố, Phường/Xã')}</span>
           <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
@@ -106,7 +106,7 @@ export function UnitPicker({
                 setQuery('')
               }}
               className={cn(
-                'h-10 flex-1 border-b-2 border-transparent px-3 text-[0.8125rem] outline-none focus-visible:bg-ws-fill disabled:cursor-not-allowed disabled:text-muted-foreground',
+                'h-10 flex-1 border-b-2 border-transparent px-3 text-body-sm outline-none focus-visible:bg-ws-fill disabled:cursor-not-allowed disabled:text-muted-foreground',
                 tab === value && 'border-primary font-semibold',
               )}
             >
@@ -122,23 +122,23 @@ export function UnitPicker({
             value={query}
             maxLength={60}
             onChange={(e) => setQuery(e.target.value)}
-            className="h-10 w-full bg-transparent pr-3 pl-9 text-sm outline-none"
+            className="h-10 w-full bg-transparent pr-3 pl-9 text-body-sm outline-none"
           />
         </div>
         <ul id={listId} role="listbox" aria-label={tab === 'province' ? t('Tỉnh/Thành phố') : t('Phường/Xã')} className="max-h-64 overflow-y-auto py-1">
-          {(tab === 'province' ? provinces : wards).isPending ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Đang tải…')}</li> : null}
+          {(tab === 'province' ? provinces : wards).isPending ? <li className="px-3 py-2 text-body-sm text-muted-foreground">{t('Đang tải…')}</li> : null}
           {(tab === 'province' ? provinces : wards).isError ? (
-            <li className="px-3 py-2 text-sm text-destructive">{problemMessage((tab === 'province' ? provinces : wards).error)}</li>
+            <li className="px-3 py-2 text-body-sm text-destructive">{problemMessage((tab === 'province' ? provinces : wards).error)}</li>
           ) : null}
           {items.length === 0 && !(tab === 'province' ? provinces : wards).isPending && !(tab === 'province' ? provinces : wards).isError ? (
-            <li className="px-3 py-2 text-sm text-muted-foreground">{t('Không có kết quả.')}</li>
+            <li className="px-3 py-2 text-body-sm text-muted-foreground">{t('Không có kết quả.')}</li>
           ) : null}
           {items.map((item) => (
             <li key={item.code} role="option" aria-selected={item.code === selected}>
               <button
                 type="button"
                 onClick={() => choose(item.code)}
-                className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm outline-none hover:bg-ws-fill focus-visible:bg-ws-fill"
+                className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-body-sm outline-none hover:bg-ws-fill focus-visible:bg-ws-fill"
               >
                 <span>{item.name}</span>
                 {item.code === selected ? <CheckIcon className="size-4 text-primary" aria-hidden="true" /> : null}

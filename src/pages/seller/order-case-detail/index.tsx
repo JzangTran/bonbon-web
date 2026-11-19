@@ -27,7 +27,7 @@ export function SellerOrderCaseDetailPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <Link to={merchantPath('/order-cases')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={merchantPath('/order-cases')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" />{t(' Danh sách khiếu nại')}
       </Link>
       {detail.isError ? <FormError message={problemMessage(detail.error)} /> : null}
@@ -38,7 +38,7 @@ export function SellerOrderCaseDetailPage() {
           {c.status === 'AWAITING_SHOP' ? (
             <Card className="gap-3 p-4">
               <h3 className="font-semibold">{t('Quán trả lời')}</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-body-sm text-muted-foreground">
                 {t('Chấp nhận thì khách được hoàn ')}{formatVnd(c.refundAmount)}{t(' ngay và quán chịu ')}{formatVnd(c.shopBears)}{t(' trong sổ cái (phần hoa hồng của số này được hoàn lại cho quán). Phản đối thì quản trị viên xem ảnh và lý do của hai bên rồi quyết định.')}
               </p>
               <div className="flex flex-wrap gap-2">

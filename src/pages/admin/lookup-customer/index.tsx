@@ -24,7 +24,7 @@ export function AdminLookupCustomerPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-10">
-      <Link to={consolePath('/lookup')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/lookup')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" />{t(' Tra cứu')}
       </Link>
       {customer.isError ? <FormError message={problemMessage(customer.error)} /> : null}
@@ -32,14 +32,14 @@ export function AdminLookupCustomerPage() {
       {c ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold">{c.name}</h1>
+            <h1 className="text-title-1">{c.name}</h1>
             {(c.roles ?? []).map((r) => (
               <Badge key={r} variant="outline">
                 {r === 'SELLER' ? t('Người bán') : t('Khách')}
               </Badge>
             ))}
           </div>
-          <Card className="gap-2 p-4 text-sm">
+          <Card className="gap-2 p-4 text-body-sm">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-semibold">{t('Tài khoản')}</h2>
               {full ? <Badge className="bg-warning-subtle text-warning-fg">{t('Đang xem đầy đủ, đã ghi nhật ký')}</Badge> : <Button size="sm" variant="outline" onClick={() => setAsking(true)}><EyeIcon />{t(' Xem đầy đủ')}</Button>}
@@ -55,7 +55,7 @@ export function AdminLookupCustomerPage() {
             </p>
           </Card>
 
-          <Card className="gap-2 p-4 text-sm">
+          <Card className="gap-2 p-4 text-body-sm">
             <h2 className="font-semibold">{t('10 đơn gần nhất')}</h2>
             {(c.recentOrders ?? []).length === 0 ? <p className="text-muted-foreground">{t('Chưa có đơn nào.')}</p> : null}
             <ul className="flex flex-col gap-2">

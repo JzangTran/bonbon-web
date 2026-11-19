@@ -44,8 +44,8 @@ export function AdminReviewsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Kiểm duyệt đánh giá')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Kiểm duyệt đánh giá')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Ẩn không xoá hẳn và luôn có lý do ghi lại. Đánh giá bị ẩn không tính vào điểm của quán và không hiện công khai; khách vẫn thấy đánh giá của mình.')}
         </p>
       </div>
@@ -60,7 +60,7 @@ export function AdminReviewsPage() {
             paging.reset()
           }}
         />
-        <label className="mb-2 flex min-h-10 items-center gap-2 text-sm">
+        <label className="mb-2 flex min-h-10 items-center gap-2 text-body-sm">
           <input
             type="checkbox"
             checked={lowOnly}
@@ -145,12 +145,12 @@ function ReviewRow({ review, busy, onHide, onUnhide }: {
           <Stars value={review.rating ?? 0} />
           {review.hidden ? <Badge className="bg-warning-subtle text-warning-fg">{t('Đã ẩn')}</Badge> : null}
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-body-sm text-muted-foreground">
           {t('Đơn #')}{review.orderNumber} · {review.reviewerName} · {formatDateTime(review.createdAt)}
         </p>
       </div>
-      {review.comment ? <p>{review.comment}</p> : <p className="text-sm text-muted-foreground">{t('Không có nhận xét.')}</p>}
-      {review.hidden && review.hiddenReason ? <p className="text-sm text-warning-fg">{t('Lý do ẩn: ')}{review.hiddenReason}</p> : null}
+      {review.comment ? <p>{review.comment}</p> : <p className="text-body-sm text-muted-foreground">{t('Không có nhận xét.')}</p>}
+      {review.hidden && review.hiddenReason ? <p className="text-body-sm text-warning-fg">{t('Lý do ẩn: ')}{review.hiddenReason}</p> : null}
       <div>
         {review.hidden ? (
           <Button variant="outline" disabled={busy} onClick={() => onUnhide({ kind: 'review', id: review.id! })}>
@@ -163,13 +163,13 @@ function ReviewRow({ review, busy, onHide, onUnhide }: {
         )}
       </div>
       {reply ? (
-        <div className="flex flex-col gap-1 rounded-sm bg-muted p-3 text-sm">
+        <div className="flex flex-col gap-1 rounded-sm bg-muted p-3 text-body-sm">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs text-muted-foreground">{t('Quán phản hồi · ')}{formatDateTime(reply.createdAt)}</p>
+            <p className="text-caption text-muted-foreground">{t('Quán phản hồi · ')}{formatDateTime(reply.createdAt)}</p>
             {reply.hidden ? <Badge className="bg-warning-subtle text-warning-fg">{t('Đã ẩn')}</Badge> : null}
           </div>
           <p>{reply.text}</p>
-          {reply.hidden && reply.hiddenReason ? <p className="text-xs text-warning-fg">{t('Lý do ẩn: ')}{reply.hiddenReason}</p> : null}
+          {reply.hidden && reply.hiddenReason ? <p className="text-caption text-warning-fg">{t('Lý do ẩn: ')}{reply.hiddenReason}</p> : null}
           <div>
             {reply.hidden ? (
               <Button size="sm" variant="outline" disabled={busy} onClick={() => onUnhide({ kind: 'reply', id: reply.id! })}>

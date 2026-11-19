@@ -52,7 +52,7 @@ export function SellerTeamShopsPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1>{t('Cửa hàng liên kết')}</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {main.data ? `${main.data.login} · ${main.data.email}` : null}
           </p>
         </div>
@@ -71,7 +71,7 @@ export function SellerTeamShopsPage() {
           <li key={l.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
             <div className="flex flex-col gap-1">
               <p className="font-medium">{l.shopName}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-caption text-muted-foreground">
                 {l.status === 'PENDING_AUTHORIZATION'
                   ? t('Gửi ngày {d}, hết hạn {e}').replace('{d}', date(l.requestedAt)).replace('{e}', date(l.expiresAt))
                   : t('Từ ngày {d}').replace('{d}', date(l.decidedAt))}
@@ -87,7 +87,7 @@ export function SellerTeamShopsPage() {
         ))}
       </ul>
       {past.length ? (
-        <details className="text-sm">
+        <details className="text-body-sm">
           <summary className="cursor-pointer text-muted-foreground">{t('Lịch sử liên kết ({n})').replace('{n}', String(past.length))}</summary>
           <ul className="mt-3 flex flex-col gap-2">
             {past.map((l) => (

@@ -32,7 +32,7 @@ export function DecideDialog({ kase, decision, onClose }: { kase: CategoryCase |
           </DialogDescription>
         </DialogHeader>
         {kase?.appealNote ? (
-          <p className="rounded-sm bg-muted px-3 py-2 text-sm">
+          <p className="rounded-sm bg-muted px-3 py-2 text-body-sm">
             <span className="font-medium">{t('Quán giải thích:')}</span> {kase.appealNote}
           </p>
         ) : null}

@@ -68,7 +68,7 @@ export function AdminContactRequestsPage() {
       />
       <div>
         <h1>{t('Yêu cầu liên hệ')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Gửi từ trang Liên hệ hỗ trợ, có thể từ người chưa có tài khoản. Câu trả lời đi tới email họ để lại.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Gửi từ trang Liên hệ hỗ trợ, có thể từ người chưa có tài khoản. Câu trả lời đi tới email họ để lại.')}</p>
       </div>
       {inbox.isError ? <FormError message={problemMessage(inbox.error)} /> : null}
       {inbox.isPending ? <Skeleton className="h-32" /> : null}
@@ -81,14 +81,14 @@ export function AdminContactRequestsPage() {
                 <span className="font-medium">
                   {r.fullName} <span className="font-normal text-muted-foreground">· {r.email}</span>
                 </span>
-                <span className="text-xs text-muted-foreground" title={formatDateTime(r.createdAt)}>
+                <span className="text-caption text-muted-foreground" title={formatDateTime(r.createdAt)}>
                   {formatRelative(r.createdAt)}
                 </span>
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-body-sm text-muted-foreground">
                 {ROLE[r.role ?? ''] ?? r.role} · {TOPIC[r.topic ?? ''] ?? r.topic}
               </span>
-              <span className="line-clamp-2 text-sm">{r.preview}</span>
+              <span className="line-clamp-2 text-body-sm">{r.preview}</span>
             </Link>
           </li>
         ))}
@@ -146,7 +146,7 @@ export function AdminContactRequestPage() {
       {request.isError ? <FormError message={problemMessage(request.error)} /> : null}
       {r ? (
         <div className="flex flex-col gap-6">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2 text-body-sm text-muted-foreground">
             <Badge className={status.className}>{status.label}</Badge>
             <span>{ROLE[r.role ?? ''] ?? r.role}</span>·<a href={`mailto:${r.email}`} className="text-link text-ink">{r.email}</a>·
             <span>{formatDateTime(r.createdAt)}</span>
@@ -154,10 +154,10 @@ export function AdminContactRequestPage() {
           <p className="rounded-xl bg-grey-50 p-4 whitespace-pre-wrap">{r.message}</p>
           {(r.answers ?? []).length > 0 ? (
             <section className="flex flex-col gap-3">
-              <h2 className="text-h3 font-medium">{t('Đã trả lời')}</h2>
+              <h2 className="text-h3">{t('Đã trả lời')}</h2>
               {(r.answers ?? []).map((a) => (
                 <div key={a.id} className="flex flex-col gap-1 border-l border-primary pl-4">
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-caption text-muted-foreground">
                     {a.adminName} · {formatDateTime(a.createdAt)}
                   </span>
                   <p className="whitespace-pre-wrap">{a.body}</p>

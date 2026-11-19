@@ -54,8 +54,8 @@ export function AdminCategoryModerationPage() {
     <div className="flex max-w-5xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Món sai ngành')}</h1>
-          <p className="max-w-2xl text-sm text-muted-foreground">
+          <h1 className="text-title-1">{t('Món sai ngành')}</h1>
+          <p className="max-w-2xl text-body-sm text-muted-foreground">
             {t('Hoa hồng tính theo ngành của món mà quán tự chọn, nên món xếp sang ngành rẻ hơn cần được sửa. Món bị đánh dấu ẩn khỏi tìm kiếm cho đến khi quán sửa; quá hạn hệ thống áp dụng ngành bạn gợi ý, quán có 7 ngày để đồng ý hoặc kháng nghị.')}
           </p>
         </div>
@@ -67,7 +67,7 @@ export function AdminCategoryModerationPage() {
       </div>
 
       {vendorId ? (
-        <p className="flex flex-wrap items-center gap-2 text-sm">
+        <p className="flex flex-wrap items-center gap-2 text-body-sm">
           {t('Đang lọc theo một cửa hàng.')}
           <Button
             size="sm"
@@ -119,11 +119,11 @@ function CaseItem({ c, onDecide }: { c: CategoryCase; onDecide: (decision: 'ACCE
           </Link>
           <Badge className={cn('ml-2', status.className)}>{status.label}</Badge>
         </p>
-        <p className="text-xs text-muted-foreground" title={formatDateTime(c.openedAt)}>
+        <p className="text-caption text-muted-foreground" title={formatDateTime(c.openedAt)}>
           {t('Mở ')}{formatRelative(c.openedAt)}
         </p>
       </div>
-      <p className="text-sm">
+      <p className="text-body-sm">
         <span className="text-muted-foreground">{t('Ngành quán chọn:')}</span> {c.originalCategory?.name} <span className="text-muted-foreground">{t('→ gợi ý:')}</span> {c.suggestedCategory?.name}
         {c.requestedCategory ? (
           <>
@@ -138,12 +138,12 @@ function CaseItem({ c, onDecide }: { c: CategoryCase; onDecide: (decision: 'ACCE
           </>
         ) : null}
       </p>
-      <p className="text-sm text-muted-foreground">{t('Lý do: ')}{c.reason}</p>
-      {c.status === 'RESTRICTED' ? <p className="text-xs text-muted-foreground">{t('Hạn quán sửa: ')}{formatDateTime(c.deadlineAt)}</p> : null}
-      {c.status === 'AUTO_CORRECTED' ? <p className="text-xs text-muted-foreground">{t('Quán đồng ý hoặc kháng nghị đến: ')}{formatDateTime(c.appealDeadlineAt)}</p> : null}
-      {c.appealNote ? <p className="rounded-sm bg-muted px-3 py-2 text-sm">{t('Quán giải thích: ')}{c.appealNote}</p> : null}
+      <p className="text-body-sm text-muted-foreground">{t('Lý do: ')}{c.reason}</p>
+      {c.status === 'RESTRICTED' ? <p className="text-caption text-muted-foreground">{t('Hạn quán sửa: ')}{formatDateTime(c.deadlineAt)}</p> : null}
+      {c.status === 'AUTO_CORRECTED' ? <p className="text-caption text-muted-foreground">{t('Quán đồng ý hoặc kháng nghị đến: ')}{formatDateTime(c.appealDeadlineAt)}</p> : null}
+      {c.appealNote ? <p className="rounded-sm bg-muted px-3 py-2 text-body-sm">{t('Quán giải thích: ')}{c.appealNote}</p> : null}
       {c.decisionReason ? (
-        <p className="text-xs text-muted-foreground">
+        <p className="text-caption text-muted-foreground">
           {t('Quyết định (')}{formatDateTime(c.decidedAt)}): {c.decisionReason}
         </p>
       ) : null}

@@ -23,7 +23,7 @@ function Textarea({ className, showCount, ...props }: React.ComponentProps<"text
   return (
     <div className="relative w-full">
       {area}
-      <span aria-hidden="true" className="pointer-events-none absolute right-3 bottom-2 text-xs text-muted-foreground tabular-nums">
+      <span aria-hidden="true" className="pointer-events-none absolute right-3 bottom-2 text-caption text-muted-foreground tabular-nums">
         {(props.value as string).length}/{maxLength}
       </span>
     </div>

@@ -64,7 +64,7 @@ export function SellerTeamMembersPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1>{t('Thành viên')}</h1>
-          <p className="text-sm text-muted-foreground">{t('Mỗi thành viên đăng nhập bằng tên:mã của riêng mình và chỉ thấy cửa hàng, quyền bạn giao.')}</p>
+          <p className="text-body-sm text-muted-foreground">{t('Mỗi thành viên đăng nhập bằng tên:mã của riêng mình và chỉ thấy cửa hàng, quyền bạn giao.')}</p>
         </div>
         <Button onClick={() => setCreating(true)}>
           <PlusIcon className="size-4" aria-hidden="true" />
@@ -101,7 +101,7 @@ export function SellerTeamMembersPage() {
                   <TableCell>
                     <p className="font-medium">{m.memberName}</p>
                     <CopyText value={m.login ?? ''} />
-                    {m.phone || m.email ? <p className="text-xs text-muted-foreground">{[m.phone, m.email].filter(Boolean).join(' · ')}</p> : null}
+                    {m.phone || m.email ? <p className="text-caption text-muted-foreground">{[m.phone, m.email].filter(Boolean).join(' · ')}</p> : null}
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1.5">
@@ -110,7 +110,7 @@ export function SellerTeamMembersPage() {
                           {s.shopName} · {s.roleName ?? t('Quyền riêng')}
                         </Badge>
                       ))}
-                      {!m.shops?.length ? <span className="text-xs text-muted-foreground">{t('Chưa giao cửa hàng')}</span> : null}
+                      {!m.shops?.length ? <span className="text-caption text-muted-foreground">{t('Chưa giao cửa hàng')}</span> : null}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -142,7 +142,7 @@ export function SellerTeamMembersPage() {
           </Table>
         </div>
       ) : members.data?.length ? (
-        <p className="text-sm text-muted-foreground">{t('Không có thành viên khớp với tìm kiếm.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Không có thành viên khớp với tìm kiếm.')}</p>
       ) : null}
       {creating ? <CreateMemberDialog onClose={() => setCreating(false)} /> : null}
       {resetFor ? <ResetPasswordDialog member={resetFor} onClose={() => setResetFor(null)} /> : null}
@@ -153,7 +153,7 @@ export function SellerTeamMembersPage() {
 
 function CopyText({ value }: { value: string }) {
   return (
-    <span className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
+    <span className="inline-flex items-center gap-1 font-mono text-caption text-muted-foreground">
       {value}
       <CopyButton value={value} label={t('Sao chép {v}', { v: value })} iconOnly variant="ghost" />
     </span>
@@ -245,7 +245,7 @@ function CreateMemberDialog({ onClose }: { onClose: () => void }) {
             </FormRow>
             <FormRow label={t('Mã đăng nhập')} htmlFor="m-code" required error={errors.loginCode} hint={t('Không đổi được sau khi tạo.')}>
               <div className="flex items-center gap-1">
-                <span className="text-sm text-muted-foreground">{prefix}:</span>
+                <span className="text-body-sm text-muted-foreground">{prefix}:</span>
                 <Input id="m-code" maxLength={40} value={draft.loginCode} onChange={set('loginCode')} placeholder="nhanvien01" autoComplete="off" spellCheck={false} />
               </div>
             </FormRow>
@@ -267,29 +267,29 @@ function CreateMemberDialog({ onClose }: { onClose: () => void }) {
         {step === 1 ? (
           <div className="flex flex-col gap-5">
             <fieldset className="flex flex-col gap-2">
-              <legend className="mb-1 text-sm font-medium">{t('Vai trò')}</legend>
+              <legend className="mb-1 text-label">{t('Vai trò')}</legend>
               {(roles.data ?? []).map((r) => (
-                <label key={r.id} className="flex items-start gap-3 rounded-sm border p-3 text-sm has-[:checked]:border-primary">
+                <label key={r.id} className="flex items-start gap-3 rounded-sm border p-3 text-body-sm has-[:checked]:border-primary">
                   <input type="radio" name="role" className="mt-0.5 accent-[var(--color-primary)]" checked={roleId === r.id} onChange={() => setRoleId(r.id ?? '')} />
                   <span className="flex flex-col gap-0.5">
                     <span className="font-medium">{r.name}</span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-caption text-muted-foreground">
                       <PermissionSummary codes={r.permissions ?? []} />
                     </span>
                   </span>
                 </label>
               ))}
-              <label className="flex items-center gap-3 rounded-sm border p-3 text-sm has-[:checked]:border-primary">
+              <label className="flex items-center gap-3 rounded-sm border p-3 text-body-sm has-[:checked]:border-primary">
                 <input type="radio" name="role" className="accent-[var(--color-primary)]" checked={roleId === 'custom'} onChange={() => setRoleId('custom')} />
                 <span className="font-medium">{t('Tự chọn quyền cho người này')}</span>
               </label>
               {roleId === 'custom' ? <PermissionPicker value={custom} onChange={setCustom} idPrefix="new-member" /> : null}
-              {errors.role ? <p role="alert" className="text-sm text-destructive">{errors.role}</p> : null}
+              {errors.role ? <p role="alert" className="text-body-sm text-destructive">{errors.role}</p> : null}
             </fieldset>
             <fieldset className="flex flex-col gap-2">
-              <legend className="mb-1 text-sm font-medium">{t('Làm ở cửa hàng')}</legend>
+              <legend className="mb-1 text-label">{t('Làm ở cửa hàng')}</legend>
               {linked.map((l) => (
-                <label key={l.vendorId} className="flex items-center gap-3 text-sm">
+                <label key={l.vendorId} className="flex items-center gap-3 text-body-sm">
                   <input
                     type="checkbox"
                     className="size-4 accent-[var(--color-primary)]"
@@ -299,16 +299,16 @@ function CreateMemberDialog({ onClose }: { onClose: () => void }) {
                   {l.shopName}
                 </label>
               ))}
-              {!linked.length ? <p className="text-sm text-muted-foreground">{t('Chưa có cửa hàng liên kết. Liên kết cửa hàng trước ở mục Cửa hàng liên kết.')}</p> : null}
-              {errors.shops ? <p role="alert" className="text-sm text-destructive">{errors.shops}</p> : null}
+              {!linked.length ? <p className="text-body-sm text-muted-foreground">{t('Chưa có cửa hàng liên kết. Liên kết cửa hàng trước ở mục Cửa hàng liên kết.')}</p> : null}
+              {errors.shops ? <p role="alert" className="text-body-sm text-destructive">{errors.shops}</p> : null}
             </fieldset>
             {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
           </div>
         ) : null}
         {step === 2 && created ? (
           <div className="flex flex-col gap-3 rounded-sm border bg-muted/40 p-4">
-            <p className="text-sm">{t('Đã tạo thành viên. Gửi thông tin đăng nhập này cho họ:')}</p>
-            <p className="font-mono text-sm">{created}</p>
+            <p className="text-body-sm">{t('Đã tạo thành viên. Gửi thông tin đăng nhập này cho họ:')}</p>
+            <p className="font-mono text-body-sm">{created}</p>
             <CopyButton value={`${created}\n${draft.password}`} label={t('Sao chép tên đăng nhập và mật khẩu')} text={t('Sao chép tên đăng nhập và mật khẩu')} size="default" />
           </div>
         ) : null}
@@ -442,7 +442,7 @@ function AssignDialog({ member, onClose }: { member: Member; onClose: () => void
                   {had ? <Badge variant="secondary">{had.roleName ?? t('Quyền riêng')}</Badge> : <Badge variant="outline">{t('Chưa giao')}</Badge>}
                 </div>
                 <select
-                  className="h-9 rounded-sm border bg-background px-2 text-sm"
+                  className="h-9 rounded-sm border bg-background px-2 text-body-sm"
                   value={pick}
                   onChange={(e) => setPicks((p) => ({ ...p, [v]: e.target.value }))}
                   aria-label={t('Vai trò ở {shop}').replace('{shop}', l.shopName ?? '')}

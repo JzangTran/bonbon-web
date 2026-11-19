@@ -52,7 +52,7 @@ export function TeamSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">{team.login}</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-caption font-normal text-muted-foreground">{team.login}</DropdownMenuLabel>
         {team.kind === 'MAIN_ACCOUNT' ? (
           <DropdownMenuItem onSelect={() => void open(null)}>
             <UsersRoundIcon className="size-4" aria-hidden="true" />
@@ -64,11 +64,11 @@ export function TeamSwitcher() {
         {team.shops.map((s) => (
           <DropdownMenuItem key={s.vendorId} onSelect={() => void open(s.vendorId)}>
             <span className="flex-1 truncate">{s.name}</span>
-            {s.status !== 'APPROVED' ? <span className="text-xs text-muted-foreground">{t('Tạm khoá')}</span> : null}
+            {s.status !== 'APPROVED' ? <span className="text-caption text-muted-foreground">{t('Tạm khoá')}</span> : null}
             {team.shopId === s.vendorId ? <CheckIcon className="size-4" aria-hidden="true" /> : null}
           </DropdownMenuItem>
         ))}
-        {!team.shops.length ? <p className="px-2 py-1.5 text-sm text-muted-foreground">{t('Chưa có cửa hàng nào.')}</p> : null}
+        {!team.shops.length ? <p className="px-2 py-1.5 text-body-sm text-muted-foreground">{t('Chưa có cửa hàng nào.')}</p> : null}
       </DropdownMenuContent>
     </DropdownMenu>
   )

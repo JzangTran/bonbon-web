@@ -44,7 +44,7 @@ export function FormRow({ label, htmlFor, required, hint, error, children, class
       </Label>
       <div className="flex max-w-xl flex-col gap-1.5">
         {control}
-        {error ? <p id={errorId} role="alert" className="text-sm text-destructive">{error}</p> : hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
+        {error ? <p id={errorId} role="alert" className="text-body-sm text-destructive">{error}</p> : hint ? <p className="text-caption text-muted-foreground">{hint}</p> : null}
       </div>
     </div>
     </div>

@@ -23,7 +23,7 @@ export function Section({ title, children }: { title: string; children: ReactNod
 
 export function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="grid gap-1 text-sm sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-4">
+    <div className="grid gap-1 text-body-sm sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-4">
       <span className="text-muted-foreground">{label}</span>
       <span className="min-w-0 break-words">{children}</span>
     </div>
@@ -79,7 +79,7 @@ export function ShopApplicationSections({ shop, canViewIdentity }: { shop: Detai
           {shop.bankName ?? '—'} · ••••{shop.accountLast4 ?? '????'} · {shop.accountHolderName ?? '—'}
         </Row>
         {shop.payoutHolderMatchesIdentity === false ? (
-          <p className="flex items-center gap-2 rounded-md bg-warning-subtle px-3 py-2 text-sm text-warning-fg">
+          <p className="flex items-center gap-2 rounded-md bg-warning-subtle px-3 py-2 text-body-sm text-warning-fg">
             <TriangleAlertIcon className="size-4 shrink-0" />
             {t('Tên chủ tài khoản không khớp tên trên giấy tờ (')}{shop.identityFullName}{t('). Kiểm tra kỹ.')}
           </p>
@@ -121,7 +121,7 @@ function IdentitySection({ shop, canView }: { shop: Detail; canView: boolean }) 
               ) : null,
             )}
           </div>
-          <p className="text-xs text-muted-foreground">{t('Liên kết ảnh hết hạn sau 5 phút.')}</p>
+          <p className="text-caption text-muted-foreground">{t('Liên kết ảnh hết hạn sau 5 phút.')}</p>
         </>
       ) : canView ? (
         <div>
@@ -130,7 +130,7 @@ function IdentitySection({ shop, canView }: { shop: Detail; canView: boolean }) 
           </Button>
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground">{t('Bạn không có quyền xem giấy tờ tuỳ thân.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Bạn không có quyền xem giấy tờ tuỳ thân.')}</p>
       )}
     </Section>
   )

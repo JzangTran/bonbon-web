@@ -68,7 +68,7 @@ export function DeleteAccountCard() {
         <CardDescription>{t('Xoá toàn bộ tài khoản, gồm cả vai trò khách và người bán nếu bạn có cả hai.')}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="grid gap-3 text-sm sm:grid-cols-2">
+        <div className="grid gap-3 text-body-sm sm:grid-cols-2">
           <div>
             <p className="font-medium">{t('Sẽ bị xoá')}</p>
             <p className="text-muted-foreground">{t('Tên, email, số điện thoại, ảnh, mật khẩu, địa chỉ giao hàng, cách đăng nhập và tuỳ chọn thông báo. Mọi phiên đăng nhập kết thúc ngay.')}</p>
@@ -81,7 +81,7 @@ export function DeleteAccountCard() {
         {check.isPending ? <Skeleton className="h-16" /> : null}
         {check.isError ? <FormError message={problemMessage(check.error)} /> : null}
         {data && !data.allowed ? (
-          <div className="flex flex-col gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
+          <div className="flex flex-col gap-2 rounded-md bg-warning-subtle px-4 py-3 text-body-sm text-warning-fg">
             <p className="font-medium">{t('Chưa xoá được vì còn việc chưa xong:')}</p>
             <ul className="flex flex-col gap-1">
               {(data.blockers ?? []).map((b) => (
@@ -98,7 +98,7 @@ export function DeleteAccountCard() {
           </div>
         ) : null}
         {data ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {t('Sau khi xác nhận, tài khoản chờ ')}{data.graceDays}{t(' ngày rồi mới bị xoá thật. Trong thời gian đó, ')}<b>{t('đăng nhập lại sẽ huỷ việc xoá')}</b>.
           </p>
         ) : null}

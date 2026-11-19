@@ -51,7 +51,7 @@ export function AdminCommissionPage() {
         if (valid) save.mutate({ categoryId: target.categoryId, rate: parsed }, { onSuccess: () => setTarget(null) })
       }}
     >
-      <p className="text-sm text-muted-foreground">
+      <p className="text-body-sm text-muted-foreground">
         {target.categoryId ? t('Các ngành con chưa có tỷ lệ riêng sẽ dùng tỷ lệ này.') : t('Dùng cho mọi ngành không có tỷ lệ riêng và không có ngành cha nào có.')}
       </p>
       <div className="flex max-w-xs flex-col gap-2">
@@ -59,7 +59,7 @@ export function AdminCommissionPage() {
           {target.name}{t(': tỷ lệ (%), từ 0 đến ')}{data?.maxRate ?? 30}
         </Label>
         <Input id="rate" autoFocus inputMode="decimal" value={text} onChange={(e) => setText(e.target.value)} placeholder="10" />
-        {net !== null ? <p className="text-xs text-muted-foreground">{t('Phần ròng ')}{percent(Math.round(net * 100) / 100)}{t(', còn lại là VAT.')}</p> : null}
+        {net !== null ? <p className="text-caption text-muted-foreground">{t('Phần ròng ')}{percent(Math.round(net * 100) / 100)}{t(', còn lại là VAT.')}</p> : null}
       </div>
       {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
       <div className="flex gap-2">
@@ -85,8 +85,8 @@ export function AdminCommissionPage() {
         onValueChange={(id) => setTab(id as 'rates' | 'history')}
       />
       <div>
-        <h1 className="text-2xl font-semibold">{t('Hoa hồng')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Hoa hồng')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Tỷ lệ đã gồm VAT ')}{data?.vatPercent ?? 8}{t('%. Tỷ lệ mới chỉ áp dụng cho đơn đặt sau khi lưu; đơn đã đặt giữ tỷ lệ cũ.')}
         </p>
       </div>
@@ -99,9 +99,9 @@ export function AdminCommissionPage() {
             <div className="flex flex-col gap-6">
           <Card className="flex-row flex-wrap items-center justify-between gap-4 bg-beige-50 p-5">
             <div>
-              <p className="text-sm text-muted-foreground">{t('Tỷ lệ mặc định (ngành không có tỷ lệ riêng)')}</p>
-              <p className="text-3xl font-semibold tabular-nums">{percent(data.defaultRate)}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-body-sm text-muted-foreground">{t('Tỷ lệ mặc định (ngành không có tỷ lệ riêng)')}</p>
+              <p className="text-title-1 tabular-nums">{percent(data.defaultRate)}</p>
+              <p className="text-caption text-muted-foreground">
                 {t('Phần ròng ')}{percent(Math.round(((data.defaultRate ?? 0) / (1 + (data.vatPercent ?? 0) / 100)) * 100) / 100)} + VAT
               </p>
             </div>
@@ -112,7 +112,7 @@ export function AdminCommissionPage() {
           </Card>
 
           <Card className="gap-0 overflow-hidden p-0">
-            <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_auto] gap-3 border-b bg-muted px-4 py-2 text-xs font-medium text-muted-foreground">
+            <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_auto] gap-3 border-b bg-muted px-4 py-2 text-caption font-medium text-muted-foreground">
               <span>{t('Ngành')}</span>
               <span className="text-right">{t('Riêng')}</span>
               <span className="text-right">{t('Đang áp dụng')}</span>
@@ -137,15 +137,15 @@ export function AdminCommissionPage() {
           ) : (
           <section className="flex flex-col gap-2">
                         {history.isError ? <FormError message={problemMessage(history.error)} /> : null}
-            {history.data && (history.data.items ?? []).length === 0 ? <p className="text-sm text-muted-foreground">{t('Chưa có thay đổi nào.')}</p> : null}
+            {history.data && (history.data.items ?? []).length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Chưa có thay đổi nào.')}</p> : null}
             <ul className="flex flex-col divide-y rounded-sm border bg-card">
               {(history.data?.items ?? []).map((row) => (
-                <li key={row.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 text-sm">
+                <li key={row.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 text-body-sm">
                   <span>
                     <b>{row.scope === 'DEFAULT' ? t('Mặc định') : row.categoryName}</b>:{' '}
                     {row.previousRate === undefined ? t('chưa có') : percent(row.previousRate)} → {row.rate === undefined ? t('kế thừa') : percent(row.rate)}
                   </span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-caption text-muted-foreground">
                     {formatDateTime(row.effectiveFrom)} · {row.actedByType === 'SYSTEM' ? t('hệ thống') : t('quản trị viên')}
                   </span>
                 </li>
@@ -164,7 +164,7 @@ export function AdminCommissionPage() {
 function CategoryRow({ category, busy, onEdit, onClear }: { category: CategoryCommissionRate; busy: boolean; onEdit: () => void; onClear: () => void }) {
   const level = category.level ?? 1
   return (
-    <li className="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_auto] items-center gap-3 border-b px-4 py-2 text-sm last:border-b-0">
+    <li className="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_auto] items-center gap-3 border-b px-4 py-2 text-body-sm last:border-b-0">
       <span className="min-w-0 truncate" style={{ paddingLeft: `${(level - 1) * 1.25}rem` }}>
         {category.name}
         {category.active === false ? <Badge variant="outline" className="ml-2">{t('Ẩn')}</Badge> : null}
@@ -172,7 +172,7 @@ function CategoryRow({ category, busy, onEdit, onClear }: { category: CategoryCo
       <span className="text-right tabular-nums">{category.ownRate !== undefined ? percent(category.ownRate) : '—'}</span>
       <span className="text-right tabular-nums">
         {percent(category.effectiveRate)}
-        <span className="block text-xs text-muted-foreground">
+        <span className="block text-caption text-muted-foreground">
           {category.source === 'OWN' ? t('riêng') : category.source === 'ANCESTOR' ? t('từ {v0}', { v0: category.sourceName }) : t('mặc định')}
         </span>
       </span>

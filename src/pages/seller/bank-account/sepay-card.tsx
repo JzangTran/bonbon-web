@@ -28,7 +28,7 @@ const time = (iso?: string | null) => (iso ? new Date(iso).toLocaleString(intlLo
 function Copy({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex items-center gap-2">
-      <code className="min-w-0 flex-1 truncate rounded-sm bg-muted px-2 py-1.5 text-xs">{value}</code>
+      <code className="min-w-0 flex-1 truncate rounded-sm bg-muted px-2 py-1.5 text-caption">{value}</code>
       <CopyButton value={value} label={label} iconOnly />
     </div>
   )
@@ -69,10 +69,10 @@ function SubAccount({ current, canEdit }: { current: string | null; canEdit: boo
   const preview = (code.trim().toUpperCase().replace(/^TKP(?=.)/, '') || current) ?? ''
   return (
     <form onSubmit={submit} className="flex flex-col gap-2 rounded-sm border p-3" noValidate>
-      <Label htmlFor="sepay-va" className="text-sm font-semibold">
+      <Label htmlFor="sepay-va" className="text-body-sm font-semibold">
         {t('Mã tài khoản ảo (VA) SePay')}
       </Label>
-      <p className="text-xs text-muted-foreground">
+      <p className="text-caption text-muted-foreground">
         {t('Chỉ cần khi SePay yêu cầu nội dung chuyển khoản bắt đầu bằng SEVQR TKP… (ví dụ VietinBank cá nhân). Nhập phần mã sau TKP, mã VietQR sẽ tự ghi đúng nội dung.')}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -94,7 +94,7 @@ function SubAccount({ current, canEdit }: { current: string | null; canEdit: boo
         ) : null}
       </div>
       {preview ? (
-        <p className="text-xs text-muted-foreground">
+        <p className="text-caption text-muted-foreground">
           {t('Nội dung chuyển khoản sẽ là')} <code className="font-mono">SEVQR TKP{preview} BONBON123</code>
         </p>
       ) : null}
@@ -162,7 +162,7 @@ export function SepayCard() {
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         {status.isError ? <FormError message={problemMessage(status.error)} /> : null}
-        <ol className="flex list-decimal flex-col gap-1.5 pl-5 text-sm text-muted-foreground">
+        <ol className="flex list-decimal flex-col gap-1.5 pl-5 text-body-sm text-muted-foreground">
           <li>{t('Tạo tài khoản ở sepay.vn và liên kết tài khoản ngân hàng nhận tiền của quán.')}</li>
           <li>{t('Trong SePay, thêm webhook với địa chỉ bên dưới, kiểu chứng thực API Key.')}</li>
           <li>{t('Dán khoá bonbon tạo cho bạn vào ô API Key rồi lưu.')}</li>
@@ -170,7 +170,7 @@ export function SepayCard() {
         {s ? <Copy value={s.webhookUrl ?? ''} label={t('Sao chép địa chỉ webhook')} /> : null}
         {apiKey ? (
           <div className="flex flex-col gap-2 rounded-sm border border-primary/40 bg-accent/30 p-3">
-            <p className="flex items-center gap-2 text-sm font-medium">
+            <p className="flex items-center gap-2 text-label">
               <CheckCircle2Icon className="size-4 text-primary" aria-hidden="true" />
               {t('Khoá chỉ hiện một lần. Sao chép ngay.')}
             </p>
@@ -192,22 +192,22 @@ export function SepayCard() {
         {s?.connected ? <SubAccount current={s.subAccount ?? null} canEdit={canEdit} /> : null}
         {s?.connected ? (
           <section className="flex flex-col gap-2">
-            <h3 className="text-sm font-semibold">{t('Giao dịch gần đây')}</h3>
-            <p className="text-xs text-muted-foreground">
+            <h3 className="text-body-sm font-semibold">{t('Giao dịch gần đây')}</h3>
+            <p className="text-caption text-muted-foreground">
               {s.lastEventAt ? t('SePay gọi lần cuối {d}').replace('{d}', time(s.lastEventAt)) : t('SePay chưa gọi lần nào. Thử chuyển một khoản nhỏ để kiểm tra.')}
             </p>
-            <ul className="flex flex-col divide-y rounded-sm border text-sm empty:hidden">
+            <ul className="flex flex-col divide-y rounded-sm border text-body-sm empty:hidden">
               {(s.recent ?? []).map((e) => (
                 <li key={e.sepayId} className="flex flex-wrap items-center justify-between gap-2 px-3 py-2">
                   <span className="flex flex-col">
                     <span className="font-medium tabular-nums">{money(e.amount)}</span>
-                    <span className="max-w-72 truncate text-xs text-muted-foreground">
+                    <span className="max-w-72 truncate text-caption text-muted-foreground">
                       {e.orderNumber ? `#${e.orderNumber} · ` : ''}
                       {e.content}
                     </span>
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">{time(e.receivedAt)}</span>
+                    <span className="text-caption text-muted-foreground">{time(e.receivedAt)}</span>
                     <Badge variant={OUTCOME[e.outcome ?? '']?.tone}>{t(OUTCOME[e.outcome ?? '']?.label ?? e.outcome ?? '')}</Badge>
                   </span>
                 </li>

@@ -98,10 +98,10 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
   const atHome = pathname === homePath
 
   return (
-    <div className="ws-root flex h-svh flex-col bg-card text-[0.8125rem]">
+    <div className="ws-root flex h-svh flex-col bg-card text-body-sm">
       <a
         href="#main"
-        className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
+        className="sr-only z-50 rounded-sm bg-card px-3 py-2 text-body-sm font-semibold text-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-2 focus:ring-ring"
       >
         {t('Bỏ qua đến nội dung chính')}
       </a>
@@ -143,7 +143,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
           >
             <BellIcon className="size-[18px]" aria-hidden="true" />
             {unread > 0 ? (
-              <span className="absolute top-0.5 right-0 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-primary px-1 text-[0.625rem] font-semibold text-white tabular-nums">
+              <span className="absolute top-0.5 right-0 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-primary px-1 text-caption font-semibold text-white tabular-nums">
                 {unread > 99 ? '99+' : unread}
               </span>
             ) : null}
@@ -333,7 +333,7 @@ function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: 
 /** Copyright, version and links. Below md it ends the scrolling work area instead of taking a fixed strip of the screen. */
 function ShellFooter({ links, className }: { links: FooterLink[]; className?: string }) {
   return (
-    <footer className={cn('flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-ws-hairline bg-card px-4 py-1.5 text-[0.6875rem] text-muted-foreground sm:px-5', className)}>
+    <footer className={cn('flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-ws-hairline bg-card px-4 py-1.5 text-caption text-muted-foreground sm:px-5', className)}>
       <span>
         © {new Date().getFullYear()}{t(' bonbon · phiên bản ')}{__APP_VERSION__}
       </span>

@@ -53,8 +53,8 @@ export function AdminMerchantsPage() {
   return (
     <div className="flex max-w-5xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Cửa hàng')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Cửa hàng')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Danh sách mọi cửa hàng đã gửi hồ sơ và vùng phủ thực tế. Muốn xử lý hồ sơ chờ duyệt, vào mục Duyệt cửa hàng.')}
         </p>
       </div>
@@ -140,11 +140,11 @@ function MerchantItem({ m }: { m: MerchantRow }) {
           <p className="font-semibold">
             {m.name ?? t('(chưa đặt tên)')} <Badge className={cn('ml-2', badge.className)}>{badge.label}</Badge>
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body-sm text-muted-foreground">
             {m.ratingAverage !== undefined && m.ratingAverage !== null ? `★ ${m.ratingAverage.toLocaleString(intlLocale, { maximumFractionDigits: 1 })} (${m.ratingCount})` : t('Chưa có đánh giá')}
           </p>
         </div>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-body-sm text-muted-foreground">
           {place || t('Chưa có địa chỉ')}{t(' · bán kính ')}{m.deliveryRadiusKm ?? '—'} km · {(m.deliveredOrders ?? 0).toLocaleString(intlLocale)}{t(' đơn đã giao ·')}{' '}
           {m.activePoints ? t('{v0} điểm phạt', { v0: m.activePoints }) : t('không có điểm phạt')}{t(' · tạo ')}{formatDateTime(m.createdAt)}
         </p>
@@ -173,7 +173,7 @@ function Coverage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground">
+      <p className="text-body-sm text-muted-foreground">
         {t('Không có vùng do quản trị vẽ: mỗi quán tự đặt bán kính giao. Quán có bán kính lớn hơn ')}{data?.outlierFactor ?? 2}{t(' lần trung vị của tỉnh được đánh dấu để xem kỹ; đây chỉ là quan sát, không có gì bị hạn chế tự động.')}
       </p>
       <form
@@ -192,7 +192,7 @@ function Coverage() {
       {coverage.isError ? <FormError message={problemMessage(coverage.error)} /> : null}
       {coverage.isPending ? <Skeleton className="h-32" /> : null}
       {data ? (
-        <p className="text-sm">
+        <p className="text-body-sm">
           {items.length}{t(' cửa hàng đang hoạt động')}
           {outliers > 0 ? <span className="text-warning-fg"> · {outliers}{t(' quán bán kính lớn bất thường')}</span> : null}
         </p>
@@ -217,7 +217,7 @@ function Coverage() {
                     <Link to={consolePath(`/merchants/${s.vendorId}`)} className="text-link font-medium">
                       {s.name}
                     </Link>
-                    <p className="text-xs text-muted-foreground">{s.address}</p>
+                    <p className="text-caption text-muted-foreground">{s.address}</p>
                   </td>
                   <td className="px-3 py-3">{[s.ward, s.province].filter(Boolean).join(', ') || '—'}</td>
                   <td className="px-3 py-3 text-right tabular-nums">

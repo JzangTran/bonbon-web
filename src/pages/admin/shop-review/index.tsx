@@ -56,8 +56,8 @@ export function ShopReviewQueuePage() {
     <div className="flex flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Duyệt cửa hàng')}</h1>
-          <p className="text-sm text-muted-foreground">{t('Hồ sơ gửi sớm nhất ở trên cùng để không hồ sơ nào bị bỏ quên.')}</p>
+          <h1 className="text-title-1">{t('Duyệt cửa hàng')}</h1>
+          <p className="text-body-sm text-muted-foreground">{t('Hồ sơ gửi sớm nhất ở trên cùng để không hồ sơ nào bị bỏ quên.')}</p>
         </div>
       </div>
 

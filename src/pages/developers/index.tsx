@@ -26,7 +26,7 @@ export function DevelopersHomePage() {
     <main className="mx-auto flex min-h-svh max-w-3xl flex-col justify-center gap-8 px-4 py-16">
       <div className="flex flex-col gap-3">
         <p className="text-small font-medium text-primary">{t('bonbon dành cho lập trình viên')}</p>
-        <h1 className="text-3xl font-semibold">{t('Tài liệu API bonbon')}</h1>
+        <h1 className="text-title-1">{t('Tài liệu API bonbon')}</h1>
         <p className="text-muted-foreground">
           {t('Mọi endpoint, tham số và mã lỗi của API bonbon. Trang này chỉ mở cho tài khoản đã liên hệ đội ngũ phát triển và được quản trị viên duyệt.')}
         </p>
@@ -38,9 +38,9 @@ export function DevelopersHomePage() {
           [t('Đăng nhập'), t('Được duyệt thì đăng nhập để đọc tài liệu.')],
         ].map(([title, text], i) => (
           <li key={title} className="flex flex-col gap-1 rounded-sm border bg-card p-4">
-            <span className="text-xs font-semibold text-primary">{i + 1}</span>
+            <span className="text-caption font-semibold text-primary">{i + 1}</span>
             <span className="font-medium">{title}</span>
-            <span className="text-sm text-muted-foreground">{text}</span>
+            <span className="text-body-sm text-muted-foreground">{text}</span>
           </li>
         ))}
       </ol>
@@ -206,7 +206,7 @@ export function DeveloperLoginPage() {
         <Button type="submit" size="lg" disabled={busy || !email || !password}>
           {busy ? t('Đang đăng nhập…') : t('Đăng nhập')}
         </Button>
-        <Link to="/forgot-password" className="text-link -mt-2 self-start text-xs">
+        <Link to="/forgot-password" className="text-link -mt-2 self-start text-caption">
           {t('Quên mật khẩu')}
         </Link>
       </form>

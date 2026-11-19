@@ -73,7 +73,7 @@ export function AdminDeveloperAccessPage() {
       />
       <div className="flex flex-col gap-1">
         <h1>{t('Yêu cầu truy cập API')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Chỉ người được duyệt mới đọc được tài liệu API ở trang dành cho lập trình viên.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Chỉ người được duyệt mới đọc được tài liệu API ở trang dành cho lập trình viên.')}</p>
       </div>
       {queue.isPending ? <Skeleton className="h-40" /> : null}
       {queue.isError ? <FormError message={problemMessage(queue.error)} /> : null}
@@ -87,7 +87,7 @@ export function AdminDeveloperAccessPage() {
                   {r.name}
                   {r.company ? ` · ${r.company}` : ''}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-caption text-muted-foreground">
                   {r.email} · {t('Gửi {d}').replace('{d}', formatDateTime(r.createdAt))}
                   {r.website ? (
                     <>
@@ -104,8 +104,8 @@ export function AdminDeveloperAccessPage() {
                 <Badge variant={r.status === 'APPROVED' ? 'default' : r.status === 'PENDING' ? 'secondary' : 'destructive'}>{t(STATUS[r.status ?? ''] ?? '')}</Badge>
               </div>
             </div>
-            <p className="text-sm whitespace-pre-line">{r.purpose}</p>
-            {r.reason ? <p className="text-sm text-muted-foreground">{t('Lý do: ')}{r.reason}</p> : null}
+            <p className="text-body-sm whitespace-pre-line">{r.purpose}</p>
+            {r.reason ? <p className="text-body-sm text-muted-foreground">{t('Lý do: ')}{r.reason}</p> : null}
             <div className="flex flex-wrap justify-end gap-2">
               {r.status === 'PENDING' ? (
                 <>

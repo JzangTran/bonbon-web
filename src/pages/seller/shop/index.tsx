@@ -26,7 +26,7 @@ export function SellerShopPage() {
   if (shop.isError) return <FormError message={problemMessage(shop.error)} />
   return (
     <div className="flex max-w-4xl flex-col gap-10">
-      <h1 className="text-2xl font-semibold">{t('Hồ sơ cửa hàng')}</h1>
+      <h1 className="text-title-1">{t('Hồ sơ cửa hàng')}</h1>
       <InfoCard key={`info-${shop.data.shop?.name}-${shop.data.shop?.address?.placeId}`} shop={shop.data} />
       <LogoCard shop={shop.data} />
       <CoverCard shop={shop.data} />
@@ -100,7 +100,7 @@ function InfoCard({ shop }: { shop: ShopApplication }) {
           </FormRow>
           <ShopAddressFields value={address} onChange={setAddress} errors={errors} />
           {moves ? (
-            <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-sm text-warning-fg">
+            <p className="flex items-center gap-2 rounded-sm bg-warning-subtle px-3 py-2 text-body-sm text-warning-fg">
               <TriangleAlertIcon className="size-4 shrink-0" />{t(' Lưu địa chỉ mới sẽ gửi cửa hàng đi duyệt lại.')}
             </p>
           ) : null}

@@ -170,7 +170,7 @@ export function MapDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false} className="max-h-[calc(100svh-2rem)] gap-0 overflow-hidden p-0 sm:max-w-3xl">
         <DialogHeader className="flex-row items-center justify-between gap-3 border-b px-4 py-3">
-          <DialogTitle className="text-base font-semibold">{t('Chọn địa điểm')}</DialogTitle>
+          <DialogTitle className="text-body font-semibold">{t('Chọn địa điểm')}</DialogTitle>
           <DialogDescription className="sr-only">{t('Kéo bản đồ để đưa ghim tới đúng vị trí cửa hàng.')}</DialogDescription>
           <div className="flex items-center gap-2">
             <Button type="button" variant="outline" size="sm" onClick={useMyLocation}>
@@ -207,19 +207,19 @@ export function MapDialog({
             />
             {focusSearch && debounced.length >= 3 ? (
               <ul role="listbox" aria-label={t('Gợi ý địa chỉ')} className="mt-1 max-h-60 overflow-y-auto rounded-sm border bg-popover shadow-float">
-                {suggestions.isPending ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Đang tìm…')}</li> : null}
-                {suggestions.isError ? <li className="px-3 py-2 text-sm text-destructive">{problemMessage(suggestions.error)}</li> : null}
-                {suggestions.data?.length === 0 ? <li className="px-3 py-2 text-sm text-muted-foreground">{t('Không tìm thấy địa chỉ phù hợp.')}</li> : null}
+                {suggestions.isPending ? <li className="px-3 py-2 text-body-sm text-muted-foreground">{t('Đang tìm…')}</li> : null}
+                {suggestions.isError ? <li className="px-3 py-2 text-body-sm text-destructive">{problemMessage(suggestions.error)}</li> : null}
+                {suggestions.data?.length === 0 ? <li className="px-3 py-2 text-body-sm text-muted-foreground">{t('Không tìm thấy địa chỉ phù hợp.')}</li> : null}
                 {suggestions.data?.map((s) => (
                   <li key={s.placeId} role="option" aria-selected={false}>
                     <button
                       type="button"
-                      className="flex w-full flex-col items-start px-3 py-2 text-left text-sm hover:bg-ws-fill"
+                      className="flex w-full flex-col items-start px-3 py-2 text-left text-body-sm hover:bg-ws-fill"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => void pickSuggestion(s.placeId!)}
                     >
                       <span className="font-medium">{s.mainText}</span>
-                      <span className="text-xs text-muted-foreground">{s.secondaryText}</span>
+                      <span className="text-caption text-muted-foreground">{s.secondaryText}</span>
                     </button>
                   </li>
                 ))}
@@ -238,7 +238,7 @@ export function MapDialog({
         </div>
 
         <DialogFooter className="m-0 flex-col items-stretch gap-2 rounded-none sm:flex-row sm:items-center sm:justify-between">
-          <p role="status" className="min-h-5 text-xs text-muted-foreground">
+          <p role="status" className="min-h-5 text-caption text-muted-foreground">
             {resolving ? t('Đang xác định địa chỉ…') : note ?? (place?.formattedAddress ? place.formattedAddress : t('Vị trí: {v0}, {v1}', { v0: centre.lat.toFixed(5), v1: centre.lng.toFixed(5) }))}
           </p>
           <Button type="button" disabled={resolving} onClick={() => onConfirm({ lat: centre.lat, lng: centre.lng, place })}>

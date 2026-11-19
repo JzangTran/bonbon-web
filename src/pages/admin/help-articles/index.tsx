@@ -49,8 +49,8 @@ export function AdminHelpArticlesPage() {
     <div className="flex max-w-4xl flex-col gap-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Bài trợ giúp')}</h1>
-          <p className="text-sm text-muted-foreground">{t('Khách và người bán đọc các bài này không cần đăng nhập. Bài nháp chỉ quản trị viên thấy.')}</p>
+          <h1 className="text-title-1">{t('Bài trợ giúp')}</h1>
+          <p className="text-body-sm text-muted-foreground">{t('Khách và người bán đọc các bài này không cần đăng nhập. Bài nháp chỉ quản trị viên thấy.')}</p>
         </div>
         <Button asChild>
           <Link to={consolePath('/help-articles/new')}>
@@ -96,10 +96,10 @@ export function AdminHelpArticlesPage() {
                   <Badge variant="outline">{AUDIENCE_LABEL[a.audience ?? ''] ?? a.audience}</Badge>
                   <Badge className={a.status === 'PUBLISHED' ? 'bg-success-subtle text-success-fg' : 'bg-warning-subtle text-warning-fg'}>{a.status === 'PUBLISHED' ? t('Đã đăng') : t('Nháp')}</Badge>
                 </div>
-                <span className="text-xs text-muted-foreground">{t('Sửa ')}{formatRelative(a.updatedAt)}</span>
+                <span className="text-caption text-muted-foreground">{t('Sửa ')}{formatRelative(a.updatedAt)}</span>
               </div>
-              <p className="line-clamp-2 text-sm text-muted-foreground">{a.body}</p>
-              {(a.keywords ?? []).length > 0 ? <p className="text-xs text-muted-foreground">{t('Từ khoá: ')}{a.keywords?.join(', ')}</p> : null}
+              <p className="line-clamp-2 text-body-sm text-muted-foreground">{a.body}</p>
+              {(a.keywords ?? []).length > 0 ? <p className="text-caption text-muted-foreground">{t('Từ khoá: ')}{a.keywords?.join(', ')}</p> : null}
               <div className="flex flex-wrap gap-2">
                 <Button asChild size="sm" variant="outline">
                   <Link to={consolePath(`/help-articles/${a.id}`)}>{t('Sửa')}</Link>
@@ -233,16 +233,16 @@ function UnansweredQuestions() {
   return (
     <section className="flex flex-col gap-3" aria-labelledby="unanswered">
       <div>
-        <h2 id="unanswered" className="text-lg font-semibold">{t('Câu hỏi chưa có câu trả lời')}</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 id="unanswered" className="text-title-3">{t('Câu hỏi chưa có câu trả lời')}</h2>
+        <p className="text-body-sm text-muted-foreground">
           {t('Câu hỏi gửi trợ lý tự động trong 30 ngày qua mà không khớp bài nào. Viết thêm bài hoặc thêm từ khoá vào bài sẵn có để trả lời được.')}
         </p>
       </div>
       {questions.isPending ? <Skeleton className="h-20" /> : null}
-      {questions.data && items.length === 0 ? <p className="text-sm text-muted-foreground">{t('Chưa có câu hỏi nào bị bỏ lỡ.')}</p> : null}
+      {questions.data && items.length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Chưa có câu hỏi nào bị bỏ lỡ.')}</p> : null}
       <ul className="flex flex-col divide-y rounded-md border">
         {items.map((q) => (
-          <li key={q.question} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+          <li key={q.question} className="flex items-center justify-between gap-3 px-3 py-2 text-body-sm">
             <span className="min-w-0 flex-1 truncate">{q.question}</span>
             <span className="shrink-0 text-muted-foreground">
               {t('{v0} lần · {v1}', { v0: q.times ?? 1, v1: q.audience === 'SELLER' ? t('người bán') : t('khách') })}

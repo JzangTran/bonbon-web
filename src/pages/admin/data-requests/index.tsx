@@ -63,7 +63,7 @@ export function AdminDataRequestsPage() {
       />
       <div className="flex flex-col gap-1">
         <h1>{t('Yêu cầu về dữ liệu cá nhân')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Phản hồi trong 2 ngày làm việc, hoàn thành trong 10–15 ngày; gia hạn được một lần có lý do.')}</p>
+        <p className="text-body-sm text-muted-foreground">{t('Phản hồi trong 2 ngày làm việc, hoàn thành trong 10–15 ngày; gia hạn được một lần có lý do.')}</p>
       </div>
       {queue.isPending ? <Skeleton className="h-48" /> : null}
       {queue.isError ? <FormError message={problemMessage(queue.error)} /> : null}
@@ -78,7 +78,7 @@ export function AdminDataRequestsPage() {
                   <p className="font-medium">
                     {t(TYPE[r.type ?? ''] ?? r.type ?? '')} · {r.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-caption text-muted-foreground">
                     {r.email} · {r.audience === 'SELLER' ? t('Người bán') : t('Khách hàng')} · {t('Gửi {d}').replace('{d}', formatDateTime(r.receivedAt))}
                   </p>
                 </div>
@@ -88,16 +88,16 @@ export function AdminDataRequestsPage() {
                   <Badge variant={open ? 'secondary' : r.status === 'REJECTED' ? 'destructive' : 'default'}>{t(STATUS[r.status ?? ''] ?? '')}</Badge>
                 </div>
               </div>
-              {r.details ? <p className="text-sm whitespace-pre-line">{r.details}</p> : null}
+              {r.details ? <p className="text-body-sm whitespace-pre-line">{r.details}</p> : null}
               {open ? (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-caption text-muted-foreground">
                   {t('Hạn hoàn thành {d} ({rel})').replace('{d}', formatDateTime(r.dueAt)).replace('{rel}', formatRelative(r.dueAt))}
                   {r.status === 'RECEIVED' ? ` · ${t('hạn phản hồi {d}').replace('{d}', formatDateTime(r.ackDueAt))}` : ''}
                 </p>
               ) : r.responseNote ? (
-                <p className="text-sm text-muted-foreground">{t('Trả lời: ')}{r.responseNote}</p>
+                <p className="text-body-sm text-muted-foreground">{t('Trả lời: ')}{r.responseNote}</p>
               ) : null}
-              {r.extensionReason ? <p className="text-xs text-muted-foreground">{t('Lý do gia hạn: ')}{r.extensionReason}</p> : null}
+              {r.extensionReason ? <p className="text-caption text-muted-foreground">{t('Lý do gia hạn: ')}{r.extensionReason}</p> : null}
               {open ? (
                 <div className="flex flex-wrap justify-end gap-2">
                   {r.status === 'RECEIVED' ? (

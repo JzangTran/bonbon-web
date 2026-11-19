@@ -31,7 +31,7 @@ export function ImagePicker({ files, onChange }: { files: File[]; onChange: (fil
           <ImageIcon />{t(' Đính kèm ảnh (')}{files.length}/{MAX})
         </Button>
         {files.map((f, i) => (
-          <span key={`${f.name}-${i}`} className="inline-flex items-center gap-1 rounded-sm bg-muted px-2 py-1 text-xs">
+          <span key={`${f.name}-${i}`} className="inline-flex items-center gap-1 rounded-sm bg-muted px-2 py-1 text-caption">
             {f.name}
             <button type="button" aria-label={t('Bỏ {v0}', { v0: f.name })} onClick={() => onChange(files.filter((_, j) => j !== i))}>
               <XIcon className="size-3" />

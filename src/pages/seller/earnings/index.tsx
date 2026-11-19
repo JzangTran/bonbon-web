@@ -44,24 +44,24 @@ export function SellerEarningsPage() {
     <div className="flex max-w-5xl flex-col gap-10">
       <FinanceTabs />
       <div>
-        <h1 className="text-2xl font-semibold">{t('Thu nhập')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Tiền giữa quán và bonbon. Mọi con số lấy từ sổ cái, cùng một sổ mà quản trị viên đối soát.')}</p>
+        <h1 className="text-title-1">{t('Thu nhập')}</h1>
+        <p className="text-body-sm text-muted-foreground">{t('Tiền giữa quán và bonbon. Mọi con số lấy từ sổ cái, cùng một sổ mà quản trị viên đối soát.')}</p>
       </div>
       {summary.isError ? <FormError message={problemMessage(summary.error)} /> : null}
       {summary.isPending ? <Skeleton className="h-28" /> : null}
 
       {s ? (
         <StatsPanel className="gap-2">
-          <p className="text-sm text-muted-foreground">{owing ? t('Quán đang nợ bonbon') : t('bonbon đang nợ quán')}</p>
-          <p className={cn('text-4xl font-semibold tabular-nums', owing ? 'text-danger-fg' : 'text-success-fg')}>{formatVnd(Math.abs(s.balance ?? 0))}</p>
-          <p className="max-w-2xl text-sm">
+          <p className="text-body-sm text-muted-foreground">{owing ? t('Quán đang nợ bonbon') : t('bonbon đang nợ quán')}</p>
+          <p className={cn('text-display tabular-nums', owing ? 'text-danger-fg' : 'text-success-fg')}>{formatVnd(Math.abs(s.balance ?? 0))}</p>
+          <p className="max-w-2xl text-body-sm">
             {owing
               ? t('Đây là hoa hồng của các đơn quán đã thu tiền mặt từ khách. Quán trả lại cho bonbon bằng chuyển khoản; khi quản trị viên ghi nhận, số này giảm đi.')
               : (s.balance ?? 0) === 0
                 ? t('Hiện hai bên không nợ nhau.')
                 : t('Đây là tiền khách đã thanh toán online cho đơn của quán (trừ hoa hồng). bonbon chuyển cho quán theo từng đợt; mỗi lần chuyển sẽ hiện ở sổ cái bên dưới kèm mã giao dịch.')}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-caption text-muted-foreground">
             {s.lastPayoutAt ? t('Lần chuyển gần nhất: {v0} lúc {v1}.', { v0: formatVnd(s.lastPayoutAmount), v1: formatDateTime(s.lastPayoutAt) }) : t('bonbon chưa chuyển tiền cho quán lần nào.')}
             {(s.heldForCases ?? 0) > 0 ? t(' Đang giữ {v0} vì khiếu nại chưa có quyết định.', { v0: formatVnd(s.heldForCases) }) : ''}
           </p>
@@ -82,7 +82,7 @@ export function SellerEarningsPage() {
       {view === 'statement' ? (
       <section className="flex flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-h3 font-medium">{t('Sao kê theo kỳ')}</h2>
+          <h2 className="text-h3">{t('Sao kê theo kỳ')}</h2>
           <Segmented
             label={t('Chia theo')}
             options={(Object.keys(GRANULARITY_LABEL) as Granularity[]).map((g) => ({ id: g, label: GRANULARITY_LABEL[g] }))}
@@ -126,7 +126,7 @@ export function SellerEarningsPage() {
                   <td className="px-3 py-3 text-right tabular-nums">{formatVnd(p.deliveryFees)}</td>
                   <td className="px-3 py-3 text-right tabular-nums" title={t('ròng {v0} + VAT {v1}', { v0: formatVnd(p.commissionNet), v1: formatVnd(p.commissionVat) })}>
                     {formatVnd(p.commission)}
-                    <span className="block text-xs text-muted-foreground">
+                    <span className="block text-caption text-muted-foreground">
                       {t('ròng ')}{formatVnd(p.commissionNet)} · VAT {formatVnd(p.commissionVat)}
                     </span>
                   </td>
@@ -154,26 +154,26 @@ export function SellerEarningsPage() {
       </section>
       ) : (
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-title-3">
           {t('Sổ cái')}{period?.start ? `: ${periodLabel(period.start, granularity).toLowerCase()}` : ''}
         </h2>
         {ledger.isError ? <FormError message={problemMessage(ledger.error)} /> : null}
         {ledger.data && (ledger.data.items ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{t('Chưa có khoản nào.')}</Card> : null}
         <ul className="flex flex-col divide-y rounded-sm border bg-card">
           {(ledger.data?.items ?? []).map((entry) => (
-            <li key={entry.id} className="flex flex-wrap items-start justify-between gap-2 px-4 py-3 text-sm">
+            <li key={entry.id} className="flex flex-wrap items-start justify-between gap-2 px-4 py-3 text-body-sm">
               <div>
                 <p className="font-medium">
                   {LEDGER_TYPE_LABEL[entry.type ?? ''] ?? entry.type}
                   {entry.orderNumber ? t(' · đơn #{v0}', { v0: entry.orderNumber }) : ''}
                 </p>
                 {entry.itemsTotal !== undefined ? (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-caption text-muted-foreground">
                     {t('Món ')}{formatVnd(entry.itemsTotal)}
                     {entry.discount ? t(' · giảm {v0}', { v0: formatVnd(entry.discount) }) : ''}{t(' · phí giao ')}{formatVnd(entry.deliveryFee)}{t(' · hoa hồng ')}{formatVnd(entry.commission)}
                   </p>
                 ) : null}
-                <p className="text-xs text-muted-foreground">
+                <p className="text-caption text-muted-foreground">
                   {formatDateTime(entry.createdAt)}
                   {entry.reference ? t(' · mã giao dịch {v0}', { v0: entry.reference }) : ''}
                   {entry.note ? ` · ${entry.note}` : ''}

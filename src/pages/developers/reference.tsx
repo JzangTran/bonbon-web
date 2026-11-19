@@ -102,9 +102,9 @@ export function DeveloperReferencePage() {
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
           <p className="text-small font-medium text-primary">{t('bonbon dành cho lập trình viên')}</p>
-          <h1 className="text-2xl font-semibold">{spec.data?.info?.title ?? t('Tài liệu API')}</h1>
-          <p className="text-sm text-muted-foreground">
-            {t('Địa chỉ gốc')}: <code className="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-xs">{baseUrl}</code>
+          <h1 className="text-title-1">{spec.data?.info?.title ?? t('Tài liệu API')}</h1>
+          <p className="text-body-sm text-muted-foreground">
+            {t('Địa chỉ gốc')}: <code className="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-caption">{baseUrl}</code>
             {spec.data ? ` · ${endpoints.length} endpoint` : ''}
           </p>
         </div>
@@ -131,12 +131,12 @@ export function DeveloperReferencePage() {
               <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
               <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('Tìm đường dẫn, mô tả…')} className="pl-9" aria-label={t('Tìm endpoint')} />
             </div>
-            <ul className="hidden max-h-[70vh] flex-col overflow-y-auto text-sm lg:flex">
+            <ul className="hidden max-h-[70vh] flex-col overflow-y-auto text-body-sm lg:flex">
               {groups.map(([tag, list]) => (
                 <li key={tag}>
                   <a href={`#tag-${encodeURIComponent(tag)}`} className="flex justify-between gap-2 rounded-sm px-2 py-1 hover:bg-muted">
                     <span className="truncate">{tag}</span>
-                    <span className="text-xs text-muted-foreground">{list.length}</span>
+                    <span className="text-caption text-muted-foreground">{list.length}</span>
                   </a>
                 </li>
               ))}
@@ -144,12 +144,12 @@ export function DeveloperReferencePage() {
           </nav>
 
           <div className="flex min-w-0 flex-col gap-8">
-            {groups.length === 0 ? <p className="text-sm text-muted-foreground">{t('Không có endpoint khớp với tìm kiếm.')}</p> : null}
+            {groups.length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Không có endpoint khớp với tìm kiếm.')}</p> : null}
             {groups.map(([tag, list]) => (
               <section key={tag} id={`tag-${encodeURIComponent(tag)}`} className="flex flex-col gap-2 scroll-mt-6">
-                <h2 className="text-lg font-semibold">{tag}</h2>
+                <h2 className="text-title-3">{tag}</h2>
                 {spec.data?.tags?.find((tg) => tg.name === tag)?.description ? (
-                  <p className="text-sm text-muted-foreground">{spec.data.tags.find((tg) => tg.name === tag)?.description}</p>
+                  <p className="text-body-sm text-muted-foreground">{spec.data.tags.find((tg) => tg.name === tag)?.description}</p>
                 ) : null}
                 <ul className="flex flex-col divide-y rounded-sm border bg-card">
                   {list.map((e) => {
@@ -163,11 +163,11 @@ export function DeveloperReferencePage() {
                           onClick={() => setOpen(expanded ? null : key)}
                           className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-muted/60"
                         >
-                          <span className={cn('w-16 shrink-0 rounded-sm px-1.5 py-0.5 text-center font-mono text-xs font-semibold uppercase', METHOD_TONE[e.method])}>
+                          <span className={cn('w-16 shrink-0 rounded-sm px-1.5 py-0.5 text-center font-mono text-caption font-semibold uppercase', METHOD_TONE[e.method])}>
                             {e.method}
                           </span>
-                          <code className="min-w-0 truncate font-mono text-sm">{e.path}</code>
-                          <span className="ml-auto hidden truncate text-sm text-muted-foreground md:inline">{e.summary}</span>
+                          <code className="min-w-0 truncate font-mono text-body-sm">{e.path}</code>
+                          <span className="ml-auto hidden truncate text-body-sm text-muted-foreground md:inline">{e.summary}</span>
                           {e.security?.length ? <LockIcon className="size-3.5 shrink-0 text-muted-foreground" aria-label={t('Cần đăng nhập')} /> : null}
                           <ChevronRightIcon className={cn('size-4 shrink-0 transition-transform', expanded && 'rotate-90')} aria-hidden="true" />
                         </button>
@@ -188,18 +188,18 @@ export function DeveloperReferencePage() {
 function EndpointDetail({ e }: { e: Endpoint }) {
   const body = e.requestBody?.content ? Object.entries(e.requestBody.content)[0] : undefined
   return (
-    <div className="flex flex-col gap-4 border-t bg-background px-4 py-4 text-sm">
+    <div className="flex flex-col gap-4 border-t bg-background px-4 py-4 text-body-sm">
       {e.summary ? <p className="font-medium">{e.summary}</p> : null}
       {e.description ? <p className="whitespace-pre-line text-muted-foreground">{plain(e.description)}</p> : null}
       {e.operationId ? (
-        <p className="text-xs text-muted-foreground">
+        <p className="text-caption text-muted-foreground">
           operationId: <code className="font-mono">{e.operationId}</code>
         </p>
       ) : null}
       {e.parameters?.length ? (
         <div className="flex flex-col gap-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('Tham số')}</h3>
-          <table className="w-full text-left text-sm">
+          <h3 className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t('Tham số')}</h3>
+          <table className="w-full text-left text-body-sm">
             <tbody className="divide-y">
               {e.parameters.map((p) => (
                 <tr key={`${p.in}-${p.name}`}>
@@ -207,7 +207,7 @@ function EndpointDetail({ e }: { e: Endpoint }) {
                     <code className="font-mono">{p.name}</code>
                     {p.required ? <span className="ml-1 text-destructive">*</span> : null}
                   </td>
-                  <td className="py-1.5 pr-3 align-top text-xs text-muted-foreground">
+                  <td className="py-1.5 pr-3 align-top text-caption text-muted-foreground">
                     {p.in} · {p.schema?.enum ? p.schema.enum.join(' | ') : (p.schema?.format ?? p.schema?.type ?? '')}
                   </td>
                   <td className="py-1.5 align-top text-muted-foreground">{p.description}</td>
@@ -219,7 +219,7 @@ function EndpointDetail({ e }: { e: Endpoint }) {
       ) : null}
       {body ? (
         <div className="flex flex-col gap-1">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('Nội dung gửi')}</h3>
+          <h3 className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t('Nội dung gửi')}</h3>
           <p>
             <code className="font-mono">{body[0]}</code>
             {refName(body[1].schema?.$ref) ? <> · {t('lược đồ')} <code className="font-mono">{refName(body[1].schema?.$ref)}</code></> : null}
@@ -228,7 +228,7 @@ function EndpointDetail({ e }: { e: Endpoint }) {
       ) : null}
       {e.responses ? (
         <div className="flex flex-col gap-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('Phản hồi')}</h3>
+          <h3 className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t('Phản hồi')}</h3>
           <ul className="flex flex-col gap-1.5">
             {Object.entries(e.responses).map(([code, r]) => (
               <li key={code} className="flex gap-3">

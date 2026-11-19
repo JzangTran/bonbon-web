@@ -114,10 +114,10 @@ export function GoogleSignIn() {
 
       {step.kind === 'consent' && idToken ? (
         <div className="flex flex-col gap-3 rounded-lg border p-4">
-          <p className="text-sm font-medium">
+          <p className="text-label">
             {step.email ? t('Mở tài khoản bán hàng cho {v0}', { v0: step.email }) : t('Thêm vai trò người bán vào tài khoản Google này')}
           </p>
-          <label className="flex items-start gap-3 text-sm">
+          <label className="flex items-start gap-3 text-body-sm">
             <input type="checkbox" className="mt-0.5 size-4" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />
             <span>
               {t('Tôi đồng ý với')}{' '}
@@ -131,7 +131,7 @@ export function GoogleSignIn() {
               .
             </span>
           </label>
-          <label className="flex items-start gap-3 text-sm text-muted-foreground">
+          <label className="flex items-start gap-3 text-body-sm text-muted-foreground">
             <input type="checkbox" className="mt-0.5 size-4" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} />
             {t('Nhận tin khuyến mãi qua email (không bắt buộc).')}
           </label>
@@ -153,7 +153,7 @@ export function GoogleSignIn() {
             void submit(idToken, { password, captchaToken: captchaToken ?? undefined })
           }}
         >
-          <p className="text-sm">{t('Email này đã có tài khoản bonbon. Nhập mật khẩu của tài khoản đó để liên kết với Google.')}</p>
+          <p className="text-body-sm">{t('Email này đã có tài khoản bonbon. Nhập mật khẩu của tài khoản đó để liên kết với Google.')}</p>
           <div className="flex flex-col gap-2">
             <Label htmlFor="link-password">{t('Mật khẩu bonbon')}</Label>
             <Input id="link-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />

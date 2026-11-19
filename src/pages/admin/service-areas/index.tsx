@@ -63,8 +63,8 @@ export function AdminServiceAreasPage() {
       <Tabs tab={tab} setTab={setTab} canWrite={canWrite} />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-2xl">
-          <h1 className="text-2xl font-semibold">{t('Khu vực phục vụ')}</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-title-1">{t('Khu vực phục vụ')}</h1>
+          <p className="text-body-sm text-muted-foreground">
             {t('Mỗi khu vực là một hình tròn quanh một tâm (một chung cư, một khu công nghiệp). Quán có vị trí nằm trong hình tròn thuộc khu vực đó và không đặt bán kính giao vượt mức tối đa của khu vực. Quán nằm ngoài mọi khu vực không mở được.')}
           </p>
         </div>
@@ -224,12 +224,12 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
                   <MapPinIcon /> {centre ? t('Chọn lại') : t('Chọn trên bản đồ')}
                 </Button>
                 {centre ? (
-                  <span className="flex items-center gap-1.5 text-sm text-success-fg">
+                  <span className="flex items-center gap-1.5 text-body-sm text-success-fg">
                     <CheckIcon className="size-4" aria-hidden="true" />
                     {centre.lat.toFixed(5)}, {centre.lng.toFixed(5)}
                   </span>
                 ) : (
-                  <span className="text-sm text-muted-foreground">{t('Chưa chọn')}</span>
+                  <span className="text-body-sm text-muted-foreground">{t('Chưa chọn')}</span>
                 )}
               </div>
             </FormRow>
@@ -241,7 +241,7 @@ function AreaForm({ area }: { area: ServiceArea | null }) {
             </FormRow>
             {area ? (
               <FormRow label={t('Trạng thái')} hint={t('Khu vực đã tắt không nhận thêm quán mới; quán đang thuộc khu vực giữ nguyên.')}>
-                <label className="flex min-h-9 items-center gap-2 text-sm">
+                <label className="flex min-h-9 items-center gap-2 text-body-sm">
                   <input type="checkbox" className="size-4" checked={active} onChange={(e) => setActive(e.target.checked)} />{t(' Đang hoạt động')}
                 </label>
               </FormRow>

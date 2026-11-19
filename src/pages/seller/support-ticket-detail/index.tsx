@@ -25,7 +25,7 @@ export function SellerSupportTicketDetailPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-10">
-      <Link to={merchantPath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={merchantPath('/support-tickets')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" />{t(' Phiếu hỗ trợ')}
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}
@@ -33,11 +33,11 @@ export function SellerSupportTicketDetailPage() {
       {tItem ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold">{tItem.subject}</h1>
+            <h1 className="text-title-1">{tItem.subject}</h1>
             <Badge className={status.className}>{status.label}</Badge>
           </div>
-          {tItem.orderNumber ? <p className="text-sm text-muted-foreground">{t('Về đơn #')}{tItem.orderNumber}</p> : null}
-          {tItem.closedBy === 'SYSTEM' ? <p className="text-sm text-muted-foreground">{t('Phiếu tự đóng vì không có tin nhắn mới sau khi được trả lời.')}</p> : null}
+          {tItem.orderNumber ? <p className="text-body-sm text-muted-foreground">{t('Về đơn #')}{tItem.orderNumber}</p> : null}
+          {tItem.closedBy === 'SYSTEM' ? <p className="text-body-sm text-muted-foreground">{t('Phiếu tự đóng vì không có tin nhắn mới sau khi được trả lời.')}</p> : null}
 
           <Card className="p-4">
             <TicketThread messages={tItem.messages ?? []} supportOnRight={false} />
@@ -71,7 +71,7 @@ export function SellerSupportTicketDetailPage() {
               </div>
             </Card>
           ) : (
-            <Card className="p-4 text-sm text-muted-foreground">{t('Phiếu đã đóng. Cần hỗ trợ thêm thì gửi phiếu mới.')}</Card>
+            <Card className="p-4 text-body-sm text-muted-foreground">{t('Phiếu đã đóng. Cần hỗ trợ thêm thì gửi phiếu mới.')}</Card>
           )}
         </>
       ) : null}

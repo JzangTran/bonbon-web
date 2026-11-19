@@ -29,7 +29,7 @@ export function AdminSupportTicketDetailPage() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-10">
-      <Link to={consolePath('/support-tickets')} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to={consolePath('/support-tickets')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
         <ArrowLeftIcon className="size-4" />{t(' Hộp thư phiếu')}
       </Link>
       {ticket.isError ? <FormError message={problemMessage(ticket.error)} /> : null}
@@ -37,11 +37,11 @@ export function AdminSupportTicketDetailPage() {
       {tItem ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold">{tItem.subject}</h1>
+            <h1 className="text-title-1">{tItem.subject}</h1>
             <Badge className={status.className}>{status.label}</Badge>
           </div>
 
-          <Card className="gap-1 p-4 text-sm">
+          <Card className="gap-1 p-4 text-body-sm">
             <p>
               <span className="text-muted-foreground">{t('Người gửi:')}</span> {tItem.userName} ({tItem.audience === 'SHOP' ? t('cửa hàng') : t('khách')})
             </p>
@@ -65,7 +65,7 @@ export function AdminSupportTicketDetailPage() {
           {tItem.status !== 'CLOSED' && canReply ? (
             <Card className="gap-3 p-4">
               <h2 className="font-semibold">{t('Trả lời')}</h2>
-              <p className="text-sm text-muted-foreground">{t('Người dùng chỉ thấy "Hỗ trợ Bonbon", không thấy tên bạn. Họ nhận thông báo, và email nếu để bật.')}</p>
+              <p className="text-body-sm text-muted-foreground">{t('Người dùng chỉ thấy "Hỗ trợ Bonbon", không thấy tên bạn. Họ nhận thông báo, và email nếu để bật.')}</p>
               <Textarea rows={5} value={body} maxLength={2000} onChange={(e) => setBody(e.target.value)} aria-label={t('Nội dung trả lời')} />
               <div>
                 <Button disabled={answer.isPending || !body.trim()} onClick={() => answer.mutate(body, { onSuccess: () => setBody('') })}>
@@ -74,7 +74,7 @@ export function AdminSupportTicketDetailPage() {
               </div>
             </Card>
           ) : null}
-          {tItem.status === 'CLOSED' ? <Card className="p-4 text-sm text-muted-foreground">{t('Phiếu đã đóng, không trả lời thêm được.')}</Card> : null}
+          {tItem.status === 'CLOSED' ? <Card className="p-4 text-body-sm text-muted-foreground">{t('Phiếu đã đóng, không trả lời thêm được.')}</Card> : null}
         </>
       ) : null}
     </div>

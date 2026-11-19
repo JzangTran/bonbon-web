@@ -98,14 +98,14 @@ export function PrivacyTab() {
             }}
           >
             <fieldset className="grid gap-2 sm:grid-cols-2">
-              <legend className="mb-2 text-sm font-medium">{t('Loại yêu cầu')}</legend>
+              <legend className="mb-2 text-label">{t('Loại yêu cầu')}</legend>
               {TYPES.map((o) => (
-                <label key={o.id} className="flex cursor-pointer flex-col gap-1 rounded-sm border p-3 text-sm has-[:checked]:border-primary has-[:checked]:bg-accent/40">
+                <label key={o.id} className="flex cursor-pointer flex-col gap-1 rounded-sm border p-3 text-body-sm has-[:checked]:border-primary has-[:checked]:bg-accent/40">
                   <span className="flex items-center gap-2 font-medium">
                     <input type="radio" name="dsr-type" className="accent-[var(--color-primary)]" checked={type === o.id} onChange={() => setType(o.id)} />
                     {t(o.label)}
                   </span>
-                  <span className="text-xs text-muted-foreground">{t(o.hint)}</span>
+                  <span className="text-caption text-muted-foreground">{t(o.hint)}</span>
                 </label>
               ))}
             </fieldset>
@@ -121,17 +121,17 @@ export function PrivacyTab() {
       </Card>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold">{t('Lịch sử yêu cầu')}</h2>
+        <h2 className="text-body font-semibold">{t('Lịch sử yêu cầu')}</h2>
         {history.isError ? <FormError message={problemMessage(history.error)} /> : null}
-        {history.data && !history.data.length ? <p className="text-sm text-muted-foreground">{t('Chưa có yêu cầu nào.')}</p> : null}
+        {history.data && !history.data.length ? <p className="text-body-sm text-muted-foreground">{t('Chưa có yêu cầu nào.')}</p> : null}
         <ul className="flex flex-col divide-y rounded-sm border empty:hidden">
           {(history.data ?? []).map((r) => (
-            <li key={r.id} className="flex flex-col gap-1.5 p-4 text-sm">
+            <li key={r.id} className="flex flex-col gap-1.5 p-4 text-body-sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-medium">{t(TYPE_LABEL[r.type ?? ''] ?? r.type ?? '')}</span>
                 <Badge variant={r.status === 'REJECTED' ? 'destructive' : r.status === 'COMPLETED' ? 'default' : 'secondary'}>{t(STATUS_LABEL[r.status ?? ''] ?? '')}</Badge>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-caption text-muted-foreground">
                 {t('Gửi {d}').replace('{d}', day(r.receivedAt))}
                 {r.status === 'RECEIVED' || r.status === 'IN_PROGRESS' ? ` · ${t('Hạn hoàn thành {d}').replace('{d}', day(r.dueAt))}${r.extended ? ` (${t('đã gia hạn')})` : ''}` : ''}
               </p>

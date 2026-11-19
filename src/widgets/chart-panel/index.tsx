@@ -57,7 +57,7 @@ export function ChartPanel<T>({
     <StatsPanel>
       <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
         <div className="flex flex-col gap-1">
-          <h2 className="text-h3 font-medium">{title}</h2>
+          <h2 className="text-h3">{title}</h2>
           {description ? <p className="text-small text-muted-foreground">{description}</p> : null}
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">

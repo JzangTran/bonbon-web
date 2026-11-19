@@ -33,7 +33,7 @@ function Input({ className, type, showCount, ...props }: React.ComponentProps<"i
   return (
     <div className="relative w-full">
       {input}
-      <span aria-hidden="true" className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-xs text-muted-foreground tabular-nums">
+      <span aria-hidden="true" className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-caption text-muted-foreground tabular-nums">
         {(props.value as string).length}/{maxLength}
       </span>
     </div>

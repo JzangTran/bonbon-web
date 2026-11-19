@@ -46,16 +46,16 @@ export function AdminMerchantDetailPage() {
 
   return (
     <div className="flex max-w-4xl flex-col gap-10">
-      <Link to={consolePath('/merchants')} className="text-link inline-flex items-center gap-1 text-sm">
+      <Link to={consolePath('/merchants')} className="text-link inline-flex items-center gap-1 text-body-sm">
         <ArrowLeftIcon className="size-4" />{t(' Cửa hàng')}
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold">{shop.name ?? t('(chưa đặt tên)')}</h1>
+        <h1 className="text-title-1">{shop.name ?? t('(chưa đặt tên)')}</h1>
         <Badge className={status.className}>{status.label}</Badge>
       </div>
 
       {duplicates.length > 0 ? (
-        <div className="flex flex-col gap-2 rounded-md bg-warning-subtle px-4 py-3 text-sm text-warning-fg">
+        <div className="flex flex-col gap-2 rounded-md bg-warning-subtle px-4 py-3 text-body-sm text-warning-fg">
           <p className="flex items-center gap-2 font-medium">
             <TriangleAlertIcon className="size-4 shrink-0" />{t(' Có cửa hàng giống hồ sơ này')}
           </p>
@@ -69,15 +69,15 @@ export function AdminMerchantDetailPage() {
               </li>
             ))}
           </ul>
-          <p className="text-xs">{t('Chỉ để người xem cân nhắc, không tự động từ chối hay khoá.')}</p>
+          <p className="text-caption">{t('Chỉ để người xem cân nhắc, không tự động từ chối hay khoá.')}</p>
         </div>
       ) : null}
 
       <ShopApplicationSections shop={shop} canViewIdentity={!!session?.permissions.has('merchant-approval:read-identity')} />
 
       <Section title={t('Hiệu suất và đối soát')}>
-        <p className="text-sm text-muted-foreground">{t('Điểm phạt, hạn chế hiển thị, đình chỉ và số dư của quán nằm ở các trang riêng.')}</p>
-        <div className="flex flex-wrap gap-3 text-sm">
+        <p className="text-body-sm text-muted-foreground">{t('Điểm phạt, hạn chế hiển thị, đình chỉ và số dư của quán nằm ở các trang riêng.')}</p>
+        <div className="flex flex-wrap gap-3 text-body-sm">
           {session?.permissions.has('shop-penalty:read') ? (
             <Link className="text-link" to={consolePath(`/penalties/${shop.vendorId}`)}>
               {t('Điểm phạt và đình chỉ')}
@@ -97,9 +97,9 @@ export function AdminMerchantDetailPage() {
       </Section>
 
       <Section title={t('Lịch sử đình chỉ')}>
-        {suspensions.length === 0 ? <p className="text-sm text-muted-foreground">{t('Chưa từng bị đình chỉ.')}</p> : null}
+        {suspensions.length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Chưa từng bị đình chỉ.')}</p> : null}
         {suspensions.map((s) => (
-          <div key={s.id} className="flex flex-col gap-1 border-b pb-3 text-sm last:border-b-0 last:pb-0">
+          <div key={s.id} className="flex flex-col gap-1 border-b pb-3 text-body-sm last:border-b-0 last:pb-0">
             <p className="font-medium">
               {SUSPENSION_STATUS[s.status ?? ''] ?? s.status}
               <span className="font-normal text-muted-foreground">{t(' · tạo ')}{formatDateTime(s.createdAt)}</span>
@@ -119,8 +119,8 @@ export function AdminMerchantDetailPage() {
       </Section>
 
       <Section title={t('Quyết định duyệt')}>
-        {decisions.length === 0 ? <p className="text-sm text-muted-foreground">{t('Chưa có quyết định.')}</p> : null}
-        <ul className="flex flex-col gap-2 text-sm">
+        {decisions.length === 0 ? <p className="text-body-sm text-muted-foreground">{t('Chưa có quyết định.')}</p> : null}
+        <ul className="flex flex-col gap-2 text-body-sm">
           {decisions.map((d, i) => (
             <li key={i}>
               <span className="font-medium">{d.decision === 'APPROVED' ? t('Duyệt') : t('Từ chối')}</span> · {formatDateTime(d.decidedAt)}

@@ -70,12 +70,12 @@ export function ShopAddressFields({
             <MapPinIcon />{t(' Định vị')}
           </Button>
           {located ? (
-            <span className="flex items-center gap-1.5 text-sm text-success-fg">
+            <span className="flex items-center gap-1.5 text-body-sm text-success-fg">
               <CheckIcon className="size-4" aria-hidden="true" />
               {t('Đã định vị (')}{value.lat!.toFixed(5)}, {value.lng!.toFixed(5)})
             </span>
           ) : (
-            <span className="text-sm text-muted-foreground">{t('Chưa định vị')}</span>
+            <span className="text-body-sm text-muted-foreground">{t('Chưa định vị')}</span>
           )}
         </div>
       </FormRow>

@@ -35,8 +35,8 @@ export function AdminLookupPage() {
     <div className="flex max-w-4xl flex-col gap-8">
       {tabs.length > 1 ? <PageTabs label={t('Tra cứu')} tabs={tabs} value={tab} onValueChange={(id) => setTab(id as 'orders' | 'customers')} /> : null}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold">{t('Tra cứu đơn và tài khoản')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Tra cứu đơn và tài khoản')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Nhập đúng một mã: không có danh sách người dùng để duyệt. Số điện thoại, email và địa chỉ được che; muốn xem đầy đủ phải chọn lý do và việc đó được ghi nhật ký.')}
         </p>
       </div>
@@ -57,7 +57,7 @@ function OrderSearch() {
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-lg font-semibold">{t('Tìm đơn')}</h2>
+      <h2 className="text-title-3">{t('Tìm đơn')}</h2>
       <form
         className="flex flex-wrap items-end gap-2"
         onSubmit={(e) => {
@@ -84,7 +84,7 @@ function OrderSearch() {
       </form>
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
       {result.isFetching ? <Skeleton className="h-16" /> : null}
-      {query && result.data && items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">{t('Không tìm thấy đơn nào khớp chính xác.')}</Card> : null}
+      {query && result.data && items.length === 0 ? <Card className="p-4 text-body-sm text-muted-foreground">{t('Không tìm thấy đơn nào khớp chính xác.')}</Card> : null}
       <ul className="flex flex-col gap-2">
         {items.map((o) => (
           <li key={o.id}>
@@ -97,7 +97,7 @@ function OrderSearch() {
                   </div>
                   <span className="font-semibold tabular-nums">{formatVnd(o.grandTotal)}</span>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-body-sm text-muted-foreground">
                   {o.shopName} · {formatDateTime(o.placedAt)}
                 </p>
               </Card>
@@ -118,7 +118,7 @@ function CustomerSearch() {
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-lg font-semibold">{t('Tìm tài khoản')}</h2>
+      <h2 className="text-title-3">{t('Tìm tài khoản')}</h2>
       <form
         className="flex flex-wrap items-end gap-2"
         onSubmit={(e) => {
@@ -145,7 +145,7 @@ function CustomerSearch() {
       </form>
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
       {result.isFetching ? <Skeleton className="h-16" /> : null}
-      {query && result.data && items.length === 0 ? <Card className="p-4 text-sm text-muted-foreground">{t('Không tìm thấy tài khoản nào khớp chính xác.')}</Card> : null}
+      {query && result.data && items.length === 0 ? <Card className="p-4 text-body-sm text-muted-foreground">{t('Không tìm thấy tài khoản nào khớp chính xác.')}</Card> : null}
       <ul className="flex flex-col gap-2">
         {items.map((c) => (
           <li key={c.id}>
@@ -159,7 +159,7 @@ function CustomerSearch() {
                     </Badge>
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-body-sm text-muted-foreground">
                   {c.email} · {c.phone ?? t('chưa có số điện thoại')}
                 </p>
               </Card>

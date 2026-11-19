@@ -43,7 +43,7 @@ export function AcceptingOrdersSwitch() {
         aria-checked={accepting}
         disabled={toggle.isPending}
         onClick={() => (accepting ? setAsking(true) : toggle.mutate({ accepting: true }))}
-        className="flex shrink-0 items-center gap-2 rounded-full px-1 py-1 text-xs whitespace-nowrap font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+        className="flex shrink-0 items-center gap-2 rounded-full px-1 py-1 text-caption whitespace-nowrap font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
         title={!accepting && shop.data?.pauseReason ? shop.data.pauseReason : undefined}
       >
         <span className="hidden sm:inline">
@@ -60,7 +60,7 @@ export function AcceptingOrdersSwitch() {
             <DialogDescription>{t('Khách sẽ thấy quán tạm ngưng. Đơn đã nhận vẫn làm tiếp như thường.')}</DialogDescription>
           </DialogHeader>
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm font-medium">{t('Trong bao lâu')}</legend>
+            <legend className="mb-2 text-label">{t('Trong bao lâu')}</legend>
             <div className="flex flex-wrap gap-2">
               {DURATIONS.map((d) => (
                 <Button key={d.label} type="button" size="sm" variant={minutes === d.minutes ? 'default' : 'outline'} aria-pressed={minutes === d.minutes}
@@ -71,7 +71,7 @@ export function AcceptingOrdersSwitch() {
             </div>
           </fieldset>
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-2 text-sm font-medium">{t('Lý do (không bắt buộc)')}</legend>
+            <legend className="mb-2 text-label">{t('Lý do (không bắt buộc)')}</legend>
             <div className="flex flex-wrap gap-2">
               {REASONS.map((r) => (
                 <Button key={r} type="button" size="sm" variant={reason === r ? 'secondary' : 'outline'} aria-pressed={reason === r}

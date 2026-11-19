@@ -13,7 +13,7 @@ export function CloseShopPage() {
   if (shop.data && status !== 'APPROVED') return <Navigate to={merchantPath()} replace />
   return (
     <FocusFrame title={t('Đóng cửa hàng')} exitTo={merchantPath('/shop')} flat>
-      <h1 className="mb-4 text-2xl font-semibold">{t('Đóng cửa hàng')}</h1>
+      <h1 className="mb-4 text-title-1">{t('Đóng cửa hàng')}</h1>
       {shop.isPending ? <Skeleton className="h-64" /> : <CloseShopCard />}
     </FocusFrame>
   )

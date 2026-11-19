@@ -42,7 +42,7 @@ function useHelpGroups(): HelpNavGroup[] {
 function PageTitle({ title, lead }: { title: string; lead?: ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
-      <h1 className="text-h1 font-semibold">{title}</h1>
+      <h1 className="text-h1">{title}</h1>
       {lead ? <p className="text-lead text-muted-foreground">{lead}</p> : null}
     </div>
   )
@@ -230,7 +230,7 @@ export function ContactPage() {
                 <span className="flex size-12 items-center justify-center rounded-full bg-accent text-primary">
                   <CheckIcon className="size-6" aria-hidden="true" />
                 </span>
-                <h2 className="text-h2 font-medium">{t('Đã gửi yêu cầu')}</h2>
+                <h2 className="text-h2">{t('Đã gửi yêu cầu')}</h2>
                 <p className="text-body text-muted-foreground">
                   {t('Chúng tôi sẽ trả lời qua ')}<b className="font-medium text-ink">{sent}</b>{t('. Hãy xem cả hộp thư rác nếu chưa thấy.')}
                 </p>

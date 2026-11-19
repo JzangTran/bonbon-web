@@ -8,7 +8,7 @@ function StoreButton({ href, store, icon }: { href: string; store: string; icon:
     <>
       {icon}
       <span className="flex flex-col items-start leading-tight">
-        <span className="text-[0.6875rem] opacity-80">{href ? t('Tải về trên') : t('Sắp có trên')}</span>
+        <span className="text-caption opacity-80">{href ? t('Tải về trên') : t('Sắp có trên')}</span>
         <span className="text-body font-semibold">{store}</span>
       </span>
     </>

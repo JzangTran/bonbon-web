@@ -112,8 +112,8 @@ export function AdminDisplayCategoriesPage() {
     <div className="flex max-w-5xl flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">{t('Danh mục trang chủ')}</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-title-1">{t('Danh mục trang chủ')}</h1>
+          <p className="text-body-sm text-muted-foreground">
             {t('Dải ảnh danh mục trên trang chủ ứng dụng khách. Mỗi danh mục gom một hoặc nhiều ngành cấp 3; khách chọn danh mục sẽ thấy các quán có món trong các ngành đó.')}
           </p>
         </div>
@@ -240,7 +240,7 @@ function DisplayForm({ existing, leaves, onDone }: { existing: Display | null; l
           <ul className="grid max-h-72 gap-1 overflow-y-auto rounded-md border p-2 sm:grid-cols-2">
             {shown.map((l) => (
               <li key={l.id}>
-                <label className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-muted">
+                <label className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm hover:bg-muted">
                   <input type="checkbox" className="size-4 accent-primary" checked={picked.has(l.id)} onChange={() => toggle(l.id)} />
                   <span className="truncate" title={l.path}>
                     {l.path}

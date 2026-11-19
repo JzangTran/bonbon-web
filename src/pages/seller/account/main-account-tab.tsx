@@ -47,7 +47,7 @@ export function MainAccountTab() {
             <CardDescription>{t('Đăng nhập trang người bán bằng tên này để quản lý nhiều cửa hàng và nhân viên.')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <dl className="grid grid-cols-[9rem_1fr] gap-x-4 gap-y-2 text-sm">
+            <dl className="grid grid-cols-[9rem_1fr] gap-x-4 gap-y-2 text-body-sm">
               <dt className="text-muted-foreground">{t('Tên đăng nhập')}</dt>
               <dd className="font-mono">{own.data.login}</dd>
               <dt className="text-muted-foreground">{t('Tên hiển thị')}</dt>
@@ -258,14 +258,14 @@ function IncomingCard() {
       </CardHeader>
       <CardContent>
         {incoming.isError ? <FormError message={problemMessage(incoming.error)} /> : null}
-        {incoming.data && !rows.length ? <p className="text-sm text-muted-foreground">{t('Chưa có yêu cầu nào.')}</p> : null}
+        {incoming.data && !rows.length ? <p className="text-body-sm text-muted-foreground">{t('Chưa có yêu cầu nào.')}</p> : null}
         <ul className="flex flex-col divide-y">
           {rows.map((r) => (
             <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
               <div className="flex flex-col gap-0.5">
                 <p className="font-medium">{r.mainAccountName}</p>
-                <p className="font-mono text-xs text-muted-foreground">{r.mainLogin}</p>
-                <p className="text-xs text-muted-foreground">{t('Gửi {d}').replace('{d}', day(r.requestedAt))}</p>
+                <p className="font-mono text-caption text-muted-foreground">{r.mainLogin}</p>
+                <p className="text-caption text-muted-foreground">{t('Gửi {d}').replace('{d}', day(r.requestedAt))}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant={r.status === 'AUTHORIZED' ? 'default' : r.status === 'PENDING_AUTHORIZATION' ? 'secondary' : 'outline'}>{t(LINK_STATUS[r.status ?? ''] ?? '')}</Badge>

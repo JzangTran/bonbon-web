@@ -64,12 +64,12 @@ export function SetPasswordPage({ mode }: { mode: 'reset' | 'initial' }) {
           <div className="flex flex-col gap-2">
             <Label htmlFor="newPassword">{t('Mật khẩu mới')}</Label>
             <Input id="newPassword" type="password" autoComplete="new-password" maxLength={100} aria-invalid={!!errors.newPassword} {...form.register('newPassword')} />
-            {errors.newPassword ? <p role="alert" className="text-sm text-destructive">{errors.newPassword.message}</p> : <PasswordStrength password={typed} />}
+            {errors.newPassword ? <p role="alert" className="text-body-sm text-destructive">{errors.newPassword.message}</p> : <PasswordStrength password={typed} />}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="confirmPassword">{t('Nhập lại mật khẩu')}</Label>
             <Input id="confirmPassword" type="password" autoComplete="new-password" maxLength={100} aria-invalid={!!errors.confirmPassword} {...form.register('confirmPassword')} />
-            {errors.confirmPassword ? <p role="alert" className="text-sm text-destructive">{errors.confirmPassword.message}</p> : null}
+            {errors.confirmPassword ? <p role="alert" className="text-body-sm text-destructive">{errors.confirmPassword.message}</p> : null}
           </div>
           <FormError message={error} />
           <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>

@@ -19,7 +19,7 @@ export function CategorySelect({
       value={value}
       disabled={loading}
       onChange={(e) => onChange(e.target.value)}
-      className="h-10 w-full rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+      className="h-10 w-full rounded-lg bg-grey-100 hover:bg-grey-200/70 px-3 text-body-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       <option value="">{loading ? t('Đang tải…') : t('Chọn ngành')}</option>
       {options.map((o) => (

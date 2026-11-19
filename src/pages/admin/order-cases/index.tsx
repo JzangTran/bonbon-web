@@ -38,8 +38,8 @@ export function AdminOrderCasesPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Khiếu nại đơn hàng')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-title-1">{t('Khiếu nại đơn hàng')}</h1>
+        <p className="text-body-sm text-muted-foreground">
           {t('Khách báo vấn đề với đơn đã giao. Quán có 12 giờ để trả lời; chỉ những khiếu nại quán phản đối hoặc không trả lời mới cần bạn quyết.')}
         </p>
       </div>
@@ -74,9 +74,9 @@ export function AdminOrderCasesPage() {
                         <Badge variant="outline">{item.shopResponse === 'DISPUTED' ? t('Quán phản đối') : t('Quán không trả lời')}</Badge>
                       ) : null}
                     </div>
-                    <span className="text-lg font-semibold tabular-nums">{formatVnd(item.refundAmount)}</span>
+                    <span className="text-title-3 tabular-nums">{formatVnd(item.refundAmount)}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-body-sm text-muted-foreground">
                     {item.vendorName}{t(' · khách ')}{item.customerName} · {item.status === 'OPEN' ? t('chờ từ {v0}', { v0: formatRelative(item.openedAt) }) : formatDateTime(item.openedAt)}
                   </p>
                 </Card>

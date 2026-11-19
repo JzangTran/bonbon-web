@@ -147,7 +147,7 @@ export function SellerRegisterPage() {
               Email
             </Label>
             <Input id="email" type="email" autoComplete="email" maxLength={255} placeholder="Email" className="h-11" aria-invalid={!!errors.email} {...form.register('email')} />
-            {errors.email ? <p role="alert" className="text-sm text-destructive">{errors.email.message}</p> : null}
+            {errors.email ? <p role="alert" className="text-body-sm text-destructive">{errors.email.message}</p> : null}
           </div>
           <FormError message={error} />
           <Button type="submit" size="lg" disabled={email.trim().length === 0 || checking}>
@@ -177,12 +177,12 @@ export function SellerRegisterPage() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="name">{t('Họ tên')}</Label>
           <Input id="name" autoComplete="name" maxLength={100} className="h-11" aria-invalid={!!errors.name} {...form.register('name')} />
-          {errors.name ? <p role="alert" className="text-sm text-destructive">{errors.name.message}</p> : null}
+          {errors.name ? <p role="alert" className="text-body-sm text-destructive">{errors.name.message}</p> : null}
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="password">{t('Mật khẩu')}</Label>
           <PasswordInput id="password" autoComplete="new-password" className="h-11" aria-invalid={!!errors.password} {...form.register('password')} />
-          <ul className="mt-1 flex flex-col gap-1 text-xs" aria-label={t('Yêu cầu mật khẩu')}>
+          <ul className="mt-1 flex flex-col gap-1 text-caption" aria-label={t('Yêu cầu mật khẩu')}>
             <li className={cn('flex items-center gap-1.5', longEnough ? 'text-success-fg' : 'text-muted-foreground')}>
               {longEnough ? <CheckIcon className="size-3.5" /> : <CircleIcon className="size-3.5" />}
               {t('Từ 8 đến 100 ký tự')}
@@ -195,7 +195,7 @@ export function SellerRegisterPage() {
           <PasswordStrength password={password} email={email} name={name} />
         </div>
 
-        <label className="flex items-start gap-2 text-sm">
+        <label className="flex items-start gap-2 text-body-sm">
           <input type="checkbox" className="mt-1" {...form.register('acceptTerms')} />
           <span>
             {t('Tôi đồng ý với')}{' '}
@@ -213,8 +213,8 @@ export function SellerRegisterPage() {
             .
           </span>
         </label>
-        {errors.acceptTerms ? <p role="alert" className="text-sm text-destructive">{errors.acceptTerms.message}</p> : null}
-        <label className="flex items-start gap-2 text-sm text-muted-foreground">
+        {errors.acceptTerms ? <p role="alert" className="text-body-sm text-destructive">{errors.acceptTerms.message}</p> : null}
+        <label className="flex items-start gap-2 text-body-sm text-muted-foreground">
           <input type="checkbox" className="mt-1" {...form.register('marketing')} />
           {t('Nhận tin khuyến mãi và hướng dẫn bán hàng qua email (không bắt buộc).')}
         </label>
@@ -271,7 +271,7 @@ function LinkAccountStep({ email, onBack }: { email: string; onBack: () => void 
           <Label htmlFor="account-password">{t('Mật khẩu')}</Label>
           <PasswordInput id="account-password" autoComplete="current-password" className="h-11" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        <label className="flex items-start gap-2 text-sm">
+        <label className="flex items-start gap-2 text-body-sm">
           <input type="checkbox" className="mt-1" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
           <span>
             {t('Tôi đồng ý với')}{' '}
@@ -329,7 +329,7 @@ function SentStep({ email }: { email: string }) {
       description={t('Chúng tôi đã gửi liên kết xác thực tới {v0}. Liên kết có hiệu lực 24 giờ.', { v0: email })}
     >
       <SuccessMark mascot="check-email" />
-      <p className="text-center text-sm text-muted-foreground">{t('Mở email và bấm liên kết để hoàn tất đăng ký. Không thấy thư? Hãy xem cả mục thư rác.')}</p>
+      <p className="text-center text-body-sm text-muted-foreground">{t('Mở email và bấm liên kết để hoàn tất đăng ký. Không thấy thư? Hãy xem cả mục thư rác.')}</p>
       {notice ? <FormSuccess message={notice} /> : null}
       <FormError message={error} />
       <Button type="button" variant="outline" size="lg" disabled={wait > 0} onClick={resend}>

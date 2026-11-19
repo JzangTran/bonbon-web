@@ -139,12 +139,12 @@ function ProfileCard() {
           <div className="flex flex-col gap-2">
             <Label htmlFor="profile-name">{t('Họ tên')}</Label>
             <Input id="profile-name" autoComplete="name" maxLength={100} aria-invalid={!!errors.name} {...form.register('name')} />
-            {errors.name ? <p role="alert" className="text-sm text-destructive">{errors.name.message}</p> : null}
+            {errors.name ? <p role="alert" className="text-body-sm text-destructive">{errors.name.message}</p> : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="profile-phone">{t('Số điện thoại')}</Label>
             <Input id="profile-phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={15} placeholder="0912345678" aria-invalid={!!errors.phone} {...form.register('phone')} />
-            {errors.phone ? <p role="alert" className="text-sm text-destructive">{errors.phone.message}</p> : null}
+            {errors.phone ? <p role="alert" className="text-body-sm text-destructive">{errors.phone.message}</p> : null}
           </div>
           {save.isError ? <FormError message={problemMessage(save.error)} /> : null}
           {save.isSuccess ? <FormSuccess message={t('Đã lưu thông tin cá nhân. Tên mới hiện ở mọi nơi bạn xuất hiện trong bonbon.')} /> : null}
@@ -209,7 +209,7 @@ function PasswordCard() {
                 {...form.register(field)}
               />
               {errors[field] ? (
-                <p role="alert" className="text-sm text-destructive">{errors[field]?.message}</p>
+                <p role="alert" className="text-body-sm text-destructive">{errors[field]?.message}</p>
               ) : field === 'newPassword' ? (
                 <PasswordStrength password={typedNew} email={session?.email} name={session?.name} />
               ) : null}

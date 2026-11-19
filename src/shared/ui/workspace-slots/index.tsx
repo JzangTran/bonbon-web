@@ -98,7 +98,7 @@ function TabLabel({ tab }: { tab: PageTab }) {
         {tab.label}
       </span>
       {tab.count ? (
-        <span className={cn('rounded-full px-1.5 text-[0.6875rem] font-semibold tabular-nums', tab.alert ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>{tab.count}</span>
+        <span className={cn('rounded-full px-1.5 text-caption font-semibold tabular-nums', tab.alert ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>{tab.count}</span>
       ) : null}
     </>
   )

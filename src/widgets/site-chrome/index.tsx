@@ -155,15 +155,15 @@ export function SiteHeader() {
           <div className="flex items-center gap-2">
             <LanguageSwitch compact />
             {area ? (
-              <a href={area.href} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
+              <a href={area.href} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-body-sm sm:inline-flex')}>
                 {area.label}
               </a>
             ) : (
               <>
-              <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'hidden min-h-9 bg-muted px-4 text-sm text-ink hover:bg-border md:inline-flex')}>
+              <a href={siteUrl('merchant', '/register')} className={cn(siteButton, 'hidden min-h-9 bg-muted px-4 text-body-sm text-ink hover:bg-border md:inline-flex')}>
                 {t('Mở quán')}
               </a>
-              <a href={siteUrl('public') + '#get-app'} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-sm sm:inline-flex')}>
+              <a href={siteUrl('public') + '#get-app'} className={cn(siteButtonSolid, 'hidden min-h-9 px-4 text-body-sm sm:inline-flex')}>
                 <SmartphoneIcon className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
                 {t('Tải app')}
               </a>
@@ -264,7 +264,7 @@ export function SiteFooter() {
           <div className="hidden flex-col gap-12 sm:flex">
             {footerGroups().map((group) => (
               <section key={group.title} className="flex flex-col gap-5">
-                <h2 className="text-h3 font-medium text-ink">{group.title}</h2>
+                <h2 className="text-h3 text-ink">{group.title}</h2>
                 <div className="grid gap-8 sm:grid-cols-3 sm:gap-0">
                   {group.columns.map((col, i) => (
                     <div key={col.label} className={cn('flex flex-col gap-3', i > 0 && 'sm:border-l sm:border-grey-200 sm:pl-8', i < group.columns.length - 1 && 'sm:pr-8')}>

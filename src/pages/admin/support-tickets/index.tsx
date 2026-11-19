@@ -36,8 +36,8 @@ export function AdminSupportTicketsPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('Phiếu hỗ trợ')}</h1>
-        <p className="text-sm text-muted-foreground">{t('Khách và người bán hỏi những việc chưa có hướng dẫn. Vấn đề về đơn đã giao đi qua khiếu nại, không qua đây.')}</p>
+        <h1 className="text-title-1">{t('Phiếu hỗ trợ')}</h1>
+        <p className="text-body-sm text-muted-foreground">{t('Khách và người bán hỏi những việc chưa có hướng dẫn. Vấn đề về đơn đã giao đi qua khiếu nại, không qua đây.')}</p>
       </div>
 
       <div role="tablist" className="flex flex-wrap gap-1 border-b">
@@ -50,7 +50,7 @@ export function AdminSupportTicketsPage() {
               setTab(tItem.id)
               paging.reset()
             }}
-            className={cn('-mb-px min-h-10 border-b-2 px-3 text-sm whitespace-nowrap', tab === tItem.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
+            className={cn('-mb-px min-h-10 border-b-2 px-3 text-body-sm whitespace-nowrap', tab === tItem.id ? 'border-primary font-semibold text-primary' : 'border-transparent text-muted-foreground')}
           >
             {tItem.label}
             {tab === tItem.id && total > 0 ? ` (${total})` : ''}
@@ -75,9 +75,9 @@ export function AdminSupportTicketsPage() {
                       <Badge className={status.className}>{status.label}</Badge>
                       <Badge variant="outline">{tItem.audience === 'SHOP' ? t('Cửa hàng') : t('Khách')}</Badge>
                     </div>
-                    <span className="text-xs text-muted-foreground">{t('chờ từ ')}{formatRelative(tItem.updatedAt)}</span>
+                    <span className="text-caption text-muted-foreground">{t('chờ từ ')}{formatRelative(tItem.updatedAt)}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-body-sm text-muted-foreground">
                     {tItem.userName}
                     {tItem.orderNumber ? t(' · đơn #{v0}', { v0: tItem.orderNumber }) : ''}
                   </p>

@@ -68,12 +68,12 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
             return (
               <figure key={i} className="my-2 flex flex-col gap-2">
                 <img src={b.src} alt={b.alt} loading="lazy" decoding="async" className="w-full rounded-lg bg-image-slot object-cover" />
-                {b.caption ? <figcaption className="text-sm leading-6 text-muted-foreground">{b.caption}</figcaption> : null}
+                {b.caption ? <figcaption className="text-body-sm leading-6 text-muted-foreground">{b.caption}</figcaption> : null}
               </figure>
             )
           case 'note':
             return (
-              <p key={i} role="note" className="rounded-lg bg-brand-50 px-4 py-3 text-base leading-7 text-brand-900">
+              <p key={i} role="note" className="rounded-lg bg-brand-50 px-4 py-3 text-body leading-7 text-brand-900">
                 <Inline text={b.text} />
               </p>
             )
@@ -143,7 +143,7 @@ export function Toc({ headings }: { headings: Heading[] }) {
         </nav>
       </details>
       <nav aria-label={t('Trong bài này')} className="sticky top-6 hidden max-h-[calc(100svh-3rem)] overflow-y-auto lg:block">
-        <p className="mb-2 pl-3 text-sm font-semibold text-foreground">{t('Trong bài này')}</p>
+        <p className="mb-2 pl-3 text-body-sm font-semibold text-foreground">{t('Trong bài này')}</p>
         {list}
       </nav>
     </>
@@ -226,7 +226,7 @@ export function ArticleView({
         <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
           <article className="min-w-0 max-w-3xl">
             <h1 className="text-[2rem] leading-[2.5rem] font-semibold tracking-[-0.025em] sm:text-[2.5rem] sm:leading-[3rem]">{title}</h1>
-            {meta ? <p className="mt-3 text-sm text-muted-foreground">{meta}</p> : null}
+            {meta ? <p className="mt-3 text-body-sm text-muted-foreground">{meta}</p> : null}
             <div className="mt-8">
               <ArticleBody blocks={blocks} />
             </div>
@@ -253,7 +253,7 @@ function ShareRow({ title, url }: { title: string; url: string }) {
   const round = 'flex size-10 items-center justify-center rounded-full border border-grey-300 text-ink outline-none transition-colors hover:bg-grey-50 focus-visible:ring-2 focus-visible:ring-ring'
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-h3 font-medium">{t('Chia sẻ')}</p>
+      <p className="text-h3">{t('Chia sẻ')}</p>
       <div className="flex gap-2">
         <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label={t('Chia sẻ lên Facebook')} className={round}>
           <FacebookGlyph />

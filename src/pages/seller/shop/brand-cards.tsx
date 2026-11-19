@@ -122,7 +122,7 @@ export function QrCard({ shop }: { shop: ShopApplication }) {
       <CardContent className="flex flex-wrap items-center gap-6">
         {image ? <img src={image} alt={t('Mã QR của {v0}', { v0: shop.shop?.name ?? '' })} className="size-40 rounded-md border" /> : <div className="size-40 rounded-md bg-muted" />}
         <div className="flex flex-col gap-2">
-          <p className="max-w-xs text-sm break-all text-muted-foreground">{shopLink(id)}</p>
+          <p className="max-w-xs text-body-sm break-all text-muted-foreground">{shopLink(id)}</p>
           {image ? (
             <a href={image} download={`bonbon-qr-${id.slice(0, 8)}.png`} className={buttonClass({ variant: 'outline' })}>
               <DownloadIcon aria-hidden="true" />
