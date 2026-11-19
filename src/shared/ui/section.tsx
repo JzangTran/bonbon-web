@@ -7,7 +7,7 @@ import { cn } from '@/shared/lib/utils'
  * content; controls that act together are one action group.
  */
 export function PageStack({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn('flex flex-col gap-12', className)}>{children}</div>
+  return <div className={cn('flex flex-col gap-6', className)}>{children}</div>
 }
 
 export function Section({ title, description, actions, className, children }: {
@@ -23,7 +23,7 @@ export function Section({ title, description, actions, className, children }: {
       {title || description || actions ? (
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div className="flex max-w-2xl flex-col gap-1">
-            {title ? <h2 className="text-h3">{title}</h2> : null}
+            {title ? <h2 className="text-title-2">{title}</h2> : null}
             {description ? <p className="text-ui text-muted-foreground">{description}</p> : null}
           </div>
           {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
@@ -48,7 +48,7 @@ export function Toolbar({ className, children }: { className?: string; children:
  * The light beige ground of statistics (figures, charts, their tables) so they stand apart from the forms and lists around them.
  */
 export function StatsPanel({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn('flex flex-col gap-6 rounded-xl bg-beige-50 p-5 sm:p-6', className)}>{children}</div>
+  return <div className={cn('flex flex-col gap-4 rounded-card bg-surface p-4 shadow-card', className)}>{children}</div>
 }
 
 /** One figure: a label, the value, and an optional line under it (a comparison or what it counts). */

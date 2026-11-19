@@ -197,6 +197,12 @@
 
 /* The page title in the workspace, as on the GitBook docs: large, under the small breadcrumb. Outside the layers so it wins over the
    size each page set when its title was hidden. */
+/* the work area reads at Fluent Body 1 (14/20) */
+.ws-content {
+  font-size: var(--bb-text-body-sm);
+  line-height: var(--bb-text-body-sm-line);
+}
+
 .ws-content h1 {
   font-size: var(--bb-text-title-1);
   line-height: var(--bb-text-title-1-line);

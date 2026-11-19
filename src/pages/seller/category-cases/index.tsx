@@ -196,7 +196,7 @@ function ActionForm({ kase, kind, onClose }: { kase: CategoryCase; kind: 'resolv
   }
 
   return (
-    <div className="mt-2 flex flex-col gap-4 rounded-xl bg-grey-50 p-4">
+    <div className="mt-2 flex flex-col gap-4 rounded-card bg-surface p-4 shadow-card">
         <div className="flex flex-col gap-1">
           <p className="font-medium">{isResolve ? t('Sửa ngành của món') : t('Kháng nghị')}</p>
           <p className="text-body-sm text-muted-foreground">

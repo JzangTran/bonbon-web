@@ -164,7 +164,7 @@ export function AdminSettlementShopPage() {
             />
           ) : null}
           {statement.data && (statement.data.periods ?? []).length === 0 ? <Card className="p-6 text-muted-foreground">{t('Chưa có số liệu trong 90 ngày gần nhất.')}</Card> : null}
-          <div className="overflow-x-auto rounded-xl bg-beige-50 px-2 py-1 sm:px-3">
+          <div className="overflow-x-auto rounded-card bg-surface px-2 py-1 shadow-card sm:px-3">
             <table className="w-full text-ui">
               <thead className="text-small text-muted-foreground">
                 <tr>

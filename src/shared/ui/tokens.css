@@ -1,4 +1,8 @@
 /*
+ * v6 (owner decision 2026-11-20): Fluent 2. Neutral canvas, white surfaces lifted by shadow4, the Fluent blue as the only signal
+ * colour (primary action, links, selection, focus); orange only for the logo, the mascot and promo labels. The mapping below is
+ * unchanged in shape: the v5 names keep pointing at roles, and the roles now carry Fluent values.
+ *
  * bonbon design tokens v5 (owner decision 2026-11-19: direction A "Cam Bếp", 10 px controls, Be Vietnam Pro everywhere).
  * The values come from the bonbon-design repo (design/ in the umbrella), generated into ./generated/tokens.css as --bb-* custom
  * properties for light and .dark. This file only maps the names the pages already use onto those roles, so no page carries a
@@ -8,6 +12,7 @@
 
 :root {
   /* palettes the pages still name directly (prefer the roles below in new code) */
+  /* "brand-*" meant the action colour in v4/v5 pages: it follows the signal blue now; real orange stays under orange-* */
   --orange-50: var(--bb-orange-50);
   --orange-100: var(--bb-orange-100);
   --orange-500: var(--bb-orange-500);
@@ -78,11 +83,11 @@
   --chart-axis: var(--bb-chart-axis);
   --radius: var(--bb-radius-control);
 
-  /* merchant, console and ops */
+  /* merchant, console and ops (Teams layout): white header and work cards on the grey canvas */
   --ws-header: var(--bb-surface);
   --ws-ground: var(--bb-background);
   --ws-fill: var(--bb-surface-subtle);
-  --ws-hairline: var(--bb-border);
+  --ws-hairline: var(--bb-divider);
 
   --headline-soft: var(--bb-text-tertiary);
   --pill-pale: var(--bb-surface-subtle);
@@ -213,13 +218,14 @@
   --color-grey-300: var(--grey-300);
   --color-grey-400: var(--grey-400);
   --color-grey-600: var(--grey-600);
-  --color-brand-50: var(--orange-50);
-  --color-brand-100: var(--orange-100);
-  --color-brand-500: var(--orange-500);
-  --color-brand-600: var(--orange-600);
-  --color-brand-700: var(--orange-700);
-  --color-brand-800: var(--orange-700);
-  --color-brand-900: var(--orange-900);
+  --color-brand-50: var(--bb-blue-160);
+  --color-brand-100: var(--bb-blue-150);
+  --color-brand-500: var(--bb-blue-80);
+  --color-brand-600: var(--bb-blue-80);
+  --color-brand-700: var(--bb-blue-70);
+  --color-brand-800: var(--bb-blue-60);
+  --color-brand-900: var(--bb-blue-40);
+  --color-orange-500: var(--bb-orange-500);
   --color-amber-50: var(--amber-50);
   --color-amber-400: var(--amber-400);
   --color-amber-800: var(--amber-800);
@@ -254,7 +260,10 @@
   --radius-media: var(--bb-radius-card);
   --radius-device: 44px;
 
-  /* only layers above the page (menu, popover, dialog, sheet, snackbar) get a shadow */
+  /* Fluent shadows: cards on the canvas (shadow4), raised (shadow8), menus and popovers (shadow16), dialogs (shadow64) */
+  --shadow-card: var(--bb-elevation-card);
+  --shadow-raised: var(--bb-elevation-raised);
   --shadow-float: var(--bb-elevation-overlay);
   --shadow-overlay: var(--bb-elevation-overlay);
+  --shadow-dialog: var(--bb-elevation-dialog);
 }
