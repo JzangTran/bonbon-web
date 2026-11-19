@@ -34,7 +34,7 @@ export function VerifyEmailPage() {
       {result.isError ? <FormError message={problemMessage(result.error)} /> : null}
       {result.data ? (
         <>
-          <Button asChild size="lg" className="uppercase tracking-wide">
+          <Button asChild size="lg" className="tracking-wide">
             <a href={siteUrl('merchant', '/login')}>{t('Đăng nhập người bán')}</a>
           </Button>
           <p className="text-body-sm text-muted-foreground">{t('Khách hàng: mở ứng dụng bonbon trên điện thoại để đăng nhập.')}</p>

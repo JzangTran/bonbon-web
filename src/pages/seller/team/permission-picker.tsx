@@ -24,7 +24,7 @@ export function PermissionPicker({ value, onChange, idPrefix }: { value: string[
       <legend className="sr-only">{t('Quyền')}</legend>
       {grouped(permissions.data).map(([group, items]) => (
         <div key={group} className="flex flex-col gap-2">
-          <p className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">{t(group)}</p>
+          <p className="text-caption font-semibold tracking-wide text-muted-foreground">{t(group)}</p>
           {items.map((p) => {
             const id = `${idPrefix}-${p.code}`
             return (

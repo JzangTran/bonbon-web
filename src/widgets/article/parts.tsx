@@ -44,7 +44,7 @@ export function TagList({ tags, oneLine, className }: { tags: string[]; oneLine?
   return (
     <ul aria-label={t('Thẻ')} className={cn('flex gap-1.5', oneLine ? 'flex-nowrap overflow-hidden' : 'flex-wrap', className)}>
       {tags.map((tag) => (
-        <li key={tag} className="shrink-0 rounded-full bg-grey-100 px-2.5 py-0.5 text-caption whitespace-nowrap text-grey-600">
+        <li key={tag} className="shrink-0 rounded-xs bg-grey-100 px-2.5 py-0.5 text-caption whitespace-nowrap text-grey-600">
           {tag}
         </li>
       ))}
@@ -70,7 +70,7 @@ export function ArticleCard({ article }: { article: Article }) {
           />
         </div>
         <TagList tags={article.tags} oneLine />
-        <h3 className="px-0.5 pb-1 text-[1.0625rem] leading-6 font-semibold text-ink">{article.title}</h3>
+        <h3 className="px-0.5 pb-1 text-body leading-6 font-semibold text-ink">{article.title}</h3>
       </Link>
     </li>
   )
@@ -91,7 +91,7 @@ export function CardGrid({ articles, initial = 6, step = 6 }: { articles: Articl
         <button
           type="button"
           onClick={() => setShown((n) => n + step)}
-          className="min-h-12 w-full rounded-full bg-grey-100 px-6 text-ui font-medium text-ink outline-none hover:bg-grey-200 focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="min-h-12 w-full rounded-control bg-grey-100 px-6 text-ui font-medium text-ink outline-none hover:bg-grey-200 focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           {t('Xem thêm (')}{articles.length - shown})
         </button>

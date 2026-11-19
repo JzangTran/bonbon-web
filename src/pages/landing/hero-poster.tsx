@@ -5,7 +5,7 @@ import { Mascot } from './mascot'
 function Tag({ kicker, value, className }: { kicker: string; value: string; className: string }) {
   return (
     <div className={`absolute flex flex-col items-start ${className}`}>
-      <span className="rounded-t-md bg-white px-2.5 shadow-sm pt-1 text-[0.6875rem] font-bold tracking-wide text-primary uppercase sm:text-caption">{kicker}</span>
+      <span className="rounded-t-md bg-white px-2.5 shadow-sm pt-1 text-caption font-bold text-primary sm:text-caption">{kicker}</span>
       <span className="rounded-md rounded-tl-none bg-ink px-3 py-1.5 text-ui font-bold text-white shadow-[0_6px_16px_rgb(0_0_0/0.25)] sm:text-body">{value}</span>
     </div>
   )

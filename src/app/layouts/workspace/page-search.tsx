@@ -61,7 +61,7 @@ export function PageSearch({ nav, extras, className }: { nav: NavParent[]; extra
   const shown = open && hits.length > 0
   return (
     <div className={cn('relative', className)}>
-      <div className="flex h-10 items-center gap-2 rounded-full border border-grey-300 bg-white px-3.5 text-muted-foreground focus-within:border-primary">
+      <div className="flex h-10 items-center gap-2 rounded-control border border-grey-300 bg-white px-3.5 text-muted-foreground focus-within:border-primary">
         <SearchIcon className="size-4 shrink-0" aria-hidden="true" />
         <input
           ref={input}

@@ -14,11 +14,11 @@ function StoreButton({ href, store, icon }: { href: string; store: string; icon:
     </>
   )
   return href ? (
-    <a href={href} className="flex h-14 min-w-44 items-center gap-3 rounded-full bg-ink px-5 text-white outline-none hover:bg-button-hover focus-visible:ring-2 focus-visible:ring-ring">
+    <a href={href} className="flex h-14 min-w-44 items-center gap-3 rounded-control bg-ink px-5 text-white outline-none hover:bg-button-hover focus-visible:ring-2 focus-visible:ring-ring">
       {body}
     </a>
   ) : (
-    <span aria-disabled="true" className="flex h-14 min-w-44 cursor-default items-center gap-3 rounded-full bg-grey-100 px-5 text-ink">
+    <span aria-disabled="true" className="flex h-14 min-w-44 cursor-default items-center gap-3 rounded-control bg-grey-100 px-5 text-ink">
       {body}
     </span>
   )

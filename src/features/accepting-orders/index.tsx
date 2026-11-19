@@ -43,7 +43,7 @@ export function AcceptingOrdersSwitch() {
         aria-checked={accepting}
         disabled={toggle.isPending}
         onClick={() => (accepting ? setAsking(true) : toggle.mutate({ accepting: true }))}
-        className="flex shrink-0 items-center gap-2 rounded-full px-1 py-1 text-caption whitespace-nowrap font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+        className="flex shrink-0 items-center gap-2 rounded-control px-1 py-1 text-caption whitespace-nowrap font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
         title={!accepting && shop.data?.pauseReason ? shop.data.pauseReason : undefined}
       >
         <span className="hidden sm:inline">

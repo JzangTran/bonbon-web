@@ -123,7 +123,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
             <Lockup className="h-7" />
           </Link>
           {focus ? (
-            <span className="hidden rounded-full bg-accent px-3 py-1 text-caption font-semibold text-accent-foreground sm:inline">{focus.label}</span>
+            <span className="hidden rounded-xs bg-accent px-3 py-1 text-caption font-semibold text-accent-foreground sm:inline">{focus.label}</span>
           ) : (
             <span className="hidden text-ui text-muted-foreground lg:inline">{area}</span>
           )}
@@ -173,7 +173,7 @@ function Shell({ area, homePath, spaces, account = [], footerLinks = [], loginPa
             </button>
           ) : null}
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex h-10 items-center gap-2 rounded-full border border-grey-300 pr-3 pl-1 text-ui outline-none hover:bg-grey-50 focus-visible:ring-2 focus-visible:ring-ring">
+            <DropdownMenuTrigger className="flex h-10 items-center gap-2 rounded-control border border-grey-300 pr-3 pl-1 text-ui outline-none hover:bg-grey-50 focus-visible:ring-2 focus-visible:ring-ring">
               <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-accent text-caption font-semibold text-primary">
                 {name.trim().charAt(0).toUpperCase() || '?'}
               </span>
@@ -315,7 +315,7 @@ function SpaceTabs({ spaces, current, vertical = false, onNavigate }: { spaces: 
             aria-current={on ? 'page' : undefined}
             className={cn(
               'flex shrink-0 items-center gap-2 text-ui whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              vertical ? 'rounded-full px-3 py-2' : 'border-b-2 px-3 py-2.5',
+              vertical ? 'rounded-control px-3 py-2' : 'border-b-2 px-3 py-2.5',
               'transition-colors hover:bg-grey-100 hover:text-ink',
               !vertical && 'rounded-t-md',
               on ? cn('font-medium text-primary', !vertical && 'border-primary') : cn('text-muted-foreground', !vertical && 'border-transparent'),

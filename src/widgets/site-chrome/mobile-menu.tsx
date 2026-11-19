@@ -63,7 +63,7 @@ export function MobileMenu({
     }
   }, [open, onOpenChange])
 
-  const row = 'flex w-full items-center justify-between gap-4 py-4 text-left text-[1.0625rem] font-medium text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring'
+  const row = 'flex w-full items-center justify-between gap-4 py-4 text-left text-body font-medium text-ink outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
   return (
     <>

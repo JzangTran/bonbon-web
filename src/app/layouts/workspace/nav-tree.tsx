@@ -53,7 +53,7 @@ export function NavTree({ nav, location, homePath, onNavigate }: {
       </ul>
       {groups.map((parent) => (
         <section key={parent.key} aria-labelledby={`nav-${parent.key}`} className="flex flex-col gap-1">
-          <h2 id={`nav-${parent.key}`} className="pl-3 text-caption font-medium tracking-wide text-muted-foreground uppercase">
+          <h2 id={`nav-${parent.key}`} className="pl-3 text-caption font-medium text-muted-foreground">
             {parent.label}
           </h2>
           <ul className="flex flex-col">

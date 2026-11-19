@@ -20,7 +20,7 @@ export function DocsRail({ groups, current, label = t('Mục lục') }: { groups
     <nav aria-label={label} className="flex flex-col gap-6 border-l border-grey-200">
       {groups.map((g) => (
         <section key={g.title} className="flex flex-col gap-1">
-          <h2 className="pl-3 text-caption font-medium tracking-wide text-muted-foreground uppercase">{g.title}</h2>
+          <h2 className="pl-3 text-caption font-medium text-muted-foreground">{g.title}</h2>
           <ul className="flex flex-col">
             {g.items.map((item) => {
               const on = item.to === current

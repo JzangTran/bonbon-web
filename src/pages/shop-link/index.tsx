@@ -35,7 +35,7 @@ export function ShopLinkPage() {
         <div className="flex size-24 items-center justify-center overflow-hidden rounded-2xl bg-grey-100">
           {shop.data?.logoUrl ? <img src={shop.data.logoUrl} alt="" className="size-full object-cover" /> : <StoreIcon className="size-10 text-muted-foreground" aria-hidden="true" />}
         </div>
-        <h1 className="text-[1.75rem] leading-tight font-semibold text-balance">
+        <h1 className="text-title-1 leading-tight text-balance">
           {shop.data?.name ?? (shop.isError ? t('Không tìm thấy quán') : '…')}
         </h1>
         <p className="text-body text-muted-foreground text-balance">
