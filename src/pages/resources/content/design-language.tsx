@@ -1,4 +1,4 @@
-import { ArrowRightIcon, BellIcon, PlusIcon, SearchIcon, ShoppingBagIcon, TrashIcon } from 'lucide-react'
+import { ChevronRightIcon, BellIcon, PlusIcon, SearchIcon, ShoppingBagIcon, TrashIcon } from 'lucide-react'
 import { t, tx } from '@/shared/i18n'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -306,7 +306,7 @@ const iconography: ResourceDoc = {
             ]}
           />
           <Stage>
-            {[SearchIcon, ShoppingBagIcon, BellIcon, PlusIcon, TrashIcon, ArrowRightIcon].map((Icon, i) => (
+            {[SearchIcon, ShoppingBagIcon, BellIcon, PlusIcon, TrashIcon, ChevronRightIcon].map((Icon, i) => (
               <Icon key={i} className="size-6 text-ink" strokeWidth={1.75} aria-hidden="true" />
             ))}
           </Stage>

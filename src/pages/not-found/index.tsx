@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { pictureOf } from '@/shared/assets/mascot-pictures'
 import { siteUrl } from '@/shared/config/sites'
 import { t } from '@/shared/i18n'
@@ -30,7 +30,7 @@ export function NotFoundPage() {
           </p>
           <div className="mt-2 flex flex-wrap justify-center gap-3 md:justify-start">
             <a href={siteUrl('public')} className={buttonClass({ size: 'lg' })}>
-              <ArrowLeftIcon aria-hidden="true" />
+              <ChevronLeftIcon aria-hidden="true" />
               {t('Về trang chủ')}
             </a>
             <a href={siteUrl('help')} className={buttonClass({ size: 'lg', variant: 'secondary' })}>

@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { useFeedback } from '@/shared/ui/feedback'
@@ -53,7 +53,7 @@ export function AdminLegalDocumentEditPage() {
 function Back() {
   return (
     <Link to={consolePath('/legal-documents')} className="text-link inline-flex items-center gap-1 text-body-sm">
-      <ArrowLeftIcon className="size-4" />{t(' Văn bản pháp lý')}
+      <ChevronLeftIcon className="size-4" />{t(' Văn bản pháp lý')}
     </Link>
   )
 }

@@ -151,7 +151,7 @@ export function AdminContactRequestPage() {
             <span>{ROLE[r.role ?? ''] ?? r.role}</span>·<a href={`mailto:${r.email}`} className="text-link text-ink">{r.email}</a>·
             <span>{formatDateTime(r.createdAt)}</span>
           </div>
-          <p className="rounded-card bg-surface p-4 shadow-card whitespace-pre-wrap">{r.message}</p>
+          <p className="rounded-card bg-surface p-4 border border-border whitespace-pre-wrap">{r.message}</p>
           {(r.answers ?? []).length > 0 ? (
             <section className="flex flex-col gap-3">
               <h2 className="text-h3">{t('Đã trả lời')}</h2>

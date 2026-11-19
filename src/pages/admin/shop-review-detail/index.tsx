@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useFeedback } from '@/shared/ui/feedback'
@@ -58,7 +58,7 @@ export function ShopReviewDetailPage() {
   return (
     <div className="flex max-w-6xl flex-col gap-10">
       <Link to={consolePath('/shop-review')} className="text-link inline-flex items-center gap-1 text-body-sm">
-        <ArrowLeftIcon className="size-4" />{t(' Duyệt cửa hàng')}
+        <ChevronLeftIcon className="size-4" />{t(' Duyệt cửa hàng')}
       </Link>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-title-1">{shop.name ?? t('(chưa đặt tên)')}</h1>

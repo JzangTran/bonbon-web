@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, EyeIcon } from 'lucide-react'
+import { ChevronLeftIcon, EyeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { RevealDialog, useAdminOrder, useRevealOrder } from '@/entities/lookup'
@@ -43,7 +43,7 @@ export function AdminLookupOrderPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <Link to={consolePath('/lookup')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" />{t(' Tra cứu')}
+        <ChevronLeftIcon className="size-4" />{t(' Tra cứu')}
       </Link>
       {order.isError ? <FormError message={problemMessage(order.error)} /> : null}
       {order.isPending ? <Skeleton className="h-64" /> : null}

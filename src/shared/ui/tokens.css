@@ -1,7 +1,8 @@
 /*
- * v6 (owner decision 2026-11-20): Fluent 2. Neutral canvas, white surfaces lifted by shadow4, the Fluent blue as the only signal
- * colour (primary action, links, selection, focus); orange only for the logo, the mascot and promo labels. The mapping below is
- * unchanged in shape: the v5 names keep pointing at roles, and the roles now carry Fluent values.
+ * v6.1 (owner review 2026-11-19): Fluent 2 as Microsoft Teams uses it. Three neutral layers: white content, a light grey pane
+ * (navigation, lists), a grey frame (top bar, app rail). Blocks are made with thin light borders and space, never shadows; shadows
+ * only for layers above the page. The Fluent blue is the only signal colour; orange only for the logo, the mascot and promo labels.
+ * Semibold is the heaviest weight; no pure black. The mapping below keeps the v5 names pointing at roles.
  *
  * bonbon design tokens v5 (owner decision 2026-11-19: direction A "Cam Bếp", 10 px controls, Be Vietnam Pro everywhere).
  * The values come from the bonbon-design repo (design/ in the umbrella), generated into ./generated/tokens.css as --bb-* custom
@@ -9,6 +10,29 @@
  * colour, size or radius of its own. To change a value, change bonbon-design/tokens and run `npm run sync` there.
  */
 @import './generated/tokens.css';
+
+/*
+ * The web type scale, one step smaller than the shared ramp (owner 2026-11-19: "the text is too big"): Be Vietnam Pro is wide and
+ * tall, so 13 px reads like the 14 px Segoe UI of Fluent's Body 1. Line heights stay generous so dense pages still breathe.
+ */
+:root {
+  --bb-text-display: 2.125rem;
+  --bb-text-display-line: 2.75rem;
+  --bb-text-title-1: 1.5rem;
+  --bb-text-title-1-line: 2rem;
+  --bb-text-title-2: 1.125rem;
+  --bb-text-title-2-line: 1.625rem;
+  --bb-text-title-3: 0.9375rem;
+  --bb-text-title-3-line: 1.375rem;
+  --bb-text-body: 0.9375rem;
+  --bb-text-body-line: 1.5rem;
+  --bb-text-body-sm: 0.8125rem;
+  --bb-text-body-sm-line: 1.25rem;
+  --bb-text-label: 0.8125rem;
+  --bb-text-label-line: 1.25rem;
+  --bb-text-caption: 0.75rem;
+  --bb-text-caption-line: 1rem;
+}
 
 :root {
   /* palettes the pages still name directly (prefer the roles below in new code) */
@@ -84,9 +108,9 @@
   --radius: var(--bb-radius-control);
 
   /* merchant, console and ops (Teams layout): white header and work cards on the grey canvas */
-  --ws-header: var(--bb-surface);
+  --ws-header: var(--bb-frame);
   --ws-ground: var(--bb-background);
-  --ws-fill: var(--bb-surface-subtle);
+  --ws-fill: var(--bb-pane);
   --ws-hairline: var(--bb-divider);
 
   --headline-soft: var(--bb-text-tertiary);
@@ -120,13 +144,17 @@
   --text-title-3--font-weight: var(--bb-text-title-3-weight);
   --text-body: var(--bb-text-body);
   --text-body--line-height: var(--bb-text-body-line);
+  --text-body--letter-spacing: var(--bb-text-body-tracking);
   --text-body-sm: var(--bb-text-body-sm);
   --text-body-sm--line-height: var(--bb-text-body-sm-line);
+  --text-body-sm--letter-spacing: var(--bb-text-body-sm-tracking);
   --text-label: var(--bb-text-label);
   --text-label--line-height: var(--bb-text-label-line);
+  --text-label--letter-spacing: var(--bb-text-label-tracking);
   --text-label--font-weight: var(--bb-text-label-weight);
   --text-caption: var(--bb-text-caption);
   --text-caption--line-height: var(--bb-text-caption-line);
+  --text-caption--letter-spacing: var(--bb-text-caption-tracking);
   --text-caption--font-weight: var(--bb-text-caption-weight);
 
   --text-h1: var(--bb-text-title-1);
@@ -141,10 +169,13 @@
   --text-h3--font-weight: var(--bb-text-title-3-weight);
   --text-lead: var(--bb-text-body);
   --text-lead--line-height: var(--bb-text-body-line);
+  --text-lead--letter-spacing: var(--bb-text-body-tracking);
   --text-ui: var(--bb-text-body-sm);
   --text-ui--line-height: var(--bb-text-body-sm-line);
+  --text-ui--letter-spacing: var(--bb-text-body-sm-tracking);
   --text-small: var(--bb-text-body-sm);
   --text-small--line-height: var(--bb-text-body-sm-line);
+  --text-small--letter-spacing: var(--bb-text-body-sm-tracking);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -180,6 +211,8 @@
 
   /* v5 role names for new code */
   --color-surface: var(--bb-surface);
+  --color-frame: var(--bb-frame);
+  --color-pane: var(--bb-pane);
   --color-surface-subtle: var(--bb-surface-subtle);
   --color-surface-strong: var(--bb-surface-strong);
   --color-border-strong: var(--bb-border-strong);

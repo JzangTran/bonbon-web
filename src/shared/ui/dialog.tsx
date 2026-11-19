@@ -16,7 +16,7 @@ export const DialogPortal = DialogPrimitive.Portal
 export const DialogClose = DialogPrimitive.Close
 
 export function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return <DialogPrimitive.Overlay data-slot="dialog-overlay" className={cn('bb-overlay fixed inset-0 z-50 bg-black/25', className)} {...props} />
+  return <DialogPrimitive.Overlay data-slot="dialog-overlay" className={cn('bb-overlay fixed inset-0 z-50 bg-overlay', className)} {...props} />
 }
 
 export function DialogContent({

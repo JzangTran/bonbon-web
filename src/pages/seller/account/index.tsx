@@ -8,7 +8,6 @@ import { useSession } from '@/entities/session'
 import { api, problemMessage } from '@/shared/api'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
-import { DangerLinkCard } from '@/shared/ui/danger-link-card'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { FormError, FormSuccess } from '@/widgets/auth-shell'
@@ -36,7 +35,7 @@ const passwordSchema = z
   .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: t('Mật khẩu nhập lại không khớp') })
   .refine((v) => v.newPassword === '' || v.newPassword !== v.currentPassword, { path: ['newPassword'], message: t('Mật khẩu mới phải khác mật khẩu hiện tại.') })
 
-type Tab = 'profile' | 'security' | 'team' | 'privacy' | 'delete'
+type Tab = 'profile' | 'security' | 'team' | 'privacy'
 
 /** The person's account, one job a tab: who they are, how they sign in, the main account and its links, their personal data, and leaving. */
 export function SellerAccountPage() {
@@ -53,7 +52,6 @@ export function SellerAccountPage() {
           { id: 'security', label: t('Đăng nhập và bảo mật') },
           { id: 'team', label: t('Tài khoản chính') },
           { id: 'privacy', label: t('Quyền riêng tư') },
-          { id: 'delete', label: t('Xoá tài khoản') },
         ]}
         value={tab}
         onValueChange={(id) => setTab(id as Tab)}
@@ -73,14 +71,6 @@ export function SellerAccountPage() {
       ) : null}
       {tab === 'team' ? <MainAccountTab /> : null}
       {tab === 'privacy' ? <PrivacyTab /> : null}
-      {tab === 'delete' ? (
-        <DangerLinkCard
-          title={t('Xoá tài khoản')}
-          description={t('Xoá toàn bộ tài khoản, gồm cả vai trò khách và người bán nếu bạn có cả hai. Có thời gian chờ trước khi xoá thật.')}
-          to="/focus/delete-account"
-          action={t('Xoá tài khoản')}
-        />
-      ) : null}
     </div>
   )
 }

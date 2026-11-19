@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from 'lucide-react'
+import { ChevronRightIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { useShopCases } from '@/entities/order-case'
 import { useShopOrders, type OrderStatus } from '@/entities/order'
@@ -61,7 +61,7 @@ export function SellerDashboardPage() {
           title={t('7 ngày qua')}
           description={
             <Link to={merchantPath('/statistics')} className="text-link inline-flex items-center gap-1 text-ink">
-              {t('Xem đầy đủ trong Doanh thu ')}<ArrowRightIcon className="size-3.5" aria-hidden="true" />
+              {t('Xem đầy đủ trong Doanh thu ')}<ChevronRightIcon className="size-3.5" aria-hidden="true" />
             </Link>
           }
           metrics={METRICS}

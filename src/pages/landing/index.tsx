@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import {
-  ArrowRightIcon,
-  ChevronDownIcon,
-  MessageCircleIcon,
-  ShieldCheckIcon,
-  WalletIcon,
-} from 'lucide-react'
+import { ChevronRightIcon, ChevronDownIcon, MessageCircleIcon, ShieldCheckIcon, WalletIcon } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { SiteFooter, SiteHeader } from '@/widgets/site-chrome'
 import { siteButton, siteButtonSolid } from '@/widgets/site-chrome/buttons'
@@ -77,7 +71,7 @@ function Hero() {
           >
             <span className="rounded-xs bg-primary px-2 py-0.5 text-caption text-primary-foreground">{t('Mới')}</span>
             {t('Mở quán trên bonbon chỉ trong vài bước')}
-            <ArrowRightIcon className="size-4" aria-hidden="true" />
+            <ChevronRightIcon className="size-4" aria-hidden="true" />
           </a>
           <h1 className="max-w-[56rem] text-display text-balance">
             {t('Đặt món từ quán dưới sảnh. ')}<span className="text-primary">{t('Giao tận cửa.')}</span>
@@ -86,7 +80,7 @@ function Hero() {
           <div id="get-app" className="flex scroll-mt-24 flex-wrap justify-center gap-3">
             <span aria-disabled="true" title={t('Ứng dụng sắp có trên App Store và Google Play.')} className={cn(btnSolid, 'cursor-default')}>
               {t('Tải app đặt món')}
-              <ArrowRightIcon className="size-4" aria-hidden="true" />
+              <ChevronRightIcon className="size-4" aria-hidden="true" />
             </span>
             <a href="#how-it-works" className={btnPale}>
               {t('Xem quán trong khu')}
@@ -296,7 +290,7 @@ function SellerBand() {
         <div className="flex min-w-0 flex-[1_1_22rem] justify-center">
           {pictureOf('wave') ? (
             // the rendered scene already has its own shop and counter: show it whole
-            <div className="w-full max-w-[600px] overflow-hidden rounded-2xl bg-accent-subtle shadow-[0_24px_60px_rgb(0_0_0/0.10)]">
+            <div className="w-full max-w-[600px] overflow-hidden rounded-2xl bg-accent-subtle border border-border">
               <Mascot pose="wave" className="w-full" />
             </div>
           ) : (
@@ -394,7 +388,7 @@ function MobileActionBar() {
         </a>
         <a href="#get-app" tabIndex={shown ? 0 : -1} className={btnSolid}>
           {t('Tải app')}
-          <ArrowRightIcon className="size-4" aria-hidden="true" />
+          <ChevronRightIcon className="size-4" aria-hidden="true" />
         </a>
       </div>
     </div>

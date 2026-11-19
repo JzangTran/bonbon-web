@@ -1,5 +1,5 @@
 import { t } from '@/shared/i18n'
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import {
@@ -41,7 +41,7 @@ export function AdminOrderCaseDetailPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-6">
       <Link to={consolePath('/order-cases')} className="inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" />{t(' Danh sách khiếu nại')}
+        <ChevronLeftIcon className="size-4" />{t(' Danh sách khiếu nại')}
       </Link>
       {detail.isError ? <FormError message={problemMessage(detail.error)} /> : null}
       {detail.isPending ? <Skeleton className="h-64" /> : null}

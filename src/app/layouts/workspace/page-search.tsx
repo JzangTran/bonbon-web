@@ -83,7 +83,7 @@ export function PageSearch({ nav, extras, className }: { nav: NavParent[]; extra
             if (e.key === 'ArrowDown') {
               e.preventDefault()
               setActive((i) => Math.min(i + 1, hits.length - 1))
-            } else if (e.key === 'ArrowUp') {
+            } else if (e.key === 'ChevronUp') {
               e.preventDefault()
               setActive((i) => Math.max(i - 1, 0))
             } else if (e.key === 'Enter') {

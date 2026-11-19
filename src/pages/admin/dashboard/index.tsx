@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from 'lucide-react'
+import { ChevronRightIcon } from 'lucide-react'
 import { Link } from 'react-router'
 import { usePlatformOverview, type PlatformOverviewBucket } from '@/entities/platform-stats'
 import { useSession } from '@/entities/session'
@@ -49,7 +49,7 @@ export function AdminDashboardPage() {
               <Link to={q.to} className="group flex h-full flex-col gap-1 rounded-xl border border-grey-200 p-4 outline-none transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring">
                 <span className="flex items-center justify-between gap-2 text-ui font-medium">
                   {q.title}
-                  <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden="true" />
+                  <ChevronRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden="true" />
                 </span>
                 <span className="text-small text-muted-foreground">{q.text}</span>
               </Link>
@@ -63,7 +63,7 @@ export function AdminDashboardPage() {
           title={t('30 ngày qua')}
           description={
             <Link to={consolePath('/statistics')} className="text-link inline-flex items-center gap-1 text-ink">
-              {t('Xem đầy đủ trong Thống kê hệ thống ')}<ArrowRightIcon className="size-3.5" aria-hidden="true" />
+              {t('Xem đầy đủ trong Thống kê hệ thống ')}<ChevronRightIcon className="size-3.5" aria-hidden="true" />
             </Link>
           }
           metrics={METRICS}

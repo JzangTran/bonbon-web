@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router'
 import { MessageList, useAdminConversation, useAdminThread } from '@/entities/chat'
 import { useSession } from '@/entities/session'
@@ -29,7 +29,7 @@ function Viewer({ id, onBack }: { id: string; onBack: () => void }) {
   return (
     <div className="flex max-w-3xl flex-col gap-4">
       <button type="button" onClick={onBack} className="inline-flex items-center gap-1 self-start text-body-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-4" />{t(' Quay lại')}
+        <ChevronLeftIcon className="size-4" />{t(' Quay lại')}
       </button>
       <div>
         <h1 className="text-title-1">{t('Trò chuyện khách – quán')}</h1>

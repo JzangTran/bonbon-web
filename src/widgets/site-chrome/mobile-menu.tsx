@@ -114,7 +114,7 @@ export function MobileMenu({
                         {item.columns.map((col) => {
                           const opened = column === col.label
                           return (
-                            <div key={col.label} className={cn('rounded-xl transition-colors', opened && 'bg-white shadow-[0_1px_2px_rgb(0_0_0/0.06)]')}>
+                            <div key={col.label} className={cn('rounded-xl transition-colors', opened && 'bg-surface')}>
                               <button
                                 type="button"
                                 aria-expanded={opened}

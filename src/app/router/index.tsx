@@ -145,10 +145,6 @@ const routes: RouteObject[] = [
         path: '/focus/close-shop',
         lazy: () => import('@/pages/seller/close-shop').then((m) => ({ Component: m.CloseShopPage })),
       },
-      {
-        path: '/focus/delete-account',
-        lazy: () => import('@/pages/seller/delete-account').then((m) => ({ Component: m.SellerDeleteAccountPage })),
-      },
     ],
   },
   {

@@ -1,16 +1,5 @@
 import { t } from '@/shared/i18n'
-import {
-  BanIcon,
-  BikeIcon,
-  CheckIcon,
-  ChefHatIcon,
-  CircleCheckIcon,
-  CircleXIcon,
-  ClockIcon,
-  PackageXIcon,
-  WalletIcon,
-  type LucideIcon,
-} from 'lucide-react'
+import { BanIcon, BikeIcon, CheckIcon, ChefHatIcon, CircleCheckIcon, CircleXIcon, ClockIcon, PackageXIcon, WalletIcon, type LucideIcon } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import type { OrderStatus } from '../model'
 

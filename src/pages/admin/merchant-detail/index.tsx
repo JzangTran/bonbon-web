@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, TriangleAlertIcon } from 'lucide-react'
+import { ChevronLeftIcon, TriangleAlertIcon } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { useMerchantDetail } from '@/entities/merchant-directory'
 import { useSession } from '@/entities/session'
@@ -47,7 +47,7 @@ export function AdminMerchantDetailPage() {
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <Link to={consolePath('/merchants')} className="text-link inline-flex items-center gap-1 text-body-sm">
-        <ArrowLeftIcon className="size-4" />{t(' Cửa hàng')}
+        <ChevronLeftIcon className="size-4" />{t(' Cửa hàng')}
       </Link>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-title-1">{shop.name ?? t('(chưa đặt tên)')}</h1>

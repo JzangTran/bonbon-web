@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowLeftIcon, BanIcon, BotIcon, ImageIcon, SendIcon, Settings2Icon, XIcon } from 'lucide-react'
+import { ChevronLeftIcon, BanIcon, BotIcon, ImageIcon, SendIcon, Settings2Icon, XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { useFeedback } from '@/shared/ui/feedback'
@@ -195,7 +195,7 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
     <Card className="flex h-[70vh] flex-col gap-0 p-0">
       <div className="flex items-center gap-2 border-b p-3">
         <Button variant="ghost" size="icon" className="md:hidden" onClick={onBack} aria-label={t('Quay lại danh sách')}>
-          <ArrowLeftIcon />
+          <ChevronLeftIcon />
         </Button>
         <span className="flex-1 truncate font-semibold">{conversation?.customerName ?? t('Cuộc trò chuyện')}</span>
         <Button
@@ -281,7 +281,7 @@ function Thread({ conversationId, conversation, live, onBack }: { conversationId
               }}
               onKeyDown={(e) => {
                 if (matches && matches.length) {
-                  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                  if (e.key === 'ArrowDown' || e.key === 'ChevronUp') {
                     e.preventDefault()
                     setPick((p) => (p + (e.key === 'ArrowDown' ? 1 : matches.length - 1)) % matches.length)
                     return

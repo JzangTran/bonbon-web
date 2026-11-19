@@ -31,6 +31,17 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    letter-spacing: var(--bb-text-body-tracking);
+  }
+  /* soft icons: a thin, even line everywhere (Fluent's icons are drawn light) */
+  svg.lucide {
+    stroke-width: 1.5;
+  }
+  /* never bold (owner 2026-11-19): semibold is the heaviest weight */
+  b,
+  strong,
+  th {
+    font-weight: 600;
   }
   /* money and counts line up in columns */
   .tabular-nums,
@@ -224,4 +235,19 @@
   &:focus-visible {
     text-decoration-thickness: 3px;
   }
+}
+
+/* a quick small wiggle when a rail or tab button is chosen (not for controls the person never sees pressed, like back) */
+@keyframes bb-wiggle {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-12deg) scale(1.08); }
+  55% { transform: rotate(9deg) scale(1.04); }
+  80% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+.bb-wiggle {
+  animation: bb-wiggle 360ms var(--bb-motion-ease-standard, ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bb-wiggle { animation: none; }
 }
