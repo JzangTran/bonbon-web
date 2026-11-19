@@ -10,7 +10,7 @@ export const cn = createCn({
     classGroups: {
       'font-size': [{ text: ['display', 'title-1', 'title-2', 'title-3', 'body', 'body-sm', 'label', 'caption', 'h1', 'h2', 'h3', 'lead', 'ui', 'small'] }],
       rounded: [{ rounded: ['control', 'panel', 'card', 'media', 'device'] }],
-      shadow: [{ shadow: ['float', 'overlay'] }],
+      shadow: [{ shadow: ['float', 'overlay', 'card', 'raised', 'dialog'] }],
     },
   },
 })
